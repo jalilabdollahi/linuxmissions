@@ -1,0 +1,11 @@
+{
+  "name": "Pretty Table",
+  "description": "A report file is hard to read because the columns are uneven. Reformat it into aligned output.",
+  "objective": "Format report.txt into aligned columns and save the result to table.txt",
+  "xp": 300,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["column", "printf", "awk printf", "formatting"],
+  "module": "module-8-advanced-text",
+  "level": "level-6-column"
+}

@@ -1,0 +1,1 @@
+`mkdir -p organized/snapshot-notes` followed by `mv inbox/snapshot-notes.txt organized/snapshot-notes/snapshot-notes-notes.txt` is enough.

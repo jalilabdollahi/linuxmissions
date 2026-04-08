@@ -1,0 +1,2 @@
+Add -delete to remove them in one pass:
+find $SANDBOX -name "*.tmp" -delete

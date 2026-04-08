@@ -1,0 +1,15 @@
+{
+  "name": "Resolv Conf: Capacity Report",
+  "description": "In the configuration editing lab, a task related to Resolv Conf needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Resolv Conf",
+    "du",
+    "sort"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-16-resolv-conf"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Histogram: Link Repair",
+  "description": "In the data processing lab, a task related to Histogram needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/histogram.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Histogram",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-9-histogram"
+}

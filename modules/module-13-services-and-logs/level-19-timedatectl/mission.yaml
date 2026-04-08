@@ -1,0 +1,15 @@
+{
+  "name": "Timedatectl: Config Rewrite",
+  "description": "In the services and logs lab, a task related to Timedatectl needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in timedatectl.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Timedatectl",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-19-timedatectl"
+}

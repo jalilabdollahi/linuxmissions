@@ -1,0 +1,1 @@
+Example: `tar -xzf rsync-delete-restore.tar.gz`

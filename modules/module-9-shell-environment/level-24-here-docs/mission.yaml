@@ -1,0 +1,15 @@
+{
+  "name": "Here Docs: Permission Fix",
+  "description": "In the shell environment lab, a task related to Here Docs needs cleanup before the handoff.",
+  "objective": "Set the mode of here-docs.sh to 640",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Here Docs",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-24-here-docs"
+}

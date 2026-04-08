@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' exit-codes.log > alerts.txt`

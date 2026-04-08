@@ -1,0 +1,15 @@
+{
+  "name": "Redirection: Permission Fix",
+  "description": "In the shell environment lab, a task related to Redirection needs cleanup before the handoff.",
+  "objective": "Set the mode of redirection.sh to 640",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Redirection",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-12-redirection"
+}

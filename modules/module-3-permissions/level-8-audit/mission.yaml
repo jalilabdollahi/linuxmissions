@@ -1,0 +1,11 @@
+{
+  "name": "World Writable Files",
+  "description": "Security scan flagged world-writable files in the app directory. These are a security risk — any user can modify them.",
+  "objective": "Find all world-writable files and remove write permission from 'others' for each one",
+  "xp": 200,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["find -perm", "-o-w", "chmod o-w", "security hardening"],
+  "module": "module-3-permissions",
+  "level": "level-8-audit"
+}

@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "boot-scare-restore.tar.gz",
+    "archived_files": {
+      "restored/boot-scare/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/boot-scare/token.txt": "boot-scare-token\n"
+    },
+    "required_files": {
+      "restored/boot-scare/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/boot-scare/token.txt": "boot-scare-token\n"
+    }
+  }
+}

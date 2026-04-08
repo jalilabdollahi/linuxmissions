@@ -1,0 +1,15 @@
+{
+  "name": "Find Mtime: Noise Dedup",
+  "description": "In the search and pipelines lab, a task related to Find Mtime needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from find-mtime-raw.txt with sorted unique values",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Find Mtime",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-4-find-mtime"
+}

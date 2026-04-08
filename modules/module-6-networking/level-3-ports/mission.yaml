@@ -1,0 +1,11 @@
+{
+  "name": "What's Listening?",
+  "description": "You have a saved socket listing from a host and need to document which TCP ports are listening.",
+  "objective": "Extract the listening TCP port numbers from ss-output.txt and save them to listening.txt",
+  "xp": 180,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["ss -tln", "netstat", "ports", "awk"],
+  "module": "module-6-networking",
+  "level": "level-3-ports"
+}

@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/passwd-file && mv inbox/passwd-file.txt organized/passwd-file/passwd-file-notes.txt`

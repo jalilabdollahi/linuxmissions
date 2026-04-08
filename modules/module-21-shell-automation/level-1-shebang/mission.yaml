@@ -1,0 +1,16 @@
+{
+  "name": "Shebang: Path Realignment",
+  "description": "In the shell automation lab, a task related to Shebang needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/shebang.txt to organized/shebang/shebang-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Shebang",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-1-shebang"
+}

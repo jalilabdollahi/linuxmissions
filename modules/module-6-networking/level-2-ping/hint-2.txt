@@ -1,0 +1,4 @@
+Loop through hosts.txt and check the exit code:
+if ./mock_ping.sh "$host"; then
+  ...
+fi

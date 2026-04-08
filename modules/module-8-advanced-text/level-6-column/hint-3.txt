@@ -1,0 +1,2 @@
+One valid command is:
+column -t report.txt > table.txt

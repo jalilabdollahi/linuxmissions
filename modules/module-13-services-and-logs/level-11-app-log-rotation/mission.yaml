@@ -1,0 +1,15 @@
+{
+  "name": "App Log Rotation: Restore Drill",
+  "description": "In the services and logs lab, a task related to App Log Rotation needs cleanup before the handoff.",
+  "objective": "Extract app-log-rotation-restore.tar.gz so the restored/app-log-rotation directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "App Log Rotation",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-11-app-log-rotation"
+}

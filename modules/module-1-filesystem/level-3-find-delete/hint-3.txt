@@ -1,0 +1,2 @@
+Alternative with xargs (useful when -delete isn't available):
+find $SANDBOX -name "*.tmp" | xargs rm -f

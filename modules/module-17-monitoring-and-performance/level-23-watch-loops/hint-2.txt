@@ -1,0 +1,1 @@
+Archive the directory contents without leaving anything out.

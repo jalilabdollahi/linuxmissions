@@ -1,0 +1,1 @@
+`mkdir -p organized/shell-startup` followed by `mv inbox/shell-startup.txt organized/shell-startup/shell-startup-notes.txt` is enough.

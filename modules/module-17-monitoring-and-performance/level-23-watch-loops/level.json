@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/watch-loops/README.txt": "Watch Loops bundle\n",
+      "bundle/watch-loops/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "watch-loops-backup.tar.gz",
+    "required_entries": [
+      "bundle/watch-loops",
+      "bundle/watch-loops/README.txt",
+      "bundle/watch-loops/notes.txt"
+    ]
+  }
+}

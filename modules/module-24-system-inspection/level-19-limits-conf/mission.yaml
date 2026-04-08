@@ -1,0 +1,15 @@
+{
+  "name": "Limits Conf: Config Rewrite",
+  "description": "In the system inspection lab, a task related to Limits Conf needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in limits-conf.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Limits Conf",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-19-limits-conf"
+}

@@ -1,0 +1,1 @@
+Example: `ln -s releases/grep-count.conf current.conf`

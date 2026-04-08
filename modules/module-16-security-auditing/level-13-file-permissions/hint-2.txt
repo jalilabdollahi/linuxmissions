@@ -1,0 +1,1 @@
+Use `chmod +x jobs/file-permissions.sh` and then execute it.

@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/rsync-archive/README.txt": "Rsync Archive bundle\n",
+      "bundle/rsync-archive/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "rsync-archive-backup.tar.gz",
+    "required_entries": [
+      "bundle/rsync-archive",
+      "bundle/rsync-archive/README.txt",
+      "bundle/rsync-archive/notes.txt"
+    ]
+  }
+}

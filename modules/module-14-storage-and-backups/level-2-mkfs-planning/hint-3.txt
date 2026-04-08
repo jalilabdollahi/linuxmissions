@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' mkfs-planning.log > alerts.txt`

@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' find-size-events.txt > ok-count.txt`

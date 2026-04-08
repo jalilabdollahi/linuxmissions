@@ -1,0 +1,5 @@
+umask works by subtracting from defaults:
+Files:  666 - umask = result
+Dirs:   777 - umask = result
+
+We want files=640, dirs=750.

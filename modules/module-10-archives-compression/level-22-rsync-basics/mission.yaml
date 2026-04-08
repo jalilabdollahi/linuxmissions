@@ -1,0 +1,15 @@
+{
+  "name": "Rsync Basics: Field Extract",
+  "description": "In the archives and compression lab, a task related to Rsync Basics needs cleanup before the handoff.",
+  "objective": "Extract the second column from rsync-basics-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Rsync Basics",
+    "cut",
+    "awk"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-22-rsync-basics"
+}

@@ -1,0 +1,1 @@
+Example: `ln -s releases/auth-log.conf current.conf`

@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/prompt-customize.txt": "Prompt Customize checklist for configuration editing\n"
+    },
+    "target_path": "organized/prompt-customize/prompt-customize-notes.txt",
+    "target_text": "Prompt Customize checklist for configuration editing\n",
+    "removed_paths": [
+      "inbox/prompt-customize.txt"
+    ]
+  }
+}

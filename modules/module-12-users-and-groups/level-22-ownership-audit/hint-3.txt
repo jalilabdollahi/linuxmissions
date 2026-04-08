@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 ownership-audit-report.csv > owners.txt`

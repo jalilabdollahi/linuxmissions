@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/frequency-table/README.txt": "Frequency Table bundle\n",
+      "bundle/frequency-table/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "frequency-table-backup.tar.gz",
+    "required_entries": [
+      "bundle/frequency-table",
+      "bundle/frequency-table/README.txt",
+      "bundle/frequency-table/notes.txt"
+    ]
+  }
+}

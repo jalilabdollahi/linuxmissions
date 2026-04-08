@@ -1,0 +1,15 @@
+{
+  "name": "Comm Diff: Capacity Report",
+  "description": "In the data processing lab, a task related to Comm Diff needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Comm Diff",
+    "du",
+    "sort"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-16-comm-diff"
+}

@@ -1,0 +1,1 @@
+Example: `tar -xzf dmesg-errors-restore.tar.gz`

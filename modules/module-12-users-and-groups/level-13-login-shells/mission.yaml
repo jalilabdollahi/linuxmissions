@@ -1,0 +1,15 @@
+{
+  "name": "Login Shells: Script Kickoff",
+  "description": "In the users and groups lab, a task related to Login Shells needs cleanup before the handoff.",
+  "objective": "Make jobs/login-shells.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Login Shells",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-13-login-shells"
+}

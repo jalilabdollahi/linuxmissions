@@ -1,0 +1,1 @@
+`mkdir -p organized/shebang` followed by `mv inbox/shebang.txt organized/shebang/shebang-notes.txt` is enough.

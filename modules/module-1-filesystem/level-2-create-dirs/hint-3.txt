@@ -1,0 +1,2 @@
+Run these inside the sandbox (replace $SANDBOX with the actual path shown above):
+cd $SANDBOX && mkdir -p logs/{app,nginx} data/{uploads,cache}

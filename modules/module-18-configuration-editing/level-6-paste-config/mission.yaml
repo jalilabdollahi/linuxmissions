@@ -1,0 +1,15 @@
+{
+  "name": "Paste Config: Config Rewrite",
+  "description": "In the configuration editing lab, a task related to Paste Config needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in paste-config.conf and save the fixed result to fixed.conf",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Paste Config",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-6-paste-config"
+}

@@ -1,0 +1,1 @@
+Example: `tar -xzf expand-tabs-restore.tar.gz`

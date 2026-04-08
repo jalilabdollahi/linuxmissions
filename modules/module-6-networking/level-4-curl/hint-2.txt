@@ -1,0 +1,1 @@
+Pipe the JSON to a text tool that extracts the `status` value.

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "tls-notes.log",
+    "lines": [
+      "INFO preparing tls-notes",
+      "ALERT TLS drift detected",
+      "INFO collecting extra context",
+      "ALERT TLS rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT TLS drift detected",
+      "ALERT TLS rollback required"
+    ]
+  }
+}

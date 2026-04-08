@@ -1,0 +1,15 @@
+{
+  "name": "Nslookup: Config Rewrite",
+  "description": "In the network troubleshooting lab, a task related to Nslookup needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in nslookup.conf and save the fixed result to fixed.conf",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Nslookup",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-6-nslookup"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Dns Triage: Backup Bundle",
+  "description": "In the network troubleshooting lab, a task related to Dns Triage needs cleanup before the handoff.",
+  "objective": "Create dns-triage-backup.tar.gz containing the files under bundle/dns-triage",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Dns Triage",
+    "tar",
+    "compression"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-23-dns-triage"
+}

@@ -1,0 +1,1 @@
+Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.

@@ -1,0 +1,15 @@
+{
+  "name": "Cut Delimiters: Script Kickoff",
+  "description": "In the data processing lab, a task related to Cut Delimiters needs cleanup before the handoff.",
+  "objective": "Make jobs/cut-delimiters.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Cut Delimiters",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-13-cut-delimiters"
+}

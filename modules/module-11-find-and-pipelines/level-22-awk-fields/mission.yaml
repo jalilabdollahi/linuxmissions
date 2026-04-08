@@ -1,0 +1,15 @@
+{
+  "name": "Awk Fields: Field Extract",
+  "description": "In the search and pipelines lab, a task related to Awk Fields needs cleanup before the handoff.",
+  "objective": "Extract the second column from awk-fields-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Awk Fields",
+    "cut",
+    "awk"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-22-awk-fields"
+}

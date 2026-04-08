@@ -1,0 +1,15 @@
+{
+  "name": "Incident Notes: Backup Bundle",
+  "description": "In the security auditing lab, a task related to Incident Notes needs cleanup before the handoff.",
+  "objective": "Create incident-notes-backup.tar.gz containing the files under bundle/incident-notes",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Incident Notes",
+    "tar",
+    "compression"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-23-incident-notes"
+}

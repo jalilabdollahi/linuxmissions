@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/file-permissions.sh && jobs/file-permissions.sh`

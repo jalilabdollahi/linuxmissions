@@ -1,0 +1,15 @@
+{
+  "name": "Package Audit: Script Kickoff",
+  "description": "In the package and release operations lab, a task related to Package Audit needs cleanup before the handoff.",
+  "objective": "Make jobs/package-audit.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Package Audit",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-13-package-audit"
+}

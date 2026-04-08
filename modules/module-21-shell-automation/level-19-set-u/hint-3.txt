@@ -1,0 +1,1 @@
+Example: `sed 's/MODE=legacy/MODE=managed/g' set-u.conf > fixed.conf`

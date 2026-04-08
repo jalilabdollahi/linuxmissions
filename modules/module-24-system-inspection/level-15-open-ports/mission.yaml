@@ -1,0 +1,15 @@
+{
+  "name": "Open Ports: Metric Sum",
+  "description": "In the system inspection lab, a task related to Open Ports needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of open-ports-metrics.csv and write the total to total.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Open Ports",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-15-open-ports"
+}

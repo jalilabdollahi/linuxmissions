@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/shebang.txt": "Shebang checklist for shell automation\n"
+    },
+    "target_path": "organized/shebang/shebang-notes.txt",
+    "target_text": "Shebang checklist for shell automation\n",
+    "removed_paths": [
+      "inbox/shebang.txt"
+    ]
+  }
+}

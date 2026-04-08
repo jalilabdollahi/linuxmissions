@@ -1,0 +1,2 @@
+Add execute permission for the owner:
+chmod u+x $SANDBOX/deploy.sh

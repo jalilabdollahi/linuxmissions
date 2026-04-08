@@ -1,0 +1,11 @@
+{
+  "name": "Top Talkers",
+  "description": "Security wants to know which IPs made the most requests — a classic log analysis task.",
+  "objective": "Produce a ranked list of IPs by request count (highest first) and save to top_ips.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["sort", "uniq -c", "pipes", "awk"],
+  "module": "module-2-text",
+  "level": "level-4-sort-uniq"
+}

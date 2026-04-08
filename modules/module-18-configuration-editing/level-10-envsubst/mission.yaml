@@ -1,0 +1,15 @@
+{
+  "name": "Envsubst: Backup Bundle",
+  "description": "In the configuration editing lab, a task related to Envsubst needs cleanup before the handoff.",
+  "objective": "Create envsubst-backup.tar.gz containing the files under bundle/envsubst",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Envsubst",
+    "tar",
+    "compression"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-10-envsubst"
+}

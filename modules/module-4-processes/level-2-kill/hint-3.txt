@@ -1,0 +1,4 @@
+If it doesn't respond to SIGTERM (kill default), use SIGKILL:
+kill -9 <PID>
+# or:
+pkill -9 -f sleep_loop.sh

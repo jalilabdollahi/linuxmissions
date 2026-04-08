@@ -1,0 +1,1 @@
+Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.

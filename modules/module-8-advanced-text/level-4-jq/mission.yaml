@@ -1,0 +1,11 @@
+{
+  "name": "JSON Surgeon",
+  "description": "A nested JSON file describes an owner and a set of services. Extract the owner email and the active services into a short report.",
+  "objective": "Read data.json and write report.txt with `owner=...` and `active=...`",
+  "xp": 250,
+  "difficulty": "intermediate",
+  "expected_time": "9m",
+  "concepts": ["jq", "json", "arrays", "select"],
+  "module": "module-8-advanced-text",
+  "level": "level-4-jq"
+}

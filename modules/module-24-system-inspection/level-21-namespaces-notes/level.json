@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/namespaces-notes.txt": "Namespaces Notes checklist for system inspection\n"
+    },
+    "target_path": "organized/namespaces-notes/namespaces-notes-notes.txt",
+    "target_text": "Namespaces Notes checklist for system inspection\n",
+    "removed_paths": [
+      "inbox/namespaces-notes.txt"
+    ]
+  }
+}

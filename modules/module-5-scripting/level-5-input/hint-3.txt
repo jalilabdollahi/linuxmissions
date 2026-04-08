@@ -1,0 +1,4 @@
+One valid solution is:
+while IFS='=' read -r key value; do
+  export "$key=$value"
+done < "$1"

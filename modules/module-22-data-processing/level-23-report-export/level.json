@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/report-export/README.txt": "Report Export bundle\n",
+      "bundle/report-export/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "report-export-backup.tar.gz",
+    "required_entries": [
+      "bundle/report-export",
+      "bundle/report-export/README.txt",
+      "bundle/report-export/notes.txt"
+    ]
+  }
+}

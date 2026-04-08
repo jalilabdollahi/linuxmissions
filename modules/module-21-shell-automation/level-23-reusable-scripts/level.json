@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/reusable-scripts/README.txt": "Reusable Scripts bundle\n",
+      "bundle/reusable-scripts/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "reusable-scripts-backup.tar.gz",
+    "required_entries": [
+      "bundle/reusable-scripts",
+      "bundle/reusable-scripts/README.txt",
+      "bundle/reusable-scripts/notes.txt"
+    ]
+  }
+}

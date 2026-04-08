@@ -1,0 +1,2 @@
+Start the block with:
+/var/log/myapp/*.log {

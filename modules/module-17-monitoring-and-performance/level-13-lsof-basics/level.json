@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/lsof-basics.sh",
+    "token_path": "jobs/lsof-basics.token",
+    "token": "lsof-basics-done",
+    "initial_mode": 416
+  }
+}

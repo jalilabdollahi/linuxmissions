@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "processes-tree-1.txt",
+        "content": "processes-tree item 1\n"
+      },
+      {
+        "path": "processes-tree-2.txt",
+        "content": "processes-tree item 2\n"
+      },
+      {
+        "path": "processes-tree-3.txt",
+        "content": "processes-tree item 3\n"
+      }
+    ]
+  }
+}

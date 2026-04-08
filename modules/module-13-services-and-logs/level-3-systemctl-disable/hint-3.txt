@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' systemctl-disable-events.txt > ok-count.txt`

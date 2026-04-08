@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Local environment / secrets
+.env
+.env.*
+*.env
+
+# Local game state
+progress.json
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Test / runtime artifacts
+*.log
+.pytest_cache/
+.mypy_cache/
+
+# Local sandbox / generated temporary files
+certificates/
+completion/

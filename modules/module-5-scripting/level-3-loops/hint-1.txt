@@ -1,0 +1,4 @@
+Loop over matching files:
+for file in "$1"/*.txt; do
+  ...
+done

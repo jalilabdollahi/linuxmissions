@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'comm-compare item %s\n' "$n" > generated/comm-compare-$n.txt; done`

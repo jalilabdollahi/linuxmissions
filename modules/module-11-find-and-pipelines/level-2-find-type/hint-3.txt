@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' find-type.log > alerts.txt`

@@ -1,0 +1,16 @@
+{
+  "name": "Timer Audit: Path Realignment",
+  "description": "In the scheduling and jobs lab, a task related to Timer Audit needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/timer-audit.txt to organized/timer-audit/timer-audit-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Timer Audit",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-21-timer-audit"
+}

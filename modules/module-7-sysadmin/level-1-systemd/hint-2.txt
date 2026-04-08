@@ -1,0 +1,2 @@
+Enable the service first:
+./systemctl enable myapp.service

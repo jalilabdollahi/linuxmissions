@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/umask-basics/README.txt": "Umask Basics bundle\n",
+      "bundle/umask-basics/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "umask-basics-backup.tar.gz",
+    "required_entries": [
+      "bundle/umask-basics",
+      "bundle/umask-basics/README.txt",
+      "bundle/umask-basics/notes.txt"
+    ]
+  }
+}

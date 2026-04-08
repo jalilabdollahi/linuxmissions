@@ -1,0 +1,16 @@
+{
+  "name": "Sed Inplace: Event Counter",
+  "description": "In the configuration editing lab, a task related to Sed Inplace needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in sed-inplace-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Sed Inplace",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-3-sed-inplace"
+}

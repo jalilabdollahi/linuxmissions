@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/snapshot-notes.txt": "Snapshot Notes checklist for storage and backups\n"
+    },
+    "target_path": "organized/snapshot-notes/snapshot-notes-notes.txt",
+    "target_text": "Snapshot Notes checklist for storage and backups\n",
+    "removed_paths": [
+      "inbox/snapshot-notes.txt"
+    ]
+  }
+}

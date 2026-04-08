@@ -1,0 +1,11 @@
+{
+  "name": "Default Lockdown",
+  "description": "New files created by an app have world-writable permissions. The default umask is too permissive.",
+  "objective": "Understand what umask value produces 640 for files and 750 for dirs. Write the answer to umask_answer.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["umask", "default permissions", "022", "027"],
+  "module": "module-3-permissions",
+  "level": "level-6-umask"
+}

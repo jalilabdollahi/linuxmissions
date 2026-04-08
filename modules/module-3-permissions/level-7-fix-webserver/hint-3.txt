@@ -1,0 +1,4 @@
+Why not just chmod -R 644?
+Because -R applies the same permission to both files AND directories.
+Directories need execute (x) to be traversed — 644 would lock you out!
+Always use find to set files and directories separately.

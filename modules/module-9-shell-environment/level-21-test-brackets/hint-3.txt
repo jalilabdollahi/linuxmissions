@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/test-brackets && mv inbox/test-brackets.txt organized/test-brackets/test-brackets-notes.txt`

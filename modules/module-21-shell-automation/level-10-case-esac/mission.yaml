@@ -1,0 +1,15 @@
+{
+  "name": "Case Esac: Backup Bundle",
+  "description": "In the shell automation lab, a task related to Case Esac needs cleanup before the handoff.",
+  "objective": "Create case-esac-backup.tar.gz containing the files under bundle/case-esac",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Case Esac",
+    "tar",
+    "compression"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-10-case-esac"
+}

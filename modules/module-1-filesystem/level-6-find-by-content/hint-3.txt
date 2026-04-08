@@ -1,0 +1,2 @@
+Save the result:
+grep -rl "password=" $SANDBOX > $SANDBOX/leak.txt

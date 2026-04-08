@@ -1,0 +1,15 @@
+{
+  "name": "Outage Brief: Permission Fix",
+  "description": "In the network troubleshooting lab, a task related to Outage Brief needs cleanup before the handoff.",
+  "objective": "Set the mode of outage-brief.sh to 640",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Outage Brief",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-24-outage-brief"
+}

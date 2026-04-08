@@ -1,0 +1,2 @@
+First see what you're targeting:
+find $SANDBOX -name "*.tmp"

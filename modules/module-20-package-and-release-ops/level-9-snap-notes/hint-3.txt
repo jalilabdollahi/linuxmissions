@@ -1,0 +1,1 @@
+Example: `ln -s releases/snap-notes.conf current.conf`

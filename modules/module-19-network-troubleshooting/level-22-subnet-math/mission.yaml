@@ -1,0 +1,15 @@
+{
+  "name": "Subnet Math: Field Extract",
+  "description": "In the network troubleshooting lab, a task related to Subnet Math needs cleanup before the handoff.",
+  "objective": "Extract the second column from subnet-math-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Subnet Math",
+    "cut",
+    "awk"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-22-subnet-math"
+}

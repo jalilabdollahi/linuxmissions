@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/csv-cleanup.txt": "Csv Cleanup checklist for data processing\n"
+    },
+    "target_path": "organized/csv-cleanup/csv-cleanup-notes.txt",
+    "target_text": "Csv Cleanup checklist for data processing\n",
+    "removed_paths": [
+      "inbox/csv-cleanup.txt"
+    ]
+  }
+}

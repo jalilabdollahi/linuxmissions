@@ -1,0 +1,3 @@
+The sticky bit shows as 't' in ls -ld output.
+Check the current state:
+ls -ld $SANDBOX/shared

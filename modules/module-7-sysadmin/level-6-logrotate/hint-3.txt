@@ -1,0 +1,6 @@
+A minimal valid file is:
+/var/log/myapp/*.log {
+  daily
+  rotate 7
+  compress
+}

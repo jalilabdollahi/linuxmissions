@@ -1,0 +1,15 @@
+{
+  "name": "Ownership Audit: Field Extract",
+  "description": "In the users and groups lab, a task related to Ownership Audit needs cleanup before the handoff.",
+  "objective": "Extract the second column from ownership-audit-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Ownership Audit",
+    "cut",
+    "awk"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-22-ownership-audit"
+}

@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "timestamps-restore.tar.gz",
+    "archived_files": {
+      "restored/timestamps/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/timestamps/token.txt": "timestamps-token\n"
+    },
+    "required_files": {
+      "restored/timestamps/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/timestamps/token.txt": "timestamps-token\n"
+    }
+  }
+}

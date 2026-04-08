@@ -1,0 +1,15 @@
+{
+  "name": "Config Storm: Metric Sum",
+  "description": "In the linux war games lab, a task related to Config Storm needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of config-storm-metrics.csv and write the total to total.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Config Storm",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-15-config-storm"
+}

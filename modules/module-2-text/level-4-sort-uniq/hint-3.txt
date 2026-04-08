@@ -1,0 +1,2 @@
+Save to top_ips.txt:
+awk '{print $1}' $SANDBOX/access.log | sort | uniq -c | sort -rn > $SANDBOX/top_ips.txt

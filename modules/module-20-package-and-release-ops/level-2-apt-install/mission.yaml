@@ -1,0 +1,15 @@
+{
+  "name": "Apt Install: Alert Filter",
+  "description": "In the package and release operations lab, a task related to Apt Install needs cleanup before the handoff.",
+  "objective": "Write every alert line from apt-install.log into alerts.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Apt Install",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-2-apt-install"
+}

@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "link-labyrinth-1.txt",
+        "content": "link-labyrinth item 1\n"
+      },
+      {
+        "path": "link-labyrinth-2.txt",
+        "content": "link-labyrinth item 2\n"
+      },
+      {
+        "path": "link-labyrinth-3.txt",
+        "content": "link-labyrinth item 3\n"
+      }
+    ]
+  }
+}

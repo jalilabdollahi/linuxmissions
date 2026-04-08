@@ -1,0 +1,11 @@
+{
+  "name": "Error Extraction",
+  "description": "Ops needs a report of all ERROR and FATAL lines from the log for the post-mortem.",
+  "objective": "Extract all lines containing ERROR or FATAL from app.log and save to errors.txt",
+  "xp": 120,
+  "difficulty": "beginner",
+  "expected_time": "8m",
+  "concepts": ["grep", "-E", "regex", "alternation", "|"],
+  "module": "module-2-text",
+  "level": "level-2-grep-pattern"
+}

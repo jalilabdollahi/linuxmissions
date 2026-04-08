@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/symbolic-links.sh && jobs/symbolic-links.sh`

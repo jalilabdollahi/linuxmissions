@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' chmod-octal.log > alerts.txt`

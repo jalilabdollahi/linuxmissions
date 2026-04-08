@@ -1,0 +1,15 @@
+{
+  "name": "Loops While: Cleanup Sweep",
+  "description": "In the shell automation lab, a task related to Loops While needs cleanup before the handoff.",
+  "objective": "Delete only the `.tmp` files under cleanup/loops-while and leave the other files intact",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Loops While",
+    "find",
+    "rm"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-8-loops-while"
+}

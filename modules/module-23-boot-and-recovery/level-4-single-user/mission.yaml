@@ -1,0 +1,15 @@
+{
+  "name": "Single User: Noise Dedup",
+  "description": "In the boot and recovery lab, a task related to Single User needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from single-user-raw.txt with sorted unique values",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Single User",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-4-single-user"
+}

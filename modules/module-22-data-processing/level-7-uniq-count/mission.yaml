@@ -1,0 +1,15 @@
+{
+  "name": "Uniq Count: History Window",
+  "description": "In the data processing lab, a task related to Uniq Count needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of uniq-count-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Uniq Count",
+    "head",
+    "tail"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-7-uniq-count"
+}

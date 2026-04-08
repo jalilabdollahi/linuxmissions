@@ -1,0 +1,1 @@
+Example: `tar -czf nginx-log-backup.tar.gz bundle/nginx-log`

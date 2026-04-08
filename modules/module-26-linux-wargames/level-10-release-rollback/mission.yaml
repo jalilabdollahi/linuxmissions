@@ -1,0 +1,15 @@
+{
+  "name": "Release Rollback: Backup Bundle",
+  "description": "In the linux war games lab, a task related to Release Rollback needs cleanup before the handoff.",
+  "objective": "Create release-rollback-backup.tar.gz containing the files under bundle/release-rollback",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Release Rollback",
+    "tar",
+    "compression"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-10-release-rollback"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Processes Tree: Loop Builder",
+  "description": "In the system inspection lab, a task related to Processes Tree needs cleanup before the handoff.",
+  "objective": "Create three files under generated/ named processes-tree-1.txt through processes-tree-3.txt with matching numbered content",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Processes Tree",
+    "for",
+    "seq",
+    "printf"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-14-processes-tree"
+}

@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 uptime-planning-report.csv > owners.txt`

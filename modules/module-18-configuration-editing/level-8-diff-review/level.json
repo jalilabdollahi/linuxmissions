@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/diff-review/keep.txt": "keep\n",
+      "cleanup/diff-review/old-1.tmp": "junk\n",
+      "cleanup/diff-review/old-2.tmp": "junk\n",
+      "cleanup/diff-review/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/diff-review/old-1.tmp",
+      "cleanup/diff-review/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/diff-review/keep.txt",
+      "cleanup/diff-review/notes.md"
+    ]
+  }
+}

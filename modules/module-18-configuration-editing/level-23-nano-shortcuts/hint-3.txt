@@ -1,0 +1,1 @@
+Example: `tar -czf nano-shortcuts-backup.tar.gz bundle/nano-shortcuts`

@@ -1,0 +1,11 @@
+{
+  "name": "The Audit Trail",
+  "description": "A shell script logs who runs it. You must identify which files in the sandbox have SUID or SGID bits set — a common security audit task.",
+  "objective": "Find all files with SUID or SGID bits set and save their paths to suid_files.txt",
+  "xp": 200,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["find", "-perm", "SUID", "SGID", "4000", "2000", "security"],
+  "module": "module-3-permissions",
+  "level": "level-5-setuid"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Tabular Output: Noise Dedup",
+  "description": "In the data processing lab, a task related to Tabular Output needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from tabular-output-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Tabular Output",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-20-tabular-output"
+}

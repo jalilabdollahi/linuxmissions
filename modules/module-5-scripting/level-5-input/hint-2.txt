@@ -1,0 +1,2 @@
+Export each key/value pair:
+export "$key=$value"

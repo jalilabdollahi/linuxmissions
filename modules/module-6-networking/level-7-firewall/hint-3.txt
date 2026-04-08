@@ -1,0 +1,2 @@
+One valid command is:
+grep DROP firewall.rules | awk '{for (i=1; i<=NF; i++) if ($i=="--dport") print $(i+1)}' > blocked_port.txt

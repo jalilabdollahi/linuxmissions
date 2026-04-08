@@ -1,0 +1,11 @@
+{
+  "name": "Process Detective",
+  "description": "Something is consuming CPU. You need to identify the top CPU-consuming processes and document them.",
+  "objective": "List the top 5 CPU-consuming processes and save the output to top_procs.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": ["ps", "aux", "top", "--sort", "head"],
+  "module": "module-4-processes",
+  "level": "level-1-ps-find"
+}

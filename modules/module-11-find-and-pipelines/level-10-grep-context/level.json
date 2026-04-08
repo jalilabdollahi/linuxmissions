@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/grep-context/README.txt": "Grep Context bundle\n",
+      "bundle/grep-context/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "grep-context-backup.tar.gz",
+    "required_entries": [
+      "bundle/grep-context",
+      "bundle/grep-context/README.txt",
+      "bundle/grep-context/notes.txt"
+    ]
+  }
+}

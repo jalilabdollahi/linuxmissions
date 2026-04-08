@@ -1,0 +1,2 @@
+grep can search file contents recursively:
+grep -r "password=" $SANDBOX

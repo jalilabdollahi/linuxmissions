@@ -1,0 +1,15 @@
+{
+  "name": "Proc Cpuinfo: Capacity Report",
+  "description": "In the services and logs lab, a task related to Proc Cpuinfo needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Proc Cpuinfo",
+    "du",
+    "sort"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-16-proc-cpuinfo"
+}

@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/shell-startup && mv inbox/shell-startup.txt organized/shell-startup/shell-startup-notes.txt`

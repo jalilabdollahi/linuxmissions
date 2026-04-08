@@ -1,0 +1,16 @@
+{
+  "name": "Summary Totals: Path Realignment",
+  "description": "In the data processing lab, a task related to Summary Totals needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/summary-totals.txt to organized/summary-totals/summary-totals-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Summary Totals",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-21-summary-totals"
+}

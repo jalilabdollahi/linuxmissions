@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "resolv-debug-1.txt",
+        "content": "resolv-debug item 1\n"
+      },
+      {
+        "path": "resolv-debug-2.txt",
+        "content": "resolv-debug item 2\n"
+      },
+      {
+        "path": "resolv-debug-3.txt",
+        "content": "resolv-debug item 3\n"
+      }
+    ]
+  }
+}

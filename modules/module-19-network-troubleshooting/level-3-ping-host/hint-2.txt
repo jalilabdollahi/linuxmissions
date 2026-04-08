@@ -1,0 +1,1 @@
+A grep count or grep piped into wc can produce the number you need.

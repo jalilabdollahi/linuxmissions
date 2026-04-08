@@ -1,0 +1,16 @@
+{
+  "name": "Broken Backup: Path Realignment",
+  "description": "In the linux war games lab, a task related to Broken Backup needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/broken-backup.txt to organized/broken-backup/broken-backup-notes.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Broken Backup",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-1-broken-backup"
+}

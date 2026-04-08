@@ -1,0 +1,8 @@
+{
+  "task": {
+    "type": "symlink_target",
+    "target_path": "releases/patch-apply.conf",
+    "target_text": "Patch Apply release payload\n",
+    "link_path": "current.conf"
+  }
+}

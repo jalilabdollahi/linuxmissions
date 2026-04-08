@@ -1,0 +1,15 @@
+{
+  "name": "Grep Count: Link Repair",
+  "description": "In the search and pipelines lab, a task related to Grep Count needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/grep-count.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Grep Count",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-9-grep-count"
+}

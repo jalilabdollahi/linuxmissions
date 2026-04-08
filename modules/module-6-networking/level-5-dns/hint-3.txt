@@ -1,0 +1,4 @@
+One valid pattern is:
+while read -r host; do
+  echo "$host $(./mock_dig.sh "$host")"
+done < hosts.txt > resolved.txt

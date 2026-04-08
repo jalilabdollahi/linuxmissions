@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/cron-syntax.txt": "Cron Syntax checklist for scheduling and jobs\n"
+    },
+    "target_path": "organized/cron-syntax/cron-syntax-notes.txt",
+    "target_text": "Cron Syntax checklist for scheduling and jobs\n",
+    "removed_paths": [
+      "inbox/cron-syntax.txt"
+    ]
+  }
+}

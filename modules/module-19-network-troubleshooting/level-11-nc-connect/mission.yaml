@@ -1,0 +1,15 @@
+{
+  "name": "Nc Connect: Restore Drill",
+  "description": "In the network troubleshooting lab, a task related to Nc Connect needs cleanup before the handoff.",
+  "objective": "Extract nc-connect-restore.tar.gz so the restored/nc-connect directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Nc Connect",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-11-nc-connect"
+}

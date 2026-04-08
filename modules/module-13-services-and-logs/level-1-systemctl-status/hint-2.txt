@@ -1,0 +1,1 @@
+`mkdir -p organized/systemctl-status` followed by `mv inbox/systemctl-status.txt organized/systemctl-status/systemctl-status-notes.txt` is enough.

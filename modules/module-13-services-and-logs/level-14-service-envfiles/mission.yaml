@@ -1,0 +1,16 @@
+{
+  "name": "Service Envfiles: Loop Builder",
+  "description": "In the services and logs lab, a task related to Service Envfiles needs cleanup before the handoff.",
+  "objective": "Create three files under generated/ named service-envfiles-1.txt through service-envfiles-3.txt with matching numbered content",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Service Envfiles",
+    "for",
+    "seq",
+    "printf"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-14-service-envfiles"
+}

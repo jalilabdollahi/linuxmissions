@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/release-rollback/README.txt": "Release Rollback bundle\n",
+      "bundle/release-rollback/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "release-rollback-backup.tar.gz",
+    "required_entries": [
+      "bundle/release-rollback",
+      "bundle/release-rollback/README.txt",
+      "bundle/release-rollback/notes.txt"
+    ]
+  }
+}

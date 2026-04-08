@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/expect-notes/README.txt": "Expect Notes bundle\n",
+      "bundle/expect-notes/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "expect-notes-backup.tar.gz",
+    "required_entries": [
+      "bundle/expect-notes",
+      "bundle/expect-notes/README.txt",
+      "bundle/expect-notes/notes.txt"
+    ]
+  }
+}

@@ -1,0 +1,2 @@
+Check current permissions:
+ls -la $SANDBOX/deploy.sh

@@ -1,0 +1,16 @@
+{
+  "name": "Ping Host: Event Counter",
+  "description": "In the network troubleshooting lab, a task related to Ping Host needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in ping-host-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Ping Host",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-3-ping-host"
+}

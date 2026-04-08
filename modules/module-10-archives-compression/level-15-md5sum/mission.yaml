@@ -1,0 +1,15 @@
+{
+  "name": "Md5Sum: Metric Sum",
+  "description": "In the archives and compression lab, a task related to Md5Sum needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of md5sum-metrics.csv and write the total to total.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Md5Sum",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-15-md5sum"
+}

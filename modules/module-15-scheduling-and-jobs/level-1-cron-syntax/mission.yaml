@@ -1,0 +1,16 @@
+{
+  "name": "Cron Syntax: Path Realignment",
+  "description": "In the scheduling and jobs lab, a task related to Cron Syntax needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/cron-syntax.txt to organized/cron-syntax/cron-syntax-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Cron Syntax",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-1-cron-syntax"
+}

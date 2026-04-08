@@ -1,0 +1,1 @@
+Example: `sed 's/MODE=legacy/MODE=managed/g' grep-fixed.conf > fixed.conf`

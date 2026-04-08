@@ -1,0 +1,11 @@
+{
+  "name": "Pack and Unpack",
+  "description": "A backup archive arrived but the files need to be extracted. Then you must archive the results directory.",
+  "objective": "Extract backup.tar.gz into extracted/, then create archive.tar.gz containing all .log files from logs/",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["tar", "-xzf", "-czf", "gzip", "compression"],
+  "module": "module-1-filesystem",
+  "level": "level-8-archives"
+}

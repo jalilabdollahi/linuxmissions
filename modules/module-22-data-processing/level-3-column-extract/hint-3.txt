@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' column-extract-events.txt > ok-count.txt`

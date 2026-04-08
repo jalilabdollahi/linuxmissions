@@ -1,0 +1,1 @@
+Loop through hosts.txt and print both the hostname and the resolved IP.

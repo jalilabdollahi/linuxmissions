@@ -1,0 +1,15 @@
+{
+  "name": "Lsblk: Noise Dedup",
+  "description": "In the archives and compression lab, a task related to Lsblk needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from lsblk-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Lsblk",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-20-lsblk"
+}

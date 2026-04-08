@@ -1,0 +1,1 @@
+Example: `ln -s releases/bg-fg.conf current.conf`

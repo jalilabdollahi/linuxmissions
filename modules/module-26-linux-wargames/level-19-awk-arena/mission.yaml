@@ -1,0 +1,15 @@
+{
+  "name": "Awk Arena: Config Rewrite",
+  "description": "In the linux war games lab, a task related to Awk Arena needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in awk-arena.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Awk Arena",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-19-awk-arena"
+}

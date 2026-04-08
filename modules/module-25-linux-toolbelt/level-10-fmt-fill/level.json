@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/fmt-fill/README.txt": "Fmt Fill bundle\n",
+      "bundle/fmt-fill/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "fmt-fill-backup.tar.gz",
+    "required_entries": [
+      "bundle/fmt-fill",
+      "bundle/fmt-fill/README.txt",
+      "bundle/fmt-fill/notes.txt"
+    ]
+  }
+}

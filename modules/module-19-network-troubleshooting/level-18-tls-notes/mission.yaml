@@ -1,0 +1,15 @@
+{
+  "name": "Tls Notes: Alert Filter",
+  "description": "In the network troubleshooting lab, a task related to Tls Notes needs cleanup before the handoff.",
+  "objective": "Write every alert line from tls-notes.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Tls Notes",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-18-tls-notes"
+}

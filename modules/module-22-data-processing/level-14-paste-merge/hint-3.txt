@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'paste-merge item %s\n' "$n" > generated/paste-merge-$n.txt; done`

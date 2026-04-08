@@ -1,0 +1,4 @@
+Put the repeated logic in one function:
+deploy_service() {
+  ...
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Forensic Dump: Cleanup Sweep",
+  "description": "In the linux war games lab, a task related to Forensic Dump needs cleanup before the handoff.",
+  "objective": "Delete only the `.tmp` files under cleanup/forensic-dump and leave the other files intact",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "15m",
+  "concepts": [
+    "Forensic Dump",
+    "find",
+    "rm"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-27-forensic-dump"
+}

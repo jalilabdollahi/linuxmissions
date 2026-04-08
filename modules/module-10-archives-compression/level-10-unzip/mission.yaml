@@ -1,0 +1,15 @@
+{
+  "name": "Unzip: Backup Bundle",
+  "description": "In the archives and compression lab, a task related to Unzip needs cleanup before the handoff.",
+  "objective": "Create unzip-backup.tar.gz containing the files under bundle/unzip",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Unzip",
+    "tar",
+    "compression"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-10-unzip"
+}

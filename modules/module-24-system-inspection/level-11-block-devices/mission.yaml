@@ -1,0 +1,15 @@
+{
+  "name": "Block Devices: Restore Drill",
+  "description": "In the system inspection lab, a task related to Block Devices needs cleanup before the handoff.",
+  "objective": "Extract block-devices-restore.tar.gz so the restored/block-devices directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Block Devices",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-11-block-devices"
+}

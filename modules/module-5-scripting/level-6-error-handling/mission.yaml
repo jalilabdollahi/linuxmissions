@@ -1,0 +1,11 @@
+{
+  "name": "Fail Loudly",
+  "description": "A fragile script crashes in confusing ways. Harden it so failures stop early and missing input gets a clear error message.",
+  "objective": "Fix safe_copy.sh so it uses strict mode and prints `SOURCE_FILE is required` when no source path is passed",
+  "xp": 220,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["set -euo pipefail", "trap", "stderr", "exit 1"],
+  "module": "module-5-scripting",
+  "level": "level-6-error-handling"
+}

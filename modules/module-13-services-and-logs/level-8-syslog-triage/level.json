@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/syslog-triage/keep.txt": "keep\n",
+      "cleanup/syslog-triage/old-1.tmp": "junk\n",
+      "cleanup/syslog-triage/old-2.tmp": "junk\n",
+      "cleanup/syslog-triage/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/syslog-triage/old-1.tmp",
+      "cleanup/syslog-triage/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/syslog-triage/keep.txt",
+      "cleanup/syslog-triage/notes.md"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Wget Mirror: Link Repair",
+  "description": "In the network troubleshooting lab, a task related to Wget Mirror needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/wget-mirror.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Wget Mirror",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-9-wget-mirror"
+}

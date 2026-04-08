@@ -1,0 +1,11 @@
+{
+  "name": "Web Server 403",
+  "description": "Nginx returns 403 Forbidden on every request. The web root directory and files have wrong permissions.",
+  "objective": "Fix the web root: directories need 755, HTML files need 644, and the webroot itself must be readable",
+  "xp": 200,
+  "difficulty": "intermediate",
+  "expected_time": "12m",
+  "concepts": ["chmod", "-R", "find -exec", "web server permissions", "644", "755"],
+  "module": "module-3-permissions",
+  "level": "level-7-fix-webserver"
+}

@@ -1,0 +1,32 @@
+{
+  "task": {
+    "type": "head_tail",
+    "input_file": "nice-values-history.log",
+    "lines": [
+      "entry-1",
+      "entry-2",
+      "entry-3",
+      "entry-4",
+      "entry-5",
+      "entry-6",
+      "entry-7",
+      "entry-8",
+      "entry-9",
+      "entry-10",
+      "entry-11",
+      "entry-12"
+    ],
+    "first_output": "first3.txt",
+    "last_output": "last3.txt",
+    "expected_first": [
+      "entry-1",
+      "entry-2",
+      "entry-3"
+    ],
+    "expected_last": [
+      "entry-10",
+      "entry-11",
+      "entry-12"
+    ]
+  }
+}

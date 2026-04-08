@@ -1,0 +1,11 @@
+{
+  "name": "Parallel Grep",
+  "description": "A keyword is hidden somewhere across a pile of files. Search in parallel and identify which file contains it.",
+  "objective": "Find the file containing `NEBULA_KEY` and write just the filename to match.txt",
+  "xp": 270,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["xargs", "-P", "grep", "parallel search"],
+  "module": "module-8-advanced-text",
+  "level": "level-5-xargs"
+}

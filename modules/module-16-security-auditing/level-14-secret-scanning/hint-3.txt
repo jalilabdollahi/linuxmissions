@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'secret-scanning item %s\n' "$n" > generated/secret-scanning-$n.txt; done`

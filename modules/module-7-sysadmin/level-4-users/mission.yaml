@@ -1,0 +1,11 @@
+{
+  "name": "New Hire",
+  "description": "A mock user database in the sandbox needs a new developer account. Use the provided helpers to add the user and put them in the docker group.",
+  "objective": "Use the sandbox helpers to create `devuser` and add them to the `docker` group",
+  "xp": 220,
+  "difficulty": "intermediate",
+  "expected_time": "9m",
+  "concepts": ["useradd", "usermod -aG", "groups", "id"],
+  "module": "module-7-sysadmin",
+  "level": "level-4-users"
+}

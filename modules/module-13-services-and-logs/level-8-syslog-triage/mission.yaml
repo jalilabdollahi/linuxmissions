@@ -1,0 +1,15 @@
+{
+  "name": "Syslog Triage: Cleanup Sweep",
+  "description": "In the services and logs lab, a task related to Syslog Triage needs cleanup before the handoff.",
+  "objective": "Delete only the `.tmp` files under cleanup/syslog-triage and leave the other files intact",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Syslog Triage",
+    "find",
+    "rm"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-8-syslog-triage"
+}

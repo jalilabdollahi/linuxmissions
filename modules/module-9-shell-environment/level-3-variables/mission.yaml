@@ -1,0 +1,16 @@
+{
+  "name": "Variables: Event Counter",
+  "description": "In the shell environment lab, a task related to Variables needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in variables-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Variables",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-3-variables"
+}

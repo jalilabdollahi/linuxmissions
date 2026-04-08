@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'split-by-lines item %s\n' "$n" > generated/split-by-lines-$n.txt; done`

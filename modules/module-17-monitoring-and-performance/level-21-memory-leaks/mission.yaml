@@ -1,0 +1,16 @@
+{
+  "name": "Memory Leaks: Path Realignment",
+  "description": "In the monitoring and performance lab, a task related to Memory Leaks needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/memory-leaks.txt to organized/memory-leaks/memory-leaks-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Memory Leaks",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-21-memory-leaks"
+}

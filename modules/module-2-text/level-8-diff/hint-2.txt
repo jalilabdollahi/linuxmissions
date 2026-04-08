@@ -1,0 +1,2 @@
+-u gives unified format (used by git diff and patches):
+diff -u $SANDBOX/v1.conf $SANDBOX/v2.conf

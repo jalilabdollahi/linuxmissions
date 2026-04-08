@@ -1,0 +1,15 @@
+{
+  "name": "Pipefail: Noise Dedup",
+  "description": "In the shell automation lab, a task related to Pipefail needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from pipefail-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Pipefail",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-20-pipefail"
+}

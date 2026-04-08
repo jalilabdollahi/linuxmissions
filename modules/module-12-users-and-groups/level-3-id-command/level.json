@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "count_pattern",
+    "input_file": "id-command-events.txt",
+    "lines": [
+      "ok",
+      "warn",
+      "ok",
+      "error",
+      "ok",
+      "error",
+      "ok",
+      "ok"
+    ],
+    "pattern": "ok",
+    "output_file": "ok-count.txt",
+    "expected_value": 5
+  }
+}

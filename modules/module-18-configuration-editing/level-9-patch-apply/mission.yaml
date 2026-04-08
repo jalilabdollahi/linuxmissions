@@ -1,0 +1,15 @@
+{
+  "name": "Patch Apply: Link Repair",
+  "description": "In the configuration editing lab, a task related to Patch Apply needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/patch-apply.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Patch Apply",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-9-patch-apply"
+}

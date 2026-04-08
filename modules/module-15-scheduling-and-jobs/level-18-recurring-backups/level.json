@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "recurring-backups.log",
+    "lines": [
+      "INFO preparing recurring-backups",
+      "ALERT RECURRING drift detected",
+      "INFO collecting extra context",
+      "ALERT RECURRING rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT RECURRING drift detected",
+      "ALERT RECURRING rollback required"
+    ]
+  }
+}

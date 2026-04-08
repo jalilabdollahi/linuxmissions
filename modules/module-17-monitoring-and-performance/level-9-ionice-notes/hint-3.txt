@@ -1,0 +1,1 @@
+Example: `ln -s releases/ionice-notes.conf current.conf`

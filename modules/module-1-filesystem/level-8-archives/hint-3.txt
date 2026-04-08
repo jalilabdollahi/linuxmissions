@@ -1,0 +1,2 @@
+Verify contents of an archive without extracting:
+tar -tzf $SANDBOX/archive.tar.gz

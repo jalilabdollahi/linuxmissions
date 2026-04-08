@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'json-notes item %s\n' "$n" > generated/json-notes-$n.txt; done`

@@ -1,0 +1,1 @@
+Example: `sed 's/MODE=legacy/MODE=managed/g' base64-encode.conf > fixed.conf`

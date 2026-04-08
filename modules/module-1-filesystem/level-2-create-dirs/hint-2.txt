@@ -1,0 +1,2 @@
+You can create multiple directories at once with brace expansion:
+mkdir -p logs/{app,nginx} data/{uploads,cache}

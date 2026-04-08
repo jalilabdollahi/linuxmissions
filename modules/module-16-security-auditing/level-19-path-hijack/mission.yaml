@@ -1,0 +1,15 @@
+{
+  "name": "Path Hijack: Config Rewrite",
+  "description": "In the security auditing lab, a task related to Path Hijack needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in path-hijack.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Path Hijack",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-19-path-hijack"
+}

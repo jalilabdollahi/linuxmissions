@@ -1,0 +1,15 @@
+{
+  "name": "Disown: Restore Drill",
+  "description": "In the scheduling and jobs lab, a task related to Disown needs cleanup before the handoff.",
+  "objective": "Extract disown-restore.tar.gz so the restored/disown directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Disown",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-11-disown"
+}

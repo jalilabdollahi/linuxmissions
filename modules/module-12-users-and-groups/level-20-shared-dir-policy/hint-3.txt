@@ -1,0 +1,1 @@
+Example: `sort shared-dir-policy-raw.txt | uniq > unique-sorted.txt`

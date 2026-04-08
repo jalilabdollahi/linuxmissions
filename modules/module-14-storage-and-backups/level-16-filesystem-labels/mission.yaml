@@ -1,0 +1,15 @@
+{
+  "name": "Filesystem Labels: Capacity Report",
+  "description": "In the storage and backups lab, a task related to Filesystem Labels needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Filesystem Labels",
+    "du",
+    "sort"
+  ],
+  "module": "module-14-storage-and-backups",
+  "level": "level-16-filesystem-labels"
+}

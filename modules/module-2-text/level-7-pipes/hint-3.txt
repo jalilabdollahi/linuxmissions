@@ -1,0 +1,2 @@
+Save it:
+grep " POST " $SANDBOX/access.log | awk '{print $1}' | sort | uniq -c | sort -rn > $SANDBOX/post_ips.txt

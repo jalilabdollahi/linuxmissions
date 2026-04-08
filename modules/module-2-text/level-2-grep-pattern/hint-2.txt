@@ -1,0 +1,2 @@
+Use -E for extended regex and | for alternation:
+grep -E "ERROR|FATAL" $SANDBOX/app.log

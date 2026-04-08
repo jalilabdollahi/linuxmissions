@@ -1,0 +1,2 @@
+Sum of field 4 (bytes) using awk:
+awk '{sum += $4} END {print sum}' $SANDBOX/access.log

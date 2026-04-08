@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/forensic-dump/keep.txt": "keep\n",
+      "cleanup/forensic-dump/old-1.tmp": "junk\n",
+      "cleanup/forensic-dump/old-2.tmp": "junk\n",
+      "cleanup/forensic-dump/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/forensic-dump/old-1.tmp",
+      "cleanup/forensic-dump/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/forensic-dump/keep.txt",
+      "cleanup/forensic-dump/notes.md"
+    ]
+  }
+}

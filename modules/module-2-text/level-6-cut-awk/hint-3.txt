@@ -1,0 +1,2 @@
+Alternative with awk (more flexible):
+awk -F, '{print $1","$3}' $SANDBOX/users.csv > $SANDBOX/extract.csv

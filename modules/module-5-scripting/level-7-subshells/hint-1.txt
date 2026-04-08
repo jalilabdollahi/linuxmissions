@@ -1,0 +1,4 @@
+Run each task in the background:
+./task-a.sh &
+./task-b.sh &
+./task-c.sh &

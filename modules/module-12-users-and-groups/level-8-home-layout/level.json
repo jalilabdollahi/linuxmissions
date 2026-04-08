@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/home-layout/keep.txt": "keep\n",
+      "cleanup/home-layout/old-1.tmp": "junk\n",
+      "cleanup/home-layout/old-2.tmp": "junk\n",
+      "cleanup/home-layout/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/home-layout/old-1.tmp",
+      "cleanup/home-layout/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/home-layout/keep.txt",
+      "cleanup/home-layout/notes.md"
+    ]
+  }
+}

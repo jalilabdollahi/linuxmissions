@@ -1,0 +1,2 @@
+Cron format is:
+minute hour day month weekday command

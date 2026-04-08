@@ -1,0 +1,15 @@
+{
+  "name": "Arithmetic: Script Kickoff",
+  "description": "In the shell automation lab, a task related to Arithmetic needs cleanup before the handoff.",
+  "objective": "Make jobs/arithmetic.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Arithmetic",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-13-arithmetic"
+}

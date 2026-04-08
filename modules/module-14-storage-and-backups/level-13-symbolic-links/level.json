@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/symbolic-links.sh",
+    "token_path": "jobs/symbolic-links.token",
+    "token": "symbolic-links-done",
+    "initial_mode": 416
+  }
+}

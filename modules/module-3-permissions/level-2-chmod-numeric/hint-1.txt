@@ -1,0 +1,3 @@
+Octal permissions: each digit = owner/group/others
+4=read, 2=write, 1=execute (add them up)
+644 = rw-r--r--  (owner rw, group r, others r)

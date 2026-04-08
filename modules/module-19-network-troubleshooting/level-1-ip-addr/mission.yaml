@@ -1,0 +1,16 @@
+{
+  "name": "Ip Addr: Path Realignment",
+  "description": "In the network troubleshooting lab, a task related to Ip Addr needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/ip-addr.txt to organized/ip-addr/ip-addr-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Ip Addr",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-1-ip-addr"
+}

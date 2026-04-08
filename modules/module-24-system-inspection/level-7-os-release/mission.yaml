@@ -1,0 +1,15 @@
+{
+  "name": "Os Release: History Window",
+  "description": "In the system inspection lab, a task related to Os Release needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of os-release-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Os Release",
+    "head",
+    "tail"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-7-os-release"
+}

@@ -1,0 +1,2 @@
+Use mkdir with the -p flag to create parent directories in one go.
+Example: mkdir -p logs/app

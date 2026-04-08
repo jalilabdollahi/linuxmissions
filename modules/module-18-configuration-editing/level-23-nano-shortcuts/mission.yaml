@@ -1,0 +1,15 @@
+{
+  "name": "Nano Shortcuts: Backup Bundle",
+  "description": "In the configuration editing lab, a task related to Nano Shortcuts needs cleanup before the handoff.",
+  "objective": "Create nano-shortcuts-backup.tar.gz containing the files under bundle/nano-shortcuts",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Nano Shortcuts",
+    "tar",
+    "compression"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-23-nano-shortcuts"
+}

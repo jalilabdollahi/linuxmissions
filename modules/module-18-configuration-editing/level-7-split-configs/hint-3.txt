@@ -1,0 +1,1 @@
+Example: `head -n 3 split-configs-history.log > first3.txt` and `tail -n 3 split-configs-history.log > last3.txt`

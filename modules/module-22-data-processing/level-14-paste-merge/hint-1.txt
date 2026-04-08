@@ -1,0 +1,1 @@
+A short for-loop is the cleanest option here.

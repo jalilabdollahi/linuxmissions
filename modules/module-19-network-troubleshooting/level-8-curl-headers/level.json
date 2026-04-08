@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/curl-headers/keep.txt": "keep\n",
+      "cleanup/curl-headers/old-1.tmp": "junk\n",
+      "cleanup/curl-headers/old-2.tmp": "junk\n",
+      "cleanup/curl-headers/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/curl-headers/old-1.tmp",
+      "cleanup/curl-headers/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/curl-headers/keep.txt",
+      "cleanup/curl-headers/notes.md"
+    ]
+  }
+}

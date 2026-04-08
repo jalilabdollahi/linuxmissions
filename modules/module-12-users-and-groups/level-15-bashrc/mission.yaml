@@ -1,0 +1,15 @@
+{
+  "name": "Bashrc: Metric Sum",
+  "description": "In the users and groups lab, a task related to Bashrc needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of bashrc-metrics.csv and write the total to total.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Bashrc",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-15-bashrc"
+}

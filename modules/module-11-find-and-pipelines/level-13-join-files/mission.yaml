@@ -1,0 +1,15 @@
+{
+  "name": "Join Files: Script Kickoff",
+  "description": "In the search and pipelines lab, a task related to Join Files needs cleanup before the handoff.",
+  "objective": "Make jobs/join-files.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Join Files",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-13-join-files"
+}

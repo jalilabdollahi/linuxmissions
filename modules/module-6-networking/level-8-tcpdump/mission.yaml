@@ -1,0 +1,11 @@
+{
+  "name": "Packet Sniff",
+  "description": "A packet capture summary was exported from tcpdump. Identify which protocol the captured traffic belongs to.",
+  "objective": "Inspect capture.txt and write the protocol name to protocol.txt",
+  "xp": 250,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["tcpdump", "capture analysis", "dns", "protocols"],
+  "module": "module-6-networking",
+  "level": "level-8-tcpdump"
+}

@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/ss-ports/README.txt": "Ss Ports bundle\n",
+      "bundle/ss-ports/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "ss-ports-backup.tar.gz",
+    "required_entries": [
+      "bundle/ss-ports",
+      "bundle/ss-ports/README.txt",
+      "bundle/ss-ports/notes.txt"
+    ]
+  }
+}

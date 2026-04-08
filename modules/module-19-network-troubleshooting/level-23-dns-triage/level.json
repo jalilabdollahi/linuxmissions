@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/dns-triage/README.txt": "Dns Triage bundle\n",
+      "bundle/dns-triage/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "dns-triage-backup.tar.gz",
+    "required_entries": [
+      "bundle/dns-triage",
+      "bundle/dns-triage/README.txt",
+      "bundle/dns-triage/notes.txt"
+    ]
+  }
+}

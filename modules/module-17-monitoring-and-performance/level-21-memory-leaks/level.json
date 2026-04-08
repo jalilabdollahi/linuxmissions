@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/memory-leaks.txt": "Memory Leaks checklist for monitoring and performance\n"
+    },
+    "target_path": "organized/memory-leaks/memory-leaks-notes.txt",
+    "target_text": "Memory Leaks checklist for monitoring and performance\n",
+    "removed_paths": [
+      "inbox/memory-leaks.txt"
+    ]
+  }
+}

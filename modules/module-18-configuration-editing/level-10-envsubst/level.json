@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/envsubst/README.txt": "Envsubst bundle\n",
+      "bundle/envsubst/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "envsubst-backup.tar.gz",
+    "required_entries": [
+      "bundle/envsubst",
+      "bundle/envsubst/README.txt",
+      "bundle/envsubst/notes.txt"
+    ]
+  }
+}

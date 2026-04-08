@@ -1,0 +1,1 @@
+Example: `sed 's/MODE=legacy/MODE=managed/g' journalctl-unit.conf > fixed.conf`

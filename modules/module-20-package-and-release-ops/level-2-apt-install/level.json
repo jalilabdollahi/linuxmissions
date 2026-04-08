@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "apt-install.log",
+    "lines": [
+      "INFO preparing apt-install",
+      "ALERT APT drift detected",
+      "INFO collecting extra context",
+      "ALERT APT rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT APT drift detected",
+      "ALERT APT rollback required"
+    ]
+  }
+}

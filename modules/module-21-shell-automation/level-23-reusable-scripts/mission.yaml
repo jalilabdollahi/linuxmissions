@@ -1,0 +1,15 @@
+{
+  "name": "Reusable Scripts: Backup Bundle",
+  "description": "In the shell automation lab, a task related to Reusable Scripts needs cleanup before the handoff.",
+  "objective": "Create reusable-scripts-backup.tar.gz containing the files under bundle/reusable-scripts",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Reusable Scripts",
+    "tar",
+    "compression"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-23-reusable-scripts"
+}

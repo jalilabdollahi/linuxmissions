@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/modprobe-notes/README.txt": "Modprobe Notes bundle\n",
+      "bundle/modprobe-notes/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "modprobe-notes-backup.tar.gz",
+    "required_entries": [
+      "bundle/modprobe-notes",
+      "bundle/modprobe-notes/README.txt",
+      "bundle/modprobe-notes/notes.txt"
+    ]
+  }
+}

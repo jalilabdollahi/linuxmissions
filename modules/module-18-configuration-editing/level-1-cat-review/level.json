@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/cat-review.txt": "Cat Review checklist for configuration editing\n"
+    },
+    "target_path": "organized/cat-review/cat-review-notes.txt",
+    "target_text": "Cat Review checklist for configuration editing\n",
+    "removed_paths": [
+      "inbox/cat-review.txt"
+    ]
+  }
+}

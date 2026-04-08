@@ -1,0 +1,15 @@
+{
+  "name": "Jobs Builtin: Backup Bundle",
+  "description": "In the scheduling and jobs lab, a task related to Jobs Builtin needs cleanup before the handoff.",
+  "objective": "Create jobs-builtin-backup.tar.gz containing the files under bundle/jobs-builtin",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Jobs Builtin",
+    "tar",
+    "compression"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-10-jobs-builtin"
+}

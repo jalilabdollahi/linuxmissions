@@ -1,0 +1,1 @@
+Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' sort-keys-metrics.csv > total.txt`

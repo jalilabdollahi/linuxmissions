@@ -1,0 +1,15 @@
+{
+  "name": "Proxy Vars: Capacity Report",
+  "description": "In the network troubleshooting lab, a task related to Proxy Vars needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Proxy Vars",
+    "du",
+    "sort"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-16-proxy-vars"
+}

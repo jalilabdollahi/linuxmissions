@@ -1,0 +1,1 @@
+Look for a filtering command that keeps only the alert lines in sudo-review.log.

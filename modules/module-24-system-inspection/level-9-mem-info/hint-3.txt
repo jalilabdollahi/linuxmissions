@@ -1,0 +1,1 @@
+Example: `ln -s releases/mem-info.conf current.conf`

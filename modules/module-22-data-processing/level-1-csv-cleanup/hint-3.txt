@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/csv-cleanup && mv inbox/csv-cleanup.txt organized/csv-cleanup/csv-cleanup-notes.txt`

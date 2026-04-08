@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "rsync-delete-restore.tar.gz",
+    "archived_files": {
+      "restored/rsync-delete/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/rsync-delete/token.txt": "rsync-delete-token\n"
+    },
+    "required_files": {
+      "restored/rsync-delete/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/rsync-delete/token.txt": "rsync-delete-token\n"
+    }
+  }
+}

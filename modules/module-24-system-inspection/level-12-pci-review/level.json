@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "chmod_mode",
+    "file_path": "pci-review.sh",
+    "content": "#!/bin/bash\necho ready\n",
+    "initial_mode": 416,
+    "mode": "640"
+  }
+}

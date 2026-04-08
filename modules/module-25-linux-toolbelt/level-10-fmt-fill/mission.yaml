@@ -1,0 +1,15 @@
+{
+  "name": "Fmt Fill: Backup Bundle",
+  "description": "In the linux toolbelt lab, a task related to Fmt Fill needs cleanup before the handoff.",
+  "objective": "Create fmt-fill-backup.tar.gz containing the files under bundle/fmt-fill",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Fmt Fill",
+    "tar",
+    "compression"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-10-fmt-fill"
+}

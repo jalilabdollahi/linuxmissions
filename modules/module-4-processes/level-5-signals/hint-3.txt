@@ -1,0 +1,5 @@
+Verify the signal triggered the trap:
+cat $SANDBOX/reload.log
+
+Useful reference:
+kill -l

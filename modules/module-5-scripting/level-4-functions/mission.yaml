@@ -1,0 +1,11 @@
+{
+  "name": "DRY Deploy",
+  "description": "A repetitive deploy script works, but it is painful to maintain. Refactor it so one function handles each service.",
+  "objective": "Rewrite deploy.sh to use a function that deploys `api`, `web`, and `worker`",
+  "xp": 190,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["functions", "local", "return", "$?"],
+  "module": "module-5-scripting",
+  "level": "level-4-functions"
+}

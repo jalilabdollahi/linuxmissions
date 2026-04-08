@@ -1,0 +1,8 @@
+{
+  "task": {
+    "type": "symlink_target",
+    "target_path": "releases/fold-wrap.conf",
+    "target_text": "Fold Wrap release payload\n",
+    "link_path": "current.conf"
+  }
+}

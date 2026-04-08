@@ -1,0 +1,15 @@
+{
+  "name": "Secret Hunt: History Window",
+  "description": "In the linux war games lab, a task related to Secret Hunt needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of secret-hunt-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Secret Hunt",
+    "head",
+    "tail"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-7-secret-hunt"
+}

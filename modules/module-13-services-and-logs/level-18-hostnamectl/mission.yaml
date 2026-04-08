@@ -1,0 +1,15 @@
+{
+  "name": "Hostnamectl: Alert Filter",
+  "description": "In the services and logs lab, a task related to Hostnamectl needs cleanup before the handoff.",
+  "objective": "Write every alert line from hostnamectl.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Hostnamectl",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-18-hostnamectl"
+}

@@ -1,0 +1,1 @@
+Use `chmod +x jobs/pipes.sh` and then execute it.

@@ -1,0 +1,11 @@
+{
+  "name": "Expense Report",
+  "description": "A CSV export lists individual expenses. Summarize the totals per category and sort them for the finance team.",
+  "objective": "Sum the amounts by category from expenses.csv and save sorted totals to totals.txt",
+  "xp": 220,
+  "difficulty": "intermediate",
+  "expected_time": "9m",
+  "concepts": ["awk", "arrays", "CSV", "sort"],
+  "module": "module-8-advanced-text",
+  "level": "level-2-awk-report"
+}

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "xargs-null.log",
+    "lines": [
+      "INFO preparing xargs-null",
+      "ALERT XARGS drift detected",
+      "INFO collecting extra context",
+      "ALERT XARGS rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT XARGS drift detected",
+      "ALERT XARGS rollback required"
+    ]
+  }
+}

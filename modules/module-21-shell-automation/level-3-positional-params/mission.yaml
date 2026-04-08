@@ -1,0 +1,16 @@
+{
+  "name": "Positional Params: Event Counter",
+  "description": "In the shell automation lab, a task related to Positional Params needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in positional-params-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Positional Params",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-3-positional-params"
+}

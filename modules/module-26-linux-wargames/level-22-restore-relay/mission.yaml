@@ -1,0 +1,15 @@
+{
+  "name": "Restore Relay: Field Extract",
+  "description": "In the linux war games lab, a task related to Restore Relay needs cleanup before the handoff.",
+  "objective": "Extract the second column from restore-relay-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Restore Relay",
+    "cut",
+    "awk"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-22-restore-relay"
+}

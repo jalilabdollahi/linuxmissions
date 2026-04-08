@@ -1,0 +1,16 @@
+{
+  "name": "Find Name: Path Realignment",
+  "description": "In the search and pipelines lab, a task related to Find Name needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/find-name.txt to organized/find-name/find-name-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Find Name",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-1-find-name"
+}

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "journal-errors.log",
+    "lines": [
+      "INFO preparing journal-errors",
+      "ALERT JOURNAL drift detected",
+      "INFO collecting extra context",
+      "ALERT JOURNAL rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT JOURNAL drift detected",
+      "ALERT JOURNAL rollback required"
+    ]
+  }
+}

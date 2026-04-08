@@ -1,0 +1,2 @@
+That gives field 1 and 3 but keeps the comma. Save it:
+cut -d, -f1,3 $SANDBOX/users.csv > $SANDBOX/extract.csv

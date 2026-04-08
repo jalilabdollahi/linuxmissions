@@ -1,0 +1,1 @@
+Example: `tar -xzf timestamps-restore.tar.gz`

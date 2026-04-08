@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/nano-shortcuts/README.txt": "Nano Shortcuts bundle\n",
+      "bundle/nano-shortcuts/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "nano-shortcuts-backup.tar.gz",
+    "required_entries": [
+      "bundle/nano-shortcuts",
+      "bundle/nano-shortcuts/README.txt",
+      "bundle/nano-shortcuts/notes.txt"
+    ]
+  }
+}

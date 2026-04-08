@@ -1,0 +1,11 @@
+{
+  "name": "Needle in a Haystack",
+  "description": "A developer lost track of all Python files they created across several project directories.",
+  "objective": "Find every file ending in .py under the sandbox and write their paths to found.txt in the sandbox root",
+  "xp": 130,
+  "difficulty": "beginner",
+  "expected_time": "8m",
+  "concepts": ["find", "output redirection", ">", "glob"],
+  "module": "module-1-filesystem",
+  "level": "level-5-find-by-name"
+}

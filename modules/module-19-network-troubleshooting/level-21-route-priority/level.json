@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/route-priority.txt": "Route Priority checklist for network troubleshooting\n"
+    },
+    "target_path": "organized/route-priority/route-priority-notes.txt",
+    "target_text": "Route Priority checklist for network troubleshooting\n",
+    "removed_paths": [
+      "inbox/route-priority.txt"
+    ]
+  }
+}

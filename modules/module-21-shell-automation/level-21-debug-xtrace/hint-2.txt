@@ -1,0 +1,1 @@
+`mkdir -p organized/debug-xtrace` followed by `mv inbox/debug-xtrace.txt organized/debug-xtrace/debug-xtrace-notes.txt` is enough.

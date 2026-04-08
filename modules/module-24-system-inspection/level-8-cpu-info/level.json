@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/cpu-info/keep.txt": "keep\n",
+      "cleanup/cpu-info/old-1.tmp": "junk\n",
+      "cleanup/cpu-info/old-2.tmp": "junk\n",
+      "cleanup/cpu-info/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/cpu-info/old-1.tmp",
+      "cleanup/cpu-info/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/cpu-info/keep.txt",
+      "cleanup/cpu-info/notes.md"
+    ]
+  }
+}

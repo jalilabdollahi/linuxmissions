@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "app-log-rotation-restore.tar.gz",
+    "archived_files": {
+      "restored/app-log-rotation/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/app-log-rotation/token.txt": "app-log-rotation-token\n"
+    },
+    "required_files": {
+      "restored/app-log-rotation/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/app-log-rotation/token.txt": "app-log-rotation-token\n"
+    }
+  }
+}

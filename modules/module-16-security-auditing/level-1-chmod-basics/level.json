@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/chmod-basics.txt": "Chmod Basics checklist for security auditing\n"
+    },
+    "target_path": "organized/chmod-basics/chmod-basics-notes.txt",
+    "target_text": "Chmod Basics checklist for security auditing\n",
+    "removed_paths": [
+      "inbox/chmod-basics.txt"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "comm-compare-1.txt",
+        "content": "comm-compare item 1\n"
+      },
+      {
+        "path": "comm-compare-2.txt",
+        "content": "comm-compare item 2\n"
+      },
+      {
+        "path": "comm-compare-3.txt",
+        "content": "comm-compare item 3\n"
+      }
+    ]
+  }
+}

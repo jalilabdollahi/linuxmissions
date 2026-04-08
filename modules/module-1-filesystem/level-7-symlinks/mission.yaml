@@ -1,0 +1,11 @@
+{
+  "name": "The Shortcut",
+  "description": "An app always reads its config from /etc/myapp/active.conf but configs are versioned. You need to point active.conf at the correct version.",
+  "objective": "Create a symlink at $SANDBOX/etc/myapp/active.conf pointing to $SANDBOX/etc/myapp/v2/config.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["ln -s", "symlinks", "readlink", "ls -l"],
+  "module": "module-1-filesystem",
+  "level": "level-7-symlinks"
+}

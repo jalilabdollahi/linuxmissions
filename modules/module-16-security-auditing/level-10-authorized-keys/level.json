@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/authorized-keys/README.txt": "Authorized Keys bundle\n",
+      "bundle/authorized-keys/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "authorized-keys-backup.tar.gz",
+    "required_entries": [
+      "bundle/authorized-keys",
+      "bundle/authorized-keys/README.txt",
+      "bundle/authorized-keys/notes.txt"
+    ]
+  }
+}

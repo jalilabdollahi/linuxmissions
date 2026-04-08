@@ -1,0 +1,15 @@
+{
+  "name": "Batch Jobs: Config Rewrite",
+  "description": "In the scheduling and jobs lab, a task related to Batch Jobs needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in batch-jobs.conf and save the fixed result to fixed.conf",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Batch Jobs",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-6-batch-jobs"
+}

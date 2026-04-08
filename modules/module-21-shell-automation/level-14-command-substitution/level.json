@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "command-substitution-1.txt",
+        "content": "command-substitution item 1\n"
+      },
+      {
+        "path": "command-substitution-2.txt",
+        "content": "command-substitution item 2\n"
+      },
+      {
+        "path": "command-substitution-3.txt",
+        "content": "command-substitution item 3\n"
+      }
+    ]
+  }
+}

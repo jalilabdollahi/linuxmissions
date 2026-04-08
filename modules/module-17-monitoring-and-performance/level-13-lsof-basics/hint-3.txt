@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/lsof-basics.sh && jobs/lsof-basics.sh`

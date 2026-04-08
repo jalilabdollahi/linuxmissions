@@ -1,0 +1,1 @@
+Example: `head -n 3 host-command-history.log > first3.txt` and `tail -n 3 host-command-history.log > last3.txt`

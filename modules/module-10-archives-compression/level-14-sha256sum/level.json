@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "sha256sum-1.txt",
+        "content": "sha256sum item 1\n"
+      },
+      {
+        "path": "sha256sum-2.txt",
+        "content": "sha256sum item 2\n"
+      },
+      {
+        "path": "sha256sum-3.txt",
+        "content": "sha256sum item 3\n"
+      }
+    ]
+  }
+}

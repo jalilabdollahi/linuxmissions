@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "multiline-fixes.log",
+    "lines": [
+      "INFO preparing multiline-fixes",
+      "ALERT MULTILINE drift detected",
+      "INFO collecting extra context",
+      "ALERT MULTILINE rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT MULTILINE drift detected",
+      "ALERT MULTILINE rollback required"
+    ]
+  }
+}

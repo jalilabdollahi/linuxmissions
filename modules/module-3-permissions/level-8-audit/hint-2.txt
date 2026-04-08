@@ -1,0 +1,2 @@
+Remove write permission from 'others' for all of them:
+find $SANDBOX/app -perm /o+w -type f -exec chmod o-w {} \;

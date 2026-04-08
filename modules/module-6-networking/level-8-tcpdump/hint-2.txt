@@ -1,0 +1,1 @@
+Queries like `A? example.com` and `AAAA? example.com` are strong hints.

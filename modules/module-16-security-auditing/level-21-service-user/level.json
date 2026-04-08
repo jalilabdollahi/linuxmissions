@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/service-user.txt": "Service User checklist for security auditing\n"
+    },
+    "target_path": "organized/service-user/service-user-notes.txt",
+    "target_text": "Service User checklist for security auditing\n",
+    "removed_paths": [
+      "inbox/service-user.txt"
+    ]
+  }
+}

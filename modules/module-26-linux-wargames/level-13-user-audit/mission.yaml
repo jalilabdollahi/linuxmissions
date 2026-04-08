@@ -1,0 +1,15 @@
+{
+  "name": "User Audit: Script Kickoff",
+  "description": "In the linux war games lab, a task related to User Audit needs cleanup before the handoff.",
+  "objective": "Make jobs/user-audit.sh executable, run it, and create the token file it writes",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "User Audit",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-13-user-audit"
+}

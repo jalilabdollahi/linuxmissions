@@ -1,0 +1,11 @@
+{
+  "name": "What's My IP?",
+  "description": "You were given a saved `ip addr` capture and need to summarize which interfaces have which addresses.",
+  "objective": "Extract each interface and IPv4 address from ip_addr.txt and save them to interfaces.txt",
+  "xp": 150,
+  "difficulty": "beginner",
+  "expected_time": "6m",
+  "concepts": ["ip addr", "grep", "awk", "interfaces"],
+  "module": "module-6-networking",
+  "level": "level-1-ip-addr"
+}

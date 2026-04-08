@@ -1,0 +1,1 @@
+`mkdir -p organized/csv-cleanup` followed by `mv inbox/csv-cleanup.txt organized/csv-cleanup/csv-cleanup-notes.txt` is enough.

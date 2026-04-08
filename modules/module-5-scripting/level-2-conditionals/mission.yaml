@@ -1,0 +1,11 @@
+{
+  "name": "The Gatekeeper",
+  "description": "An automation script should tell you whether a target file exists, but the conditional logic is missing.",
+  "objective": "Write check_file.sh so it prints `EXISTS` when the path exists and `MISSING` when it does not",
+  "xp": 160,
+  "difficulty": "beginner",
+  "expected_time": "6m",
+  "concepts": ["if", "else", "test", "-f", "-e"],
+  "module": "module-5-scripting",
+  "level": "level-2-conditionals"
+}

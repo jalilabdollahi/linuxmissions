@@ -1,0 +1,15 @@
+{
+  "name": "Flock Locks: Metric Sum",
+  "description": "In the scheduling and jobs lab, a task related to Flock Locks needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of flock-locks-metrics.csv and write the total to total.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Flock Locks",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-15-flock-locks"
+}

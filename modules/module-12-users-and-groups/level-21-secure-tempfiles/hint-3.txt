@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/secure-tempfiles && mv inbox/secure-tempfiles.txt organized/secure-tempfiles/secure-tempfiles-notes.txt`

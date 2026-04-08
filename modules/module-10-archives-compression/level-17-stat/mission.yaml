@@ -1,0 +1,15 @@
+{
+  "name": "Stat: Schedule Entry",
+  "description": "In the archives and compression lab, a task related to Stat needs cleanup before the handoff.",
+  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Stat",
+    "cron",
+    "crontab syntax"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-17-stat"
+}

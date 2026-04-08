@@ -1,0 +1,2 @@
+Redirect the output to a file using >:
+find $SANDBOX -name "*.py" > $SANDBOX/found.txt

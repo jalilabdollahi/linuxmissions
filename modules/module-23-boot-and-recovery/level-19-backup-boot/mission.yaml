@@ -1,0 +1,15 @@
+{
+  "name": "Backup Boot: Config Rewrite",
+  "description": "In the boot and recovery lab, a task related to Backup Boot needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in backup-boot.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Backup Boot",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-19-backup-boot"
+}

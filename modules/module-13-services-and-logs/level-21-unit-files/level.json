@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/unit-files.txt": "Unit Files checklist for services and logs\n"
+    },
+    "target_path": "organized/unit-files/unit-files-notes.txt",
+    "target_text": "Unit Files checklist for services and logs\n",
+    "removed_paths": [
+      "inbox/unit-files.txt"
+    ]
+  }
+}

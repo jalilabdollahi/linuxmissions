@@ -1,0 +1,2 @@
+The answer is 027. Write it to the file:
+echo "027" > $SANDBOX/umask_answer.txt

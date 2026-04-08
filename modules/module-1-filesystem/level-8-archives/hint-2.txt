@@ -1,0 +1,2 @@
+To create a .tar.gz from all .log files:
+tar -czf $SANDBOX/archive.tar.gz -C $SANDBOX/logs .

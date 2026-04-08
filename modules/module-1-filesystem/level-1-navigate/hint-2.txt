@@ -1,0 +1,2 @@
+Once you locate it, use: cat /path/to/secret.conf
+The sandbox path is shown at the top of the mission briefing.

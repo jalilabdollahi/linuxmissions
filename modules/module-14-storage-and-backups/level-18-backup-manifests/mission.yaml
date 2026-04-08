@@ -1,0 +1,15 @@
+{
+  "name": "Backup Manifests: Alert Filter",
+  "description": "In the storage and backups lab, a task related to Backup Manifests needs cleanup before the handoff.",
+  "objective": "Write every alert line from backup-manifests.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Backup Manifests",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-14-storage-and-backups",
+  "level": "level-18-backup-manifests"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Wrong Owner",
+  "description": "Files were created as root but the app runs as 'nobody'. The app can't read its own config.",
+  "objective": "Change ownership of all files in config/ so the current user owns them (use your actual username)",
+  "xp": 150,
+  "difficulty": "beginner",
+  "expected_time": "8m",
+  "concepts": ["chown", "ls -la", "whoami", "ownership"],
+  "module": "module-3-permissions",
+  "level": "level-3-chown"
+}

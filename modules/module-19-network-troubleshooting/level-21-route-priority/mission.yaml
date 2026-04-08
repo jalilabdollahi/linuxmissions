@@ -1,0 +1,16 @@
+{
+  "name": "Route Priority: Path Realignment",
+  "description": "In the network troubleshooting lab, a task related to Route Priority needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/route-priority.txt to organized/route-priority/route-priority-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Route Priority",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-21-route-priority"
+}

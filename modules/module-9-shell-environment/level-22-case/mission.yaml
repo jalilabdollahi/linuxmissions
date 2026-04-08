@@ -1,0 +1,15 @@
+{
+  "name": "Case: Field Extract",
+  "description": "In the shell environment lab, a task related to Case needs cleanup before the handoff.",
+  "objective": "Extract the second column from case-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Case",
+    "cut",
+    "awk"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-22-case"
+}

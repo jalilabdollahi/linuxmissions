@@ -1,0 +1,11 @@
+{
+  "name": "The Background Worker",
+  "description": "A data processing script takes a while to finish. You need to start it without blocking your terminal, inspect the job list, and let it complete.",
+  "objective": "Run process.sh in the background and wait for it to finish so result.txt contains the finished output",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["&", "jobs", "fg", "bg", "Ctrl+Z", "disown"],
+  "module": "module-4-processes",
+  "level": "level-3-background-jobs"
+}

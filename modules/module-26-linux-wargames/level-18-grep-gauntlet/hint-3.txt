@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' grep-gauntlet.log > alerts.txt`

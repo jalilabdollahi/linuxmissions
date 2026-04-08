@@ -1,0 +1,15 @@
+{
+  "name": "Less Review: Alert Filter",
+  "description": "In the configuration editing lab, a task related to Less Review needs cleanup before the handoff.",
+  "objective": "Write every alert line from less-review.log into alerts.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Less Review",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-2-less-review"
+}

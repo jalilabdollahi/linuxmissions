@@ -1,0 +1,8 @@
+{
+  "task": {
+    "type": "cron_line",
+    "output_file": "crontab.txt",
+    "expected_line": "15 2 * * * /usr/local/bin/nightly-check",
+    "note": "Write the production timer line into crontab.txt."
+  }
+}

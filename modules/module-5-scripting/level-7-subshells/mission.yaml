@@ -1,0 +1,11 @@
+{
+  "name": "Parallel Launch",
+  "description": "Three independent tasks take too long one after another. Launch them in parallel and wait for all of them to finish.",
+  "objective": "Write run_all.sh so it runs task-a.sh, task-b.sh, and task-c.sh in parallel and waits until all three finish",
+  "xp": 230,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["subshells", "&", "wait", "parallel jobs"],
+  "module": "module-5-scripting",
+  "level": "level-7-subshells"
+}

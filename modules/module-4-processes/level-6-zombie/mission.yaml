@@ -1,0 +1,11 @@
+{
+  "name": "Zombie Apocalypse",
+  "description": "A buggy parent process left behind zombie children. Identify them, document what you found, and stop the parent so the zombies can be reaped.",
+  "objective": "Find the zombie processes, save their PIDs and names to zombies.txt, then kill the parent process",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["ps", "zombie", "Z state", "PPID", "kill parent", "wait"],
+  "module": "module-4-processes",
+  "level": "level-6-zombie"
+}

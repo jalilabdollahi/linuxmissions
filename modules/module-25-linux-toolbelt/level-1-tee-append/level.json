@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/tee-append.txt": "Tee Append checklist for linux toolbelt\n"
+    },
+    "target_path": "organized/tee-append/tee-append-notes.txt",
+    "target_text": "Tee Append checklist for linux toolbelt\n",
+    "removed_paths": [
+      "inbox/tee-append.txt"
+    ]
+  }
+}

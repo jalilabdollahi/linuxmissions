@@ -1,0 +1,16 @@
+{
+  "name": "Sha256Sum: Loop Builder",
+  "description": "In the archives and compression lab, a task related to Sha256Sum needs cleanup before the handoff.",
+  "objective": "Create three files under generated/ named sha256sum-1.txt through sha256sum-3.txt with matching numbered content",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Sha256Sum",
+    "for",
+    "seq",
+    "printf"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-14-sha256sum"
+}

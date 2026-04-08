@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "service-envfiles-1.txt",
+        "content": "service-envfiles item 1\n"
+      },
+      {
+        "path": "service-envfiles-2.txt",
+        "content": "service-envfiles item 2\n"
+      },
+      {
+        "path": "service-envfiles-3.txt",
+        "content": "service-envfiles item 3\n"
+      }
+    ]
+  }
+}

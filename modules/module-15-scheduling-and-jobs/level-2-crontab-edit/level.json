@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "crontab-edit.log",
+    "lines": [
+      "INFO preparing crontab-edit",
+      "ALERT CRONTAB drift detected",
+      "INFO collecting extra context",
+      "ALERT CRONTAB rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT CRONTAB drift detected",
+      "ALERT CRONTAB rollback required"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "hostnamectl.log",
+    "lines": [
+      "INFO preparing hostnamectl",
+      "ALERT HOSTNAMECTL drift detected",
+      "INFO collecting extra context",
+      "ALERT HOSTNAMECTL rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT HOSTNAMECTL drift detected",
+      "ALERT HOSTNAMECTL rollback required"
+    ]
+  }
+}

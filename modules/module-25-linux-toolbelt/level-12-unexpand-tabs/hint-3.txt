@@ -1,0 +1,1 @@
+Example: `chmod 640 unexpand-tabs.sh`

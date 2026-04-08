@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/yaml-basics.sh",
+    "token_path": "jobs/yaml-basics.token",
+    "token": "yaml-basics-done",
+    "initial_mode": 416
+  }
+}

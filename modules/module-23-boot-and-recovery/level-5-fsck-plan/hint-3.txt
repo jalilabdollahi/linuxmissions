@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 fsck-plan-report.csv > owners.txt`

@@ -1,0 +1,2 @@
+diff shows differences between two files:
+diff $SANDBOX/v1.conf $SANDBOX/v2.conf

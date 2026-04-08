@@ -1,0 +1,1 @@
+Use `chmod +x jobs/cut-delimiters.sh` and then execute it.

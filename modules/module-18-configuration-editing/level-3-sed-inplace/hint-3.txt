@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' sed-inplace-events.txt > ok-count.txt`

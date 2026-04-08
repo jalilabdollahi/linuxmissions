@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/awk-sum/README.txt": "Awk Sum bundle\n",
+      "bundle/awk-sum/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "awk-sum-backup.tar.gz",
+    "required_entries": [
+      "bundle/awk-sum",
+      "bundle/awk-sum/README.txt",
+      "bundle/awk-sum/notes.txt"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Traceroute Notes: Noise Dedup",
+  "description": "In the network troubleshooting lab, a task related to Traceroute Notes needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from traceroute-notes-raw.txt with sorted unique values",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Traceroute Notes",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-4-traceroute-notes"
+}

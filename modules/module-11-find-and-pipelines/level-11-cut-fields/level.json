@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "cut-fields-restore.tar.gz",
+    "archived_files": {
+      "restored/cut-fields/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/cut-fields/token.txt": "cut-fields-token\n"
+    },
+    "required_files": {
+      "restored/cut-fields/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/cut-fields/token.txt": "cut-fields-token\n"
+    }
+  }
+}

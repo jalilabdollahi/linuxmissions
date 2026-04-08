@@ -1,0 +1,15 @@
+{
+  "name": "Anomaly Detection: Field Extract",
+  "description": "In the data processing lab, a task related to Anomaly Detection needs cleanup before the handoff.",
+  "objective": "Extract the second column from anomaly-detection-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Anomaly Detection",
+    "cut",
+    "awk"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-22-anomaly-detection"
+}

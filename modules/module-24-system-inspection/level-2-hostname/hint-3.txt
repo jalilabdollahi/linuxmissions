@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' hostname.log > alerts.txt`

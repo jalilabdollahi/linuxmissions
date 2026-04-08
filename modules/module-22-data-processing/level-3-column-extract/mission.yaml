@@ -1,0 +1,16 @@
+{
+  "name": "Column Extract: Event Counter",
+  "description": "In the data processing lab, a task related to Column Extract needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in column-extract-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Column Extract",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-3-column-extract"
+}

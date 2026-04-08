@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/less-navigation.sh",
+    "token_path": "jobs/less-navigation.token",
+    "token": "less-navigation-done",
+    "initial_mode": 416
+  }
+}

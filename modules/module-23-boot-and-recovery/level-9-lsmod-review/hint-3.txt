@@ -1,0 +1,1 @@
+Example: `ln -s releases/lsmod-review.conf current.conf`

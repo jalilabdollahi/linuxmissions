@@ -1,0 +1,15 @@
+{
+  "name": "Symbolic Links: Script Kickoff",
+  "description": "In the storage and backups lab, a task related to Symbolic Links needs cleanup before the handoff.",
+  "objective": "Make jobs/symbolic-links.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Symbolic Links",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-14-storage-and-backups",
+  "level": "level-13-symbolic-links"
+}

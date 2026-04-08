@@ -1,0 +1,15 @@
+{
+  "name": "Repo Keys: Restore Drill",
+  "description": "In the package and release operations lab, a task related to Repo Keys needs cleanup before the handoff.",
+  "objective": "Extract repo-keys-restore.tar.gz so the restored/repo-keys directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Repo Keys",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-11-repo-keys"
+}

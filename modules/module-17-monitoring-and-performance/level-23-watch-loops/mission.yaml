@@ -1,0 +1,15 @@
+{
+  "name": "Watch Loops: Backup Bundle",
+  "description": "In the monitoring and performance lab, a task related to Watch Loops needs cleanup before the handoff.",
+  "objective": "Create watch-loops-backup.tar.gz containing the files under bundle/watch-loops",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Watch Loops",
+    "tar",
+    "compression"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-23-watch-loops"
+}

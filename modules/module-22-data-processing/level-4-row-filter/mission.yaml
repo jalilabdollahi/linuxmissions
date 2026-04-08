@@ -1,0 +1,15 @@
+{
+  "name": "Row Filter: Noise Dedup",
+  "description": "In the data processing lab, a task related to Row Filter needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from row-filter-raw.txt with sorted unique values",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Row Filter",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-4-row-filter"
+}

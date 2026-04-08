@@ -1,0 +1,15 @@
+{
+  "name": "Http Status: Schedule Entry",
+  "description": "In the network troubleshooting lab, a task related to Http Status needs cleanup before the handoff.",
+  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Http Status",
+    "cron",
+    "crontab syntax"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-17-http-status"
+}

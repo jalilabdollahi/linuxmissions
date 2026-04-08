@@ -1,0 +1,16 @@
+{
+  "name": "Emergency Target: Loop Builder",
+  "description": "In the boot and recovery lab, a task related to Emergency Target needs cleanup before the handoff.",
+  "objective": "Create three files under generated/ named emergency-target-1.txt through emergency-target-3.txt with matching numbered content",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Emergency Target",
+    "for",
+    "seq",
+    "printf"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-14-emergency-target"
+}

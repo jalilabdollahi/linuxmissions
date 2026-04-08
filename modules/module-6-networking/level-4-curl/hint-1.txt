@@ -1,0 +1,2 @@
+Use curl with a local file URL:
+curl -s "file://$SANDBOX/api/response.json"

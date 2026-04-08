@@ -1,0 +1,15 @@
+{
+  "name": "Service Failure: Backup Bundle",
+  "description": "In the linux war games lab, a task related to Service Failure needs cleanup before the handoff.",
+  "objective": "Create service-failure-backup.tar.gz containing the files under bundle/service-failure",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "15m",
+  "concepts": [
+    "Service Failure",
+    "tar",
+    "compression"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-23-service-failure"
+}

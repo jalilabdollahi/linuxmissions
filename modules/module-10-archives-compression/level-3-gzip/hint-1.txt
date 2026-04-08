@@ -1,0 +1,1 @@
+Count matching lines instead of copying them out by hand.

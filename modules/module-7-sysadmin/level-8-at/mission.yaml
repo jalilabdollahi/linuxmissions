@@ -1,0 +1,11 @@
+{
+  "name": "One-Shot Task",
+  "description": "A one-time cleanup command should be queued with a sandbox-safe mock `at` helper.",
+  "objective": "Use the provided at helper to schedule `./cleanup.sh` to run in 1 minute",
+  "xp": 280,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["at", "atq", "one-time scheduling", "stdin"],
+  "module": "module-7-sysadmin",
+  "level": "level-8-at"
+}

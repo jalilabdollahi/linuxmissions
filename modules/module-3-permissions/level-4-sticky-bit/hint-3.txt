@@ -1,0 +1,3 @@
+Or use octal (1 prefix = sticky bit):
+chmod 1777 $SANDBOX/shared
+ls -ld $SANDBOX/shared  # look for 't' at the end of permissions

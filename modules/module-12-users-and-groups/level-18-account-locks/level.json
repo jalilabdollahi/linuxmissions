@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "account-locks.log",
+    "lines": [
+      "INFO preparing account-locks",
+      "ALERT ACCOUNT drift detected",
+      "INFO collecting extra context",
+      "ALERT ACCOUNT rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT ACCOUNT drift detected",
+      "ALERT ACCOUNT rollback required"
+    ]
+  }
+}

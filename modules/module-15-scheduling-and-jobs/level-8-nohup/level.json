@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/nohup/keep.txt": "keep\n",
+      "cleanup/nohup/old-1.tmp": "junk\n",
+      "cleanup/nohup/old-2.tmp": "junk\n",
+      "cleanup/nohup/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/nohup/old-1.tmp",
+      "cleanup/nohup/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/nohup/keep.txt",
+      "cleanup/nohup/notes.md"
+    ]
+  }
+}

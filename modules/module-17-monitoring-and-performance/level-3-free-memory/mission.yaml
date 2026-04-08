@@ -1,0 +1,16 @@
+{
+  "name": "Free Memory: Event Counter",
+  "description": "In the monitoring and performance lab, a task related to Free Memory needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in free-memory-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Free Memory",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-3-free-memory"
+}

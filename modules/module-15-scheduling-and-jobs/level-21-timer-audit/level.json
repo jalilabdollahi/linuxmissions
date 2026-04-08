@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/timer-audit.txt": "Timer Audit checklist for scheduling and jobs\n"
+    },
+    "target_path": "organized/timer-audit/timer-audit-notes.txt",
+    "target_text": "Timer Audit checklist for scheduling and jobs\n",
+    "removed_paths": [
+      "inbox/timer-audit.txt"
+    ]
+  }
+}

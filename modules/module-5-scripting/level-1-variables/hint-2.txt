@@ -1,0 +1,2 @@
+Use echo to print the greeting:
+echo "Hello, $1!"

@@ -1,0 +1,16 @@
+{
+  "name": "Awk Patterns: Path Realignment",
+  "description": "In the search and pipelines lab, a task related to Awk Patterns needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/awk-patterns.txt to organized/awk-patterns/awk-patterns-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Awk Patterns",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-21-awk-patterns"
+}

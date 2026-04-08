@@ -1,0 +1,3 @@
+find can search by permission bits.
+Find SUID files (4000 bit set):
+find $SANDBOX -perm /4000

@@ -1,0 +1,15 @@
+{
+  "name": "Curl Headers: Cleanup Sweep",
+  "description": "In the network troubleshooting lab, a task related to Curl Headers needs cleanup before the handoff.",
+  "objective": "Delete only the `.tmp` files under cleanup/curl-headers and leave the other files intact",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Curl Headers",
+    "find",
+    "rm"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-8-curl-headers"
+}

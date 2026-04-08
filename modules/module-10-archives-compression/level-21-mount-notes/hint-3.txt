@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/mount-notes && mv inbox/mount-notes.txt organized/mount-notes/mount-notes-notes.txt`

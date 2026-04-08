@@ -1,0 +1,15 @@
+{
+  "name": "History Safety: Capacity Report",
+  "description": "In the security auditing lab, a task related to History Safety needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "History Safety",
+    "du",
+    "sort"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-16-history-safety"
+}

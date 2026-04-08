@@ -1,0 +1,15 @@
+{
+  "name": "Exit Codes: Alert Filter",
+  "description": "In the shell automation lab, a task related to Exit Codes needs cleanup before the handoff.",
+  "objective": "Write every alert line from exit-codes.log into alerts.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Exit Codes",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-2-exit-codes"
+}

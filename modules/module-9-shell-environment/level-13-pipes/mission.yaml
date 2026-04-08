@@ -1,0 +1,15 @@
+{
+  "name": "Pipes: Script Kickoff",
+  "description": "In the shell environment lab, a task related to Pipes needs cleanup before the handoff.",
+  "objective": "Make jobs/pipes.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Pipes",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-13-pipes"
+}

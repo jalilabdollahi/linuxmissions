@@ -1,0 +1,16 @@
+{
+  "name": "Apt Remove: Event Counter",
+  "description": "In the package and release operations lab, a task related to Apt Remove needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in apt-remove-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Apt Remove",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-3-apt-remove"
+}

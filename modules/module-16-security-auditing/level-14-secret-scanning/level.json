@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "secret-scanning-1.txt",
+        "content": "secret-scanning item 1\n"
+      },
+      {
+        "path": "secret-scanning-2.txt",
+        "content": "secret-scanning item 2\n"
+      },
+      {
+        "path": "secret-scanning-3.txt",
+        "content": "secret-scanning item 3\n"
+      }
+    ]
+  }
+}

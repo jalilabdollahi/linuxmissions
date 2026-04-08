@@ -1,0 +1,15 @@
+{
+  "name": "Expand Tabs: Restore Drill",
+  "description": "In the linux toolbelt lab, a task related to Expand Tabs needs cleanup before the handoff.",
+  "objective": "Extract expand-tabs-restore.tar.gz so the restored/expand-tabs directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Expand Tabs",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-11-expand-tabs"
+}

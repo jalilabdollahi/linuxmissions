@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/missing-library.txt": "Missing Library checklist for boot and recovery\n"
+    },
+    "target_path": "organized/missing-library/missing-library-notes.txt",
+    "target_text": "Missing Library checklist for boot and recovery\n",
+    "removed_paths": [
+      "inbox/missing-library.txt"
+    ]
+  }
+}

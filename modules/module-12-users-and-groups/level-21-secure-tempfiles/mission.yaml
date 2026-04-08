@@ -1,0 +1,16 @@
+{
+  "name": "Secure Tempfiles: Path Realignment",
+  "description": "In the users and groups lab, a task related to Secure Tempfiles needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/secure-tempfiles.txt to organized/secure-tempfiles/secure-tempfiles-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Secure Tempfiles",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-21-secure-tempfiles"
+}

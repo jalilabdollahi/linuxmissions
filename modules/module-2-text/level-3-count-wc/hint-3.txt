@@ -1,0 +1,6 @@
+Write all three to report.txt:
+{
+  echo "Total requests: $(wc -l < $SANDBOX/access.log)"
+  echo "Unique IPs: $(awk '{print $1}' $SANDBOX/access.log | sort -u | wc -l)"
+  echo "Total bytes: $(awk '{sum += $4} END {print sum}' $SANDBOX/access.log)"
+} > $SANDBOX/report.txt

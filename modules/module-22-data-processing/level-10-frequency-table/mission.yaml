@@ -1,0 +1,15 @@
+{
+  "name": "Frequency Table: Backup Bundle",
+  "description": "In the data processing lab, a task related to Frequency Table needs cleanup before the handoff.",
+  "objective": "Create frequency-table-backup.tar.gz containing the files under bundle/frequency-table",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Frequency Table",
+    "tar",
+    "compression"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-10-frequency-table"
+}

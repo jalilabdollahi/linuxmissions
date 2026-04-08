@@ -1,0 +1,15 @@
+{
+  "name": "Dpkg Files: Cleanup Sweep",
+  "description": "In the package and release operations lab, a task related to Dpkg Files needs cleanup before the handoff.",
+  "objective": "Delete only the `.tmp` files under cleanup/dpkg-files and leave the other files intact",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Dpkg Files",
+    "find",
+    "rm"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-8-dpkg-files"
+}

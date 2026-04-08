@@ -1,0 +1,3 @@
+Save results:
+find $SANDBOX -perm /6000 > $SANDBOX/suid_files.txt
+cat $SANDBOX/suid_files.txt

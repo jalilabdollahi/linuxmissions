@@ -1,0 +1,15 @@
+{
+  "name": "Kernel Tuning: Schedule Entry",
+  "description": "In the system inspection lab, a task related to Kernel Tuning needs cleanup before the handoff.",
+  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Kernel Tuning",
+    "cron",
+    "crontab syntax"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-17-kernel-tuning"
+}

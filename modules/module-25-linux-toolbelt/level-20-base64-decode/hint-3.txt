@@ -1,0 +1,1 @@
+Example: `sort base64-decode-raw.txt | uniq > unique-sorted.txt`

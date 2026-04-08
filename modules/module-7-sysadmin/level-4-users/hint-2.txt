@@ -1,0 +1,2 @@
+Then add the user to docker:
+./usermod -aG docker devuser

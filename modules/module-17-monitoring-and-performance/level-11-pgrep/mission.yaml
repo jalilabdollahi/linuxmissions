@@ -1,0 +1,15 @@
+{
+  "name": "Pgrep: Restore Drill",
+  "description": "In the monitoring and performance lab, a task related to Pgrep needs cleanup before the handoff.",
+  "objective": "Extract pgrep-restore.tar.gz so the restored/pgrep directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Pgrep",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-11-pgrep"
+}

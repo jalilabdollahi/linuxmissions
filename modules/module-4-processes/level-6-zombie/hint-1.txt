@@ -1,0 +1,2 @@
+Look for zombie processes by process state:
+ps aux | grep defunct

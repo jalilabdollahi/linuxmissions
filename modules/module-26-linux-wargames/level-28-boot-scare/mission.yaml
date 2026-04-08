@@ -1,0 +1,15 @@
+{
+  "name": "Boot Scare: Restore Drill",
+  "description": "In the linux war games lab, a task related to Boot Scare needs cleanup before the handoff.",
+  "objective": "Extract boot-scare-restore.tar.gz so the restored/boot-scare directory appears in the sandbox",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "15m",
+  "concepts": [
+    "Boot Scare",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-28-boot-scare"
+}

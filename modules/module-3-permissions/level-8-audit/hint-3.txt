@@ -1,0 +1,3 @@
+Verify none remain:
+find $SANDBOX/app -perm /o+w -type f
+# Should return nothing

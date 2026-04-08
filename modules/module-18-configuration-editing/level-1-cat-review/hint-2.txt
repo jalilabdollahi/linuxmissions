@@ -1,0 +1,1 @@
+`mkdir -p organized/cat-review` followed by `mv inbox/cat-review.txt organized/cat-review/cat-review-notes.txt` is enough.

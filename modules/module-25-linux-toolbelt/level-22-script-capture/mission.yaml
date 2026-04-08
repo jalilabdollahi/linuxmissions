@@ -1,0 +1,15 @@
+{
+  "name": "Script Capture: Field Extract",
+  "description": "In the linux toolbelt lab, a task related to Script Capture needs cleanup before the handoff.",
+  "objective": "Extract the second column from script-capture-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Script Capture",
+    "cut",
+    "awk"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-22-script-capture"
+}

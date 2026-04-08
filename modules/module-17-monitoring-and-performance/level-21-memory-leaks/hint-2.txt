@@ -1,0 +1,1 @@
+`mkdir -p organized/memory-leaks` followed by `mv inbox/memory-leaks.txt organized/memory-leaks/memory-leaks-notes.txt` is enough.

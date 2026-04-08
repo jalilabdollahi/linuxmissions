@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/data-retention/README.txt": "Data Retention bundle\n",
+      "bundle/data-retention/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "data-retention-backup.tar.gz",
+    "required_entries": [
+      "bundle/data-retention",
+      "bundle/data-retention/README.txt",
+      "bundle/data-retention/notes.txt"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+One valid pattern is:
+if [ -e "$1" ]; then
+  echo "EXISTS"
+else
+  echo "MISSING"
+fi

@@ -1,0 +1,21 @@
+{
+  "task": {
+    "type": "extract_field",
+    "input_file": "yes-head-report.csv",
+    "lines": [
+      "service,owner,priority",
+      "api,alex,high",
+      "worker,mina,medium",
+      "db,sofia,critical"
+    ],
+    "delimiter": ",",
+    "field_index": 2,
+    "output_file": "owners.txt",
+    "expected_lines": [
+      "owner",
+      "alex",
+      "mina",
+      "sofia"
+    ]
+  }
+}

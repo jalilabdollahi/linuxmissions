@@ -1,0 +1,11 @@
+{
+  "name": "Log Hunt",
+  "description": "A mock `journalctl` command in the sandbox can show recent logs. Find the error entries from the last hour and save them.",
+  "objective": "Use the provided journalctl helper and save the recent `error` entries to errors.txt",
+  "xp": 180,
+  "difficulty": "beginner",
+  "expected_time": "7m",
+  "concepts": ["journalctl", "--since", "grep", "logs"],
+  "module": "module-7-sysadmin",
+  "level": "level-2-journald"
+}

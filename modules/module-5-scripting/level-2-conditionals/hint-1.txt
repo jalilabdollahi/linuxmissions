@@ -1,0 +1,4 @@
+Use an if statement with a file test:
+if [ -e "$1" ]; then
+  ...
+fi

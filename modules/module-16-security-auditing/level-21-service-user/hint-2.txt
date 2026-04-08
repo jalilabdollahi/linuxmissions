@@ -1,0 +1,1 @@
+`mkdir -p organized/service-user` followed by `mv inbox/service-user.txt organized/service-user/service-user-notes.txt` is enough.

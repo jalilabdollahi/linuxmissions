@@ -1,0 +1,3 @@
+Verify with:
+ls -la $SANDBOX/etc/myapp/
+readlink $SANDBOX/etc/myapp/active.conf

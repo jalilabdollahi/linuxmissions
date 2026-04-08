@@ -1,0 +1,15 @@
+{
+  "name": "Cron Hourly: Noise Dedup",
+  "description": "In the scheduling and jobs lab, a task related to Cron Hourly needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from cron-hourly-raw.txt with sorted unique values",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Cron Hourly",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-4-cron-hourly"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Uname A: Cleanup Sweep",
+  "description": "In the boot and recovery lab, a task related to Uname A needs cleanup before the handoff.",
+  "objective": "Delete only the `.tmp` files under cleanup/uname-a and leave the other files intact",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Uname A",
+    "find",
+    "rm"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-8-uname-a"
+}

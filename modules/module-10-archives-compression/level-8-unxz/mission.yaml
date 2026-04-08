@@ -1,0 +1,15 @@
+{
+  "name": "Unxz: Cleanup Sweep",
+  "description": "In the archives and compression lab, a task related to Unxz needs cleanup before the handoff.",
+  "objective": "Delete only the `.tmp` files under cleanup/unxz and leave the other files intact",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Unxz",
+    "find",
+    "rm"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-8-unxz"
+}

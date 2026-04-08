@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "expand-tabs-restore.tar.gz",
+    "archived_files": {
+      "restored/expand-tabs/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/expand-tabs/token.txt": "expand-tabs-token\n"
+    },
+    "required_files": {
+      "restored/expand-tabs/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/expand-tabs/token.txt": "expand-tabs-token\n"
+    }
+  }
+}

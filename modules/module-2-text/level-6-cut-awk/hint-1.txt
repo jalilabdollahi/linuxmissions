@@ -1,0 +1,2 @@
+cut can extract fields by delimiter:
+cut -d, -f1,3 $SANDBOX/users.csv

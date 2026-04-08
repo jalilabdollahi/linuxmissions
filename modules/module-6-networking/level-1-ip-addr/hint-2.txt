@@ -1,0 +1,1 @@
+You need the interface name from lines ending with `:` and the IPv4 address from `inet` lines.

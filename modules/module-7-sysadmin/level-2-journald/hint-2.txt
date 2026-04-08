@@ -1,0 +1,2 @@
+Pipe the recent logs through grep:
+./journalctl --since "1 hour ago" | grep error

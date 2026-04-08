@@ -1,0 +1,3 @@
+Document the zombies first, then kill the parent:
+ps -o pid,comm,stat,ppid | awk '$3 ~ /^Z/ {print}' > $SANDBOX/zombies.txt
+kill $(cat $SANDBOX/parent.pid)

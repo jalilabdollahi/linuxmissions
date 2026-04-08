@@ -1,0 +1,15 @@
+{
+  "name": "Grep Gauntlet: Alert Filter",
+  "description": "In the linux war games lab, a task related to Grep Gauntlet needs cleanup before the handoff.",
+  "objective": "Write every alert line from grep-gauntlet.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Grep Gauntlet",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-18-grep-gauntlet"
+}

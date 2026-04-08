@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "systemctl-enable.log",
+    "lines": [
+      "INFO preparing systemctl-enable",
+      "ALERT SYSTEMCTL drift detected",
+      "INFO collecting extra context",
+      "ALERT SYSTEMCTL rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT SYSTEMCTL drift detected",
+      "ALERT SYSTEMCTL rollback required"
+    ]
+  }
+}

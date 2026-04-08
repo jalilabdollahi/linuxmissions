@@ -1,0 +1,15 @@
+{
+  "name": "Yes Head: Field Extract",
+  "description": "In the linux toolbelt lab, a task related to Yes Head needs cleanup before the handoff.",
+  "objective": "Extract the second column from yes-head-report.csv into owners.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Yes Head",
+    "cut",
+    "awk"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-5-yes-head"
+}

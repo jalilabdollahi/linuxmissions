@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/file-types/README.txt": "File Types bundle\n",
+      "bundle/file-types/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "file-types-backup.tar.gz",
+    "required_entries": [
+      "bundle/file-types",
+      "bundle/file-types/README.txt",
+      "bundle/file-types/notes.txt"
+    ]
+  }
+}

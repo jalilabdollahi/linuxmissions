@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/summary-totals.txt": "Summary Totals checklist for data processing\n"
+    },
+    "target_path": "organized/summary-totals/summary-totals-notes.txt",
+    "target_text": "Summary Totals checklist for data processing\n",
+    "removed_paths": [
+      "inbox/summary-totals.txt"
+    ]
+  }
+}

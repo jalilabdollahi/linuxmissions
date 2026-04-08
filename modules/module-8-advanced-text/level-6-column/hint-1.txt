@@ -1,0 +1,2 @@
+If `column` is available, it is made for this:
+column -t report.txt

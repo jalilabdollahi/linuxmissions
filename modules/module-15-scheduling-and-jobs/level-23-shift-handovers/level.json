@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/shift-handovers/README.txt": "Shift Handovers bundle\n",
+      "bundle/shift-handovers/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "shift-handovers-backup.tar.gz",
+    "required_entries": [
+      "bundle/shift-handovers",
+      "bundle/shift-handovers/README.txt",
+      "bundle/shift-handovers/notes.txt"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Test Brackets: Path Realignment",
+  "description": "In the shell environment lab, a task related to Test Brackets needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/test-brackets.txt to organized/test-brackets/test-brackets-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Test Brackets",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-21-test-brackets"
+}

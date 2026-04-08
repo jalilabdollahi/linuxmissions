@@ -1,0 +1,11 @@
+{
+  "name": "Open Sesame",
+  "description": "A firewall ruleset was exported from a host. Read it and figure out which application port is being denied.",
+  "objective": "Find the blocked destination port in firewall.rules and write it to blocked_port.txt",
+  "xp": 230,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["iptables", "firewall rules", "analysis", "ports"],
+  "module": "module-6-networking",
+  "level": "level-7-firewall"
+}

@@ -1,0 +1,4 @@
+Change all files at once:
+chown $(whoami) $SANDBOX/config/*.conf
+# Or recursively:
+chown -R $(whoami) $SANDBOX/config/

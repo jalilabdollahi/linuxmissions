@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/dd-imaging/keep.txt": "keep\n",
+      "cleanup/dd-imaging/old-1.tmp": "junk\n",
+      "cleanup/dd-imaging/old-2.tmp": "junk\n",
+      "cleanup/dd-imaging/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/dd-imaging/old-1.tmp",
+      "cleanup/dd-imaging/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/dd-imaging/keep.txt",
+      "cleanup/dd-imaging/notes.md"
+    ]
+  }
+}

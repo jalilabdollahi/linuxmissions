@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/user-audit.sh",
+    "token_path": "jobs/user-audit.token",
+    "token": "user-audit-done",
+    "initial_mode": 416
+  }
+}

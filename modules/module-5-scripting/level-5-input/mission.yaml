@@ -1,0 +1,11 @@
+{
+  "name": "Config Parser",
+  "description": "Your app stores environment variables in a `key=value` file. You need a loader script that turns those lines into exported shell variables.",
+  "objective": "Write load_env.sh so sourcing it with app.env exports APP_NAME, APP_ENV, and APP_PORT",
+  "xp": 210,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["while read", "IFS", "export", "source"],
+  "module": "module-5-scripting",
+  "level": "level-5-input"
+}

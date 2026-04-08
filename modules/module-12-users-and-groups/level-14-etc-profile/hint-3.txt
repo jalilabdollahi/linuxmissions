@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'etc-profile item %s\n' "$n" > generated/etc-profile-$n.txt; done`

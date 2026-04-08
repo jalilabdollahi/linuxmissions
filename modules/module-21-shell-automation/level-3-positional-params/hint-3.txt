@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' positional-params-events.txt > ok-count.txt`

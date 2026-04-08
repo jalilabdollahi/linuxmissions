@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/usb-review.sh && jobs/usb-review.sh`

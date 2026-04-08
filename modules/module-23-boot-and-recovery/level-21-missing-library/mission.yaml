@@ -1,0 +1,16 @@
+{
+  "name": "Missing Library: Path Realignment",
+  "description": "In the boot and recovery lab, a task related to Missing Library needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/missing-library.txt to organized/missing-library/missing-library-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Missing Library",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-21-missing-library"
+}

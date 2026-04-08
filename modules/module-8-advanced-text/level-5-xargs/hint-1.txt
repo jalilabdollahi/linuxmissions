@@ -1,0 +1,2 @@
+Start by listing the files:
+find files -type f

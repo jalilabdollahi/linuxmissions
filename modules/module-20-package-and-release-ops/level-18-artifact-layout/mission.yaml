@@ -1,0 +1,15 @@
+{
+  "name": "Artifact Layout: Alert Filter",
+  "description": "In the package and release operations lab, a task related to Artifact Layout needs cleanup before the handoff.",
+  "objective": "Write every alert line from artifact-layout.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Artifact Layout",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-18-artifact-layout"
+}

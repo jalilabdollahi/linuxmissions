@@ -1,0 +1,2 @@
+The pattern to match is:
+# EXTRA CONFIG

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "report-headers.log",
+    "lines": [
+      "INFO preparing report-headers",
+      "ALERT REPORT drift detected",
+      "INFO collecting extra context",
+      "ALERT REPORT rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT REPORT drift detected",
+      "ALERT REPORT rollback required"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/ip-addr.txt": "Ip Addr checklist for network troubleshooting\n"
+    },
+    "target_path": "organized/ip-addr/ip-addr-notes.txt",
+    "target_text": "Ip Addr checklist for network troubleshooting\n",
+    "removed_paths": [
+      "inbox/ip-addr.txt"
+    ]
+  }
+}

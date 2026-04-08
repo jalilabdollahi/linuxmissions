@@ -1,0 +1,15 @@
+{
+  "name": "Sources List: Permission Fix",
+  "description": "In the package and release operations lab, a task related to Sources List needs cleanup before the handoff.",
+  "objective": "Set the mode of sources-list.sh to 640",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Sources List",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-12-sources-list"
+}

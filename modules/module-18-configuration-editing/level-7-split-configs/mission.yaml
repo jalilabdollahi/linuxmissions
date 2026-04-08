@@ -1,0 +1,15 @@
+{
+  "name": "Split Configs: History Window",
+  "description": "In the configuration editing lab, a task related to Split Configs needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of split-configs-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Split Configs",
+    "head",
+    "tail"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-7-split-configs"
+}

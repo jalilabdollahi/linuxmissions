@@ -1,0 +1,15 @@
+{
+  "name": "Seq Command: Noise Dedup",
+  "description": "In the linux toolbelt lab, a task related to Seq Command needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from seq-command-raw.txt with sorted unique values",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Seq Command",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-4-seq-command"
+}

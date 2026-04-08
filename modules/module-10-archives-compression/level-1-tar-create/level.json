@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/tar-create.txt": "Tar Create checklist for archives and compression\n"
+    },
+    "target_path": "organized/tar-create/tar-create-notes.txt",
+    "target_text": "Tar Create checklist for archives and compression\n",
+    "removed_paths": [
+      "inbox/tar-create.txt"
+    ]
+  }
+}

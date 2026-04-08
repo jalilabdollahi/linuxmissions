@@ -1,0 +1,15 @@
+{
+  "name": "Service Dependencies: Field Extract",
+  "description": "In the services and logs lab, a task related to Service Dependencies needs cleanup before the handoff.",
+  "objective": "Extract the second column from service-dependencies-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Service Dependencies",
+    "cut",
+    "awk"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-22-service-dependencies"
+}

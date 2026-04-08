@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/here-strings/README.txt": "Here Strings bundle\n",
+      "bundle/here-strings/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "here-strings-backup.tar.gz",
+    "required_entries": [
+      "bundle/here-strings",
+      "bundle/here-strings/README.txt",
+      "bundle/here-strings/notes.txt"
+    ]
+  }
+}

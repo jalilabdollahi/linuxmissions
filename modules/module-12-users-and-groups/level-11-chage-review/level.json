@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "chage-review-restore.tar.gz",
+    "archived_files": {
+      "restored/chage-review/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/chage-review/token.txt": "chage-review-token\n"
+    },
+    "required_files": {
+      "restored/chage-review/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/chage-review/token.txt": "chage-review-token\n"
+    }
+  }
+}

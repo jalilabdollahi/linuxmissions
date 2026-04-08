@@ -1,0 +1,1 @@
+Example: `head -n 3 dpkg-query-history.log > first3.txt` and `tail -n 3 dpkg-query-history.log > last3.txt`

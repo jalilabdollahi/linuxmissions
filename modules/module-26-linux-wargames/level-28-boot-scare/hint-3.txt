@@ -1,0 +1,1 @@
+Example: `tar -xzf boot-scare-restore.tar.gz`

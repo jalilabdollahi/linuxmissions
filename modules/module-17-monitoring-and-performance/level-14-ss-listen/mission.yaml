@@ -1,0 +1,16 @@
+{
+  "name": "Ss Listen: Loop Builder",
+  "description": "In the monitoring and performance lab, a task related to Ss Listen needs cleanup before the handoff.",
+  "objective": "Create three files under generated/ named ss-listen-1.txt through ss-listen-3.txt with matching numbered content",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Ss Listen",
+    "for",
+    "seq",
+    "printf"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-14-ss-listen"
+}

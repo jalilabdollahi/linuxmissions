@@ -1,0 +1,15 @@
+{
+  "name": "Lsof Basics: Script Kickoff",
+  "description": "In the monitoring and performance lab, a task related to Lsof Basics needs cleanup before the handoff.",
+  "objective": "Make jobs/lsof-basics.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Lsof Basics",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-13-lsof-basics"
+}

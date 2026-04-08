@@ -1,0 +1,15 @@
+{
+  "name": "Storage Panic: Restore Drill",
+  "description": "In the linux war games lab, a task related to Storage Panic needs cleanup before the handoff.",
+  "objective": "Extract storage-panic-restore.tar.gz so the restored/storage-panic directory appears in the sandbox",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Storage Panic",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-11-storage-panic"
+}

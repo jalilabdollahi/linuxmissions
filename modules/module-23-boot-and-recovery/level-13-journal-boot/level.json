@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/journal-boot.sh",
+    "token_path": "jobs/journal-boot.token",
+    "token": "journal-boot-done",
+    "initial_mode": 416
+  }
+}

@@ -1,0 +1,4 @@
+Check the niceness with ps:
+ps -o pid,ni,cmd -p $(cat $SANDBOX/pid.txt)
+
+If the NI column is 15 or another value >= 10, validation should pass.

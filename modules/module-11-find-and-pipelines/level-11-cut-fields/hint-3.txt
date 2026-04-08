@@ -1,0 +1,1 @@
+Example: `tar -xzf cut-fields-restore.tar.gz`

@@ -1,0 +1,1 @@
+Example: `chmod 640 telnet-legacy.sh`

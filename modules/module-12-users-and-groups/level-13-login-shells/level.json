@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/login-shells.sh",
+    "token_path": "jobs/login-shells.token",
+    "token": "login-shells-done",
+    "initial_mode": 416
+  }
+}

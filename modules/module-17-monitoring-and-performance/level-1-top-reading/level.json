@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/top-reading.txt": "Top Reading checklist for monitoring and performance\n"
+    },
+    "target_path": "organized/top-reading/top-reading-notes.txt",
+    "target_text": "Top Reading checklist for monitoring and performance\n",
+    "removed_paths": [
+      "inbox/top-reading.txt"
+    ]
+  }
+}

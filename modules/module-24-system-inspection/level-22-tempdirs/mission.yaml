@@ -1,0 +1,15 @@
+{
+  "name": "Tempdirs: Field Extract",
+  "description": "In the system inspection lab, a task related to Tempdirs needs cleanup before the handoff.",
+  "objective": "Extract the second column from tempdirs-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Tempdirs",
+    "cut",
+    "awk"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-22-tempdirs"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "API Call",
+  "description": "The API response is stored locally, but you still need to fetch it with curl and extract one field from the JSON.",
+  "objective": "Use curl on response.json and save the value of `service.status` to status.txt",
+  "xp": 190,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["curl", "file://", "json", "pipes"],
+  "module": "module-6-networking",
+  "level": "level-4-curl"
+}

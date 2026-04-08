@@ -1,0 +1,11 @@
+{
+  "name": "Log Discipline",
+  "description": "An application is filling disk with old logs. Write a logrotate config so the logs are rotated daily and compressed.",
+  "objective": "Create myapp.logrotate for `/var/log/myapp/*.log` with `daily`, `rotate 7`, and `compress`",
+  "xp": 250,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["logrotate", "daily", "rotate", "compress"],
+  "module": "module-7-sysadmin",
+  "level": "level-6-logrotate"
+}

@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/awk-patterns.txt": "Awk Patterns checklist for search and pipelines\n"
+    },
+    "target_path": "organized/awk-patterns/awk-patterns-notes.txt",
+    "target_text": "Awk Patterns checklist for search and pipelines\n",
+    "removed_paths": [
+      "inbox/awk-patterns.txt"
+    ]
+  }
+}

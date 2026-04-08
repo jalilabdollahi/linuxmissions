@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/cat-reassemble.sh",
+    "token_path": "jobs/cat-reassemble.token",
+    "token": "cat-reassemble-done",
+    "initial_mode": 416
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "xxd-review.log",
+    "lines": [
+      "INFO preparing xxd-review",
+      "ALERT XXD drift detected",
+      "INFO collecting extra context",
+      "ALERT XXD rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT XXD drift detected",
+      "ALERT XXD rollback required"
+    ]
+  }
+}

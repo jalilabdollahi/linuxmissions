@@ -1,0 +1,1 @@
+`mkdir -p organized/uname` followed by `mv inbox/uname.txt organized/uname/uname-notes.txt` is enough.

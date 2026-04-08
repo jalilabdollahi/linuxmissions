@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "history-restore.tar.gz",
+    "archived_files": {
+      "restored/history/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/history/token.txt": "history-token\n"
+    },
+    "required_files": {
+      "restored/history/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/history/token.txt": "history-token\n"
+    }
+  }
+}

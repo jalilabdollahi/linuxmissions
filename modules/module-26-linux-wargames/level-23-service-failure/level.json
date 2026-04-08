@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/service-failure/README.txt": "Service Failure bundle\n",
+      "bundle/service-failure/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "service-failure-backup.tar.gz",
+    "required_entries": [
+      "bundle/service-failure",
+      "bundle/service-failure/README.txt",
+      "bundle/service-failure/notes.txt"
+    ]
+  }
+}

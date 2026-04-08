@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "set-e.log",
+    "lines": [
+      "INFO preparing set-e",
+      "ALERT SET drift detected",
+      "INFO collecting extra context",
+      "ALERT SET rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT SET drift detected",
+      "ALERT SET rollback required"
+    ]
+  }
+}

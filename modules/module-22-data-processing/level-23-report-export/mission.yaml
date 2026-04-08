@@ -1,0 +1,15 @@
+{
+  "name": "Report Export: Backup Bundle",
+  "description": "In the data processing lab, a task related to Report Export needs cleanup before the handoff.",
+  "objective": "Create report-export-backup.tar.gz containing the files under bundle/report-export",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Report Export",
+    "tar",
+    "compression"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-23-report-export"
+}

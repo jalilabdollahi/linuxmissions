@@ -1,0 +1,16 @@
+{
+  "name": "Rescue Shell: Event Counter",
+  "description": "In the boot and recovery lab, a task related to Rescue Shell needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in rescue-shell-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Rescue Shell",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-3-rescue-shell"
+}

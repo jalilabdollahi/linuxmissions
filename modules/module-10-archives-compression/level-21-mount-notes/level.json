@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/mount-notes.txt": "Mount Notes checklist for archives and compression\n"
+    },
+    "target_path": "organized/mount-notes/mount-notes-notes.txt",
+    "target_text": "Mount Notes checklist for archives and compression\n",
+    "removed_paths": [
+      "inbox/mount-notes.txt"
+    ]
+  }
+}

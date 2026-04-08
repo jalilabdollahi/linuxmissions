@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "test-operators-restore.tar.gz",
+    "archived_files": {
+      "restored/test-operators/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/test-operators/token.txt": "test-operators-token\n"
+    },
+    "required_files": {
+      "restored/test-operators/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/test-operators/token.txt": "test-operators-token\n"
+    }
+  }
+}

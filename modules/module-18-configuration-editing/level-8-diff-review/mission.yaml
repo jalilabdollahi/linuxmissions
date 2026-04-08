@@ -1,0 +1,15 @@
+{
+  "name": "Diff Review: Cleanup Sweep",
+  "description": "In the configuration editing lab, a task related to Diff Review needs cleanup before the handoff.",
+  "objective": "Delete only the `.tmp` files under cleanup/diff-review and leave the other files intact",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Diff Review",
+    "find",
+    "rm"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-8-diff-review"
+}

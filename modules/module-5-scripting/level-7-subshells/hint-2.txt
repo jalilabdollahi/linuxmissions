@@ -1,0 +1,2 @@
+After starting the tasks, use:
+wait

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "pwd-cd.log",
+    "lines": [
+      "INFO preparing pwd-cd",
+      "ALERT PWD drift detected",
+      "INFO collecting extra context",
+      "ALERT PWD rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT PWD drift detected",
+      "ALERT PWD rollback required"
+    ]
+  }
+}

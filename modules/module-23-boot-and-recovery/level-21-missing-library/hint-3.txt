@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/missing-library && mv inbox/missing-library.txt organized/missing-library/missing-library-notes.txt`

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "ip-route.log",
+    "lines": [
+      "INFO preparing ip-route",
+      "ALERT IP drift detected",
+      "INFO collecting extra context",
+      "ALERT IP rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT IP drift detected",
+      "ALERT IP rollback required"
+    ]
+  }
+}

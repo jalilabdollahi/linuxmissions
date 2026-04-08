@@ -1,0 +1,11 @@
+{
+  "name": "Signal Relay",
+  "description": "A long-running listener reloads its configuration when it receives SIGHUP. Trigger that behavior without killing the service.",
+  "objective": "Send SIGHUP to listener.sh so it writes 'reloaded' to reload.log",
+  "xp": 200,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["kill -HUP", "signals", "SIGHUP", "trap", "kill -l"],
+  "module": "module-4-processes",
+  "level": "level-5-signals"
+}

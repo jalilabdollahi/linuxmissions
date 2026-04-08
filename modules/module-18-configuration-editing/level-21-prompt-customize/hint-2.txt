@@ -1,0 +1,1 @@
+`mkdir -p organized/prompt-customize` followed by `mv inbox/prompt-customize.txt organized/prompt-customize/prompt-customize-notes.txt` is enough.

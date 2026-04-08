@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/file-permissions.sh",
+    "token_path": "jobs/file-permissions.token",
+    "token": "file-permissions-done",
+    "initial_mode": 416
+  }
+}

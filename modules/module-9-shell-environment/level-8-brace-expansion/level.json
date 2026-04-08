@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/brace-expansion/keep.txt": "keep\n",
+      "cleanup/brace-expansion/old-1.tmp": "junk\n",
+      "cleanup/brace-expansion/old-2.tmp": "junk\n",
+      "cleanup/brace-expansion/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/brace-expansion/old-1.tmp",
+      "cleanup/brace-expansion/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/brace-expansion/keep.txt",
+      "cleanup/brace-expansion/notes.md"
+    ]
+  }
+}

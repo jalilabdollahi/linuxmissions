@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/debug-xtrace.txt": "Debug Xtrace checklist for shell automation\n"
+    },
+    "target_path": "organized/debug-xtrace/debug-xtrace-notes.txt",
+    "target_text": "Debug Xtrace checklist for shell automation\n",
+    "removed_paths": [
+      "inbox/debug-xtrace.txt"
+    ]
+  }
+}

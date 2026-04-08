@@ -1,0 +1,16 @@
+{
+  "name": "Unit Files: Path Realignment",
+  "description": "In the services and logs lab, a task related to Unit Files needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/unit-files.txt to organized/unit-files/unit-files-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Unit Files",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-21-unit-files"
+}

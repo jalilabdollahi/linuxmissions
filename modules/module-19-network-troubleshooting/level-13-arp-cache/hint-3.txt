@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/arp-cache.sh && jobs/arp-cache.sh`

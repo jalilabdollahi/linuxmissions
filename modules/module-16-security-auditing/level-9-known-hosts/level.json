@@ -1,0 +1,8 @@
+{
+  "task": {
+    "type": "symlink_target",
+    "target_path": "releases/known-hosts.conf",
+    "target_text": "Known Hosts release payload\n",
+    "link_path": "current.conf"
+  }
+}

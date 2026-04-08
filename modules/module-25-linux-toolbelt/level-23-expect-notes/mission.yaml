@@ -1,0 +1,15 @@
+{
+  "name": "Expect Notes: Backup Bundle",
+  "description": "In the linux toolbelt lab, a task related to Expect Notes needs cleanup before the handoff.",
+  "objective": "Create expect-notes-backup.tar.gz containing the files under bundle/expect-notes",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Expect Notes",
+    "tar",
+    "compression"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-23-expect-notes"
+}

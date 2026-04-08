@@ -1,0 +1,12 @@
+{
+  "task": {
+    "type": "disk_report",
+    "dirs": {
+      "datasets/api": 100,
+      "datasets/logs": 180,
+      "datasets/cache": 60
+    },
+    "output_file": "largest.txt",
+    "expected_dir": "datasets/logs"
+  }
+}

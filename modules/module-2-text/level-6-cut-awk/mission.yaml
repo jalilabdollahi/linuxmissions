@@ -1,0 +1,11 @@
+{
+  "name": "Column Harvest",
+  "description": "A CSV export contains many columns but the billing system only needs usernames and email addresses.",
+  "objective": "Extract only the username (field 1) and email (field 3) from users.csv, save to extract.csv (comma-separated)",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["cut", "awk", "-F", "-d", "field extraction"],
+  "module": "module-2-text",
+  "level": "level-6-cut-awk"
+}

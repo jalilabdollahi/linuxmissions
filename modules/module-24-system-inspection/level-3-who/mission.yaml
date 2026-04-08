@@ -1,0 +1,16 @@
+{
+  "name": "Who: Event Counter",
+  "description": "In the system inspection lab, a task related to Who needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in who-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Who",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-3-who"
+}

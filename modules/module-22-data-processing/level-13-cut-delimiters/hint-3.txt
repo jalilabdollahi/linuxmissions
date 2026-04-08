@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/cut-delimiters.sh && jobs/cut-delimiters.sh`

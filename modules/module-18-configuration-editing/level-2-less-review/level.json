@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "less-review.log",
+    "lines": [
+      "INFO preparing less-review",
+      "ALERT LESS drift detected",
+      "INFO collecting extra context",
+      "ALERT LESS rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT LESS drift detected",
+      "ALERT LESS rollback required"
+    ]
+  }
+}

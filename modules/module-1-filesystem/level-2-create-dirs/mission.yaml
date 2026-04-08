@@ -1,0 +1,11 @@
+{
+  "name": "Build the Scaffold",
+  "description": "A web app expects a specific directory layout to exist before it starts. Without it, it crashes.",
+  "objective": "Create the directory tree: logs/app, logs/nginx, data/uploads, data/cache inside the sandbox",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": ["mkdir", "mkdir -p", "tree", "ls"],
+  "module": "module-1-filesystem",
+  "level": "level-2-create-dirs"
+}

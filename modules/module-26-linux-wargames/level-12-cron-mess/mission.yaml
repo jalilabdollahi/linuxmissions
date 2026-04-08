@@ -1,0 +1,15 @@
+{
+  "name": "Cron Mess: Permission Fix",
+  "description": "In the linux war games lab, a task related to Cron Mess needs cleanup before the handoff.",
+  "objective": "Set the mode of cron-mess.sh to 640",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Cron Mess",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-12-cron-mess"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Package Verify: Path Realignment",
+  "description": "In the package and release operations lab, a task related to Package Verify needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/package-verify.txt to organized/package-verify/package-verify-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Package Verify",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-21-package-verify"
+}

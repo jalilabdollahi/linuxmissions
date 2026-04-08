@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' ping-host-events.txt > ok-count.txt`

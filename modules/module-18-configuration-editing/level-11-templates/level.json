@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "templates-restore.tar.gz",
+    "archived_files": {
+      "restored/templates/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/templates/token.txt": "templates-token\n"
+    },
+    "required_files": {
+      "restored/templates/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/templates/token.txt": "templates-token\n"
+    }
+  }
+}

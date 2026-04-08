@@ -1,0 +1,2 @@
+Use a pipe into the helper:
+echo './cleanup.sh' | ./at now + 1 minute

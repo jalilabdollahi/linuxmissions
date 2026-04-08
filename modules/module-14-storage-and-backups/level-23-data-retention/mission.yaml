@@ -1,0 +1,15 @@
+{
+  "name": "Data Retention: Backup Bundle",
+  "description": "In the storage and backups lab, a task related to Data Retention needs cleanup before the handoff.",
+  "objective": "Create data-retention-backup.tar.gz containing the files under bundle/data-retention",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Data Retention",
+    "tar",
+    "compression"
+  ],
+  "module": "module-14-storage-and-backups",
+  "level": "level-23-data-retention"
+}

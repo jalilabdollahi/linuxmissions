@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/awk-patterns && mv inbox/awk-patterns.txt organized/awk-patterns/awk-patterns-notes.txt`

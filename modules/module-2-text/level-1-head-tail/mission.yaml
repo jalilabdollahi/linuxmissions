@@ -1,0 +1,11 @@
+{
+  "name": "Log Triage",
+  "description": "A service crashed and left a huge log file. You need to see the first and last entries quickly.",
+  "objective": "Write the first 5 lines of app.log to first5.txt and the last 5 lines to last5.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": ["head", "tail", "-n", "output redirection"],
+  "module": "module-2-text",
+  "level": "level-1-head-tail"
+}

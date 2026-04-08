@@ -1,0 +1,16 @@
+{
+  "name": "Tar Create: Path Realignment",
+  "description": "In the archives and compression lab, a task related to Tar Create needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/tar-create.txt to organized/tar-create/tar-create-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Tar Create",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-1-tar-create"
+}

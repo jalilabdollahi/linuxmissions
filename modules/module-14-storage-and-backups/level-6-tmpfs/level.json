@@ -1,0 +1,11 @@
+{
+  "task": {
+    "type": "replace_text",
+    "input_file": "tmpfs.conf",
+    "original_text": "MODE=legacy\nRETRIES=1\nMODE=legacy\n",
+    "old": "MODE=legacy",
+    "new": "MODE=managed",
+    "output_file": "fixed.conf",
+    "expected_text": "MODE=managed\nRETRIES=1\nMODE=managed\n"
+  }
+}

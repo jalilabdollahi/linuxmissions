@@ -1,0 +1,16 @@
+{
+  "name": "Apt Search: Path Realignment",
+  "description": "In the package and release operations lab, a task related to Apt Search needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/apt-search.txt to organized/apt-search/apt-search-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Apt Search",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-1-apt-search"
+}

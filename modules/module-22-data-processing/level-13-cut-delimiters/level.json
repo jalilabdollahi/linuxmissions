@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/cut-delimiters.sh",
+    "token_path": "jobs/cut-delimiters.token",
+    "token": "cut-delimiters-done",
+    "initial_mode": 416
+  }
+}

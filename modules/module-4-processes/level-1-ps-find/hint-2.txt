@@ -1,0 +1,2 @@
+Sort by CPU (column 3, descending) and take top 5:
+ps aux --sort=-%cpu | head -6

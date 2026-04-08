@@ -1,0 +1,6 @@
+Work backwards:
+Files:  666 - ? = 640  → umask = 026? No: 666 - 026 = 640 ✓
+Dirs:   777 - 027 = 750 ✓
+
+Try umask 027 and create test files to see:
+(umask 027 && touch /tmp/test_file && ls -la /tmp/test_file)

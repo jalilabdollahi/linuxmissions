@@ -1,0 +1,2 @@
+ps aux shows all processes with CPU% and MEM%:
+ps aux

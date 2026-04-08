@@ -1,0 +1,15 @@
+{
+  "name": "Netstat Legacy: Metric Sum",
+  "description": "In the monitoring and performance lab, a task related to Netstat Legacy needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of netstat-legacy-metrics.csv and write the total to total.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Netstat Legacy",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-15-netstat-legacy"
+}

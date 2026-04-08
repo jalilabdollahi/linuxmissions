@@ -1,0 +1,16 @@
+{
+  "name": "Id Command: Event Counter",
+  "description": "In the users and groups lab, a task related to Id Command needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in id-command-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Id Command",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-3-id-command"
+}

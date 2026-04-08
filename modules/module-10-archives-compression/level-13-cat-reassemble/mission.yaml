@@ -1,0 +1,15 @@
+{
+  "name": "Cat Reassemble: Script Kickoff",
+  "description": "In the archives and compression lab, a task related to Cat Reassemble needs cleanup before the handoff.",
+  "objective": "Make jobs/cat-reassemble.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Cat Reassemble",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-13-cat-reassemble"
+}

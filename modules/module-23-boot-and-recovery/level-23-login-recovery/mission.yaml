@@ -1,0 +1,15 @@
+{
+  "name": "Login Recovery: Backup Bundle",
+  "description": "In the boot and recovery lab, a task related to Login Recovery needs cleanup before the handoff.",
+  "objective": "Create login-recovery-backup.tar.gz containing the files under bundle/login-recovery",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Login Recovery",
+    "tar",
+    "compression"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-23-login-recovery"
+}

@@ -1,0 +1,1 @@
+Use chmod with octal mode 640.

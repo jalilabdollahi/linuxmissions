@@ -1,0 +1,16 @@
+{
+  "name": "Tee Append: Path Realignment",
+  "description": "In the linux toolbelt lab, a task related to Tee Append needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/tee-append.txt to organized/tee-append/tee-append-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Tee Append",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-1-tee-append"
+}

@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' ps-sorting.log > alerts.txt`

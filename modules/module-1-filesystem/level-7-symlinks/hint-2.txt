@@ -1,0 +1,2 @@
+Point active.conf at the v2 config:
+ln -s $SANDBOX/etc/myapp/v2/config.conf $SANDBOX/etc/myapp/active.conf

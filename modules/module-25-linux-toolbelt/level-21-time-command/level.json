@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/time-command.txt": "Time Command checklist for linux toolbelt\n"
+    },
+    "target_path": "organized/time-command/time-command-notes.txt",
+    "target_text": "Time Command checklist for linux toolbelt\n",
+    "removed_paths": [
+      "inbox/time-command.txt"
+    ]
+  }
+}

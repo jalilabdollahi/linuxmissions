@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/pipes.sh",
+    "token_path": "jobs/pipes.token",
+    "token": "pipes-done",
+    "initial_mode": 416
+  }
+}

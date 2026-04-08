@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 awk-fields-report.csv > owners.txt`

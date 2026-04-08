@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/flatpak-notes/README.txt": "Flatpak Notes bundle\n",
+      "bundle/flatpak-notes/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "flatpak-notes-backup.tar.gz",
+    "required_entries": [
+      "bundle/flatpak-notes",
+      "bundle/flatpak-notes/README.txt",
+      "bundle/flatpak-notes/notes.txt"
+    ]
+  }
+}

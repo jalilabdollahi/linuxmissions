@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' crontab-edit.log > alerts.txt`

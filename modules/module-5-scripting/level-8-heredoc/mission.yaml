@@ -1,0 +1,11 @@
+{
+  "name": "Template Engine",
+  "description": "A config file should be generated from environment values, but the template logic was never written.",
+  "objective": "Write generate.sh so it reads vars.env and writes app.conf using a heredoc with the configured values",
+  "xp": 250,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": ["heredoc", "<<EOF", "source", "variables"],
+  "module": "module-5-scripting",
+  "level": "level-8-heredoc"
+}

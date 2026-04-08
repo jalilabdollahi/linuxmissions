@@ -1,0 +1,15 @@
+{
+  "name": "Backup Rotation: Backup Bundle",
+  "description": "In the archives and compression lab, a task related to Backup Rotation needs cleanup before the handoff.",
+  "objective": "Create backup-rotation-backup.tar.gz containing the files under bundle/backup-rotation",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Backup Rotation",
+    "tar",
+    "compression"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-23-backup-rotation"
+}

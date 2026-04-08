@@ -1,0 +1,2 @@
+Copy the credentials file to token.txt:
+cp $SANDBOX/.config/app/.credentials $SANDBOX/token.txt

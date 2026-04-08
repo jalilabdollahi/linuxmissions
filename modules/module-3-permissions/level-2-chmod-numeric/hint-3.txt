@@ -1,0 +1,4 @@
+Apply them:
+chmod 644 $SANDBOX/index.html
+chmod 755 $SANDBOX/app.py
+chmod 600 $SANDBOX/secrets.conf

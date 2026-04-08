@@ -1,0 +1,15 @@
+{
+  "name": "Rollback Plan: Backup Bundle",
+  "description": "In the package and release operations lab, a task related to Rollback Plan needs cleanup before the handoff.",
+  "objective": "Create rollback-plan-backup.tar.gz containing the files under bundle/rollback-plan",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Rollback Plan",
+    "tar",
+    "compression"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-23-rollback-plan"
+}

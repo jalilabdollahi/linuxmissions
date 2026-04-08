@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/top-reading && mv inbox/top-reading.txt organized/top-reading/top-reading-notes.txt`

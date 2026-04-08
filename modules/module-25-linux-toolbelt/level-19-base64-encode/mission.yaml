@@ -1,0 +1,15 @@
+{
+  "name": "Base64 Encode: Config Rewrite",
+  "description": "In the linux toolbelt lab, a task related to Base64 Encode needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in base64-encode.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Base64 Encode",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-19-base64-encode"
+}

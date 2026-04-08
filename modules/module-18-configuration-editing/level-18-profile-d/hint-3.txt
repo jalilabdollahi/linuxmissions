@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' profile-d.log > alerts.txt`

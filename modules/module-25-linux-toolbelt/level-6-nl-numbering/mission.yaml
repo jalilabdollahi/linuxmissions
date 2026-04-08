@@ -1,0 +1,15 @@
+{
+  "name": "Nl Numbering: Config Rewrite",
+  "description": "In the linux toolbelt lab, a task related to Nl Numbering needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in nl-numbering.conf and save the fixed result to fixed.conf",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Nl Numbering",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-6-nl-numbering"
+}

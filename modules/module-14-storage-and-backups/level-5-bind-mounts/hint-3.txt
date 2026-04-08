@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 bind-mounts-report.csv > owners.txt`

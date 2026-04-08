@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "snapshot-restore.log",
+    "lines": [
+      "INFO preparing snapshot-restore",
+      "ALERT SNAPSHOT drift detected",
+      "INFO collecting extra context",
+      "ALERT SNAPSHOT rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT SNAPSHOT drift detected",
+      "ALERT SNAPSHOT rollback required"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Dmesg Basics: History Window",
+  "description": "In the services and logs lab, a task related to Dmesg Basics needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of dmesg-basics-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Dmesg Basics",
+    "head",
+    "tail"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-7-dmesg-basics"
+}

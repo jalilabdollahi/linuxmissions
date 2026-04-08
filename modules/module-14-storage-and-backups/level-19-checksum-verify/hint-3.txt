@@ -1,0 +1,1 @@
+Example: `sed 's/MODE=legacy/MODE=managed/g' checksum-verify.conf > fixed.conf`

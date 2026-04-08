@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/apt-search && mv inbox/apt-search.txt organized/apt-search/apt-search-notes.txt`

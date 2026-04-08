@@ -1,0 +1,15 @@
+{
+  "name": "Base64 Decode: Noise Dedup",
+  "description": "In the linux toolbelt lab, a task related to Base64 Decode needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from base64-decode-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Base64 Decode",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-20-base64-decode"
+}

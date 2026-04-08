@@ -1,0 +1,16 @@
+{
+  "name": "Find Size: Event Counter",
+  "description": "In the search and pipelines lab, a task related to Find Size needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in find-size-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Find Size",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-3-find-size"
+}

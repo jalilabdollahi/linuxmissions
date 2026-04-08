@@ -1,0 +1,16 @@
+{
+  "name": "Top Reading: Path Realignment",
+  "description": "In the monitoring and performance lab, a task related to Top Reading needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/top-reading.txt to organized/top-reading/top-reading-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Top Reading",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-1-top-reading"
+}

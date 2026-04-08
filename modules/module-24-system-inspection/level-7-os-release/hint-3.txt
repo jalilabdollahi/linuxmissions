@@ -1,0 +1,1 @@
+Example: `head -n 3 os-release-history.log > first3.txt` and `tail -n 3 os-release-history.log > last3.txt`

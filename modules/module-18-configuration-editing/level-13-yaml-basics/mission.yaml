@@ -1,0 +1,15 @@
+{
+  "name": "Yaml Basics: Script Kickoff",
+  "description": "In the configuration editing lab, a task related to Yaml Basics needs cleanup before the handoff.",
+  "objective": "Make jobs/yaml-basics.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Yaml Basics",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-13-yaml-basics"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Secrets in Plain Sight",
+  "description": "Hidden dotfiles are used to configure many Linux tools. A token file is hiding in the sandbox — but ls alone won't show it.",
+  "objective": "Find the hidden file (starting with .) containing 'AUTH_TOKEN', read its value, and copy it to token.txt in the sandbox root",
+  "xp": 150,
+  "difficulty": "beginner",
+  "expected_time": "8m",
+  "concepts": ["ls -a", "dotfiles", "hidden files", "cat"],
+  "module": "module-1-filesystem",
+  "level": "level-10-hidden-files"
+}

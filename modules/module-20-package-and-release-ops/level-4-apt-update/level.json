@@ -1,0 +1,21 @@
+{
+  "task": {
+    "type": "sort_unique",
+    "input_file": "apt-update-raw.txt",
+    "lines": [
+      "zeta",
+      "alpha",
+      "beta",
+      "alpha",
+      "gamma",
+      "beta"
+    ],
+    "output_file": "unique-sorted.txt",
+    "expected_lines": [
+      "alpha",
+      "beta",
+      "gamma",
+      "zeta"
+    ]
+  }
+}

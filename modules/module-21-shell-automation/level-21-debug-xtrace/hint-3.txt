@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/debug-xtrace && mv inbox/debug-xtrace.txt organized/debug-xtrace/debug-xtrace-notes.txt`

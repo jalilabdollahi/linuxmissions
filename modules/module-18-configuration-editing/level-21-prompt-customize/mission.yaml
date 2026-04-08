@@ -1,0 +1,16 @@
+{
+  "name": "Prompt Customize: Path Realignment",
+  "description": "In the configuration editing lab, a task related to Prompt Customize needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/prompt-customize.txt to organized/prompt-customize/prompt-customize-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Prompt Customize",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-21-prompt-customize"
+}

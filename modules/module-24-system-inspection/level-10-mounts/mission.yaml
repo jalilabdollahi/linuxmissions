@@ -1,0 +1,15 @@
+{
+  "name": "Mounts: Backup Bundle",
+  "description": "In the system inspection lab, a task related to Mounts needs cleanup before the handoff.",
+  "objective": "Create mounts-backup.tar.gz containing the files under bundle/mounts",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Mounts",
+    "tar",
+    "compression"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-10-mounts"
+}

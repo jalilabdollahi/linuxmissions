@@ -1,0 +1,1 @@
+Example: `tar -czf here-strings-backup.tar.gz bundle/here-strings`

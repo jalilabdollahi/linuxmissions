@@ -1,0 +1,2 @@
+Launch the script with a positive niceness value:
+nice -n 15 bash $SANDBOX/heavy.sh &

@@ -1,0 +1,15 @@
+{
+  "name": "Dmesg Errors: Restore Drill",
+  "description": "In the boot and recovery lab, a task related to Dmesg Errors needs cleanup before the handoff.",
+  "objective": "Extract dmesg-errors-restore.tar.gz so the restored/dmesg-errors directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Dmesg Errors",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-11-dmesg-errors"
+}

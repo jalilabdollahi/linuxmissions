@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/prompt-customize && mv inbox/prompt-customize.txt organized/prompt-customize/prompt-customize-notes.txt`

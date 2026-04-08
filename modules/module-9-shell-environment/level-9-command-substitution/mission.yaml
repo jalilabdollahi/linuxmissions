@@ -1,0 +1,15 @@
+{
+  "name": "Command Substitution: Link Repair",
+  "description": "In the shell environment lab, a task related to Command Substitution needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/command-substitution.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Command Substitution",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-9-command-substitution"
+}

@@ -1,0 +1,1 @@
+`mkdir -p organized/grub-notes` followed by `mv inbox/grub-notes.txt organized/grub-notes/grub-notes-notes.txt` is enough.

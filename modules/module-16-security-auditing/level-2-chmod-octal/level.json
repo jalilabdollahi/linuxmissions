@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "chmod-octal.log",
+    "lines": [
+      "INFO preparing chmod-octal",
+      "ALERT CHMOD drift detected",
+      "INFO collecting extra context",
+      "ALERT CHMOD rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT CHMOD drift detected",
+      "ALERT CHMOD rollback required"
+    ]
+  }
+}

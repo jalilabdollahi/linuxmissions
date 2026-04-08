@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/passwd-file.txt": "Passwd File checklist for users and groups\n"
+    },
+    "target_path": "organized/passwd-file/passwd-file-notes.txt",
+    "target_text": "Passwd File checklist for users and groups\n",
+    "removed_paths": [
+      "inbox/passwd-file.txt"
+    ]
+  }
+}

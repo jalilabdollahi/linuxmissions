@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/nginx-log/README.txt": "Nginx Log bundle\n",
+      "bundle/nginx-log/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "nginx-log-backup.tar.gz",
+    "required_entries": [
+      "bundle/nginx-log",
+      "bundle/nginx-log/README.txt",
+      "bundle/nginx-log/notes.txt"
+    ]
+  }
+}

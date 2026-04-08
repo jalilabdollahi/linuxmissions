@@ -1,0 +1,15 @@
+{
+  "name": "Grep Context: Backup Bundle",
+  "description": "In the search and pipelines lab, a task related to Grep Context needs cleanup before the handoff.",
+  "objective": "Create grep-context-backup.tar.gz containing the files under bundle/grep-context",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Grep Context",
+    "tar",
+    "compression"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-10-grep-context"
+}

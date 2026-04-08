@@ -1,0 +1,2 @@
+Use find to search including hidden files:
+find $SANDBOX -name ".*" -type f

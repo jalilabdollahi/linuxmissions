@@ -1,0 +1,1 @@
+`mkdir -p organized/ip-addr` followed by `mv inbox/ip-addr.txt organized/ip-addr/ip-addr-notes.txt` is enough.

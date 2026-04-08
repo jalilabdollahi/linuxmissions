@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/package-verify && mv inbox/package-verify.txt organized/package-verify/package-verify-notes.txt`

@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "block-devices-restore.tar.gz",
+    "archived_files": {
+      "restored/block-devices/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/block-devices/token.txt": "block-devices-token\n"
+    },
+    "required_files": {
+      "restored/block-devices/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/block-devices/token.txt": "block-devices-token\n"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+Example: `find cleanup/grep-invert -name '*.tmp' -delete`

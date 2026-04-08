@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "dmesg-errors-restore.tar.gz",
+    "archived_files": {
+      "restored/dmesg-errors/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/dmesg-errors/token.txt": "dmesg-errors-token\n"
+    },
+    "required_files": {
+      "restored/dmesg-errors/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/dmesg-errors/token.txt": "dmesg-errors-token\n"
+    }
+  }
+}

@@ -1,0 +1,2 @@
+Use the provided helper from inside the sandbox:
+./systemctl status myapp.service

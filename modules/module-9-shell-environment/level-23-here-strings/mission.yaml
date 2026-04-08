@@ -1,0 +1,15 @@
+{
+  "name": "Here Strings: Backup Bundle",
+  "description": "In the shell environment lab, a task related to Here Strings needs cleanup before the handoff.",
+  "objective": "Create here-strings-backup.tar.gz containing the files under bundle/here-strings",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Here Strings",
+    "tar",
+    "compression"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-23-here-strings"
+}

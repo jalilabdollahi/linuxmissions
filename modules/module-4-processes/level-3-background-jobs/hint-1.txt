@@ -1,0 +1,2 @@
+Run the script in the background so your shell prompt returns immediately:
+bash $SANDBOX/process.sh &

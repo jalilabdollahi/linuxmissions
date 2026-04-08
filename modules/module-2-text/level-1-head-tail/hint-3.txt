@@ -1,0 +1,2 @@
+Bonus: tail -f follows a file live (great for watching logs):
+tail -f /var/log/syslog

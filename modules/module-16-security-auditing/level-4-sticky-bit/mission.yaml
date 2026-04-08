@@ -1,0 +1,15 @@
+{
+  "name": "Sticky Bit: Noise Dedup",
+  "description": "In the security auditing lab, a task related to Sticky Bit needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from sticky-bit-raw.txt with sorted unique values",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Sticky Bit",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-4-sticky-bit"
+}

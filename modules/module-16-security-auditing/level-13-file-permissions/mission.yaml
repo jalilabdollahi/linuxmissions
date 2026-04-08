@@ -1,0 +1,15 @@
+{
+  "name": "File Permissions: Script Kickoff",
+  "description": "In the security auditing lab, a task related to File Permissions needs cleanup before the handoff.",
+  "objective": "Make jobs/file-permissions.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "File Permissions",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-13-file-permissions"
+}

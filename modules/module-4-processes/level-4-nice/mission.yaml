@@ -1,0 +1,11 @@
+{
+  "name": "Play Nice",
+  "description": "A CPU-heavy batch task is competing with other services. Launch it with a lower priority so it stays out of the way.",
+  "objective": "Run heavy.sh with niceness 15, save its PID to pid.txt, and confirm the process has the adjusted niceness",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["nice", "renice", "ps -o ni", "priority"],
+  "module": "module-4-processes",
+  "level": "level-4-nice"
+}

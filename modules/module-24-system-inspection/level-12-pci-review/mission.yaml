@@ -1,0 +1,15 @@
+{
+  "name": "Pci Review: Permission Fix",
+  "description": "In the system inspection lab, a task related to Pci Review needs cleanup before the handoff.",
+  "objective": "Set the mode of pci-review.sh to 640",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Pci Review",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-12-pci-review"
+}

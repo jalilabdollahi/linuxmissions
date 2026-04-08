@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/usb-review.sh",
+    "token_path": "jobs/usb-review.token",
+    "token": "usb-review-done",
+    "initial_mode": 416
+  }
+}

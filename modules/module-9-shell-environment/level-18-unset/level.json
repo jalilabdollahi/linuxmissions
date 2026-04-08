@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "unset.log",
+    "lines": [
+      "INFO preparing unset",
+      "ALERT UNSET drift detected",
+      "INFO collecting extra context",
+      "ALERT UNSET rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT UNSET drift detected",
+      "ALERT UNSET rollback required"
+    ]
+  }
+}

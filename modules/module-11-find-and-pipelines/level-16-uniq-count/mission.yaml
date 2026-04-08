@@ -1,0 +1,15 @@
+{
+  "name": "Uniq Count: Capacity Report",
+  "description": "In the search and pipelines lab, a task related to Uniq Count needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Uniq Count",
+    "du",
+    "sort"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-16-uniq-count"
+}

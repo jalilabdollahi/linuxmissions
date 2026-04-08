@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/chmod-basics && mv inbox/chmod-basics.txt organized/chmod-basics/chmod-basics-notes.txt`

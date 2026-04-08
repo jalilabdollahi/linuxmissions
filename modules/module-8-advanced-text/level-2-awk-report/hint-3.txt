@@ -1,0 +1,2 @@
+One valid pattern is:
+awk -F, 'NR>1 {totals[$1]+=$2} END {for (k in totals) print k, totals[k]}' expenses.csv | sort -k2,2nr > totals.txt

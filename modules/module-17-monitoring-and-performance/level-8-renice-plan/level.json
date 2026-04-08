@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/renice-plan/keep.txt": "keep\n",
+      "cleanup/renice-plan/old-1.tmp": "junk\n",
+      "cleanup/renice-plan/old-2.tmp": "junk\n",
+      "cleanup/renice-plan/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/renice-plan/old-1.tmp",
+      "cleanup/renice-plan/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/renice-plan/keep.txt",
+      "cleanup/renice-plan/notes.md"
+    ]
+  }
+}

@@ -1,0 +1,2 @@
+Find and sort files by size:
+find $SANDBOX -type f -exec du -h {} + | sort -rh | head -5

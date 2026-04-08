@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/ip-addr && mv inbox/ip-addr.txt organized/ip-addr/ip-addr-notes.txt`

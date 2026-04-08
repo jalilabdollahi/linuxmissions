@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/pipes.sh && jobs/pipes.sh`

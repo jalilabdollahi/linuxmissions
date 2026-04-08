@@ -1,0 +1,16 @@
+{
+  "name": "Chmod Symbolic: Event Counter",
+  "description": "In the security auditing lab, a task related to Chmod Symbolic needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in chmod-symbolic-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Chmod Symbolic",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-3-chmod-symbolic"
+}

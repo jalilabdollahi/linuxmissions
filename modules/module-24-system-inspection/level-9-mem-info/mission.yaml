@@ -1,0 +1,15 @@
+{
+  "name": "Mem Info: Link Repair",
+  "description": "In the system inspection lab, a task related to Mem Info needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/mem-info.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Mem Info",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-9-mem-info"
+}

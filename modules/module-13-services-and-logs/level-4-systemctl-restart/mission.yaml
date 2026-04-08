@@ -1,0 +1,15 @@
+{
+  "name": "Systemctl Restart: Noise Dedup",
+  "description": "In the services and logs lab, a task related to Systemctl Restart needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from systemctl-restart-raw.txt with sorted unique values",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Systemctl Restart",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-4-systemctl-restart"
+}

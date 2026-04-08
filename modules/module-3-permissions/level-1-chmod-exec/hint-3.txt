@@ -1,0 +1,2 @@
+Then run it:
+chmod u+x $SANDBOX/deploy.sh && $SANDBOX/deploy.sh

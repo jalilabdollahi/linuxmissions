@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "gpg-checks-restore.tar.gz",
+    "archived_files": {
+      "restored/gpg-checks/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/gpg-checks/token.txt": "gpg-checks-token\n"
+    },
+    "required_files": {
+      "restored/gpg-checks/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/gpg-checks/token.txt": "gpg-checks-token\n"
+    }
+  }
+}

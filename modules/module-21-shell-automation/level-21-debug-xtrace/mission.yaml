@@ -1,0 +1,16 @@
+{
+  "name": "Debug Xtrace: Path Realignment",
+  "description": "In the shell automation lab, a task related to Debug Xtrace needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/debug-xtrace.txt to organized/debug-xtrace/debug-xtrace-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Debug Xtrace",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-21-debug-xtrace"
+}

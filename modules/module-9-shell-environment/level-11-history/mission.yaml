@@ -1,0 +1,15 @@
+{
+  "name": "History: Restore Drill",
+  "description": "In the shell environment lab, a task related to History needs cleanup before the handoff.",
+  "objective": "Extract history-restore.tar.gz so the restored/history directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "History",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-9-shell-environment",
+  "level": "level-11-history"
+}

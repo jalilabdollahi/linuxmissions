@@ -1,0 +1,15 @@
+{
+  "name": "Permission Matrix: Backup Bundle",
+  "description": "In the users and groups lab, a task related to Permission Matrix needs cleanup before the handoff.",
+  "objective": "Create permission-matrix-backup.tar.gz containing the files under bundle/permission-matrix",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Permission Matrix",
+    "tar",
+    "compression"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-23-permission-matrix"
+}

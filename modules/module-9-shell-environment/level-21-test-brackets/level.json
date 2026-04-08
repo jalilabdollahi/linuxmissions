@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/test-brackets.txt": "Test Brackets checklist for shell environment\n"
+    },
+    "target_path": "organized/test-brackets/test-brackets-notes.txt",
+    "target_text": "Test Brackets checklist for shell environment\n",
+    "removed_paths": [
+      "inbox/test-brackets.txt"
+    ]
+  }
+}

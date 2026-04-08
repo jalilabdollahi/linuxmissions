@@ -1,0 +1,6 @@
+One valid pattern is:
+while read -r host; do
+  if ./mock_ping.sh "$host"; then
+    echo "$host" >> reachable.txt
+  fi
+done < hosts.txt

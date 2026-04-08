@@ -1,0 +1,1 @@
+Example: `tar -czf mounts-backup.tar.gz bundle/mounts`

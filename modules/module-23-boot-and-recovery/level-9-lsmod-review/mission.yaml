@@ -1,0 +1,15 @@
+{
+  "name": "Lsmod Review: Link Repair",
+  "description": "In the boot and recovery lab, a task related to Lsmod Review needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/lsmod-review.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Lsmod Review",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-9-lsmod-review"
+}

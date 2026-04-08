@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "storage-panic-restore.tar.gz",
+    "archived_files": {
+      "restored/storage-panic/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/storage-panic/token.txt": "storage-panic-token\n"
+    },
+    "required_files": {
+      "restored/storage-panic/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/storage-panic/token.txt": "storage-panic-token\n"
+    }
+  }
+}

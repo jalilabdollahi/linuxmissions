@@ -1,0 +1,15 @@
+{
+  "name": "Snapshot Restore: Alert Filter",
+  "description": "In the boot and recovery lab, a task related to Snapshot Restore needs cleanup before the handoff.",
+  "objective": "Write every alert line from snapshot-restore.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Snapshot Restore",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-18-snapshot-restore"
+}

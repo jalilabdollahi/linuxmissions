@@ -1,0 +1,15 @@
+{
+  "name": "Nice Values: History Window",
+  "description": "In the monitoring and performance lab, a task related to Nice Values needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of nice-values-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Nice Values",
+    "head",
+    "tail"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-7-nice-values"
+}

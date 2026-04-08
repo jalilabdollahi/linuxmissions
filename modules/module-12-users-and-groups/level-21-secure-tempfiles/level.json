@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/secure-tempfiles.txt": "Secure Tempfiles checklist for users and groups\n"
+    },
+    "target_path": "organized/secure-tempfiles/secure-tempfiles-notes.txt",
+    "target_text": "Secure Tempfiles checklist for users and groups\n",
+    "removed_paths": [
+      "inbox/secure-tempfiles.txt"
+    ]
+  }
+}

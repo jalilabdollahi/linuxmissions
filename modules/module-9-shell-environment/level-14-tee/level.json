@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "tee-1.txt",
+        "content": "tee item 1\n"
+      },
+      {
+        "path": "tee-2.txt",
+        "content": "tee item 2\n"
+      },
+      {
+        "path": "tee-3.txt",
+        "content": "tee item 3\n"
+      }
+    ]
+  }
+}

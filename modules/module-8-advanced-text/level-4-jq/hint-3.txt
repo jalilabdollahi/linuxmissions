@@ -1,0 +1,5 @@
+With jq, one approach is:
+{
+  echo "owner=$(jq -r '.owner.email' data.json)"
+  echo "active=$(jq -r '[.services[] | select(.active) | .name] | join(\",\")' data.json)"
+} > report.txt

@@ -1,0 +1,11 @@
+{
+  "name": "The Password Leak",
+  "description": "Someone hardcoded a password in one of the config files. Security needs you to find which file contains the string 'password='.",
+  "objective": "Find the file containing 'password=' and write its path to leak.txt in the sandbox root",
+  "xp": 150,
+  "difficulty": "beginner",
+  "expected_time": "8m",
+  "concepts": ["grep", "-r", "-l", "output redirection"],
+  "module": "module-1-filesystem",
+  "level": "level-6-find-by-content"
+}

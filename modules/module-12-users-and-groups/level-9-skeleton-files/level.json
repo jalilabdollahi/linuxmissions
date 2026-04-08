@@ -1,0 +1,8 @@
+{
+  "task": {
+    "type": "symlink_target",
+    "target_path": "releases/skeleton-files.conf",
+    "target_text": "Skeleton Files release payload\n",
+    "link_path": "current.conf"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Controlled Power",
+  "description": "The ops team wants one narrowly scoped sudo permission. Write the rule into the sandbox's sudoers include file.",
+  "objective": "Write a rule in sudoers.d/devuser that allows devuser to run /usr/bin/systemctl without a password",
+  "xp": 240,
+  "difficulty": "intermediate",
+  "expected_time": "9m",
+  "concepts": ["sudoers", "NOPASSWD", "/etc/sudoers.d", "visudo"],
+  "module": "module-7-sysadmin",
+  "level": "level-5-sudoers"
+}

@@ -1,0 +1,1 @@
+`mkdir -p organized/apt-search` followed by `mv inbox/apt-search.txt organized/apt-search/apt-search-notes.txt` is enough.

@@ -1,0 +1,3 @@
+Find the process:
+ps aux | grep sleep_loop
+pgrep -f sleep_loop.sh

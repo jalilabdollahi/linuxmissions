@@ -1,0 +1,11 @@
+{
+  "name": "Env Surgery",
+  "description": "A startup script expects environment variables from a `.env` file, but the file is incomplete.",
+  "objective": "Fill in `.env` so sourcing it sets APP_MODE=production and APP_PORT=8080, then run app.sh successfully",
+  "xp": 260,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["export", "source", ".env", "printenv"],
+  "module": "module-7-sysadmin",
+  "level": "level-7-env"
+}

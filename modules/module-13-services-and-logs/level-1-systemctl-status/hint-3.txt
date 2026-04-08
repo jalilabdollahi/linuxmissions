@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/systemctl-status && mv inbox/systemctl-status.txt organized/systemctl-status/systemctl-status-notes.txt`

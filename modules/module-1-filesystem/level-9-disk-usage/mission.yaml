@@ -1,0 +1,11 @@
+{
+  "name": "Disk Hog",
+  "description": "The server disk is nearly full. You need to identify the largest files and directories.",
+  "objective": "Find the single largest file in the sandbox and write its path to biggest.txt in the sandbox root",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["du", "df", "sort", "-h", "-S", "find -size"],
+  "module": "module-1-filesystem",
+  "level": "level-9-disk-usage"
+}

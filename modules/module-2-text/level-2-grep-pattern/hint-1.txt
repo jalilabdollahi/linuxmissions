@@ -1,0 +1,2 @@
+grep can search for a literal string:
+grep "ERROR" $SANDBOX/app.log

@@ -1,0 +1,1 @@
+`mkdir -p organized/awk-patterns` followed by `mv inbox/awk-patterns.txt organized/awk-patterns/awk-patterns-notes.txt` is enough.

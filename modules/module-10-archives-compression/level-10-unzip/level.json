@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/unzip/README.txt": "Unzip bundle\n",
+      "bundle/unzip/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "unzip-backup.tar.gz",
+    "required_entries": [
+      "bundle/unzip",
+      "bundle/unzip/README.txt",
+      "bundle/unzip/notes.txt"
+    ]
+  }
+}

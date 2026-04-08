@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "artifact-layout.log",
+    "lines": [
+      "INFO preparing artifact-layout",
+      "ALERT ARTIFACT drift detected",
+      "INFO collecting extra context",
+      "ALERT ARTIFACT rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT ARTIFACT drift detected",
+      "ALERT ARTIFACT rollback required"
+    ]
+  }
+}

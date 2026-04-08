@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "tar-extract.log",
+    "lines": [
+      "INFO preparing tar-extract",
+      "ALERT TAR drift detected",
+      "INFO collecting extra context",
+      "ALERT TAR rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT TAR drift detected",
+      "ALERT TAR rollback required"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Network Recovery: Capacity Report",
+  "description": "In the boot and recovery lab, a task related to Network Recovery needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Network Recovery",
+    "du",
+    "sort"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-16-network-recovery"
+}

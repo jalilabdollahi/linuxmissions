@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "exit-codes.log",
+    "lines": [
+      "INFO preparing exit-codes",
+      "ALERT EXIT drift detected",
+      "INFO collecting extra context",
+      "ALERT EXIT rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT EXIT drift detected",
+      "ALERT EXIT rollback required"
+    ]
+  }
+}

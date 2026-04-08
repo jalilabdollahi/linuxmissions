@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "timeout-1.txt",
+        "content": "timeout item 1\n"
+      },
+      {
+        "path": "timeout-2.txt",
+        "content": "timeout item 2\n"
+      },
+      {
+        "path": "timeout-3.txt",
+        "content": "timeout item 3\n"
+      }
+    ]
+  }
+}

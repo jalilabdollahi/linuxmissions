@@ -1,0 +1,15 @@
+{
+  "name": "Find Type: Alert Filter",
+  "description": "In the search and pipelines lab, a task related to Find Type needs cleanup before the handoff.",
+  "objective": "Write every alert line from find-type.log into alerts.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Find Type",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-2-find-type"
+}

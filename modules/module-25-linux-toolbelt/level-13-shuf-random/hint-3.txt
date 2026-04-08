@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/shuf-random.sh && jobs/shuf-random.sh`

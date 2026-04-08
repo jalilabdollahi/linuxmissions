@@ -1,0 +1,15 @@
+{
+  "name": "Env Print: Config Rewrite",
+  "description": "In the system inspection lab, a task related to Env Print needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in env-print.conf and save the fixed result to fixed.conf",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Env Print",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-6-env-print"
+}

@@ -1,0 +1,1 @@
+Example: `ln -s releases/histogram.conf current.conf`

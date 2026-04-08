@@ -1,0 +1,15 @@
+{
+  "name": "Mtu Troubles: Noise Dedup",
+  "description": "In the network troubleshooting lab, a task related to Mtu Troubles needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from mtu-troubles-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Mtu Troubles",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-20-mtu-troubles"
+}

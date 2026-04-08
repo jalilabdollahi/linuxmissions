@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/find-name.txt": "Find Name checklist for search and pipelines\n"
+    },
+    "target_path": "organized/find-name/find-name-notes.txt",
+    "target_text": "Find Name checklist for search and pipelines\n",
+    "removed_paths": [
+      "inbox/find-name.txt"
+    ]
+  }
+}

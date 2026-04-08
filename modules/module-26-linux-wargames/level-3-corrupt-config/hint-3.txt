@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' corrupt-config-events.txt > ok-count.txt`

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/loops-while/keep.txt": "keep\n",
+      "cleanup/loops-while/old-1.tmp": "junk\n",
+      "cleanup/loops-while/old-2.tmp": "junk\n",
+      "cleanup/loops-while/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/loops-while/old-1.tmp",
+      "cleanup/loops-while/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/loops-while/keep.txt",
+      "cleanup/loops-while/notes.md"
+    ]
+  }
+}

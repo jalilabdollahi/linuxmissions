@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "noisy-logs.log",
+    "lines": [
+      "INFO preparing noisy-logs",
+      "ALERT NOISY drift detected",
+      "INFO collecting extra context",
+      "ALERT NOISY rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT NOISY drift detected",
+      "ALERT NOISY rollback required"
+    ]
+  }
+}

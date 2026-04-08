@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' chmod-symbolic-events.txt > ok-count.txt`

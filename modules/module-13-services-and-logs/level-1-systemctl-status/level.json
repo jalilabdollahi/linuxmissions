@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/systemctl-status.txt": "Systemctl Status checklist for services and logs\n"
+    },
+    "target_path": "organized/systemctl-status/systemctl-status-notes.txt",
+    "target_text": "Systemctl Status checklist for services and logs\n",
+    "removed_paths": [
+      "inbox/systemctl-status.txt"
+    ]
+  }
+}

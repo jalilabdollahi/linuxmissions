@@ -1,0 +1,15 @@
+{
+  "name": "Path Recovery: Field Extract",
+  "description": "In the boot and recovery lab, a task related to Path Recovery needs cleanup before the handoff.",
+  "objective": "Extract the second column from path-recovery-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Path Recovery",
+    "cut",
+    "awk"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-22-path-recovery"
+}

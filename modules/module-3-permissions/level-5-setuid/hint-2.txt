@@ -1,0 +1,2 @@
+Find SUID or SGID (4000 or 2000):
+find $SANDBOX -perm /6000

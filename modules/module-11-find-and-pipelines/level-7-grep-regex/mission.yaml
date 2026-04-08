@@ -1,0 +1,15 @@
+{
+  "name": "Grep Regex: History Window",
+  "description": "In the search and pipelines lab, a task related to Grep Regex needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of grep-regex-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Grep Regex",
+    "head",
+    "tail"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-7-grep-regex"
+}

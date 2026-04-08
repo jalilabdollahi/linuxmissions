@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'changelog-review item %s\n' "$n" > generated/changelog-review-$n.txt; done`

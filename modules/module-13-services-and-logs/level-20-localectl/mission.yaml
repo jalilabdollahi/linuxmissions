@@ -1,0 +1,15 @@
+{
+  "name": "Localectl: Noise Dedup",
+  "description": "In the services and logs lab, a task related to Localectl needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from localectl-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Localectl",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-20-localectl"
+}

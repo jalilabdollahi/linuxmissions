@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/incident-summary/README.txt": "Incident Summary bundle\n",
+      "bundle/incident-summary/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "incident-summary-backup.tar.gz",
+    "required_entries": [
+      "bundle/incident-summary",
+      "bundle/incident-summary/README.txt",
+      "bundle/incident-summary/notes.txt"
+    ]
+  }
+}

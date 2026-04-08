@@ -1,0 +1,11 @@
+{
+  "name": "Connection Map",
+  "description": "A saved TCP snapshot shows active sessions. Count how many unique remote IPs have ESTABLISHED connections.",
+  "objective": "Count the unique remote IPs from ESTAB rows in connections.txt and save the number to unique_ips.txt",
+  "xp": 220,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["ss -tn", "ESTAB", "awk", "sort", "uniq"],
+  "module": "module-6-networking",
+  "level": "level-6-netstat"
+}

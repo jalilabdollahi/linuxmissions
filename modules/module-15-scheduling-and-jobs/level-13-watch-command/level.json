@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/watch-command.sh",
+    "token_path": "jobs/watch-command.token",
+    "token": "watch-command-done",
+    "initial_mode": 416
+  }
+}

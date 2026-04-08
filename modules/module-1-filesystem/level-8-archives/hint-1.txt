@@ -1,0 +1,3 @@
+To extract a .tar.gz:
+mkdir -p $SANDBOX/extracted
+tar -xzf $SANDBOX/backup.tar.gz -C $SANDBOX/extracted

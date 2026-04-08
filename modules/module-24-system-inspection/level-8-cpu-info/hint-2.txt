@@ -1,0 +1,1 @@
+A `find` command with a name filter plus `-delete` or `-exec rm` works well here.

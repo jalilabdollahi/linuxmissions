@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'service-envfiles item %s\n' "$n" > generated/service-envfiles-$n.txt; done`

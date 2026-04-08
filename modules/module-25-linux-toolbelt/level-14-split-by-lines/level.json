@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "split-by-lines-1.txt",
+        "content": "split-by-lines item 1\n"
+      },
+      {
+        "path": "split-by-lines-2.txt",
+        "content": "split-by-lines item 2\n"
+      },
+      {
+        "path": "split-by-lines-3.txt",
+        "content": "split-by-lines item 3\n"
+      }
+    ]
+  }
+}

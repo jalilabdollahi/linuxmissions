@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 anomaly-detection-report.csv > owners.txt`

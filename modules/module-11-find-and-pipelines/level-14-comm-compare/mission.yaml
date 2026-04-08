@@ -1,0 +1,16 @@
+{
+  "name": "Comm Compare: Loop Builder",
+  "description": "In the search and pipelines lab, a task related to Comm Compare needs cleanup before the handoff.",
+  "objective": "Create three files under generated/ named comm-compare-1.txt through comm-compare-3.txt with matching numbered content",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Comm Compare",
+    "for",
+    "seq",
+    "printf"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-14-comm-compare"
+}

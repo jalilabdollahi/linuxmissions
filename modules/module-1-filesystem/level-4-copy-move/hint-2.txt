@@ -1,0 +1,2 @@
+The .bak file also needs to move and be renamed to app.conf:
+mv $SANDBOX/staging/app.conf.bak $SANDBOX/production/app.conf

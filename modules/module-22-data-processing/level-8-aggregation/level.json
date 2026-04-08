@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/aggregation/keep.txt": "keep\n",
+      "cleanup/aggregation/old-1.tmp": "junk\n",
+      "cleanup/aggregation/old-2.tmp": "junk\n",
+      "cleanup/aggregation/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/aggregation/old-1.tmp",
+      "cleanup/aggregation/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/aggregation/keep.txt",
+      "cleanup/aggregation/notes.md"
+    ]
+  }
+}

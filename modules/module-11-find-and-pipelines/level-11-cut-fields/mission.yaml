@@ -1,0 +1,15 @@
+{
+  "name": "Cut Fields: Restore Drill",
+  "description": "In the search and pipelines lab, a task related to Cut Fields needs cleanup before the handoff.",
+  "objective": "Extract cut-fields-restore.tar.gz so the restored/cut-fields directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Cut Fields",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-11-cut-fields"
+}

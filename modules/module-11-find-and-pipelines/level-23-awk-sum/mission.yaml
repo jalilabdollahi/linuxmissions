@@ -1,0 +1,15 @@
+{
+  "name": "Awk Sum: Backup Bundle",
+  "description": "In the search and pipelines lab, a task related to Awk Sum needs cleanup before the handoff.",
+  "objective": "Create awk-sum-backup.tar.gz containing the files under bundle/awk-sum",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Awk Sum",
+    "tar",
+    "compression"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-23-awk-sum"
+}

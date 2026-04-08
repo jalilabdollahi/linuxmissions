@@ -1,0 +1,2 @@
+Save to errors.txt:
+grep -E "ERROR|FATAL" $SANDBOX/app.log > $SANDBOX/errors.txt

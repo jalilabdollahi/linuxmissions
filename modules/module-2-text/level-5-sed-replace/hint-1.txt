@@ -1,0 +1,3 @@
+sed uses: sed 's/old/new/g' to replace all occurrences on each line.
+Preview first:
+sed 's/staging.internal/prod.internal/g' $SANDBOX/config.conf

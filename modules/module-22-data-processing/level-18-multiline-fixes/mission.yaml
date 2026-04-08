@@ -1,0 +1,15 @@
+{
+  "name": "Multiline Fixes: Alert Filter",
+  "description": "In the data processing lab, a task related to Multiline Fixes needs cleanup before the handoff.",
+  "objective": "Write every alert line from multiline-fixes.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Multiline Fixes",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-18-multiline-fixes"
+}

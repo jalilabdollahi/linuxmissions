@@ -1,0 +1,1 @@
+`mkdir -p organized/missing-library` followed by `mv inbox/missing-library.txt organized/missing-library/missing-library-notes.txt` is enough.

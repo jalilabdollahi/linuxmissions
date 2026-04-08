@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/find-name && mv inbox/find-name.txt organized/find-name/find-name-notes.txt`

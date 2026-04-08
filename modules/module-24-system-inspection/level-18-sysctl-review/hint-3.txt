@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' sysctl-review.log > alerts.txt`

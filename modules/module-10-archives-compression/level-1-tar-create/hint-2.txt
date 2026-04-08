@@ -1,0 +1,1 @@
+`mkdir -p organized/tar-create` followed by `mv inbox/tar-create.txt organized/tar-create/tar-create-notes.txt` is enough.

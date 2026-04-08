@@ -1,0 +1,15 @@
+{
+  "name": "Blkid: Schedule Entry",
+  "description": "In the storage and backups lab, a task related to Blkid needs cleanup before the handoff.",
+  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Blkid",
+    "cron",
+    "crontab syntax"
+  ],
+  "module": "module-14-storage-and-backups",
+  "level": "level-17-blkid"
+}

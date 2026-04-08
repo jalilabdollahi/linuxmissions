@@ -1,0 +1,11 @@
+{
+  "name": "Spot the Difference",
+  "description": "Two versions of a config file exist. You need to see what changed between them and document the differences.",
+  "objective": "Compare v1.conf and v2.conf using diff and save the output to changes.diff",
+  "xp": 120,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": ["diff", "patch", "-u", "unified format"],
+  "module": "module-2-text",
+  "level": "level-8-diff"
+}

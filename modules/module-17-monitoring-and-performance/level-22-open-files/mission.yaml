@@ -1,0 +1,15 @@
+{
+  "name": "Open Files: Field Extract",
+  "description": "In the monitoring and performance lab, a task related to Open Files needs cleanup before the handoff.",
+  "objective": "Extract the second column from open-files-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Open Files",
+    "cut",
+    "awk"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-22-open-files"
+}

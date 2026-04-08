@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' free-memory-events.txt > ok-count.txt`

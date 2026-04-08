@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "cpio-restore.tar.gz",
+    "archived_files": {
+      "restored/cpio/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/cpio/token.txt": "cpio-token\n"
+    },
+    "required_files": {
+      "restored/cpio/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/cpio/token.txt": "cpio-token\n"
+    }
+  }
+}

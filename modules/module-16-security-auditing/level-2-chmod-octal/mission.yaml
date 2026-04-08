@@ -1,0 +1,15 @@
+{
+  "name": "Chmod Octal: Alert Filter",
+  "description": "In the security auditing lab, a task related to Chmod Octal needs cleanup before the handoff.",
+  "objective": "Write every alert line from chmod-octal.log into alerts.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Chmod Octal",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-2-chmod-octal"
+}

@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'timeout item %s\n' "$n" > generated/timeout-$n.txt; done`

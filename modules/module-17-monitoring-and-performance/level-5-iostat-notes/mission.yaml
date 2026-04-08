@@ -1,0 +1,15 @@
+{
+  "name": "Iostat Notes: Field Extract",
+  "description": "In the monitoring and performance lab, a task related to Iostat Notes needs cleanup before the handoff.",
+  "objective": "Extract the second column from iostat-notes-report.csv into owners.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Iostat Notes",
+    "cut",
+    "awk"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-5-iostat-notes"
+}

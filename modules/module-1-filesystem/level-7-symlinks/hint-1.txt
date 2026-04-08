@@ -1,0 +1,2 @@
+Use ln -s to create a symbolic link:
+ln -s TARGET LINK_NAME

@@ -1,0 +1,2 @@
+One simple solution is:
+curl -s "file://$SANDBOX/api/response.json" | grep -o '"status": "[^"]*"' | cut -d'"' -f4 > status.txt

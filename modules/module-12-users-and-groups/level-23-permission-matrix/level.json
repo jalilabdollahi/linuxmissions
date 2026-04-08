@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/permission-matrix/README.txt": "Permission Matrix bundle\n",
+      "bundle/permission-matrix/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "permission-matrix-backup.tar.gz",
+    "required_entries": [
+      "bundle/permission-matrix",
+      "bundle/permission-matrix/README.txt",
+      "bundle/permission-matrix/notes.txt"
+    ]
+  }
+}

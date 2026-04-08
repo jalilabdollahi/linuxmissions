@@ -1,0 +1,5 @@
+One valid pattern is:
+if [ $# -lt 1 ]; then
+  echo "SOURCE_FILE is required"
+  exit 1
+fi

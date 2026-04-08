@@ -1,0 +1,2 @@
+Full path: $SANDBOX/var/app/config/prod/secrets/secret.conf
+Use: cat $SANDBOX/var/app/config/prod/secrets/secret.conf

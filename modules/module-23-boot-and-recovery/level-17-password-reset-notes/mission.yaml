@@ -1,0 +1,15 @@
+{
+  "name": "Password Reset Notes: Schedule Entry",
+  "description": "In the boot and recovery lab, a task related to Password Reset Notes needs cleanup before the handoff.",
+  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Password Reset Notes",
+    "cron",
+    "crontab syntax"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-17-password-reset-notes"
+}

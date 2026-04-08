@@ -1,0 +1,1 @@
+Example: `tar -xzf app-log-rotation-restore.tar.gz`

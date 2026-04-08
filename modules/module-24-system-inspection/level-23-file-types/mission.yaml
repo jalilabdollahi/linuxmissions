@@ -1,0 +1,15 @@
+{
+  "name": "File Types: Backup Bundle",
+  "description": "In the system inspection lab, a task related to File Types needs cleanup before the handoff.",
+  "objective": "Create file-types-backup.tar.gz containing the files under bundle/file-types",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "File Types",
+    "tar",
+    "compression"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-23-file-types"
+}

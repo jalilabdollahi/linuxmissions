@@ -1,0 +1,11 @@
+{
+  "name": "Service Down",
+  "description": "A dummy service is packaged in the sandbox along with a mock `systemctl` helper. Use it to enable and start the service.",
+  "objective": "Use the provided mock systemctl to enable and start myapp.service",
+  "xp": 170,
+  "difficulty": "beginner",
+  "expected_time": "6m",
+  "concepts": ["systemctl", "enable", "start", "status", "unit files"],
+  "module": "module-7-sysadmin",
+  "level": "level-1-systemd"
+}

@@ -1,0 +1,4 @@
+Pass the service name into the function:
+deploy_service api
+deploy_service web
+deploy_service worker

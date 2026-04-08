@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "nc-connect-restore.tar.gz",
+    "archived_files": {
+      "restored/nc-connect/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/nc-connect/token.txt": "nc-connect-token\n"
+    },
+    "required_files": {
+      "restored/nc-connect/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/nc-connect/token.txt": "nc-connect-token\n"
+    }
+  }
+}

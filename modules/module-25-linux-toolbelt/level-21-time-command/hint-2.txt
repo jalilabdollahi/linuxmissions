@@ -1,0 +1,1 @@
+`mkdir -p organized/time-command` followed by `mv inbox/time-command.txt organized/time-command/time-command-notes.txt` is enough.

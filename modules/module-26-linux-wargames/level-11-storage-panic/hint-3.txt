@@ -1,0 +1,1 @@
+Example: `tar -xzf storage-panic-restore.tar.gz`

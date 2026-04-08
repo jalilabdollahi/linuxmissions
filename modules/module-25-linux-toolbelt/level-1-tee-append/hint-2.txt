@@ -1,0 +1,1 @@
+`mkdir -p organized/tee-append` followed by `mv inbox/tee-append.txt organized/tee-append/tee-append-notes.txt` is enough.

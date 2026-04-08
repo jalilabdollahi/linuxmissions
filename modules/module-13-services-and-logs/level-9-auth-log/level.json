@@ -1,0 +1,8 @@
+{
+  "task": {
+    "type": "symlink_target",
+    "target_path": "releases/auth-log.conf",
+    "target_text": "Auth Log release payload\n",
+    "link_path": "current.conf"
+  }
+}

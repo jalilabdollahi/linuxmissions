@@ -1,0 +1,1 @@
+Example: `grep -c '^ok$' cron-daily-events.txt > ok-count.txt`

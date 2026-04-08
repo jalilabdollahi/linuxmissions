@@ -1,0 +1,2 @@
+Use -l to show only filenames (not lines):
+grep -rl "password=" $SANDBOX

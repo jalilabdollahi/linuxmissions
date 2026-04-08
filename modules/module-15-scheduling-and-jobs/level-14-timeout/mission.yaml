@@ -1,0 +1,16 @@
+{
+  "name": "Timeout: Loop Builder",
+  "description": "In the scheduling and jobs lab, a task related to Timeout needs cleanup before the handoff.",
+  "objective": "Create three files under generated/ named timeout-1.txt through timeout-3.txt with matching numbered content",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Timeout",
+    "for",
+    "seq",
+    "printf"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-14-timeout"
+}

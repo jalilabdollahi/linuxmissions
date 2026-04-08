@@ -1,0 +1,11 @@
+{
+  "name": "Spring Cleaning",
+  "description": "The disk is filling up with leftover .tmp files scattered across the sandbox.",
+  "objective": "Delete all files ending in .tmp from the sandbox (leave everything else intact)",
+  "xp": 120,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": ["find", "-delete", "rm", "glob", "xargs"],
+  "module": "module-1-filesystem",
+  "level": "level-3-find-delete"
+}

@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/jobs-builtin/README.txt": "Jobs Builtin bundle\n",
+      "bundle/jobs-builtin/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "jobs-builtin-backup.tar.gz",
+    "required_entries": [
+      "bundle/jobs-builtin",
+      "bundle/jobs-builtin/README.txt",
+      "bundle/jobs-builtin/notes.txt"
+    ]
+  }
+}

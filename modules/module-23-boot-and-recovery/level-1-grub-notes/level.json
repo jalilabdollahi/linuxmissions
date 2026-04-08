@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/grub-notes.txt": "Grub Notes checklist for boot and recovery\n"
+    },
+    "target_path": "organized/grub-notes/grub-notes-notes.txt",
+    "target_text": "Grub Notes checklist for boot and recovery\n",
+    "removed_paths": [
+      "inbox/grub-notes.txt"
+    ]
+  }
+}

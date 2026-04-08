@@ -1,0 +1,1 @@
+Example: `sort shell-options-raw.txt | uniq > unique-sorted.txt`

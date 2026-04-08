@@ -1,0 +1,1 @@
+Use `chmod +x jobs/watch-command.sh` and then execute it.

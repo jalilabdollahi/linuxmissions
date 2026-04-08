@@ -1,0 +1,1 @@
+Example: `sort lsblk-raw.txt | uniq > unique-sorted.txt`

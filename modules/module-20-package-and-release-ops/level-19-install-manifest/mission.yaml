@@ -1,0 +1,15 @@
+{
+  "name": "Install Manifest: Config Rewrite",
+  "description": "In the package and release operations lab, a task related to Install Manifest needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in install-manifest.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Install Manifest",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-19-install-manifest"
+}

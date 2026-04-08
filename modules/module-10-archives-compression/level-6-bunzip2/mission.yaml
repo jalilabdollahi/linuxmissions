@@ -1,0 +1,15 @@
+{
+  "name": "Bunzip2: Config Rewrite",
+  "description": "In the archives and compression lab, a task related to Bunzip2 needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in bunzip2.conf and save the fixed result to fixed.conf",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Bunzip2",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-6-bunzip2"
+}

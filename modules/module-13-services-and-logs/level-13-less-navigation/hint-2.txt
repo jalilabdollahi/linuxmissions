@@ -1,0 +1,1 @@
+Use `chmod +x jobs/less-navigation.sh` and then execute it.

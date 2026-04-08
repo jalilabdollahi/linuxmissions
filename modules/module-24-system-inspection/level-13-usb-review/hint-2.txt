@@ -1,0 +1,1 @@
+Use `chmod +x jobs/usb-review.sh` and then execute it.

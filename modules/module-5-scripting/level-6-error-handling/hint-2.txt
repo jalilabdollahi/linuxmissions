@@ -1,0 +1,3 @@
+Check whether the first argument was provided before using it.
+If it is missing, print:
+SOURCE_FILE is required

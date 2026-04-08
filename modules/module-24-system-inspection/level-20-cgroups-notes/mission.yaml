@@ -1,0 +1,15 @@
+{
+  "name": "Cgroups Notes: Noise Dedup",
+  "description": "In the system inspection lab, a task related to Cgroups Notes needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from cgroups-notes-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Cgroups Notes",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-24-system-inspection",
+  "level": "level-20-cgroups-notes"
+}

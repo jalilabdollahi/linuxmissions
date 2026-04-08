@@ -1,0 +1,2 @@
+After editing `.env`, test with:
+set -a; source .env; set +a; ./app.sh

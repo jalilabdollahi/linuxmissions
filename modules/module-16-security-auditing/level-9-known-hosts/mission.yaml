@@ -1,0 +1,15 @@
+{
+  "name": "Known Hosts: Link Repair",
+  "description": "In the security auditing lab, a task related to Known Hosts needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/known-hosts.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Known Hosts",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-9-known-hosts"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Fsck Plan: Field Extract",
+  "description": "In the boot and recovery lab, a task related to Fsck Plan needs cleanup before the handoff.",
+  "objective": "Extract the second column from fsck-plan-report.csv into owners.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Fsck Plan",
+    "cut",
+    "awk"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-5-fsck-plan"
+}

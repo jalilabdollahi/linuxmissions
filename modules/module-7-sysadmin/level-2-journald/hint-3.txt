@@ -1,0 +1,2 @@
+Save the result to:
+./journalctl --since "1 hour ago" | grep error > errors.txt

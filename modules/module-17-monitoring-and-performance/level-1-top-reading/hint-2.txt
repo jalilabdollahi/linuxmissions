@@ -1,0 +1,1 @@
+`mkdir -p organized/top-reading` followed by `mv inbox/top-reading.txt organized/top-reading/top-reading-notes.txt` is enough.

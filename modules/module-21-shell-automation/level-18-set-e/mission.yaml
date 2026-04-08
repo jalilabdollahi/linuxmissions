@@ -1,0 +1,15 @@
+{
+  "name": "Set E: Alert Filter",
+  "description": "In the shell automation lab, a task related to Set E needs cleanup before the handoff.",
+  "objective": "Write every alert line from set-e.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Set E",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-18-set-e"
+}

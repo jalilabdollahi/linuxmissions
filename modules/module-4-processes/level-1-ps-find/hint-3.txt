@@ -1,0 +1,2 @@
+Save to top_procs.txt:
+ps aux --sort=-%cpu | head -6 > $SANDBOX/top_procs.txt

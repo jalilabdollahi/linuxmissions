@@ -1,0 +1,11 @@
+{
+  "name": "Pipeline Master",
+  "description": "A multi-step data transformation: filter, transform, sort, and count — all in one pipeline.",
+  "objective": "From access.log, extract only POST requests, count how many came from each IP, save ranked result to post_ips.txt",
+  "xp": 200,
+  "difficulty": "intermediate",
+  "expected_time": "12m",
+  "concepts": ["pipes", "grep", "awk", "sort", "uniq -c", "chaining"],
+  "module": "module-2-text",
+  "level": "level-7-pipes"
+}

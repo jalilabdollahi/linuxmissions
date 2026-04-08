@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' tar-extract.log > alerts.txt`

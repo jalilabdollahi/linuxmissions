@@ -1,0 +1,1 @@
+Example: `head -n 3 uniq-count-history.log > first3.txt` and `tail -n 3 uniq-count-history.log > last3.txt`

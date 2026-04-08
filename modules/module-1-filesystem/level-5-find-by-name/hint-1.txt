@@ -1,0 +1,2 @@
+Use find to list all .py files:
+find $SANDBOX -name "*.py"

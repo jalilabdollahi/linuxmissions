@@ -1,0 +1,4 @@
+Your heredoc should expand variables, for example:
+name=$APP_NAME
+port=$APP_PORT
+environment=$APP_ENV

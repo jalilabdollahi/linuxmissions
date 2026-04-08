@@ -1,0 +1,2 @@
+Move all .conf files in one command using a glob:
+mv $SANDBOX/staging/*.conf $SANDBOX/production/

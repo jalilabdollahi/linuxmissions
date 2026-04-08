@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "ps-sorting.log",
+    "lines": [
+      "INFO preparing ps-sorting",
+      "ALERT PS drift detected",
+      "INFO collecting extra context",
+      "ALERT PS rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT PS drift detected",
+      "ALERT PS rollback required"
+    ]
+  }
+}

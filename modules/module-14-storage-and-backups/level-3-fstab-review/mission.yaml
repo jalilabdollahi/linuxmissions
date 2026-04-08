@@ -1,0 +1,16 @@
+{
+  "name": "Fstab Review: Event Counter",
+  "description": "In the storage and backups lab, a task related to Fstab Review needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in fstab-review-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Fstab Review",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-14-storage-and-backups",
+  "level": "level-3-fstab-review"
+}

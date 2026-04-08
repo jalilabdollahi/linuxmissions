@@ -1,0 +1,1 @@
+`mkdir -p organized/summary-totals` followed by `mv inbox/summary-totals.txt organized/summary-totals/summary-totals-notes.txt` is enough.

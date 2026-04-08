@@ -1,0 +1,15 @@
+{
+  "name": "Ss Ports: Backup Bundle",
+  "description": "In the network troubleshooting lab, a task related to Ss Ports needs cleanup before the handoff.",
+  "objective": "Create ss-ports-backup.tar.gz containing the files under bundle/ss-ports",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Ss Ports",
+    "tar",
+    "compression"
+  ],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-10-ss-ports"
+}

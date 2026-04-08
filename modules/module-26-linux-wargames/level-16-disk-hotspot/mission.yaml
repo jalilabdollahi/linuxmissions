@@ -1,0 +1,15 @@
+{
+  "name": "Disk Hotspot: Capacity Report",
+  "description": "In the linux war games lab, a task related to Disk Hotspot needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Disk Hotspot",
+    "du",
+    "sort"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-16-disk-hotspot"
+}

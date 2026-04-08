@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' snapshot-restore.log > alerts.txt`

@@ -1,0 +1,15 @@
+{
+  "name": "Pidof: Backup Bundle",
+  "description": "In the monitoring and performance lab, a task related to Pidof needs cleanup before the handoff.",
+  "objective": "Create pidof-backup.tar.gz containing the files under bundle/pidof",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Pidof",
+    "tar",
+    "compression"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-10-pidof"
+}

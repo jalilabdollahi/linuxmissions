@@ -1,0 +1,16 @@
+{
+  "name": "Cat Review: Path Realignment",
+  "description": "In the configuration editing lab, a task related to Cat Review needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/cat-review.txt to organized/cat-review/cat-review-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Cat Review",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-1-cat-review"
+}

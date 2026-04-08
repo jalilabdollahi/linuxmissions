@@ -1,0 +1,4 @@
+Inside the block, include:
+daily
+rotate 7
+compress

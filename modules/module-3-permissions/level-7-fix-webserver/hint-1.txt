@@ -1,0 +1,2 @@
+Inspect the current state:
+find $SANDBOX/webroot -exec ls -ld {} \;

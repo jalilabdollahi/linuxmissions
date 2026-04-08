@@ -1,0 +1,2 @@
+One valid command is:
+awk '$1=="LISTEN" {split($4,a,":"); print a[length(a)]}' ss-output.txt | sort -n > listening.txt

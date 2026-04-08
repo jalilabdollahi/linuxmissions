@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'command-substitution item %s\n' "$n" > generated/command-substitution-$n.txt; done`

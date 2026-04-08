@@ -1,0 +1,1 @@
+Use `chmod +x jobs/arithmetic.sh` and then execute it.

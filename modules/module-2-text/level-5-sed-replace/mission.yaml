@@ -1,0 +1,11 @@
+{
+  "name": "Find and Replace",
+  "description": "The staging config file still has old hostname references that need to be updated for production.",
+  "objective": "Replace all occurrences of 'staging.internal' with 'prod.internal' in config.conf and save to config.prod.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["sed", "s/old/new/g", "-i", "substitution"],
+  "module": "module-2-text",
+  "level": "level-5-sed-replace"
+}

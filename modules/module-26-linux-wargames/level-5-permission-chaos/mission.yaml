@@ -1,0 +1,15 @@
+{
+  "name": "Permission Chaos: Field Extract",
+  "description": "In the linux war games lab, a task related to Permission Chaos needs cleanup before the handoff.",
+  "objective": "Extract the second column from permission-chaos-report.csv into owners.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Permission Chaos",
+    "cut",
+    "awk"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-5-permission-chaos"
+}

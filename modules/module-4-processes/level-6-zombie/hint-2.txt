@@ -1,0 +1,5 @@
+Show PID, parent PID, state, and command:
+ps -o pid,ppid,stat,comm | awk '$3 ~ /^Z/ {print}'
+
+Save what you find to:
+$SANDBOX/zombies.txt

@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "repo-keys-restore.tar.gz",
+    "archived_files": {
+      "restored/repo-keys/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/repo-keys/token.txt": "repo-keys-token\n"
+    },
+    "required_files": {
+      "restored/repo-keys/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/repo-keys/token.txt": "repo-keys-token\n"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+This is a delimiter-based column extraction task.

@@ -1,0 +1,15 @@
+{
+  "name": "Bzip2: Field Extract",
+  "description": "In the archives and compression lab, a task related to Bzip2 needs cleanup before the handoff.",
+  "objective": "Extract the second column from bzip2-report.csv into owners.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Bzip2",
+    "cut",
+    "awk"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-5-bzip2"
+}

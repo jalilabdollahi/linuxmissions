@@ -1,0 +1,8 @@
+{
+  "task": {
+    "type": "symlink_target",
+    "target_path": "releases/mem-info.conf",
+    "target_text": "Mem Info release payload\n",
+    "link_path": "current.conf"
+  }
+}

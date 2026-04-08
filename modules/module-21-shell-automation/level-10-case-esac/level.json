@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/case-esac/README.txt": "Case Esac bundle\n",
+      "bundle/case-esac/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "case-esac-backup.tar.gz",
+    "required_entries": [
+      "bundle/case-esac",
+      "bundle/case-esac/README.txt",
+      "bundle/case-esac/notes.txt"
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' fstab-failures-metrics.csv > total.txt`

@@ -1,0 +1,2 @@
+One valid solution is:
+find files -type f | xargs -P 4 grep -l 'NEBULA_KEY' | xargs -I{} basename {} > match.txt

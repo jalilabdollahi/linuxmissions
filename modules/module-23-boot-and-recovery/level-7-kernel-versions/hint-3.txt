@@ -1,0 +1,1 @@
+Example: `head -n 3 kernel-versions-history.log > first3.txt` and `tail -n 3 kernel-versions-history.log > last3.txt`

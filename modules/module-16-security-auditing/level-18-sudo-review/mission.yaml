@@ -1,0 +1,15 @@
+{
+  "name": "Sudo Review: Alert Filter",
+  "description": "In the security auditing lab, a task related to Sudo Review needs cleanup before the handoff.",
+  "objective": "Write every alert line from sudo-review.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Sudo Review",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-18-sudo-review"
+}

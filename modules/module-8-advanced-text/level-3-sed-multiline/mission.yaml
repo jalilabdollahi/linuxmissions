@@ -1,0 +1,11 @@
+{
+  "name": "Config Injector",
+  "description": "A config file is missing one include line in exactly the right place. Insert it after the marker block.",
+  "objective": "Insert `include /etc/myapp/extra.conf` after the line `# EXTRA CONFIG` in app.conf",
+  "xp": 230,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["sed", "append", "multiline edits", "config files"],
+  "module": "module-8-advanced-text",
+  "level": "level-3-sed-multiline"
+}

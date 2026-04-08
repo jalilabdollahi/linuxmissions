@@ -1,0 +1,4 @@
+Kill by PID (from pgrep) or by name:
+kill <PID>
+# or:
+pkill -f sleep_loop.sh

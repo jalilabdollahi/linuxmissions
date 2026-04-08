@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/aliases/README.txt": "Aliases bundle\n",
+      "bundle/aliases/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "aliases-backup.tar.gz",
+    "required_entries": [
+      "bundle/aliases",
+      "bundle/aliases/README.txt",
+      "bundle/aliases/notes.txt"
+    ]
+  }
+}

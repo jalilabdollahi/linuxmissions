@@ -1,0 +1,15 @@
+{
+  "name": "Set U: Config Rewrite",
+  "description": "In the shell automation lab, a task related to Set U needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in set-u.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Set U",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-19-set-u"
+}

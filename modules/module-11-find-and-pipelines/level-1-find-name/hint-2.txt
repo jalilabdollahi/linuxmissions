@@ -1,0 +1,1 @@
+`mkdir -p organized/find-name` followed by `mv inbox/find-name.txt organized/find-name/find-name-notes.txt` is enough.

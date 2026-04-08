@@ -1,0 +1,3 @@
+Check current ownership:
+ls -la $SANDBOX/config/
+whoami

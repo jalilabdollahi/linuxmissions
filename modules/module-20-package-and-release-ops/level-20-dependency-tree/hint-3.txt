@@ -1,0 +1,1 @@
+Example: `sort dependency-tree-raw.txt | uniq > unique-sorted.txt`

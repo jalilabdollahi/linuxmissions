@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/arithmetic.sh && jobs/arithmetic.sh`

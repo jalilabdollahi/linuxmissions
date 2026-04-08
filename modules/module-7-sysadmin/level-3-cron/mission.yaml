@@ -1,0 +1,11 @@
+{
+  "name": "Scheduled Sweep",
+  "description": "A daily cleanup task needs to run automatically. Write the cron entry in the sandbox's crontab file.",
+  "objective": "Write a crontab entry in crontab.txt that runs cleanup.sh every day at 3am",
+  "xp": 190,
+  "difficulty": "intermediate",
+  "expected_time": "7m",
+  "concepts": ["cron", "crontab", "scheduling", "cron syntax"],
+  "module": "module-7-sysadmin",
+  "level": "level-3-cron"
+}

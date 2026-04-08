@@ -1,0 +1,15 @@
+{
+  "name": "Bg Fg: Link Repair",
+  "description": "In the scheduling and jobs lab, a task related to Bg Fg needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/bg-fg.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Bg Fg",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-9-bg-fg"
+}

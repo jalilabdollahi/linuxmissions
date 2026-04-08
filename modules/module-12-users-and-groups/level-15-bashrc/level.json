@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "awk_sum",
+    "input_file": "bashrc-metrics.csv",
+    "lines": [
+      "service,cost",
+      "api,12",
+      "worker,19",
+      "db,24",
+      "cache,5"
+    ],
+    "output_file": "total.txt",
+    "expected_sum": 60
+  }
+}

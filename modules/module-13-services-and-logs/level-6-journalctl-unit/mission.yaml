@@ -1,0 +1,15 @@
+{
+  "name": "Journalctl Unit: Config Rewrite",
+  "description": "In the services and logs lab, a task related to Journalctl Unit needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in journalctl-unit.conf and save the fixed result to fixed.conf",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Journalctl Unit",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-6-journalctl-unit"
+}

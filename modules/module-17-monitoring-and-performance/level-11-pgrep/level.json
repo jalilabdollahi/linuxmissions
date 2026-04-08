@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "pgrep-restore.tar.gz",
+    "archived_files": {
+      "restored/pgrep/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/pgrep/token.txt": "pgrep-token\n"
+    },
+    "required_files": {
+      "restored/pgrep/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/pgrep/token.txt": "pgrep-token\n"
+    }
+  }
+}

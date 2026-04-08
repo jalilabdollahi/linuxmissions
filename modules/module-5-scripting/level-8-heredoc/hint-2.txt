@@ -1,0 +1,4 @@
+Use cat with a heredoc to write app.conf:
+cat > app.conf <<EOF
+...
+EOF

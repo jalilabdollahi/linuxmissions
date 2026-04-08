@@ -1,0 +1,1 @@
+Example: `ln -s releases/wget-mirror.conf current.conf`

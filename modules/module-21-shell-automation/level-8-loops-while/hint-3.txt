@@ -1,0 +1,1 @@
+Example: `find cleanup/loops-while -name '*.tmp' -delete`

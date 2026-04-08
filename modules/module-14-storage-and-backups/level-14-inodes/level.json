@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "inodes-1.txt",
+        "content": "inodes item 1\n"
+      },
+      {
+        "path": "inodes-2.txt",
+        "content": "inodes item 2\n"
+      },
+      {
+        "path": "inodes-3.txt",
+        "content": "inodes item 3\n"
+      }
+    ]
+  }
+}

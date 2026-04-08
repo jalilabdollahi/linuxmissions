@@ -1,0 +1,16 @@
+{
+  "name": "Service User: Path Realignment",
+  "description": "In the security auditing lab, a task related to Service User needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/service-user.txt to organized/service-user/service-user-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Service User",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-21-service-user"
+}

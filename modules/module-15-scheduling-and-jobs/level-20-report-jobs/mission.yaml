@@ -1,0 +1,15 @@
+{
+  "name": "Report Jobs: Noise Dedup",
+  "description": "In the scheduling and jobs lab, a task related to Report Jobs needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from report-jobs-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Report Jobs",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-20-report-jobs"
+}

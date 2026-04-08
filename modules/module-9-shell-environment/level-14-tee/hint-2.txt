@@ -1,0 +1,1 @@
+Use `seq` or explicit numbers and redirect each line into a separate file.

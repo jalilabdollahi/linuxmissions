@@ -1,0 +1,2 @@
+Send the HUP signal:
+kill -HUP $(cat $SANDBOX/listener.pid)

@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/tar-create && mv inbox/tar-create.txt organized/tar-create/tar-create-notes.txt`

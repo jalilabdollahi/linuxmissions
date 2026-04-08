@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 journalctl-errors-report.csv > owners.txt`

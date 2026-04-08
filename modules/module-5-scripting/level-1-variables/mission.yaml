@@ -1,0 +1,11 @@
+{
+  "name": "Speak Variable",
+  "description": "Your onboarding script should greet whoever runs it, but the dynamic name support was never written.",
+  "objective": "Write greet.sh so running `bash greet.sh World` prints `Hello, World!`",
+  "xp": 150,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": ["bash", "$1", "echo", "variables"],
+  "module": "module-5-scripting",
+  "level": "level-1-variables"
+}

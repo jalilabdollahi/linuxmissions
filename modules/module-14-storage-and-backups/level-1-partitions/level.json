@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/partitions.txt": "Partitions checklist for storage and backups\n"
+    },
+    "target_path": "organized/partitions/partitions-notes.txt",
+    "target_text": "Partitions checklist for storage and backups\n",
+    "removed_paths": [
+      "inbox/partitions.txt"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Semver Basics: Capacity Report",
+  "description": "In the package and release operations lab, a task related to Semver Basics needs cleanup before the handoff.",
+  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Semver Basics",
+    "du",
+    "sort"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-16-semver-basics"
+}

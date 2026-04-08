@@ -1,0 +1,16 @@
+{
+  "name": "Time Command: Path Realignment",
+  "description": "In the linux toolbelt lab, a task related to Time Command needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/time-command.txt to organized/time-command/time-command-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Time Command",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-21-time-command"
+}

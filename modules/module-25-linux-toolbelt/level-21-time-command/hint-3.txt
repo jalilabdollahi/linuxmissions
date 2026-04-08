@@ -1,0 +1,1 @@
+Example: `mkdir -p organized/time-command && mv inbox/time-command.txt organized/time-command/time-command-notes.txt`

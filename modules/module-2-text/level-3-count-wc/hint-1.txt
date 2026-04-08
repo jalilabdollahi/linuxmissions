@@ -1,0 +1,5 @@
+Total lines = total requests:
+wc -l < $SANDBOX/access.log
+
+Unique IPs (field 1):
+awk '{print $1}' $SANDBOX/access.log | sort -u | wc -l

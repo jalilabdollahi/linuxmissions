@@ -1,0 +1,3 @@
+Use ls -a to reveal hidden files and dirs (those starting with .):
+ls -la $SANDBOX
+ls -la $SANDBOX/.config/

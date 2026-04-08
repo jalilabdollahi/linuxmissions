@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "group-file.log",
+    "lines": [
+      "INFO preparing group-file",
+      "ALERT GROUP drift detected",
+      "INFO collecting extra context",
+      "ALERT GROUP rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT GROUP drift detected",
+      "ALERT GROUP rollback required"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Profile D: Alert Filter",
+  "description": "In the configuration editing lab, a task related to Profile D needs cleanup before the handoff.",
+  "objective": "Write every alert line from profile-d.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Profile D",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-18-profile-d"
+}

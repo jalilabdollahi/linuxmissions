@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/pidof/README.txt": "Pidof bundle\n",
+      "bundle/pidof/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "pidof-backup.tar.gz",
+    "required_entries": [
+      "bundle/pidof",
+      "bundle/pidof/README.txt",
+      "bundle/pidof/notes.txt"
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+`mkdir -p organized/package-verify` followed by `mv inbox/package-verify.txt organized/package-verify/package-verify-notes.txt` is enough.

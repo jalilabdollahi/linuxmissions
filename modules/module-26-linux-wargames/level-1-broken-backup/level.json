@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/broken-backup.txt": "Broken Backup checklist for linux war games\n"
+    },
+    "target_path": "organized/broken-backup/broken-backup-notes.txt",
+    "target_text": "Broken Backup checklist for linux war games\n",
+    "removed_paths": [
+      "inbox/broken-backup.txt"
+    ]
+  }
+}

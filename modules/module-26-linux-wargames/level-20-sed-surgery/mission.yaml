@@ -1,0 +1,15 @@
+{
+  "name": "Sed Surgery: Noise Dedup",
+  "description": "In the linux war games lab, a task related to Sed Surgery needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from sed-surgery-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Sed Surgery",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-20-sed-surgery"
+}

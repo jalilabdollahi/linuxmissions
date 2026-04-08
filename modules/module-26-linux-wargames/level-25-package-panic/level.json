@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/package-panic.sh",
+    "token_path": "jobs/package-panic.token",
+    "token": "package-panic-done",
+    "initial_mode": 416
+  }
+}

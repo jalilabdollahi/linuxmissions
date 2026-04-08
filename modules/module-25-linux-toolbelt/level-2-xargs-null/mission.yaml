@@ -1,0 +1,15 @@
+{
+  "name": "Xargs Null: Alert Filter",
+  "description": "In the linux toolbelt lab, a task related to Xargs Null needs cleanup before the handoff.",
+  "objective": "Write every alert line from xargs-null.log into alerts.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Xargs Null",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-2-xargs-null"
+}

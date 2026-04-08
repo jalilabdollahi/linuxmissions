@@ -1,0 +1,15 @@
+{
+  "name": "Hardening Checklist: Permission Fix",
+  "description": "In the security auditing lab, a task related to Hardening Checklist needs cleanup before the handoff.",
+  "objective": "Set the mode of hardening-checklist.sh to 640",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Hardening Checklist",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-24-hardening-checklist"
+}

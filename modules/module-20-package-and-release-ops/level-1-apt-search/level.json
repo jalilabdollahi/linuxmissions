@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/apt-search.txt": "Apt Search checklist for package and release operations\n"
+    },
+    "target_path": "organized/apt-search/apt-search-notes.txt",
+    "target_text": "Apt Search checklist for package and release operations\n",
+    "removed_paths": [
+      "inbox/apt-search.txt"
+    ]
+  }
+}

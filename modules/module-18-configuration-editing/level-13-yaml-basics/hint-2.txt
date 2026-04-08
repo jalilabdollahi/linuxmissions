@@ -1,0 +1,1 @@
+Use `chmod +x jobs/yaml-basics.sh` and then execute it.

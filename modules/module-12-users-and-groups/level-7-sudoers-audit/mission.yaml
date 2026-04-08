@@ -1,0 +1,15 @@
+{
+  "name": "Sudoers Audit: History Window",
+  "description": "In the users and groups lab, a task related to Sudoers Audit needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of sudoers-audit-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Sudoers Audit",
+    "head",
+    "tail"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-7-sudoers-audit"
+}

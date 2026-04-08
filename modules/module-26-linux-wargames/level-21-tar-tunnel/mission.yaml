@@ -1,0 +1,16 @@
+{
+  "name": "Tar Tunnel: Path Realignment",
+  "description": "In the linux war games lab, a task related to Tar Tunnel needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/tar-tunnel.txt to organized/tar-tunnel/tar-tunnel-notes.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Tar Tunnel",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-21-tar-tunnel"
+}

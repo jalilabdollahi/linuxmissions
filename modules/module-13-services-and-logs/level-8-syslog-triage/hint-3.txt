@@ -1,0 +1,1 @@
+Example: `find cleanup/syslog-triage -name '*.tmp' -delete`

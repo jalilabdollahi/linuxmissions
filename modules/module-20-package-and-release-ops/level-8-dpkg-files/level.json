@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/dpkg-files/keep.txt": "keep\n",
+      "cleanup/dpkg-files/old-1.tmp": "junk\n",
+      "cleanup/dpkg-files/old-2.tmp": "junk\n",
+      "cleanup/dpkg-files/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/dpkg-files/old-1.tmp",
+      "cleanup/dpkg-files/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/dpkg-files/keep.txt",
+      "cleanup/dpkg-files/notes.md"
+    ]
+  }
+}

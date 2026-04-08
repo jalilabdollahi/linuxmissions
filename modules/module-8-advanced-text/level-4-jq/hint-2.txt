@@ -1,0 +1,1 @@
+You need one value from `.owner.email` and a filtered list from `.services`.

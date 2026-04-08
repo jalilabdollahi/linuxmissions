@@ -1,0 +1,15 @@
+{
+  "name": "Conditionals If: Link Repair",
+  "description": "In the shell automation lab, a task related to Conditionals If needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/conditionals-if.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Conditionals If",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-9-conditionals-if"
+}

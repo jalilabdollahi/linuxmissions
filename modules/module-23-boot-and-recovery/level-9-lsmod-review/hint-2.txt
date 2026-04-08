@@ -1,0 +1,1 @@
+Use `ln -s` so current.conf points at the release file.

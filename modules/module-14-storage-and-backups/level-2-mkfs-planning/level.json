@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "mkfs-planning.log",
+    "lines": [
+      "INFO preparing mkfs-planning",
+      "ALERT MKFS drift detected",
+      "INFO collecting extra context",
+      "ALERT MKFS rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT MKFS drift detected",
+      "ALERT MKFS rollback required"
+    ]
+  }
+}

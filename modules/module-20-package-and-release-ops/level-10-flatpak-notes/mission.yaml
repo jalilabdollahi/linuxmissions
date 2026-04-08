@@ -1,0 +1,15 @@
+{
+  "name": "Flatpak Notes: Backup Bundle",
+  "description": "In the package and release operations lab, a task related to Flatpak Notes needs cleanup before the handoff.",
+  "objective": "Create flatpak-notes-backup.tar.gz containing the files under bundle/flatpak-notes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Flatpak Notes",
+    "tar",
+    "compression"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-10-flatpak-notes"
+}

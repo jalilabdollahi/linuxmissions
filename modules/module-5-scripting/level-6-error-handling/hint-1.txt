@@ -1,0 +1,2 @@
+Add strict mode near the top:
+set -euo pipefail

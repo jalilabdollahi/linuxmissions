@@ -1,0 +1,1 @@
+The remote endpoint is the last column, and you only need the IP part before the colon.

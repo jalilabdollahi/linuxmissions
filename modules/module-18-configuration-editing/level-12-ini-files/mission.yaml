@@ -1,0 +1,15 @@
+{
+  "name": "Ini Files: Permission Fix",
+  "description": "In the configuration editing lab, a task related to Ini Files needs cleanup before the handoff.",
+  "objective": "Set the mode of ini-files.sh to 640",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Ini Files",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-12-ini-files"
+}

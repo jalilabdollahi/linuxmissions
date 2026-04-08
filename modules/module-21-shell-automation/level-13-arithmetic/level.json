@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/arithmetic.sh",
+    "token_path": "jobs/arithmetic.token",
+    "token": "arithmetic-done",
+    "initial_mode": 416
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Csv Cleanup: Path Realignment",
+  "description": "In the data processing lab, a task related to Csv Cleanup needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/csv-cleanup.txt to organized/csv-cleanup/csv-cleanup-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Csv Cleanup",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-1-csv-cleanup"
+}

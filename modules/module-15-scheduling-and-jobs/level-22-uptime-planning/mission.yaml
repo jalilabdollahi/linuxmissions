@@ -1,0 +1,15 @@
+{
+  "name": "Uptime Planning: Field Extract",
+  "description": "In the scheduling and jobs lab, a task related to Uptime Planning needs cleanup before the handoff.",
+  "objective": "Extract the second column from uptime-planning-report.csv into owners.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Uptime Planning",
+    "cut",
+    "awk"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-22-uptime-planning"
+}

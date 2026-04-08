@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/mounts/README.txt": "Mounts bundle\n",
+      "bundle/mounts/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "mounts-backup.tar.gz",
+    "required_entries": [
+      "bundle/mounts",
+      "bundle/mounts/README.txt",
+      "bundle/mounts/notes.txt"
+    ]
+  }
+}

@@ -1,0 +1,2 @@
+Redirect the output to config.prod.conf:
+sed 's/staging.internal/prod.internal/g' $SANDBOX/config.conf > $SANDBOX/config.prod.conf

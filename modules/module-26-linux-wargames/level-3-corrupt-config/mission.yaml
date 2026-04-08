@@ -1,0 +1,16 @@
+{
+  "name": "Corrupt Config: Event Counter",
+  "description": "In the linux war games lab, a task related to Corrupt Config needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in corrupt-config-events.txt and write the number to ok-count.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Corrupt Config",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-3-corrupt-config"
+}

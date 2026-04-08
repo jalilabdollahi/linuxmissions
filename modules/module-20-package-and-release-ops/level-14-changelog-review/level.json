@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "changelog-review-1.txt",
+        "content": "changelog-review item 1\n"
+      },
+      {
+        "path": "changelog-review-2.txt",
+        "content": "changelog-review item 2\n"
+      },
+      {
+        "path": "changelog-review-3.txt",
+        "content": "changelog-review item 3\n"
+      }
+    ]
+  }
+}

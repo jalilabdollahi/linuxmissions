@@ -1,0 +1,15 @@
+{
+  "name": "Aliases File: Config Rewrite",
+  "description": "In the configuration editing lab, a task related to Aliases File needs cleanup before the handoff.",
+  "objective": "Replace every `MODE=legacy` entry in aliases-file.conf and save the fixed result to fixed.conf",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Aliases File",
+    "sed",
+    "redirection"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-19-aliases-file"
+}

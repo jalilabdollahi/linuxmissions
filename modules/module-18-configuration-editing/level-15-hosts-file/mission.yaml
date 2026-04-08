@@ -1,0 +1,15 @@
+{
+  "name": "Hosts File: Metric Sum",
+  "description": "In the configuration editing lab, a task related to Hosts File needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of hosts-file-metrics.csv and write the total to total.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Hosts File",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-18-configuration-editing",
+  "level": "level-15-hosts-file"
+}

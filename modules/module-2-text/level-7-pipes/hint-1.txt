@@ -1,0 +1,2 @@
+Filter POST lines first:
+grep " POST " $SANDBOX/access.log

@@ -1,0 +1,1 @@
+Example: `find cleanup/brace-expansion -name '*.tmp' -delete`

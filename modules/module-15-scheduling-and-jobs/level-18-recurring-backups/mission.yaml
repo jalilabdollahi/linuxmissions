@@ -1,0 +1,15 @@
+{
+  "name": "Recurring Backups: Alert Filter",
+  "description": "In the scheduling and jobs lab, a task related to Recurring Backups needs cleanup before the handoff.",
+  "objective": "Write every alert line from recurring-backups.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Recurring Backups",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-15-scheduling-and-jobs",
+  "level": "level-18-recurring-backups"
+}

@@ -1,0 +1,2 @@
+Use an awk array keyed by category:
+totals[$1] += $2

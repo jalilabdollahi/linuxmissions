@@ -1,0 +1,1 @@
+Example: `tar -czf umask-basics-backup.tar.gz bundle/umask-basics`

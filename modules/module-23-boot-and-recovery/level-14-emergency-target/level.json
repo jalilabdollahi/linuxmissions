@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "emergency-target-1.txt",
+        "content": "emergency-target item 1\n"
+      },
+      {
+        "path": "emergency-target-2.txt",
+        "content": "emergency-target item 2\n"
+      },
+      {
+        "path": "emergency-target-3.txt",
+        "content": "emergency-target item 3\n"
+      }
+    ]
+  }
+}

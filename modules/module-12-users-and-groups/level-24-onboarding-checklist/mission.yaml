@@ -1,0 +1,15 @@
+{
+  "name": "Onboarding Checklist: Permission Fix",
+  "description": "In the users and groups lab, a task related to Onboarding Checklist needs cleanup before the handoff.",
+  "objective": "Set the mode of onboarding-checklist.sh to 640",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Onboarding Checklist",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-24-onboarding-checklist"
+}

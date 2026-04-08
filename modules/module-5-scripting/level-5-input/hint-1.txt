@@ -1,0 +1,4 @@
+Read the file line by line:
+while IFS='=' read -r key value; do
+  ...
+done < "$1"

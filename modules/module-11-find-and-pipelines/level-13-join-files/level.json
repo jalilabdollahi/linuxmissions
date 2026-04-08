@@ -1,0 +1,9 @@
+{
+  "task": {
+    "type": "run_script_token",
+    "script_path": "jobs/join-files.sh",
+    "token_path": "jobs/join-files.token",
+    "token": "join-files-done",
+    "initial_mode": 416
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Account Locks: Alert Filter",
+  "description": "In the users and groups lab, a task related to Account Locks needs cleanup before the handoff.",
+  "objective": "Write every alert line from account-locks.log into alerts.txt",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Account Locks",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-18-account-locks"
+}

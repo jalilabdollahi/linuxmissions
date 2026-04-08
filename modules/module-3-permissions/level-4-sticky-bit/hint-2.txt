@@ -1,0 +1,2 @@
+Set the sticky bit symbolically:
+chmod +t $SANDBOX/shared

@@ -1,0 +1,2 @@
+Extract the IP (field 1) and count:
+grep " POST " $SANDBOX/access.log | awk '{print $1}' | sort | uniq -c | sort -rn

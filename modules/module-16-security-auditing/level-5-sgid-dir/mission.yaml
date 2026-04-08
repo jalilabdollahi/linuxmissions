@@ -1,0 +1,15 @@
+{
+  "name": "Sgid Dir: Field Extract",
+  "description": "In the security auditing lab, a task related to Sgid Dir needs cleanup before the handoff.",
+  "objective": "Extract the second column from sgid-dir-report.csv into owners.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Sgid Dir",
+    "cut",
+    "awk"
+  ],
+  "module": "module-16-security-auditing",
+  "level": "level-5-sgid-dir"
+}

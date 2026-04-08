@@ -1,0 +1,1 @@
+Example: `ln -s releases/fold-wrap.conf current.conf`

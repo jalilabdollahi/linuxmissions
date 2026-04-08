@@ -1,0 +1,11 @@
+{
+  "name": "Can You Hear Me?",
+  "description": "Your sandbox includes a mock ping helper that simulates which hosts respond. Use it to document reachability.",
+  "objective": "Check every host in hosts.txt and save only the reachable hostnames to reachable.txt",
+  "xp": 160,
+  "difficulty": "beginner",
+  "expected_time": "7m",
+  "concepts": ["ping", "exit codes", "loops", "if"],
+  "module": "module-6-networking",
+  "level": "level-2-ping"
+}

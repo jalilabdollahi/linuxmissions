@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/shell-startup.txt": "Shell Startup checklist for shell environment\n"
+    },
+    "target_path": "organized/shell-startup/shell-startup-notes.txt",
+    "target_text": "Shell Startup checklist for shell environment\n",
+    "removed_paths": [
+      "inbox/shell-startup.txt"
+    ]
+  }
+}

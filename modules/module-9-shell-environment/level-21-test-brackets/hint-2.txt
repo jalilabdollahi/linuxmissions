@@ -1,0 +1,1 @@
+`mkdir -p organized/test-brackets` followed by `mv inbox/test-brackets.txt organized/test-brackets/test-brackets-notes.txt` is enough.

@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/backup-rotation/README.txt": "Backup Rotation bundle\n",
+      "bundle/backup-rotation/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "backup-rotation-backup.tar.gz",
+    "required_entries": [
+      "bundle/backup-rotation",
+      "bundle/backup-rotation/README.txt",
+      "bundle/backup-rotation/notes.txt"
+    ]
+  }
+}

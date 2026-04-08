@@ -1,0 +1,3 @@
+Verify the result:
+cat $SANDBOX/config.prod.conf
+diff $SANDBOX/config.conf $SANDBOX/config.prod.conf

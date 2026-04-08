@@ -1,0 +1,14 @@
+{
+  "task": {
+    "type": "archive_extract",
+    "archive_path": "disown-restore.tar.gz",
+    "archived_files": {
+      "restored/disown/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/disown/token.txt": "disown-token\n"
+    },
+    "required_files": {
+      "restored/disown/app.conf": "PORT=8080\nMODE=restored\n",
+      "restored/disown/token.txt": "disown-token\n"
+    }
+  }
+}

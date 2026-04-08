@@ -1,0 +1,2 @@
+Save the background PID right after starting it:
+nice -n 15 bash $SANDBOX/heavy.sh & echo $! > $SANDBOX/pid.txt

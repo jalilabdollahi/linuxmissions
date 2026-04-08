@@ -1,0 +1,15 @@
+{
+  "name": "String Ops: Permission Fix",
+  "description": "In the shell automation lab, a task related to String Ops needs cleanup before the handoff.",
+  "objective": "Set the mode of string-ops.sh to 640",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "String Ops",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-21-shell-automation",
+  "level": "level-12-string-ops"
+}

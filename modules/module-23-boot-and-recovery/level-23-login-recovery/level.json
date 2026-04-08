@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/login-recovery/README.txt": "Login Recovery bundle\n",
+      "bundle/login-recovery/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "login-recovery-backup.tar.gz",
+    "required_entries": [
+      "bundle/login-recovery",
+      "bundle/login-recovery/README.txt",
+      "bundle/login-recovery/notes.txt"
+    ]
+  }
+}

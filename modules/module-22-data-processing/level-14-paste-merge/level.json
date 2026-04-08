@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "paste-merge-1.txt",
+        "content": "paste-merge item 1\n"
+      },
+      {
+        "path": "paste-merge-2.txt",
+        "content": "paste-merge item 2\n"
+      },
+      {
+        "path": "paste-merge-3.txt",
+        "content": "paste-merge item 3\n"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "du.log",
+    "lines": [
+      "INFO preparing du",
+      "ALERT DU drift detected",
+      "INFO collecting extra context",
+      "ALERT DU rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT DU drift detected",
+      "ALERT DU rollback required"
+    ]
+  }
+}

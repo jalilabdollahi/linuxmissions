@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/ssh-config/keep.txt": "keep\n",
+      "cleanup/ssh-config/old-1.tmp": "junk\n",
+      "cleanup/ssh-config/old-2.tmp": "junk\n",
+      "cleanup/ssh-config/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/ssh-config/old-1.tmp",
+      "cleanup/ssh-config/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/ssh-config/keep.txt",
+      "cleanup/ssh-config/notes.md"
+    ]
+  }
+}

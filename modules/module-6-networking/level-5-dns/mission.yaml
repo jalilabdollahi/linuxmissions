@@ -1,0 +1,11 @@
+{
+  "name": "Name Resolution",
+  "description": "DNS lookups are mocked in this sandbox. Resolve the provided hostnames and record the answers.",
+  "objective": "Resolve each hostname in hosts.txt with mock_dig.sh and save `host ip` pairs to resolved.txt",
+  "xp": 210,
+  "difficulty": "intermediate",
+  "expected_time": "9m",
+  "concepts": ["dig", "dns", "hostnames", "loops"],
+  "module": "module-6-networking",
+  "level": "level-5-dns"
+}

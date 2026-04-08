@@ -1,0 +1,15 @@
+{
+  "name": "Join Keys: Metric Sum",
+  "description": "In the data processing lab, a task related to Join Keys needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of join-keys-metrics.csv and write the total to total.txt",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Join Keys",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-15-join-keys"
+}

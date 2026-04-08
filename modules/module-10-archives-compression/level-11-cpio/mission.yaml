@@ -1,0 +1,15 @@
+{
+  "name": "Cpio: Restore Drill",
+  "description": "In the archives and compression lab, a task related to Cpio needs cleanup before the handoff.",
+  "objective": "Extract cpio-restore.tar.gz so the restored/cpio directory appears in the sandbox",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Cpio",
+    "tar",
+    "archive extraction"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-11-cpio"
+}

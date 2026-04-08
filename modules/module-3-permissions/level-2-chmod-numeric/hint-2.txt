@@ -1,0 +1,2 @@
+755 = rwxr-xr-x  (owner rwx, group rx, others rx)
+600 = rw-------  (owner rw only, nobody else)

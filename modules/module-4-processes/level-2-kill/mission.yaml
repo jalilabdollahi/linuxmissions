@@ -1,0 +1,11 @@
+{
+  "name": "Runaway Process",
+  "description": "A background script is running in an infinite loop and wasting resources. It needs to be stopped.",
+  "objective": "Find the 'sleep_loop.sh' process and kill it",
+  "xp": 120,
+  "difficulty": "beginner",
+  "expected_time": "8m",
+  "concepts": ["pgrep", "pkill", "kill", "SIGTERM", "SIGKILL", "ps"],
+  "module": "module-4-processes",
+  "level": "level-2-kill"
+}

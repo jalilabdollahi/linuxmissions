@@ -1,0 +1,15 @@
+{
+  "name": "Archive Rescue: Noise Dedup",
+  "description": "In the linux war games lab, a task related to Archive Rescue needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from archive-rescue-raw.txt with sorted unique values",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Archive Rescue",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-4-archive-rescue"
+}

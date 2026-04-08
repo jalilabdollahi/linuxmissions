@@ -1,0 +1,15 @@
+{
+  "name": "Release Notes: Schedule Entry",
+  "description": "In the package and release operations lab, a task related to Release Notes needs cleanup before the handoff.",
+  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Release Notes",
+    "cron",
+    "crontab syntax"
+  ],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-17-release-notes"
+}

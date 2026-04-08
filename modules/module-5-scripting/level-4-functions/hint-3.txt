@@ -1,0 +1,6 @@
+One valid shape is:
+deploy_service() {
+  local name="$1"
+  echo "Deploying $name"
+  echo "$name ready"
+}

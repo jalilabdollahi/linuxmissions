@@ -1,0 +1,7 @@
+One valid flow is:
+bash $SANDBOX/process.sh &
+jobs
+fg %1
+
+When it finishes, confirm the output:
+cat $SANDBOX/result.txt

@@ -1,0 +1,15 @@
+{
+  "name": "Triage Report: Permission Fix",
+  "description": "In the monitoring and performance lab, a task related to Triage Report needs cleanup before the handoff.",
+  "objective": "Set the mode of triage-report.sh to 640",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Triage Report",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-24-triage-report"
+}

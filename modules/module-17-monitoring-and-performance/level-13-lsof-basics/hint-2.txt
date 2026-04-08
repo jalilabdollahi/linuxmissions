@@ -1,0 +1,1 @@
+Use `chmod +x jobs/lsof-basics.sh` and then execute it.

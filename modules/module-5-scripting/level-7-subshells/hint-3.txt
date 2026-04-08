@@ -1,0 +1,5 @@
+One valid script is:
+./task-a.sh &
+./task-b.sh &
+./task-c.sh &
+wait

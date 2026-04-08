@@ -1,0 +1,1 @@
+`mkdir -p organized/namespaces-notes` followed by `mv inbox/namespaces-notes.txt organized/namespaces-notes/namespaces-notes-notes.txt` is enough.

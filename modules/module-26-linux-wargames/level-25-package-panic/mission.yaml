@@ -1,0 +1,15 @@
+{
+  "name": "Package Panic: Script Kickoff",
+  "description": "In the linux war games lab, a task related to Package Panic needs cleanup before the handoff.",
+  "objective": "Make jobs/package-panic.sh executable, run it, and create the token file it writes",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "15m",
+  "concepts": [
+    "Package Panic",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-25-package-panic"
+}

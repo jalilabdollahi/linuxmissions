@@ -1,0 +1,15 @@
+{
+  "name": "Log Maze: Metric Sum",
+  "description": "In the linux war games lab, a task related to Log Maze needs cleanup before the handoff.",
+  "objective": "Sum the numeric values in the second column of log-maze-metrics.csv and write the total to total.txt",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "15m",
+  "concepts": [
+    "Log Maze",
+    "awk",
+    "numeric aggregation"
+  ],
+  "module": "module-26-linux-wargames",
+  "level": "level-29-log-maze"
+}

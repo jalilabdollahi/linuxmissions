@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/tar-tunnel.txt": "Tar Tunnel checklist for linux war games\n"
+    },
+    "target_path": "organized/tar-tunnel/tar-tunnel-notes.txt",
+    "target_text": "Tar Tunnel checklist for linux war games\n",
+    "removed_paths": [
+      "inbox/tar-tunnel.txt"
+    ]
+  }
+}

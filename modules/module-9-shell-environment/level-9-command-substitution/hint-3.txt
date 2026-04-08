@@ -1,0 +1,1 @@
+Example: `ln -s releases/command-substitution.conf current.conf`

@@ -1,0 +1,1 @@
+Example: `find cleanup/diff-review -name '*.tmp' -delete`

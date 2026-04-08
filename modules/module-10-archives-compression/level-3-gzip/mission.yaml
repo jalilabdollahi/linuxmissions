@@ -1,0 +1,16 @@
+{
+  "name": "Gzip: Event Counter",
+  "description": "In the archives and compression lab, a task related to Gzip needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in gzip-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Gzip",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-10-archives-compression",
+  "level": "level-3-gzip"
+}

@@ -1,0 +1,1 @@
+Example: `for n in 1 2 3; do printf 'resolv-debug item %s\n' "$n" > generated/resolv-debug-$n.txt; done`

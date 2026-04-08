@@ -1,0 +1,16 @@
+{
+  "name": "Paste Merge: Loop Builder",
+  "description": "In the data processing lab, a task related to Paste Merge needs cleanup before the handoff.",
+  "objective": "Create three files under generated/ named paste-merge-1.txt through paste-merge-3.txt with matching numbered content",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Paste Merge",
+    "for",
+    "seq",
+    "printf"
+  ],
+  "module": "module-22-data-processing",
+  "level": "level-14-paste-merge"
+}

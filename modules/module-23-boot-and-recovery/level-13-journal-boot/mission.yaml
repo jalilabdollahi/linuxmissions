@@ -1,0 +1,15 @@
+{
+  "name": "Journal Boot: Script Kickoff",
+  "description": "In the boot and recovery lab, a task related to Journal Boot needs cleanup before the handoff.",
+  "objective": "Make jobs/journal-boot.sh executable, run it, and create the token file it writes",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Journal Boot",
+    "chmod",
+    "bash"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-13-journal-boot"
+}

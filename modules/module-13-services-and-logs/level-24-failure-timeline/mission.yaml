@@ -1,0 +1,15 @@
+{
+  "name": "Failure Timeline: Permission Fix",
+  "description": "In the services and logs lab, a task related to Failure Timeline needs cleanup before the handoff.",
+  "objective": "Set the mode of failure-timeline.sh to 640",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Failure Timeline",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-24-failure-timeline"
+}

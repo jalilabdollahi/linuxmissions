@@ -1,0 +1,11 @@
+{
+  "name": "Pattern Mastery",
+  "description": "A log file mixes text, usernames, and IP addresses. Pull out just the IPv4 addresses into a clean report.",
+  "objective": "Extract all IPv4 addresses from app.log and save them to ips.txt",
+  "xp": 200,
+  "difficulty": "beginner",
+  "expected_time": "7m",
+  "concepts": ["grep -E", "regex", "IPv4", "patterns"],
+  "module": "module-8-advanced-text",
+  "level": "level-1-regex-grep"
+}

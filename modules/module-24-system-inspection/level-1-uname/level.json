@@ -1,0 +1,13 @@
+{
+  "task": {
+    "type": "create_tree_move",
+    "files": {
+      "inbox/uname.txt": "Uname checklist for system inspection\n"
+    },
+    "target_path": "organized/uname/uname-notes.txt",
+    "target_text": "Uname checklist for system inspection\n",
+    "removed_paths": [
+      "inbox/uname.txt"
+    ]
+  }
+}

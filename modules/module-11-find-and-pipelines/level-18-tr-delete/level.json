@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "tr-delete.log",
+    "lines": [
+      "INFO preparing tr-delete",
+      "ALERT TR drift detected",
+      "INFO collecting extra context",
+      "ALERT TR rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT TR drift detected",
+      "ALERT TR rollback required"
+    ]
+  }
+}

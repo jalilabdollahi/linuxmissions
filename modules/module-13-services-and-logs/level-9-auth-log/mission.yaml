@@ -1,0 +1,15 @@
+{
+  "name": "Auth Log: Link Repair",
+  "description": "In the services and logs lab, a task related to Auth Log needs cleanup before the handoff.",
+  "objective": "Create current.conf as a symbolic link to releases/auth-log.conf",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Auth Log",
+    "ln",
+    "symbolic links"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-9-auth-log"
+}

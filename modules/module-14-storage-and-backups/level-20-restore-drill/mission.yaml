@@ -1,0 +1,15 @@
+{
+  "name": "Restore Drill: Noise Dedup",
+  "description": "In the storage and backups lab, a task related to Restore Drill needs cleanup before the handoff.",
+  "objective": "Create unique-sorted.txt from restore-drill-raw.txt with sorted unique values",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Restore Drill",
+    "sort",
+    "uniq"
+  ],
+  "module": "module-14-storage-and-backups",
+  "level": "level-20-restore-drill"
+}

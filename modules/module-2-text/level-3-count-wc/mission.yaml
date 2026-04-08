@@ -1,0 +1,11 @@
+{
+  "name": "By the Numbers",
+  "description": "The product team wants a quick report on the access log: total requests, unique IPs, and total bytes served.",
+  "objective": "Write a report.txt with 3 lines: total request count, unique IP count, and total bytes (sum of field 3)",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["wc", "awk", "sort", "uniq", "pipes"],
+  "module": "module-2-text",
+  "level": "level-3-count-wc"
+}

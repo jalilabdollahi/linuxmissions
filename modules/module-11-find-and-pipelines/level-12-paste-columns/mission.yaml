@@ -1,0 +1,15 @@
+{
+  "name": "Paste Columns: Permission Fix",
+  "description": "In the search and pipelines lab, a task related to Paste Columns needs cleanup before the handoff.",
+  "objective": "Set the mode of paste-columns.sh to 640",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": [
+    "Paste Columns",
+    "chmod",
+    "permissions"
+  ],
+  "module": "module-11-find-and-pipelines",
+  "level": "level-12-paste-columns"
+}

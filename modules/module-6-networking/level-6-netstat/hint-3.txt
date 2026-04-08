@@ -1,0 +1,2 @@
+One valid solution is:
+awk '$1=="ESTAB" {split($5,a,":"); print a[1]}' connections.txt | sort -u | wc -l > unique_ips.txt

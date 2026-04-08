@@ -1,0 +1,2 @@
+chown changes the owner:
+chown $(whoami) $SANDBOX/config/database.conf

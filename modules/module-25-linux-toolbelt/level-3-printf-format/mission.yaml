@@ -1,0 +1,16 @@
+{
+  "name": "Printf Format: Event Counter",
+  "description": "In the linux toolbelt lab, a task related to Printf Format needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in printf-format-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Printf Format",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-3-printf-format"
+}

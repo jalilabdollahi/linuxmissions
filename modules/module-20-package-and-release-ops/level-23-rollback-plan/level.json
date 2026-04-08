@@ -1,0 +1,15 @@
+{
+  "task": {
+    "type": "archive_create",
+    "source_files": {
+      "bundle/rollback-plan/README.txt": "Rollback Plan bundle\n",
+      "bundle/rollback-plan/notes.txt": "handoff notes\n"
+    },
+    "archive_path": "rollback-plan-backup.tar.gz",
+    "required_entries": [
+      "bundle/rollback-plan",
+      "bundle/rollback-plan/README.txt",
+      "bundle/rollback-plan/notes.txt"
+    ]
+  }
+}

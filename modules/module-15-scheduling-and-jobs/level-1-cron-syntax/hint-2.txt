@@ -1,0 +1,1 @@
+`mkdir -p organized/cron-syntax` followed by `mv inbox/cron-syntax.txt organized/cron-syntax/cron-syntax-notes.txt` is enough.

@@ -1,0 +1,3 @@
+Fix directories and files separately using find:
+find $SANDBOX/webroot -type d -exec chmod 755 {} \;
+find $SANDBOX/webroot -type f -exec chmod 644 {} \;

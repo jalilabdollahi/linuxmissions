@@ -1,0 +1,1 @@
+Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.

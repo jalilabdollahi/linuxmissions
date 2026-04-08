@@ -1,0 +1,1 @@
+Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`

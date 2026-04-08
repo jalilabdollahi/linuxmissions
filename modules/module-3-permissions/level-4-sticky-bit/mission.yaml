@@ -1,0 +1,11 @@
+{
+  "name": "Shared Space",
+  "description": "A shared uploads directory lets any user write files — but users are deleting each other's work!",
+  "objective": "Set the sticky bit on the shared/ directory so only file owners can delete their own files",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["sticky bit", "chmod +t", "chmod 1777", "shared directories"],
+  "module": "module-3-permissions",
+  "level": "level-4-sticky-bit"
+}

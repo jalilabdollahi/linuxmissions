@@ -1,0 +1,5 @@
+Check the shell's job table:
+jobs
+
+You can bring the job back with:
+fg %1

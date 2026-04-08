@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 archive-prune-report.csv > owners.txt`

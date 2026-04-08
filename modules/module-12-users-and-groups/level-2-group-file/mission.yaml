@@ -1,0 +1,15 @@
+{
+  "name": "Group File: Alert Filter",
+  "description": "In the users and groups lab, a task related to Group File needs cleanup before the handoff.",
+  "objective": "Write every alert line from group-file.log into alerts.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Group File",
+    "grep",
+    "output redirection"
+  ],
+  "module": "module-12-users-and-groups",
+  "level": "level-2-group-file"
+}

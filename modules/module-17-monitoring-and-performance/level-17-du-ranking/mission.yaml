@@ -1,0 +1,15 @@
+{
+  "name": "Du Ranking: Schedule Entry",
+  "description": "In the monitoring and performance lab, a task related to Du Ranking needs cleanup before the handoff.",
+  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Du Ranking",
+    "cron",
+    "crontab syntax"
+  ],
+  "module": "module-17-monitoring-and-performance",
+  "level": "level-17-du-ranking"
+}

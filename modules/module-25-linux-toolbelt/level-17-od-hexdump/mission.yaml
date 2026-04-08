@@ -1,0 +1,15 @@
+{
+  "name": "Od Hexdump: Schedule Entry",
+  "description": "In the linux toolbelt lab, a task related to Od Hexdump needs cleanup before the handoff.",
+  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": [
+    "Od Hexdump",
+    "cron",
+    "crontab syntax"
+  ],
+  "module": "module-25-linux-toolbelt",
+  "level": "level-17-od-hexdump"
+}

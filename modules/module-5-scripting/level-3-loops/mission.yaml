@@ -1,0 +1,11 @@
+{
+  "name": "Bulk Renamer",
+  "description": "A batch of text files needs to be archived with a new extension, and doing them one by one is not an option.",
+  "objective": "Write rename.sh so it renames every `.txt` file in the target directory to `.bak`",
+  "xp": 180,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["for", "glob", "mv", "basename"],
+  "module": "module-5-scripting",
+  "level": "level-3-loops"
+}

@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' artifact-layout.log > alerts.txt`

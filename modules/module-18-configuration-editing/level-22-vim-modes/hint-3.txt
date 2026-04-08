@@ -1,0 +1,1 @@
+Example: `cut -d, -f2 vim-modes-report.csv > owners.txt`

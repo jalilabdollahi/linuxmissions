@@ -1,0 +1,16 @@
+{
+  "name": "Systemctl Disable: Event Counter",
+  "description": "In the services and logs lab, a task related to Systemctl Disable needs cleanup before the handoff.",
+  "objective": "Count how many times `ok` appears in systemctl-disable-events.txt and write the number to ok-count.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Systemctl Disable",
+    "grep",
+    "wc",
+    "redirection"
+  ],
+  "module": "module-13-services-and-logs",
+  "level": "level-3-systemctl-disable"
+}

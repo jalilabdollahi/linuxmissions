@@ -1,0 +1,16 @@
+{
+  "name": "Grub Notes: Path Realignment",
+  "description": "In the boot and recovery lab, a task related to Grub Notes needs cleanup before the handoff.",
+  "objective": "Create the target directory and move inbox/grub-notes.txt to organized/grub-notes/grub-notes-notes.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Grub Notes",
+    "mkdir",
+    "mv",
+    "cp"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-1-grub-notes"
+}

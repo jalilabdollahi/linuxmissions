@@ -1,0 +1,1 @@
+Example: `grep 'ALERT' apt-install.log > alerts.txt`

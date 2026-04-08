@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "extract_match",
+    "input_file": "grep-gauntlet.log",
+    "lines": [
+      "INFO preparing grep-gauntlet",
+      "ALERT GREP drift detected",
+      "INFO collecting extra context",
+      "ALERT GREP rollback required",
+      "INFO handoff complete"
+    ],
+    "pattern": "ALERT",
+    "output_file": "alerts.txt",
+    "expected_lines": [
+      "ALERT GREP drift detected",
+      "ALERT GREP rollback required"
+    ]
+  }
+}

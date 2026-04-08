@@ -1,0 +1,1 @@
+Example: `find cleanup/ssh-config -name '*.tmp' -delete`

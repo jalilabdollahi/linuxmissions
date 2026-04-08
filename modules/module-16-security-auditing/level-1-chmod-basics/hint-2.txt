@@ -1,0 +1,1 @@
+`mkdir -p organized/chmod-basics` followed by `mv inbox/chmod-basics.txt organized/chmod-basics/chmod-basics-notes.txt` is enough.

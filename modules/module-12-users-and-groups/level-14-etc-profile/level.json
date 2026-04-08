@@ -1,0 +1,20 @@
+{
+  "task": {
+    "type": "loop_generate",
+    "root_dir": "generated",
+    "expected_files": [
+      {
+        "path": "etc-profile-1.txt",
+        "content": "etc-profile item 1\n"
+      },
+      {
+        "path": "etc-profile-2.txt",
+        "content": "etc-profile item 2\n"
+      },
+      {
+        "path": "etc-profile-3.txt",
+        "content": "etc-profile item 3\n"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+Example: `tar -czf envsubst-backup.tar.gz bundle/envsubst`

@@ -1,0 +1,2 @@
+Find world-writable files (others have write permission):
+find $SANDBOX/app -perm /o+w -type f

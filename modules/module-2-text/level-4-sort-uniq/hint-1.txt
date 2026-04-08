@@ -1,0 +1,2 @@
+Extract IPs, sort them, then count consecutive duplicates:
+awk '{print $1}' $SANDBOX/access.log | sort | uniq -c

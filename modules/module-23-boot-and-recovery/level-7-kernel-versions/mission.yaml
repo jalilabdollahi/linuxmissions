@@ -1,0 +1,15 @@
+{
+  "name": "Kernel Versions: History Window",
+  "description": "In the boot and recovery lab, a task related to Kernel Versions needs cleanup before the handoff.",
+  "objective": "Write the first 3 lines of kernel-versions-history.log to first3.txt and the last 3 lines to last3.txt",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "5m",
+  "concepts": [
+    "Kernel Versions",
+    "head",
+    "tail"
+  ],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-7-kernel-versions"
+}

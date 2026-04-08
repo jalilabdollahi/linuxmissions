@@ -1,0 +1,19 @@
+{
+  "task": {
+    "type": "find_and_delete",
+    "files": {
+      "cleanup/grep-invert/keep.txt": "keep\n",
+      "cleanup/grep-invert/old-1.tmp": "junk\n",
+      "cleanup/grep-invert/old-2.tmp": "junk\n",
+      "cleanup/grep-invert/notes.md": "notes\n"
+    },
+    "remove_paths": [
+      "cleanup/grep-invert/old-1.tmp",
+      "cleanup/grep-invert/old-2.tmp"
+    ],
+    "keep_paths": [
+      "cleanup/grep-invert/keep.txt",
+      "cleanup/grep-invert/notes.md"
+    ]
+  }
+}

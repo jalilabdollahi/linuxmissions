@@ -1,0 +1,1 @@
+Example: `chmod +x jobs/join-files.sh && jobs/join-files.sh`

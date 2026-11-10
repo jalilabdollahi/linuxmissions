@@ -23,12 +23,14 @@ try:
     from engine.player import prompt_player_name
     from engine.reset import prepare_level, get_sandbox
     from engine.runner import kill_sandbox_processes, run_validate
-    from engine.safety import validate_command, warn_command, print_safety_info
+    from engine.safety import validate_command, warn_command
     from engine.ui import (
         console,
         render_markdown,
         show_guidance,
         show_help,
+        show_level_screen,
+        show_validation,
         show_mission_briefing,
         show_post_level_debrief,
         show_command_bar,
@@ -38,18 +40,21 @@ try:
         show_welcome,
         show_module_completion,
         module_title,
+        module_number,
     )
 except ModuleNotFoundError:
     from certificate import generate_certificate, save_certificate
     from player import prompt_player_name
     from reset import prepare_level, get_sandbox
     from runner import kill_sandbox_processes, run_validate
-    from safety import validate_command, warn_command, print_safety_info
+    from safety import validate_command, warn_command
     from ui import (
         console,
         render_markdown,
         show_guidance,
         show_help,
+        show_level_screen,
+        show_validation,
         show_mission_briefing,
         show_post_level_debrief,
         show_command_bar,
@@ -59,6 +64,7 @@ except ModuleNotFoundError:
         show_welcome,
         show_module_completion,
         module_title,
+        module_number,
     )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -527,9 +533,25 @@ def configure_readline(sandbox: Path) -> None:
     readline.parse_and_bind("set completion-ignore-case on")
 
 
+# readline needs non-printing escape codes wrapped in \001 ... \002 to measure the prompt.
+def _ansi(code: str) -> str:
+    return f"\001\033[{code}m\002"
+
+
+PROMPT = "linuxmissions> "
+CONTINUATION_PROMPT = f"{_ansi('2')}...> {_ansi('0')}"
+
+
+def set_prompt(module_num: int, level_num: int) -> None:
+    """Prompt that shows where the player is, e.g. `m10 › L1 ❯ `."""
+    global PROMPT
+    cyan, green, dim, reset = _ansi("1;38;5;81"), _ansi("1;38;5;77"), _ansi("2"), _ansi("0")
+    PROMPT = f"{cyan}m{module_num}{reset}{dim} › {reset}{cyan}L{level_num}{reset}{green} ❯ {reset}"
+
+
 def prompt_command() -> str:
     """Read one command. Unfinished input (heredoc, if/for, open quote, trailing |) continues on `...> ` lines."""
-    first = input("linuxmissions> ")
+    first = input(PROMPT)
     if not first.strip():
         return ""
     if first.strip().lower() in META_COMMANDS or first.strip().split()[0].lower() in ("edit",):
@@ -542,7 +564,7 @@ def prompt_command() -> str:
     try:
         while needs_more_input("\n".join(lines)):
             try:
-                lines.append(input("...> "))
+                lines.append(input(CONTINUATION_PROMPT))
             except KeyboardInterrupt:
                 console.print("\n[dim]Input cancelled.[/dim]")
                 return ""
@@ -557,10 +579,10 @@ def clear_screen() -> None:
     os.system("clear")
 
 
-def wait_for_enter(message: str = "Press Enter to continue") -> None:
+def wait_for_enter(message: str = "Press Enter to continue", next_title: str | None = None) -> None:
     while True:
         try:
-            show_continue_prompt(message)
+            show_continue_prompt(message, next_title)
             input()
             return
         except KeyboardInterrupt:
@@ -569,15 +591,12 @@ def wait_for_enter(message: str = "Press Enter to continue") -> None:
             return
 
 
-def render_level_screen(progress: dict, mission: dict, level_num: int, total_levels: int, module_levels: list[dict], sandbox: Path) -> None:
+def render_level_screen(progress: dict, mission: dict, level_num: int, total_levels: int,
+                        module_levels: list[dict], sandbox: Path, ctx: dict | None = None) -> None:
     clear_screen()
-    show_welcome(progress["player_name"])
-    show_status(progress, mission.get("module", ""), len(module_levels))
-    show_command_bar()
-    console.rule(f"[bold blue]{module_title(mission.get('module', ''))}[/bold blue]")
-    show_mission_briefing(mission, level_num, total_levels)
-    print_safety_info()
-    console.print(f"\n[dim]Sandbox:[/dim] [bold]{sandbox}[/bold]\n")
+    ctx = ctx or {}
+    show_level_screen(progress, mission, level_num, total_levels,
+                      len(progress.get("completed_levels", [])), ctx.get("overall_total", 0), sandbox)
 
 
 # ─── Validation ───────────────────────────────────────────────────────────────
@@ -586,7 +605,7 @@ def validate_level(level_path: Path, sandbox: Path, verbose: bool = False) -> bo
     """Run validate.sh. Auto-validation after each command is silent; `validate` shows why."""
     ok, message = run_validate(level_path, sandbox)
     if verbose and message:
-        console.print(message, markup=False, highlight=False)
+        show_validation(message)
     return ok
 
 
@@ -653,8 +672,14 @@ def play_level(
     total_levels: int,
     progress: dict,
     module_levels: list[dict],
+    ctx: dict | None = None,
 ) -> bool:
-    """Play a single level. Return True if completed (or skipped)."""
+    """Play a single level. Return True if completed (or skipped).
+
+    ctx (optional): modules (all modules, for `status`), overall_total (number of
+    levels in the game) and next_title (name of the following mission).
+    """
+    ctx = ctx or {}
     mission = level["mission"]
     level_id = level["id"]
     level_path = REPO_ROOT / level["path"]
@@ -662,7 +687,8 @@ def play_level(
     shell_session = ShellSession(sandbox)
     shell_session.start()
     configure_readline(sandbox)
-    render_level_screen(progress, mission, level_num, total_levels, module_levels, sandbox)
+    set_prompt(module_number(mission.get("module", "")), level_num)
+    render_level_screen(progress, mission, level_num, total_levels, module_levels, sandbox, ctx)
 
     hints = [h for h in (level_path / f"hint-{i}.txt" for i in range(1, 4)) if h.exists()]
     hints_used = progress.setdefault("hints_used", {})
@@ -694,11 +720,12 @@ def play_level(
             continue
 
         if cmd_lower == "status":
-            show_status(progress, mission.get("module", ""), len(module_levels))
+            show_status(progress, ctx.get("modules") or [{"name": mission.get("module", ""), "levels": module_levels}],
+                        mission.get("module", ""))
             continue
 
         if cmd_lower == "objective":
-            render_level_screen(progress, mission, level_num, total_levels, module_levels, sandbox)
+            render_level_screen(progress, mission, level_num, total_levels, module_levels, sandbox, ctx)
             continue
 
         if cmd_lower == "hint":
@@ -720,7 +747,7 @@ def play_level(
                     continue
             hints_used[level_id] = nxt
             save_progress(progress)
-            show_guidance(hints[nxt - 1].read_text(encoding="utf-8"), nxt, xp_percent(nxt))
+            show_guidance(hints[nxt - 1].read_text(encoding="utf-8"), nxt, xp_percent(nxt), len(hints))
             continue
 
         if cmd_lower == "hints":
@@ -728,7 +755,7 @@ def play_level(
             if not used:
                 console.print("[dim]No hints revealed yet. Type [bold]hint[/bold] for the first one.[/dim]")
             for n in range(1, used + 1):
-                show_guidance(hints[n - 1].read_text(encoding="utf-8"), n, xp_percent(n))
+                show_guidance(hints[n - 1].read_text(encoding="utf-8"), n, xp_percent(n), len(hints))
             continue
 
         if cmd_lower == "reset":
@@ -738,7 +765,7 @@ def play_level(
             shell_session = ShellSession(sandbox)
             shell_session.start()
             configure_readline(sandbox)
-            render_level_screen(progress, mission, level_num, total_levels, module_levels, sandbox)
+            render_level_screen(progress, mission, level_num, total_levels, module_levels, sandbox, ctx)
             continue
 
         if cmd_lower == "skip":
@@ -767,8 +794,9 @@ def play_level(
             shell_session.close()
             kill_sandbox_processes(sandbox)
             clear_screen()
-            show_post_level_debrief(debrief, xp, elapsed)
-            wait_for_enter()
+            show_post_level_debrief(debrief, xp, elapsed, mission.get("name", ""),
+                                    hints_used.get(level_id, 0), progress.get("total_xp", 0))
+            wait_for_enter(next_title=ctx.get("next_title"))
             return True
 
     return True
@@ -845,8 +873,8 @@ def main() -> None:
     progress["player_name"] = prompt_player_name(progress.get("player_name", ""))
     save_progress(progress)
 
-    show_welcome(progress["player_name"])
     all_ids = {lv["id"] for mod in modules for lv in mod["levels"]}
+    show_welcome(progress["player_name"], progress, len(all_ids))
     if all_ids.issubset(set(progress.get("completed_levels", []))):
         show_victory(progress)
         return
@@ -864,12 +892,17 @@ def main() -> None:
         progress["current_level"] = current_level["name"]
         save_progress(progress)
 
+        nxt_module, nxt_level = advance(modules, module_index, level_index)
+        next_title = (modules[nxt_module]["levels"][nxt_level]["mission"].get("name")
+                      if nxt_module is not None else None)
         play_level(
             current_level,
             level_index + 1,
             len(current_module["levels"]),
             progress,
             current_module["levels"],
+            {"modules": modules, "overall_total": sum(len(m["levels"]) for m in modules),
+             "next_title": next_title},
         )
 
         progress = load_progress()

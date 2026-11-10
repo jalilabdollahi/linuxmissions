@@ -1,1 +1,13 @@
-Example: `ln -s releases/wget-mirror.conf current.conf`
+Type this at the prompt (rm first if an earlier try left files behind):
+
+rm -rf mirror
+wget -q -r -np -nH --cut-dirs=1 -k -P mirror "$(cat docs-url.txt)"
+
+- -r            follow the links in each page (robots.txt is respected, so /docs/old/ is skipped)
+- -np           stay below /docs/: no blog, no admin, no site root
+- -nH           no 127.0.0.1:PORT/ folder
+- --cut-dirs=1  drop "docs/" from the saved paths, so /docs/guide/x.html becomes mirror/guide/x.html
+- -k            rewrite links to downloaded files as relative links that work offline
+- -P mirror     save under mirror/
+
+Check it: find mirror -type f

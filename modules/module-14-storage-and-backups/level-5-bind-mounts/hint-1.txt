@@ -1,1 +1,3 @@
-This is a delimiter-based column extraction task.
+mounts.txt hides the difference: a bind mount of /srv/uploads looks like the disk was mounted a second time. The kernel keeps one more fact about each mount. Look at mountinfo.txt and compare its columns with man 5 proc (search for mountinfo): which field says which directory of the file system is visible at the mount point?
+For ordinary mounts it shows the top of the file system. What does it show when only a subdirectory is visible?
+Then ask where the original directory really is on the running system. The mount's device also appears elsewhere in the file.

@@ -1,15 +1,11 @@
 {
-  "name": "Onboarding Checklist: Permission Fix",
-  "description": "In the users and groups lab, a task related to Onboarding Checklist needs cleanup before the handoff.",
-  "objective": "Set the mode of onboarding-checklist.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Onboarding Checklist",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Onboarding Checklist",
+  "description": "Three engineers join the platform team on build-07 next week. The onboarding ticket lists everything their accounts need: users, groups, homes, sudo, a forced first password change and container ID ranges. One of them used to work here and still has a locked account.",
+  "objective": "Carry out TICKET.md on the server copy in this sandbox (etc/, home/) with the sandbox's tools (useradd, usermod, gpasswd, chage, visudo and so on): create or re-enable the three accounts as the ticket says, with the exact UIDs, shells, groups, home directories (from etc/skel, mode 0750; an existing home is kept as it is), a password that must be changed at first login, one 65536-ID range each in etc/subuid and etc/subgid, and a sudo rule file in etc/sudoers.d that visudo -c accepts. Nothing else in the account databases may change.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "40m",
+  "concepts": ["useradd/usermod/chage/gpasswd", "UID allocation and reserved ranges", "skel and HOME_MODE", "sudoers.d file rules", "re-enabling a locked account", "subuid/subgid"],
   "module": "module-12-users-and-groups",
   "level": "level-24-onboarding-checklist"
 }

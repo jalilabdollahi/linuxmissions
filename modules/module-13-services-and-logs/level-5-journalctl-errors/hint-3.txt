@@ -1,1 +1,10 @@
-Example: `cut -d, -f2 journalctl-errors-report.csv > owners.txt`
+Filter by priority and a full start date, print ISO timestamps, save the result:
+
+journalctl -p err --since "2026-11-09 23:40" -o short-iso > errors.txt
+cat errors.txt
+
+- -p err                         err, crit, alert, emerg; PostgreSQL "ERROR:" lines are logged at
+                                 warning and pgbackrest's stdout at info, so they stay out
+- --since "2026-11-09 23:40"     yesterday 23:40; "--since 23:40" would mean today at 23:40
+- (no -b)                        both boots: before and after the reboot at around 00:30
+- -o short-iso                   date, time and zone on every line

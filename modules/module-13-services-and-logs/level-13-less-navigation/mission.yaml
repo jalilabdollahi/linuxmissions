@@ -1,15 +1,11 @@
 {
-  "name": "Less Navigation: Script Kickoff",
-  "description": "In the services and logs lab, a task related to Less Navigation needs cleanup before the handoff.",
-  "objective": "Make jobs/less-navigation.sh executable, run it, and create the token file it writes",
+  "name": "Needle in huge.log",
+  "description": "orders-api's worker panicked several times today and the developer needs one specific crash (NOTE.txt). huge.log has the whole day: 200,000 lines, far too many to scroll through.",
+  "objective": "Write to trace.txt the trace id (the 16 hex digits after trace=) from the line that is two lines above the first worker panic (a line containing `panic: `) after the second deploy that really finished (`deploy finished: ...`; dry runs don't count). Don't change huge.log.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Less Navigation",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "10m",
+  "concepts": ["less -N", "less /pattern, n and N", "less G and g", "less &pattern filter", "grep -n", "context around a match"],
   "module": "module-13-services-and-logs",
   "level": "level-13-less-navigation"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Frequency Table: Backup Bundle",
-  "description": "In the data processing lab, a task related to Frequency Table needs cleanup before the handoff.",
-  "objective": "Create frequency-table-backup.tar.gz containing the files under bundle/frequency-table",
+  "name": "Status Codes By Hour",
+  "description": "The shop's web server had a bad day: errors came in waves, and the team wants to see when. access.log is yesterday's log in the usual combined format, e.g. 203.0.113.9 - - [10/Nov/2026:14:03:22 +0000] \"GET /cart HTTP/1.1\" 200 5120 \"-\" \"Mozilla/5.0 ...\". The server was switched off for maintenance for a few hours at night.",
+  "objective": "Write status_by_hour.csv: the header line hour,2xx,3xx,4xx,5xx, then exactly 24 lines, one per hour 00 to 23 (two digits, as in the log's timestamp), each with the number of requests in that hour whose status code starts with 2, 3, 4 and 5. Hours without requests are listed with 0 in every column.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Frequency Table",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "20m",
+  "concepts": ["awk -F'\"'", "split() on :", "2-D array keys c[h, cls]", "printf %02d", "filling missing rows with zeros"],
   "module": "module-22-data-processing",
   "level": "level-10-frequency-table"
 }

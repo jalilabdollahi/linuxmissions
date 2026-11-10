@@ -1,1 +1,11 @@
-Example: `grep 'ALERT' sysctl-review.log > alerts.txt`
+cd capture; declare -A src
+for d in usr/lib/sysctl.d run/sysctl.d etc/sysctl.d; do for f in $d/*.conf; do src[$(basename $f)]=$f; done; done
+for n in $(printf '%s\n' "${!src[@]}" | LC_ALL=C sort); do f=${src[$n]}; grep -hv '^[[:space:]]*[#;]' $f | grep = | while IFS='=' read -r k v; do echo "$(echo $k | tr -d ' \t' | sed 's/^-//' | tr / .)=$(echo $v) $f"; done; done | awk '{k=$0; sub(/=.*/,"",k); last[k]=$0} END{for(k in last) print last[k]}' | LC_ALL=C sort > ../effective.txt
+cd ..; cat effective.txt
+
+- the first loop       a later directory overwrites an earlier one per file NAME, so etc wins over run over usr/lib: masked files drop out
+- sort of the names    apply the files in name order, across all directories
+- grep -hv ... | grep =   drop comments, keep assignments
+- tr / . and sed 's/^-//' normalise the key; echo $v collapses spaces in the value
+- awk last[k]          the last assignment of each key wins and remembers its file
+- LC_ALL=C sort        final list sorted by key

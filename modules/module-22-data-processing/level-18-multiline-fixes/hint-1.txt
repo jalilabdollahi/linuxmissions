@@ -1,1 +1,7 @@
-Look for a filtering command that keeps only the alert lines in multiline-fixes.log.
+Compare wc -l tickets.csv with the last ticket id. Then look at a few records with
+cat -A: where does a ticket really end? A line break only ends a record when it is
+outside double quotes.
+Tricks that look like they work but don't: "a new record starts with TCK-" (some
+notes mention ticket ids at the start of a line) and "a record ends when the line
+ends with a quote" (CSV writes a quote inside a field as "", which can end a line).
+What stays true no matter what the text says: count the " characters seen so far.

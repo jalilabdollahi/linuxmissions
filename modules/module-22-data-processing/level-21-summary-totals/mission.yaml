@@ -1,16 +1,11 @@
 {
-  "name": "Summary Totals: Path Realignment",
-  "description": "In the data processing lab, a task related to Summary Totals needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/summary-totals.txt to organized/summary-totals/summary-totals-notes.txt",
+  "name": "Ledger Rollup",
+  "description": "Accounting closes October and wants the ledger as a rollup report: the rows grouped by department and team, with a subtotal after every team, another after every department and a grand total at the end. ledger.csv comes from the accounting tool, which writes amounts like \"1,234.50\" (in quotes because of the comma) and refunds in parentheses: (45.00).",
+  "objective": "Write report.tsv, every line with 5 tab-separated columns and no header. The ledger rows: department, team, date, description, amount, grouped by department (A-Z), then team (A-Z), and within a team in the order of ledger.csv. Amounts everywhere as plain numbers with two decimals, refunds negative (1234.50, -45.00). After the last row of each team: department, team, TEAM TOTAL, an empty column, the team's sum. After the last team of each department: department, an empty column, DEPARTMENT TOTAL, an empty column, the department's sum. Last line: two empty columns, GRAND TOTAL, an empty column, the sum of everything. Leave ledger.csv unchanged.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Summary Totals",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "25m",
+  "concepts": ["control-break report", "sort -s -t, -k1,1 -k2,2", "awk prev-key detection", "END block for the last group", "parsing \"1,234.50\" and (45.00)"],
   "module": "module-22-data-processing",
   "level": "level-21-summary-totals"
 }

@@ -1,1 +1,10 @@
-Example: `grep 'ALERT' crontab-edit.log > alerts.txt`
+crontab -l > deploy.cron
+echo '10 4 * * * /opt/app/bin/warm-cache --all' >> deploy.cron
+crontab deploy.cron
+crontab -l
+
+- crontab -l > deploy.cron   save the installed table (all six jobs) to a file
+- echo '...' >> deploy.cron  append the new job; >> keeps what is already there
+- crontab deploy.cron        install the complete file as deploy's table
+- crontab -l                 check: seven jobs, the MAILTO line and comments intact
+(the same in one line: (crontab -l; echo '10 4 * * * /opt/app/bin/warm-cache --all') | crontab -)

@@ -1,0 +1,439 @@
+#!/usr/bin/env python3
+"""cron-run: play cron for a simulated time window (LinuxMissions mock).
+
+Reads the same places cron does, inside a sandbox root, finds every job due
+in the window, and really runs it the way Debian cron would: `SHELL -c CMD`
+with cron's minimal environment (SHELL=/bin/sh, PATH=/usr/bin:/bin, HOME,
+LOGNAME plus the crontab's NAME=value lines), cwd = $HOME, `%` turned into
+stdin, output collected and "mailed" to MAILTO. A crontab with a syntax error
+is skipped entirely, as cron does. Jobs see the simulated time through a
+`date` shim placed first in their PATH.
+
+  cron-run --root DIR [--from T] (--to T | --days N | --at T) [options]
+
+Sources (all optional, combined):
+  --root DIR            sandbox root: DIR/etc/crontab, DIR/etc/cron.d/*,
+                        DIR/var/spool/cron/crontabs/<user>; if DIR/etc/crontab
+                        is absent, DIR/etc/cron.{hourly,daily,weekly,monthly}
+                        run at Ubuntu's default times (17 * * * *, 25 6 * * *,
+                        47 6 * * 7, 52 6 1 * *) via run-parts
+  --spool DIR           user crontabs directory (default DIR/var/spool/cron/crontabs)
+  --crontab FILE[:USER] an extra user crontab (repeatable)
+  --system-crontab FILE an extra file in /etc/crontab format (repeatable)
+  --no-periodic         do not run the cron.{hourly,...} directories
+
+Window: --from (default LM_CRON_NOW or now), then --to, --days N, or
+--at T (just the minute T). Times: "YYYY-MM-DD HH:MM". [from, to).
+
+Running:
+  --home DIR            HOME and working directory of jobs (default --root)
+  --path P              PATH for jobs that set none (default /usr/bin:/bin;
+                        Ubuntu's systemd unit starts cron with -P, which would
+                        inherit /usr/local/sbin:/usr/local/bin:/usr/sbin:...)
+  --boot                run @reboot jobs at the start of the window
+  --tick SECONDS        real seconds per simulated minute; 0 (default) runs
+                        jobs one after another, >0 runs them concurrently so
+                        long jobs overlap the way they would in real life
+  --timeout SECONDS     kill a job after this long (default 60)
+  --no-clock            jobs see the real time (no `date` shim)
+  --list                only print the schedule, run nothing
+
+Output:
+  stdout                syslog-style lines like cron's: "Apr  8 02:00:01
+                        host CRON[pid]: (user) CMD (command)"
+  --log FILE            append those lines to FILE too
+  --jsonl FILE          one JSON object per run (time, user, source, line,
+                        schedule, command, stdin, exit, output, mailto, ...)
+  --mail-dir DIR        deliver job output as mbox mail to DIR/<rcpt>
+                        (default DIR/var/mail with --root); without it, cron's
+                        "No MTA installed, discarding output" is logged
+  --summary             print a per-job table at the end
+  --hostname NAME       host name in logs and mail (default "sandbox")
+  -q, --quiet           no syslog lines on stdout
+"""
+import argparse
+import datetime as dt
+import json
+import os
+import shutil
+import signal
+import subprocess
+import sys
+import tempfile
+import time
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, HERE)
+import cronlib  # noqa: E402
+
+DATE_SHIM = r"""#!/bin/sh
+# cron-run clock shim: `date` as of the simulated time (see mocks/README.md).
+for a in "$@"; do
+  case "$a" in -d*|--date*|-r*|--reference*|-f*|--file*|-s*|--set*) exec "$LM_CRON_REAL_DATE" "$@" ;; esac
+done
+if "$LM_CRON_REAL_DATE" --version >/dev/null 2>&1; then gnu=1; else gnu=; fi
+now=$LM_CRON_EPOCH
+if [ "$LM_CRON_SCALE" != 0 ]; then
+  if [ -n "$gnu" ]; then real=$("$LM_CRON_REAL_DATE" +%s%N)
+  else real=$(python3 -c 'import time; print(time.time_ns())'); fi
+  now=$(( LM_CRON_EPOCH + (real - LM_CRON_T0NS) * LM_CRON_SCALE / 1000000000 ))
+fi
+if [ -n "$gnu" ]; then
+  TZ=UTC0 exec "$LM_CRON_REAL_DATE" -d "@$now" "$@"
+else
+  TZ=UTC0 exec "$LM_CRON_REAL_DATE" -r "$now" "$@"
+fi
+"""
+
+
+class Job:
+    def __init__(self, entry, user, source, mailto_default):
+        self.entry = entry
+        self.user = user
+        self.source = source
+        self.mailto_default = mailto_default
+
+
+def load_sources(args, log):
+    jobs = []
+    root = args.root
+
+    def add_file(path, label, system, user=None):
+        try:
+            with open(path, "rb") as f:
+                text = f.read().decode("utf-8", "surrogateescape")
+        except OSError as exc:
+            log("CRON", f"ERROR (cannot read {label}: {exc.strerror})")
+            return
+        owner = user or "root"
+        tab = cronlib.parse_crontab(text, system=system, filename=label, source=label)
+        if tab.errors:
+            log(owner if not system else "*system*", "ERROR (Syntax error, this crontab file will be ignored)")
+            for e in tab.errors:
+                print(f"cron-run: {e}", file=sys.stderr)
+            args.had_errors = True
+            return
+        if tab.missing_newline:
+            log(owner if not system else "*system*",
+                "ERROR (Missing newline before EOF, this crontab file will be ignored)")
+            args.had_errors = True
+            return
+        # cron keeps each file's entries in reverse order (it prepends them)
+        for e in reversed(tab.entries):
+            jobs.append(Job(e, e.user if system else owner, label, e.user if system else owner))
+
+    def rel(path):
+        if root:
+            try:
+                return os.path.relpath(path, root)
+            except ValueError:
+                return path
+        return path
+
+    if root:
+        etc_crontab = os.path.join(root, "etc", "crontab")
+        if os.path.isfile(etc_crontab):
+            add_file(etc_crontab, rel(etc_crontab), True)
+        elif not args.no_periodic:
+            for name, sched in cronlib.DEBIAN_PERIODIC:
+                d = os.path.join(root, "etc", f"cron.{name}")
+                if os.path.isdir(d):
+                    line = f"{sched} root cd / && run-parts --report {d}\n"
+                    tab = cronlib.parse_crontab(line, system=True, source=rel(d))
+                    e = tab.entries[0]
+                    e.env = {"SHELL": "/bin/sh"}
+                    e.source = rel(d)
+                    jobs.append(Job(e, "root", rel(d), "root"))
+        crond = os.path.join(root, "etc", "cron.d")
+        if os.path.isdir(crond):
+            for name in sorted(os.listdir(crond)):
+                p = os.path.join(crond, name)
+                if cronlib.valid_crond_name(name) and os.path.isfile(p):
+                    add_file(p, rel(p), True)
+    spool = args.spool or (os.path.join(root, "var", "spool", "cron", "crontabs") if root else None)
+    if spool and os.path.isdir(spool):
+        for name in sorted(os.listdir(spool)):
+            p = os.path.join(spool, name)
+            if name.startswith(".") or name.startswith("tmp.") or not os.path.isfile(p):
+                continue
+            add_file(p, rel(p), False, user=name)
+    for spec in args.crontab:
+        path, _, user = spec.partition(":")
+        add_file(path, path, False, user=user or default_user())
+    for path in args.system_crontab:
+        add_file(path, path, True)
+    return jobs
+
+
+def default_user():
+    return os.environ.get("LM_CRON_USER") or os.environ.get("USER") or "root"
+
+
+def syslog_time(t: dt.datetime) -> str:
+    return t.strftime("%b ") + f"{t.day:2d}" + t.strftime(" %H:%M:%S")
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(prog="cron-run", add_help=True,
+                                 description="Run cron jobs for a simulated time window (LinuxMissions mock).")
+    ap.add_argument("--root")
+    ap.add_argument("--spool")
+    ap.add_argument("--crontab", action="append", default=[])
+    ap.add_argument("--system-crontab", action="append", default=[])
+    ap.add_argument("--no-periodic", action="store_true")
+    ap.add_argument("--from", dest="start")
+    ap.add_argument("--to")
+    ap.add_argument("--days", type=float)
+    ap.add_argument("--at")
+    ap.add_argument("--home")
+    ap.add_argument("--path", default=cronlib.DEFAULT_PATH)
+    ap.add_argument("--boot", action="store_true")
+    ap.add_argument("--tick", type=float, default=0.0)
+    ap.add_argument("--timeout", type=float, default=60.0)
+    ap.add_argument("--no-clock", action="store_true")
+    ap.add_argument("--list", action="store_true")
+    ap.add_argument("--log")
+    ap.add_argument("--jsonl")
+    ap.add_argument("--mail-dir")
+    ap.add_argument("--summary", action="store_true")
+    ap.add_argument("--hostname", default="sandbox")
+    ap.add_argument("-q", "--quiet", action="store_true")
+    args = ap.parse_args(argv)
+    args.had_errors = False
+
+    if not (args.root or args.crontab or args.system_crontab or args.spool):
+        ap.error("give --root, --spool, --crontab or --system-crontab")
+    try:
+        if args.at:
+            start = cronlib.parse_time(args.at)
+            end = start + dt.timedelta(minutes=1)
+        else:
+            start = cronlib.parse_time(args.start or os.environ.get("LM_CRON_NOW") or "now")
+            if args.to:
+                end = cronlib.parse_time(args.to)
+            else:
+                end = start + dt.timedelta(days=args.days if args.days is not None else 1)
+    except ValueError as exc:
+        ap.error(str(exc))
+    if end <= start:
+        ap.error("the window is empty (--to must be after --from)")
+    root = os.path.abspath(args.root) if args.root else None
+    args.root = root
+    home = os.path.abspath(args.home) if args.home else (root or os.getcwd())
+    mail_dir = args.mail_dir or (os.path.join(root, "var", "mail") if root else None)
+
+    log_fh = open(args.log, "a", encoding="utf-8") if args.log else None
+    jsonl_fh = open(args.jsonl, "a", encoding="utf-8") if args.jsonl else None
+    fake_pid = [1000]
+    clock = [start]
+
+    def log(user, msg, when=None, pid=None):
+        if pid is None:
+            fake_pid[0] += 1
+            pid = fake_pid[0]
+        line = f"{syslog_time((when or clock[0]).replace(second=1))} {args.hostname} CRON[{pid}]: ({user}) {msg}"
+        if not args.quiet:
+            print(line, file=sys.stderr if args.list else sys.stdout, flush=True)
+        if log_fh:
+            log_fh.write(line + "\n")
+            log_fh.flush()
+
+    jobs = load_sources(args, log)
+
+    schedule = []
+    if args.boot:
+        for j in jobs:
+            if j.entry.reboot:
+                schedule.append((start, j))
+    runs = cronlib.expand([j.entry for j in jobs], start, end)
+    by_entry = {id(j.entry): j for j in jobs}
+    schedule += [(t, by_entry[id(e)]) for t, e in runs]
+
+    if args.list:
+        for t, j in schedule:
+            print(f"{t:%Y-%m-%d %H:%M}\t{j.user}\t{j.source}:{j.entry.lineno}\t{j.entry.command}")
+        return 1 if args.had_errors else 0
+
+    shim_dir = None
+    real_date = shutil.which("date", path="/bin:/usr/bin") or "/bin/date"
+    if not args.no_clock:
+        shim_dir = tempfile.mkdtemp(prefix="cron-run-clock.")
+        with open(os.path.join(shim_dir, "date"), "w") as f:
+            f.write(DATE_SHIM)
+        os.chmod(os.path.join(shim_dir, "date"), 0o755)
+        rp = os.path.join(shim_dir, "run-parts")
+        with open(rp, "w") as f:
+            f.write(f"#!/bin/sh\nexec python3 '{os.path.join(HERE, 'run-parts')}' \"$@\"\n")
+        os.chmod(rp, 0o755)
+
+    scale = 0 if args.tick <= 0 else max(1, round(60 / args.tick))
+    stats = {}
+    running = []   # (proc, job, when, outfile, t0, record)
+
+    def launch(when, job):
+        e = job.entry
+        command, stdin_data = e.split()
+        env = {}
+        env.update(e.env)
+        env.setdefault("SHELL", "/bin/sh")
+        env.setdefault("HOME", home)
+        env.setdefault("PATH", args.path)
+        env["LOGNAME"] = job.user
+        mailto = env.get("MAILTO", job.mailto_default)
+        visible_env = dict(env)
+        if shim_dir:
+            env["PATH"] = shim_dir + ":" + env["PATH"]
+            env["LM_CRON_EPOCH"] = str(int((when - dt.datetime(1970, 1, 1)).total_seconds()) + 1)
+            env["LM_CRON_T0NS"] = str(time.time_ns())
+            env["LM_CRON_SCALE"] = str(scale)
+            env["LM_CRON_REAL_DATE"] = real_date
+        fake_pid[0] += 1
+        pid = fake_pid[0]
+        log(job.user, f"CMD ({command})", when, pid)
+        out = tempfile.TemporaryFile()
+        cwd = env["HOME"]
+        record = {"time": f"{when:%Y-%m-%d %H:%M}", "user": job.user, "source": job.source,
+                  "line": e.lineno, "schedule": e.schedule, "command": command, "stdin": stdin_data,
+                  "mailto": mailto, "cwd": cwd, "env": visible_env}
+        if not os.path.isdir(cwd):
+            record.update(exit=1, output=f"chdir({cwd}): No such file or directory\n", mailed=None,
+                          start=time.time(), end=time.time(), killed=False)
+            finish(record, job)
+            return None
+        try:
+            proc = subprocess.Popen([env["SHELL"], "-c", command], cwd=cwd, env=env,
+                                    stdin=subprocess.PIPE if stdin_data else subprocess.DEVNULL,
+                                    stdout=out, stderr=subprocess.STDOUT, start_new_session=True)
+        except OSError as exc:
+            record.update(exit=127, output=f"{env['SHELL']}: {exc.strerror}\n", mailed=None,
+                          start=time.time(), end=time.time(), killed=False)
+            finish(record, job)
+            return None
+        if stdin_data:
+            try:
+                proc.stdin.write(stdin_data.encode("utf-8", "surrogateescape"))
+                proc.stdin.close()
+            except BrokenPipeError:
+                pass
+        record["start"] = time.time()
+        item = (proc, job, when, out, record)
+        running.append(item)
+        return item
+
+    def reap(item, block):
+        proc, job, when, out, record = item
+        if block:
+            try:
+                proc.wait(timeout=max(0.0, record["start"] + args.timeout - time.time()))
+            except subprocess.TimeoutExpired:
+                pass
+        if proc.poll() is None and time.time() - record["start"] >= args.timeout:
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except OSError:
+                pass
+            proc.wait()
+            record["killed"] = True
+        if proc.poll() is None:
+            return False
+        record.setdefault("killed", False)
+        record["end"] = time.time()
+        record["exit"] = proc.returncode
+        out.seek(0)
+        record["output"] = out.read().decode("utf-8", "replace")
+        out.close()
+        running.remove(item)
+        finish(record, job)
+        return True
+
+    def finish(record, job):
+        output = record["output"]
+        record["mailed"] = None
+        mailto = record["mailto"]
+        if output and mailto:
+            if mail_dir:
+                deliver(mail_dir, mailto, job, record, output)
+                record["mailed"] = mailto
+            else:
+                log("CRON", "info (No MTA installed, discarding output)")
+        key = (job.source, job.entry.lineno)
+        st = stats.setdefault(key, {"command": record["command"], "runs": 0, "exits": {}})
+        st["runs"] += 1
+        st["exits"][record["exit"]] = st["exits"].get(record["exit"], 0) + 1
+        if jsonl_fh:
+            jsonl_fh.write(json.dumps(record, sort_keys=True) + "\n")
+            jsonl_fh.flush()
+
+    def deliver(directory, rcpt, job, record, output):
+        os.makedirs(directory, exist_ok=True)
+        name = rcpt.replace("/", "_").split(",")[0].strip() or job.user
+        when = dt.datetime.strptime(record["time"], "%Y-%m-%d %H:%M")
+        env = record["env"]
+        env_lines = "".join(f"X-Cron-Env: <{k}={env[k]}>\n" for k in ("SHELL", "HOME", "PATH", "LOGNAME") if k in env)
+        ctime = when.strftime("%a %b ") + f"{when.day:2d}" + when.strftime(" %H:%M:01 %Y")
+        msg = (f"From {job.user}@{args.hostname}  {ctime}\n"
+               f"From: {job.user} (Cron Daemon)\n"
+               f"To: {rcpt}\n"
+               f"Subject: Cron <{job.user}@{args.hostname}> {record['command']}\n"
+               "MIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n"
+               "Content-Transfer-Encoding: 8bit\n"
+               f"{env_lines}"
+               f"Date: {when:%a, %d %b %Y %H:%M:01} +0000\n\n"
+               f"{output}{'' if output.endswith(chr(10)) else chr(10)}\n")
+        with open(os.path.join(directory, name), "a", encoding="utf-8") as f:
+            f.write(msg)
+
+    try:
+        if args.tick <= 0:
+            for when, job in schedule:
+                clock[0] = when
+                item = launch(when, job)
+                if item:
+                    reap(item, True)
+        else:
+            sim_anchor, real_anchor = start, time.time()
+            minutes = []
+            for when, job in schedule:
+                if not minutes or minutes[-1][0] != when:
+                    minutes.append((when, []))
+                minutes[-1][1].append(job)
+            for when, due in minutes:
+                target = real_anchor + (when - sim_anchor).total_seconds() / 60 * args.tick
+                while running and time.time() < target:
+                    for item in list(running):
+                        reap(item, False)
+                    time.sleep(min(0.05, max(0.0, target - time.time())))
+                for item in list(running):
+                    reap(item, False)
+                if not running:
+                    sim_anchor, real_anchor = when, time.time()
+                clock[0] = when
+                for job in due:
+                    launch(when, job)
+            while running:
+                for item in list(running):
+                    reap(item, False)
+                time.sleep(0.02)
+    finally:
+        for item in list(running):
+            try:
+                os.killpg(item[0].pid, signal.SIGKILL)
+            except OSError:
+                pass
+        if shim_dir:
+            shutil.rmtree(shim_dir, ignore_errors=True)
+        if log_fh:
+            log_fh.close()
+        if jsonl_fh:
+            jsonl_fh.close()
+
+    if args.summary:
+        print("RUNS\tEXIT CODES\tSOURCE:LINE\tCOMMAND")
+        for (src, line), st in sorted(stats.items()):
+            codes = ",".join(f"{c}x{n}" for c, n in sorted(st["exits"].items(), key=lambda kv: str(kv[0])))
+            print(f"{st['runs']}\t{codes}\t{src}:{line}\t{st['command']}")
+    return 1 if args.had_errors else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,1 +1,3 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Look at where each link points: `ls -l` shows it, `readlink` prints just the target. Most targets start with the same long prefix. That prefix is the place the tree used to live.
+Which links point inside that old tree, and which point at completely different places? Only the first group is yours to fix.
+A relative link is resolved from the directory that holds the link, not from where you are standing. So the new target depends on where each link lives.

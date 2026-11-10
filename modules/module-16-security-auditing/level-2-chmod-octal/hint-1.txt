@@ -1,1 +1,5 @@
-Look for a filtering command that keeps only the alert lines in chmod-octal.log.
+First write down what each file has now (`stat -c '%a %n' file` prints the octal mode).
+The policy gives an upper limit, not a target: a file at 600 is already fine and must
+stay 600, while a file at 777 has to come down. Think of the limit as a list of
+permission bits that are allowed, and everything else must be taken away.
+Scripts in app/bin have a different limit from the rest of app/.

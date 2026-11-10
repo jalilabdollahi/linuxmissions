@@ -1,15 +1,11 @@
 {
-  "name": "Ssh Config Edit: Schedule Entry",
-  "description": "In the configuration editing lab, a task related to Ssh Config Edit needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Hop Through the Bastion",
+  "description": "The six db-* servers are only reachable through bastion.corp, and each one has its own login user and key. The current home/.ssh/config was started by a colleague and does not work for anything.",
+  "objective": "Rewrite home/.ssh/config so that `ssh db-N` works for every host listed in db-hosts.txt (right user, port and key, reached through bastion.corp as the jump host, real name db-N.corp.internal), bastion.corp itself uses user jump with key keys/bastion, github.com uses user git with keys/github and no jump host, gitlab.corp keeps its existing settings, and every other host gets only safe defaults: ServerAliveInterval 30, no agent forwarding, and no forced User.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Ssh Config Edit",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "25m",
+  "concepts": ["ssh_config Host patterns", "ProxyJump", "first value wins", "ssh -G"],
   "module": "module-18-configuration-editing",
   "level": "level-17-ssh-config-edit"
 }

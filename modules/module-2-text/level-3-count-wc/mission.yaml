@@ -1,11 +1,11 @@
 {
   "name": "By the Numbers",
-  "description": "The product team wants a quick report on the access log: total requests, unique IPs, and total bytes served.",
-  "objective": "Write a report.txt with 3 lines: total request count, unique IP count, and total bytes (sum of field 3)",
+  "description": "The product team wants three numbers from yesterday's web server log (access.log, nginx combined format): how many requests, from how many different clients, and how much data was sent.",
+  "objective": "Create report.txt with exactly these three lines: requests=<number of requests>, unique_ips=<number of distinct client IPs>, bytes=<total response bytes>. The response size is the number right after the status code; '-' means 0 bytes.",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "10m",
-  "concepts": ["wc", "awk", "sort", "uniq", "pipes"],
+  "concepts": ["wc -l", "awk fields", "awk sum", "sort -u", "command substitution"],
   "module": "module-2-text",
   "level": "level-3-count-wc"
 }

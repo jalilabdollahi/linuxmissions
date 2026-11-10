@@ -1,1 +1,14 @@
-`mkdir -p organized/debug-xtrace` followed by `mv inbox/debug-xtrace.txt organized/debug-xtrace/debug-xtrace-notes.txt` is enough.
+- `set -x` turns on xtrace; every command is printed with $PS4 in front.
+- `PS4='+${BASH_SOURCE}:${LINENO}: '` (single quotes, so it is expanded at
+  each trace line) gives  +./invoice_sync.sh:87: same_customer ...
+- `BASH_XTRACEFD=9` sends the trace to file descriptor 9 instead of stderr.
+  Open that descriptor on the file first:  exec 9> trace.log
+  (bash 4.1 or newer; macOS's /bin/bash 3.2 does not have it)
+- Put it all in an if at the top, so it only happens with DEBUG=1:
+    if [ "${DEBUG:-}" = 1 ]; then exec 9> trace.log; BASH_XTRACEFD=9; PS4='...'; set -x; fi
+- Inside [[ ]], the right side of == is a glob PATTERN unless it is quoted:
+    [[ $a == $b ]]     * ? [ ] in $b are wildcards
+    [[ $a == "$b" ]]   exact string comparison
+  xtrace shows the difference: a quoted pattern is printed with \* escapes.
+
+Read more: man bash, "PS4", "BASH_XTRACEFD", and "[[ expression ]]".

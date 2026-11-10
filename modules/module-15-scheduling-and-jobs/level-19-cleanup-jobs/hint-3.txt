@@ -1,1 +1,14 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' cleanup-jobs.conf > fixed.conf`
+cat > cleanup.sh <<'EOF2'
+#!/bin/bash
+set -u
+: "${CACHE_DIR:?CACHE_DIR is not set}"
+[ -d "$CACHE_DIR" ] || { echo "cleanup.sh: $CACHE_DIR is not a directory" >&2; exit 1; }
+find "$CACHE_DIR" -mindepth 1 -type f -mtime +7 ! -name .keep -delete
+EOF2
+
+- set -u / ${CACHE_DIR:?...}   stop with a message if the variable is unset or empty
+- [ -d "$CACHE_DIR" ] || ...   refuse anything that is not a directory
+- find "$CACHE_DIR"   quoted, so odd paths stay one word
+- -mindepth 1 -type f   only regular files below the directory: no directories, no symlinks
+- -mtime +7 ! -name .keep   older than a week, except the .keep files
+- -delete   deletes safely with any file name; cat > keeps the file executable

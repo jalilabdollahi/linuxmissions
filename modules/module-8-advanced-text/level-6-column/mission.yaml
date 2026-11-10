@@ -1,11 +1,11 @@
 {
   "name": "Pretty Table",
-  "description": "A report file is hard to read because the columns are uneven. Reformat it into aligned output.",
-  "objective": "Format report.txt into aligned columns and save the result to table.txt",
-  "xp": 300,
-  "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["column", "printf", "awk printf", "formatting"],
+  "description": "The on-call handbook needs a readable inventory of services, but services.csv is a wall of commas, and its description column contains spaces.",
+  "objective": "Turn services.csv into table.txt: the same 15 lines (header included) with commas replaced by left-aligned columns separated by spaces (no tabs), each column starting at the same position on every line, and every value, including descriptions with spaces, kept whole.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["column -t", "column -s", "printf / awk printf field widths", "delimiters"],
   "module": "module-8-advanced-text",
   "level": "level-6-column"
 }

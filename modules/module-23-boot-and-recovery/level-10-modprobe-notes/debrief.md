@@ -1,17 +1,20 @@
-# Modprobe Notes: Backup Bundle
+# The Driver That Never Loads
 
-## What you practiced
-- This level focused on **Modprobe Notes** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`modprobe` builds its behaviour from every `*.conf` file under `/etc/modprobe.d/`. Three
+directives touch ixgbe here, and only one blocks it. `blacklist` only stops *alias*
+expansion (a PCI device asking for its driver), not `modprobe ixgbe` by name.
+`options` just adds module parameters. `install ixgbe /bin/true` replaces the whole load
+with a command that does nothing and succeeds, so the module never arrives and no error
+shows. Commenting out that one line is the smallest correct fix. The `.disabled` file is
+ignored because modprobe only reads names ending in `.conf`.
 
-## Commands to remember
-```bash
-tar -czf backup.tar.gz folder/
-tar -tf backup.tar.gz
-gzip file.txt
-```
+## Common mistakes
+- Removing the `blacklist` line and wondering why nothing changed.
+- Deleting the whole workaround file and losing the `options` line the NIC needs.
+- Editing the `.disabled` file: it never took effect.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use tar with create, gzip, and file flags.
+## Next step
+`modprobe -c` prints the merged configuration, `modprobe -n -v NAME` shows the chain, and
+`modprobe --ignore-install NAME` bypasses an install rule for one run.
+`modinfo -F depends NAME` lists direct dependencies.

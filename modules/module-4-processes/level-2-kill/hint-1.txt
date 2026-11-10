@@ -1,3 +1,4 @@
-Find the process:
-ps aux | grep sleep_loop
-pgrep -f sleep_loop.sh
+To stop a process you first need to identify it, usually by its PID (process
+ID). Both scripts were started from this sandbox, so a search that is too broad
+(".sh", the sandbox path) will hit the web server as well. What text appears
+only in the logger's command line?

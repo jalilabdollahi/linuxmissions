@@ -1,1 +1,9 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+Four small tables and one pass over the listing is a job for awk: read the account
+files first (FILENAME or NR==FNR tells you which file you are in), then the listing.
+  awk -F: '{ print $3, $1 }' old/etc/passwd          number -> name
+  split($0, a, ":")                                   take fields from a line inside awk
+  sub(/^[^ ]+ +/, "", path)                           repeated 7 times it strips the 7 fields before the path
+A path can hold spaces and apostrophes, so wrap each in single quotes and write an
+apostrophe inside them as '\'' . chown takes user:group, user alone, or :group alone.
+Run the plan the way the validator will: (cd restored && bash ../chown-plan.sh), then
+look at .lm-state/chown.log.

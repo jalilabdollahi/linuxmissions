@@ -1,1 +1,1 @@
-An awk one-liner can skip the header and add the second field.
+`grep -E 'status=5' logs/gateway.log` finds failing requests; `grep -h "REQID" logs/*` finds one request everywhere. TIMES.md says how each file keeps time: `date -u -d @EPOCH`, `date -u -d "2026-11-09 18:01:07 +0330"` and `jq` for the JSON lines help, or do it all in a short python3 or awk script that normalises every line to UTC first. The root cause is the earliest ERROR (after conversion to UTC) among the failing requests' lines, not the first ERROR in any file.

@@ -1,1 +1,10 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+Useful commands (systemctl is a mock with the real options):
+  systemctl status metrics-agent           Loaded: line says enabled/disabled, Active: says running or not
+  ls -l etc/systemd/system/*.wants/        the links `enable` created and which target they belong to
+  systemctl get-default                    the target the server boots into
+  systemctl list-dependencies multi-user.target   what that target pulls in
+`enable` reads [Install] WantedBy= from the unit file. After you change it:
+  systemctl reenable UNIT                  removes the old links and creates the new ones
+  enable/reenable --now                    also starts the unit right away
+Don't change the default target: this is a server.
+Read more: man systemd.unit ([Install] section), man systemctl (enable, reenable, get-default)

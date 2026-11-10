@@ -1,15 +1,11 @@
 {
-  "name": "Host Command: History Window",
-  "description": "In the network troubleshooting lab, a task related to Host Command needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of host-command-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Host Command",
-    "head",
-    "tail"
-  ],
+  "name": "Who Are You, Really?",
+  "description": "From Monday the mail relay rejects senders whose IP fails forward-confirmed reverse DNS: the PTR name of the IP must resolve back to that same IP. Find out who would be rejected before switching it on (TICKET.txt). The test resolver runs on 127.0.0.1, port in dns.port.",
+  "objective": "Check every IP in senders.txt (PTR → name → A records, following CNAMEs) and write fcrdns-fail.txt with the IPs that fail, one per line.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["host -p", "PTR / in-addr.arpa", "forward-confirmed reverse DNS", "exact matching with awk", "trailing dot in zone files"],
   "module": "module-19-network-troubleshooting",
   "level": "level-7-host-command"
 }

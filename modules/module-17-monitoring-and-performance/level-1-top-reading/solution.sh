@@ -1,0 +1,13 @@
+#!/bin/bash
+LOAD1=$(grep -o 'load average:.*' top.txt | tr -d ',' | awk '{print $3}')
+LOAD15=$(grep -o 'load average:.*' top.txt | tr -d ',' | awk '{print $5}')
+IOWAIT=$(awk '/^%Cpu/ {for (i=1;i<=NF;i++) if ($i=="wa,") print $(i-1)}' top.txt)
+ZOMBIES=$(awk '/^Tasks:/ {for (i=1;i<=NF;i++) if ($i=="zombie") print $(i-1)}' top.txt)
+TOP=$(awk 'NR>7 {v=$6; if (v ~ /g$/) {sub(/g/,"",v); v*=1048576} else if (v ~ /m$/) {sub(/m/,"",v); v*=1024} if (v>max) {max=v; pid=$1}} END {print pid}' top.txt)
+cat > summary.env <<EOT
+LOAD1=$LOAD1
+LOAD15=$LOAD15
+IOWAIT=$IOWAIT
+ZOMBIES=$ZOMBIES
+TOP_MEM_PID=$TOP
+EOT

@@ -1,1 +1,5 @@
-This is a sorting task followed by deduplication.
+There are two ways to see "who depends on this": ask the package database for the reverse
+dependencies, or ask apt what it would do if you removed the package. Only one of them knows
+the difference between a hard dependency and a recommendation, and between a dependency that is
+the only way to be satisfied and one with a second option already installed. Remember that you
+only want to look: removing for real breaks the check.

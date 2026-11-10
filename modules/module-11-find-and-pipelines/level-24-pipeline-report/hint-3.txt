@@ -1,1 +1,13 @@
-Example: `chmod 640 pipeline-report.sh`
+  find var/log -name 'mail.log*' -mtime -7 -exec gzip -cdf {} + \
+  | awk '$7 ~ /^from=<.*@/ { d = $7; sub(/.*@/, "", d); sub(/>.*/, "", d); from[$6] = tolower(d) }
+         /status=bounced/ { bounced[$6] = 1 }
+         END { for (q in bounced) if (q in from) print from[q] }' \
+  | sort | uniq -c | sort -k1,1nr -k2,2 | head -5 | awk '{ print NR, $2, $1 }' > report.txt
+      find ... -mtime -7        this week's logs of both relays; gzip -cdf reads .gz and plain alike
+      from[$6] = tolower(d)     sender domain per queue ID (the empty sender <> has no @, so it is skipped)
+      bounced[$6] = 1           which queue IDs bounced
+      END                       after all files: one domain per bounced message (works across files)
+      sort | uniq -c            bounces per domain
+      sort -k1,1nr -k2,2        highest count first, ties by domain name
+      head -5 | awk ...         top 5 as "rank domain count"
+  cat report.txt

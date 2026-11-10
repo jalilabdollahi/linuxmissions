@@ -1,1 +1,7 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Read LAYOUT.txt next to a few lines of the file: head -3 payroll.dat | cat -A shows
+exactly where each record ends ($). Which lines are payments, and which are the
+bank's header and trailer?
+A fixed-width file has no separator to split on, so fields are picked by column
+number. Three things to deal with after that: the spaces that pad each name to 30
+characters, the 2 decimals that are implied (not written), and the few names that
+are written "Last, First" -- what does a comma inside a field do to a CSV line?

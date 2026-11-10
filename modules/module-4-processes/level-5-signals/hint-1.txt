@@ -1,5 +1,4 @@
-Find the listener process PID:
-cat $SANDBOX/listener.pid
-
-You could also search with:
-pgrep -f listener.sh
+Two steps: change the setting in the file, then tell the running process to
+read the file again. Stopping and starting it would also re-read the config,
+but that is what you must avoid. Many daemons write their PID to a .pid file
+so you can send them signals; is there one here?

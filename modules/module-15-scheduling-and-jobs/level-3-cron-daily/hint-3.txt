@@ -1,1 +1,9 @@
-Example: `grep -c '^ok$' cron-daily-events.txt > ok-count.txt`
+run-parts --test etc/cron.daily
+mv etc/cron.daily/db-backup.sh etc/cron.daily/db-backup
+chmod +x etc/cron.daily/db-backup
+run-parts --test etc/cron.daily
+
+- run-parts --test ...   lists only apt-compat, logrotate and man-db at first
+- mv ... db-backup       run-parts ignores names with a dot; drop the .sh suffix
+- chmod +x ...           run-parts skips files that are not executable
+- run-parts --test ...   now etc/cron.daily/db-backup is in the list too

@@ -1,1 +1,13 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+Python's ipaddress module does CIDR maths for you:
+  import ipaddress as ip
+  n = ip.ip_network("10.1.2.77/24", strict=False)   # 10.1.2.0/24 (strict=False accepts host bits)
+  ip.ip_network("192.0.2.9")                         # a bare address is a /32
+  n.subnet_of(ip.ip_network("10.0.0.0/8"))           # True: n is completely inside
+  ip.ip_address("2001:0db8:0000:...:0b2d") in n6     # addresses compare by value, any notation
+  n.version                                           # 4 or 6: never compare across versions
+
+- strip the comment: line.split("#")[0].strip()
+- redundant: some OTHER entry m with n.subnet_of(m); when n == m, only the later line counts
+- grep -o 'SRC=[^ ]*' blocked.log | cut -d= -f2 | sort -u   lists the sources
+
+Read more: python3 -c 'import ipaddress; help(ipaddress.IPv4Network.subnet_of)'

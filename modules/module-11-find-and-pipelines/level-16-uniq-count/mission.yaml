@@ -1,15 +1,11 @@
 {
-  "name": "Uniq Count: Capacity Report",
-  "description": "In the search and pipelines lab, a task related to Uniq Count needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Uniq Count",
-    "du",
-    "sort"
-  ],
+  "name": "Is It Beaconing?",
+  "description": "A laptop was quarantined after an antivirus alert. Malware often phones home by looking up the same odd domain again and again. You have two hours of the laptop's local DNS cache log, dnsmasq.log: every lookup is a query[...] line, followed by forwarded/reply or cached lines for the same name. Applications write names in any case, and some add a trailing dot (example.com.).",
+  "objective": "Count the query[...] lines per domain, treating names case-insensitively and ignoring a trailing dot. Write beacons.txt with one line 'count domain' for every domain queried 3 times or more, highest count first, and once.txt with every domain queried exactly once, one per line. Write domains in lowercase without the trailing dot.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["sort | uniq -c", "uniq -u / -d", "uniq needs sorted input", "normalising keys (tr, sed)", "sort -rn"],
   "module": "module-11-find-and-pipelines",
   "level": "level-16-uniq-count"
 }

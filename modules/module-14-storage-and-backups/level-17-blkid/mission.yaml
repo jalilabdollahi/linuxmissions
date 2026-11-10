@@ -1,15 +1,11 @@
 {
-  "name": "Blkid: Schedule Entry",
-  "description": "In the storage and backups lab, a task related to Blkid needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "What Is in the Box?",
+  "description": "Finance dropped a box of unlabeled disk images on the team: some ext file systems, a swap area, a partitioned disk and one that looks empty.",
+  "objective": "Write inventory.csv (first line file,TYPE,UUID,LABEL) with one row per image in images/, as blkid sees the contents, not the names. An image with a partition table gets one row per partition named FILE@p1, FILE@p2, and none for the whole disk; an image with nothing recognisable gets a row with empty TYPE, UUID and LABEL. Fields an image does not have stay empty.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Blkid",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "30m",
+  "concepts": ["blkid -p -o export", "partition offsets (-O)", "sfdisk -d", "PTTYPE vs TYPE", "exit status 2 in loops"],
   "module": "module-14-storage-and-backups",
   "level": "level-17-blkid"
 }

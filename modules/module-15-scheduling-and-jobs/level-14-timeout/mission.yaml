@@ -1,16 +1,11 @@
 {
-  "name": "Timeout: Loop Builder",
-  "description": "In the scheduling and jobs lab, a task related to Timeout needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named timeout-1.txt through timeout-3.txt with matching numbered content",
+  "name": "Hanging Healthchecks",
+  "description": "The nightly fleet report never finishes: ./healthcheck.sh HOST hangs forever for some hosts, and the loop over hosts.txt waits on it (NOTE.txt).",
+  "objective": "Write report.txt with one line per host, in the order of hosts.txt: the host name, a space, and OK (the check passed), FAIL (it returned an error) or TIMEOUT (no answer within 3 seconds). Every host must be checked with ./healthcheck.sh, each check may run at most 3 seconds, and no healthcheck.sh process may be left running.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Timeout",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "12m",
+  "concepts": ["timeout", "timeout -k", "exit status 124", "while read loop", "case on $?"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-14-timeout"
 }

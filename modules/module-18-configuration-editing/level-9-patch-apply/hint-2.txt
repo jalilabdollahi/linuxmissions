@@ -1,1 +1,8 @@
-Use `ln -s` so current.conf points at the release file.
+patch reads the diff from standard input:
+  patch -p1 --dry-run < fix-timeouts.patch     test only, change nothing
+  patch -p1 < fix-timeouts.patch               apply for real
+-p1 strips one leading path component (the a/ and b/ prefixes). A hunk that does
+not match is written to proxy.conf.rej and the original is kept as proxy.conf.orig.
+Read the .rej file: it says which line to change. Make that edit yourself (edit,
+nano or sed -i), keeping your local lines, then delete the .rej and .orig files.
+More: man patch

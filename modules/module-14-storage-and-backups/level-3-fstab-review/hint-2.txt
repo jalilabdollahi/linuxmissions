@@ -1,1 +1,6 @@
-A grep count or grep piped into wc can produce the number you need.
+fstab wants the file system UUID (the UUID= column of blkid), not PARTUUID, which identifies the partition table entry and also looks like a UUID.
+  fields:   UUID=...  /mountpoint  type  options  dump  pass
+  nofail    option: do not fail the boot if the device is absent (add it to the options field, comma separated)
+  pass      1 for /, 2 for other file systems that should be checked after it, 0 for never (swap has nothing to check)
+Edit with `edit etc/fstab`, or with sed -i. Swap has no directory, so its mount point field is the word none.
+More: man 5 fstab, man blkid

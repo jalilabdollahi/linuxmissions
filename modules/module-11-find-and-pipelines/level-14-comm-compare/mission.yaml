@@ -1,16 +1,11 @@
 {
-  "name": "Comm Compare: Loop Builder",
-  "description": "In the search and pipelines lab, a task related to Comm Compare needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named comm-compare-1.txt through comm-compare-3.txt with matching numbered content",
+  "name": "Twin Servers Drift",
+  "description": "web-1 and web-2 sit behind the same load balancer and should be identical, but a deploy works on one and fails on the other. You have both package lists as dumped by the inventory agent: web1.pkgs and web2.pkgs (package<TAB>version, in install order). The two dumps were taken with different formats: web-1 adds the architecture to some names (libc6:amd64), web-2 never does.",
+  "objective": "Write only-web1.txt with the names of the packages installed on web-1 but not on web-2, and only-web2.txt with those installed on web-2 but not on web-1. One package name per line, each name once, without architecture or version. A package installed on both hosts in different versions is not drift.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Comm Compare",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "12m",
+  "concepts": ["comm -23 / -13", "sort -u", "cut -f1", "sed 's/:.*//'", "sorted input"],
   "module": "module-11-find-and-pipelines",
   "level": "level-14-comm-compare"
 }

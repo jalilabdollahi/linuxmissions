@@ -1,1 +1,8 @@
-Example: `ln -s releases/ionice-notes.conf current.conf`
+tar=$(pgrep -o -f 'tar -czf')
+for pid in $tar $(pstree -p "$tar" | grep -o '([0-9]*)' | tr -d '()'); do ionice -c3 -p "$pid"; done
+for pid in $tar $(pstree -p "$tar" | grep -o '([0-9]*)' | tr -d '()') $(pgrep -f dbserver.sh); do echo "$pid: $(ionice -p $pid)"; done
+
+- pgrep -o -f 'tar -czf'    the PID of the backup's tar (the oldest match)
+- pstree -p | grep -o | tr  the PIDs of every process below it, including the gzip that writes the archive
+- ionice -c3 -p "$pid"      puts each of them in the idle class
+- the last loop             shows the class of all of them, and of the database for comparison

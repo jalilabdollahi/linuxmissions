@@ -1,1 +1,9 @@
-Example: `for n in 1 2 3; do printf 'paste-merge item %s\n' "$n" > generated/paste-merge-$n.txt; done`
+tr -d '\r' < scan_dump.txt | grep -vx -- '--' | paste - - - - > rows.tmp
+{ printf 'parcel\tweight_kg\tpostcode\tdock\n'; cat rows.tmp; } > parcels.tsv
+cut -f1 rows.tmp | paste -sd, - > manifest.txt
+
+- tr -d '\r'                     Windows line endings off first (else "--\r" is not "--")
+- grep -vx -- '--'               drop the separator lines
+- paste - - - -                  every 4 lines become one tab-separated row
+- { printf ...; cat rows.tmp; }  the header line, then the rows, into one file
+- cut -f1 | paste -sd, -         the ids, joined into one comma-separated line

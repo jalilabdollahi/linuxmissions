@@ -1,2 +1,3 @@
-Check current permissions:
-ls -la $SANDBOX/deploy.sh
+"Permission denied" on a script you can read usually means the system does not
+consider it a program. Look at the long listing of deploy.sh: in the first column
+(-rw-r--r--) which letter is missing from the owner's part?

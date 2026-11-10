@@ -1,1 +1,8 @@
-Inspect the current mode first if you want to verify the change.
+Collect one fact at a time and test each in your shell before writing the
+script: where do the host name, kernel release and architecture come from?
+Which pseudo-file describes the OS, which one the memory (watch the unit)
+and which the uptime? Then think about the JSON itself: building it with
+`echo` and quotes breaks as soon as a value contains a quote, and a number
+printed inside quotes is a string. Is there a tool that builds JSON safely?
+Also test the script when nothing is listening: what does an empty list of
+ports turn into?

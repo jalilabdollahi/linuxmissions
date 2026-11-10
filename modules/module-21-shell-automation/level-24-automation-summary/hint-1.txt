@@ -1,1 +1,16 @@
-Inspect the current mode first if you want to verify the change.
+Build it in small steps and run it after each one with short settings:
+  CHECK_TIMEOUT=2 RETRY_DELAY=1 ./run_checks.sh; echo "exit $?"; cat summary.txt
+
+1. The loop: `ls -l checks.d` shows four checks, a README and a folder.
+   Which test tells you "regular file AND executable"?
+2. One attempt: how do you run a command but give up after N seconds? How
+   does the script know afterwards that it was cut off rather than failed?
+3. Retries: a loop around the attempt that stops on success or after the
+   3rd try, sleeping a bit longer each time. What should the summary say
+   for the attempts count?
+4. The total and the exit status: count the checks that never passed.
+5. Locking: start one run with `./run_checks.sh &` and immediately a second
+   one. How can the second notice the first and leave at once? (Module 15
+   had a tool for exactly this.)
+
+Game tip: `edit run_checks.sh` opens the script in an editor.

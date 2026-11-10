@@ -1,2 +1,6 @@
-Build the new name from the old one:
-mv "$file" "${file%.txt}.bak"
+- `for f in "$1"/*.txt; do ... done` loops over the .txt files in the folder. Keep "$1" in quotes and the `*.txt` outside them, so the folder name may contain spaces but the * still matches.
+- `${f%.txt}` is $f with a trailing `.txt` cut off, so `"${f%.txt}.bak"` is the new name.
+- `mv -- "$f" "${f%.txt}.bak"` renames; quote both names.
+- If nothing matches, bash leaves the pattern as it is: the loop runs once with f set to the literal text `DIR/*.txt`. Skip that case with `[ -e "$f" ] || continue`.
+
+Read more: `man bash`, sections "Pathname Expansion" and "Parameter Expansion".

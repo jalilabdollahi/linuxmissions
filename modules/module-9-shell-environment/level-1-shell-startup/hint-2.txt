@@ -1,1 +1,9 @@
-`mkdir -p organized/shell-startup` followed by `mv inbox/shell-startup.txt organized/shell-startup/shell-startup-notes.txt` is enough.
+- The usual layout: put interactive settings and the variables you want everywhere in ~/.bashrc, and let the login file load it with one line:
+    [ -f ~/.bashrc ] && . ~/.bashrc
+  (`.` is the same as `source`: run the file in the current shell.)
+- Move the export line, don't copy it: the objective allows exactly one definition. Remove it from .profile afterwards (`edit home/.profile`, or `grep -v PROJECT_ROOT ...`).
+- Test like the validator does, with a clean environment and home/ as HOME:
+    env -i HOME="$SANDBOX/home" bash -l -c 'echo $PROJECT_ROOT'
+    env -i HOME="$SANDBOX/home" bash -i -c 'echo $PROJECT_ROOT'
+
+Read more: `man bash`, section INVOCATION.

@@ -1,2 +1,8 @@
-Add strict mode near the top:
-set -euo pipefail
+Run the script the three bad ways and look at what happens, and at `echo $?` afterwards:
+- with a file name that does not exist,
+- with no argument at all (press Ctrl-C to stop it: what is grep waiting for?),
+- with "shop settings.conf" (the name has a space).
+
+Why does it print "copy complete" after grep failed? Which command's exit status decides whether a pipeline succeeded?
+
+Game tip: `edit safe_copy.sh` opens the script in an editor.

@@ -1,15 +1,11 @@
 {
-  "name": "Mkfs Planning: Alert Filter",
-  "description": "In the storage and backups lab, a task related to Mkfs Planning needs cleanup before the handoff.",
-  "objective": "Write every alert line from mkfs-planning.log into alerts.txt",
+  "name": "Plan the Log Volume",
+  "description": "The app team filed a storage request for a log volume that will hold millions of tiny files. The real disk is not here yet, so you build the volume as an image file to prove the numbers work.",
+  "objective": "Read REQUEST.txt and build logs.img to match it: the exact size, the file system type, the volume label, the reserved-block percentage and the inode density it asks for. The image must be a clean file system (it passes e2fsck). The shell blocks the mkfs wrapper commands on real devices, but you are working on a plain file: mke2fs does the same job.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Mkfs Planning",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["truncate", "mke2fs -t ext4", "-L -m -i options", "dumpe2fs -h", "reserved blocks and inodes"],
   "module": "module-14-storage-and-backups",
   "level": "level-2-mkfs-planning"
 }

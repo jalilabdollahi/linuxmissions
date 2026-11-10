@@ -1,1 +1,5 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  yes            prints "y" forever; `yes TEXT` prints TEXT forever
+  cmd1 | cmd2    cmd2 reads cmd1's output as its input
+  head -n N      stops after N lines (and the pipe closes, so yes ends)
+An endless command must always end up in a pipe with something that stops
+reading. Never send plain `yes` into a file. More: man yes

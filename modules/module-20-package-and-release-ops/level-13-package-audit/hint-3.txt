@@ -1,1 +1,10 @@
-Example: `chmod +x jobs/package-audit.sh && jobs/package-audit.sh`
+export LC_ALL=C
+norm() { awk '{ sub(/:[a-z0-9]+$/, "", $1); print $1 "\t" $2 }' "$1" | sort -t $'\t' -k1,1; }
+norm prod.txt > prod.norm; norm staging.txt > staging.norm
+join -t $'\t' -a1 -a2 -e - -o 0,1.2,2.2 prod.norm staging.norm | awk -F '\t' '$2 != $3' > drift.tsv
+wc -l drift.tsv
+
+- export LC_ALL=C   plain byte order, so sort and join agree about the order
+- norm()            awk reads both layouts, drops the ":arch" suffix and prints name TAB version; sort orders by name
+- join -a1 -a2      -a1 -a2 keep packages found on only one side, -e - writes a dash for the missing version, -o picks name, prod version, staging version
+- awk '$2 != $3'    keeps only the rows where the versions differ (a dash differs from any version)

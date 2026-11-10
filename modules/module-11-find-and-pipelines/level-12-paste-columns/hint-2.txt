@@ -1,1 +1,8 @@
-Use chmod with octal mode 640.
+  paste A B C              join line N of each file with tabs between them
+  paste -d, A B            use , instead of tab
+  paste -s -d, FILE        serial: join all lines of FILE into ONE line, separated by ,
+  -                        as a file name: read standard input (e.g. ... | paste A - C)
+  tr -d '\r'               delete every carriage return
+  awk -F'\t' '$2 >= 90'    keep rows whose second field is at least 90
+  od -c FILE | head        show every byte; Windows line ends appear as \r \n
+More: man paste, man tr

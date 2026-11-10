@@ -1,17 +1,21 @@
-# Cgroups Notes: Noise Dedup
+# Who Hit the Wall?
 
-## What you practiced
-- This level focused on **Cgroups Notes** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+cgroup v2 exposes every counter as a small file. `memory.max` is the hard
+limit in bytes (`max` means unlimited), `memory.events` counts what happened
+at the limit, and `cpu.stat` counts scheduler periods and how many of them
+ended with the group throttled. Selecting values by name with awk, instead of
+by line number, keeps the script correct when the files grow new fields.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- Reading `memory.high`, `memory.swap.max` or `cpu.max` because they also
+  contain "max".
+- Taking `oom` instead of `oom_kill`: one OOM event can kill several
+  processes, or none.
+- Dividing by `nr_periods` without checking for zero.
+- Treating `max` as a number or dividing it by 1048576.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Next step
+On a live host `systemd-cgtop` shows the same data per unit, and
+`systemctl show UNIT -p MemoryMax -p MemoryCurrent` reads it through systemd.
+`memory.pressure` and `cpu.pressure` (PSI) show waiting time before things die.

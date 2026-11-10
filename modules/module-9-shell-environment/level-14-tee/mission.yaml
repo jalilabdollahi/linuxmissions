@@ -1,16 +1,11 @@
 {
-  "name": "Tee: Loop Builder",
-  "description": "In the shell environment lab, a task related to Tee needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named tee-1.txt through tee-3.txt with matching numbered content",
+  "name": "Three Copies",
+  "description": "Checkout errors are spiking (INCIDENT.txt). gen-events taps the live event bus and prints what passes by, one line per event; every run sees different traffic.",
+  "objective": "From one single run of ./gen-events, save its complete, unchanged output in events.raw, the events whose level is error (level=error) in errors.log, and the number of those events in error_count.txt (just the number).",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Tee",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "10m",
+  "concepts": ["tee", "tee in the middle of a pipeline", "grep", "wc -l"],
   "module": "module-9-shell-environment",
   "level": "level-14-tee"
 }

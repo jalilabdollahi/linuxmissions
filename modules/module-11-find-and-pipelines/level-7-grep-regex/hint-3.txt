@@ -1,1 +1,6 @@
-Example: `head -n 3 grep-regex-history.log > first3.txt` and `tail -n 3 grep-regex-history.log > last3.txt`
+  grep -H -i -m1 -E '^[[:space:]]*PermitRootLogin[[:space:]]' hosts/*/sshd_config
+      the first real PermitRootLogin line of each host (comments start with #, so ^ skips them)
+  grep -H -i -m1 -E '^[[:space:]]*PermitRootLogin[[:space:]]' hosts/*/sshd_config | grep -i -E '[[:space:]]yes$' | cut -d/ -f2 > root-login-hosts.txt
+      keep the lines whose value is yes, then cut out the host folder name
+  cat root-login-hosts.txt
+      check the list

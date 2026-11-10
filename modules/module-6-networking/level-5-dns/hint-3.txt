@@ -1,4 +1,20 @@
-One valid pattern is:
+Type this at the prompt:
+
 while read -r host; do
-  echo "$host $(./mock_dig.sh "$host")"
+  ips="$(./dig +short "$host" | grep -E '^[0-9.]+$')"
+  if [ -z "$ips" ]; then
+    echo "$host NXDOMAIN"
+  else
+    for ip in $ips; do
+      echo "$host $ip"
+    done
+  fi
 done < hosts.txt > resolved.txt
+
+- while read -r host ... < hosts.txt     one name per loop
+- ./dig +short "$host"                   only the answer data: CNAME targets and addresses
+- grep -E '^[0-9.]+$'                    keep just the IPv4 addresses
+- [ -z "$ips" ] -> NXDOMAIN              no address at all: the name does not exist
+- for ip in $ips                         one output line per address (api.internal has two)
+
+Check it: cat resolved.txt

@@ -1,16 +1,11 @@
 {
-  "name": "Sed Inplace: Event Counter",
-  "description": "In the configuration editing lab, a task related to Sed Inplace needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in sed-inplace-events.txt and write the number to ok-count.txt",
+  "name": "Staging Moves Over",
+  "description": "Ports 8080 are crowded on the staging box, so the team agreed that staging moves to 9080. services.conf also holds production, which must stay on 8080, and several comments that mention the old port.",
+  "objective": "Change the port of the [staging] section of services.conf from 8080 to 9080, editing the file in place and keeping the original as services.conf.bak. Production, the other sections and every comment must stay exactly as they were.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Sed Inplace",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["sed -i.bak", "address ranges", "section-aware edit", "anchored patterns"],
   "module": "module-18-configuration-editing",
   "level": "level-3-sed-inplace"
 }

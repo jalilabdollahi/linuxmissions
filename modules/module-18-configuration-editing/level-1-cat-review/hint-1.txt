@@ -1,1 +1,4 @@
-Inspect the sandbox, then create the missing path for organized/cat-review/cat-review-notes.txt.
+The file looks fine because the problem is made of characters your terminal does
+not draw. A plain `cat` hides them. Is there a way to make `cat` show line ends,
+tabs and unusual bytes? Compare the `port` line with the `workers` line.
+Also ask: what does a file saved on Windows use to end a line?

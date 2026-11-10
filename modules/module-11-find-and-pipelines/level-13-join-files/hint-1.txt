@@ -1,1 +1,7 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Look at the first lines of both files. Which column holds the MAC in each one,
+and does the same device's MAC look the same in both? A program that pairs
+lines by key compares the keys character by character, so 3C-22-FB-... and
+3c:22:fb:... are different keys until you make them alike.
+Two more questions: join expects both inputs sorted on the key, so what
+happens if they are not? And what should become of a lease whose MAC is not
+in the inventory at all?

@@ -1,1 +1,36 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+Type this at the prompt. It replaces nightly_export.sh:
+
+cat > nightly_export.sh <<'SCRIPT'
+#!/bin/bash
+# nightly_export.sh - export today's orders to export.csv
+if [ -e export.lock ]; then
+  echo "nightly_export: export.lock exists, another export is running" >&2
+  exit 1
+fi
+echo $$ > export.lock
+work=$(mktemp -d)
+fetch_pid=""
+cleanup() {
+  if [ -n "$fetch_pid" ]; then kill "$fetch_pid" 2>/dev/null; fi
+  rm -rf "$work"
+  rm -f export.lock
+}
+trap cleanup EXIT
+trap 'exit 143' TERM
+trap 'exit 130' INT
+./bin/fetch_orders > "$work/orders.raw" &
+fetch_pid=$!
+wait "$fetch_pid" || { echo "nightly_export: fetch_orders failed" >&2; exit 1; }
+fetch_pid=""
+./bin/to_csv < "$work/orders.raw" > "$work/export.csv" || { echo "nightly_export: to_csv failed" >&2; exit 1; }
+mv "$work/export.csv" export.csv
+echo "exported $(( $(wc -l < export.csv) - 1 )) orders"
+SCRIPT
+
+- trap cleanup EXIT (after the lock check)   every way out removes the lock and the temp dir, but a refused run leaves the other run's lock alone
+- trap 'exit 143' TERM          SIGTERM becomes exit 143, which runs the EXIT trap
+- fetch_orders ... & + wait     wait returns at once when TERM arrives; a foreground command would delay the trap 30 s
+- kill "$fetch_pid" in cleanup  the background step does not outlive the script
+- to_csv into $work, then mv    export.csv is replaced only by a complete file
+
+Try it: ./nightly_export.sh & sleep 1; kill -TERM $!; sleep 0.5; ls

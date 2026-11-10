@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+- ps -eo pid,rss,vsz,cmd prints exactly the columns you ask for; RSS is the
+  resident set (KiB), VSZ the virtual size.
+- --sort=-rss sorts by a column, and the minus sign means biggest first.
+- Keep only the workers with grep on their command line (the script is
+  opt/workers/worker.py), and take the first three with head -3.
+- awk '{print $1}' keeps only the first column (the PID).
+- man ps (section STANDARD FORMAT SPECIFIERS and the --sort option).

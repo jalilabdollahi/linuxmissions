@@ -1,1 +1,11 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+Brace expansion (it happens before the command runs):
+  echo x{a,b,c}        -> xa xb xc
+  echo {a,b}/{1,2}     -> a/1 a/2 b/1 b/2     (several braces multiply)
+  echo {01..03}        -> 01 02 03            (a leading zero pads every number)
+  echo f{,.bak}        -> f f.bak             (an empty first item = the plain name)
+- Braces must not be quoted, and there must be no spaces inside them: {a, b} does not expand.
+- `mkdir -p` creates the parent directories too and doesn't complain if they exist.
+- Made a mess? `rm -r data svc` and start again.
+(macOS's old bash 3.2 does not zero-pad {01..12}; `$(seq -w 1 12)` works everywhere.)
+
+Read more: `man bash`, section Brace Expansion.

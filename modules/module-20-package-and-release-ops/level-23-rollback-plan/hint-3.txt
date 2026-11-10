@@ -1,1 +1,11 @@
-Example: `tar -czf rollback-plan-backup.tar.gz bundle/rollback-plan`
+last=$(grep -E ' DEPLOY [0-9.]+ ok$' deploy.log | awk '{print $3}' | while read -r v; do grep -q " ROLLBACK $v -> " deploy.log || echo "$v"; done | tail -n 1)
+ln -sfn "releases/$last" current.new && mv -T current.new current
+kill -HUP "$(cat run/app.pid)"
+echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) ROLLBACK 1.6.0 -> $last health 500 after deploy" >> deploy.log
+curl -s "http://127.0.0.1:$(cat app.port)/health"
+
+- grep | awk | while   releases deployed "ok" in log order, minus the ones named as rolled back; tail -n 1 is the most recent that is left
+- ln -sfn ... current.new && mv -T   builds the new link beside the old one, then swaps it in with a single atomic rename
+- kill -HUP           makes the running app load the new target
+- echo >> deploy.log  appends the ROLLBACK line with a UTC timestamp
+- curl /health        should answer 200 with that version

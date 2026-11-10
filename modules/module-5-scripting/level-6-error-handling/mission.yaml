@@ -1,11 +1,11 @@
 {
   "name": "Fail Loudly",
-  "description": "A fragile script crashes in confusing ways. Harden it so failures stop early and missing input gets a clear error message.",
-  "objective": "Fix safe_copy.sh so it uses strict mode and prints `SOURCE_FILE is required` when no source path is passed",
-  "xp": 220,
+  "description": "safe_copy.sh puts a config into deploy/ without its comment lines. Yesterday it was given a file name with a typo: it printed `copy complete`, exited 0 and shipped an empty config. Last night someone ran it with no argument and it just sat there until the job timed out.",
+  "objective": "Harden safe_copy.sh: turn on bash strict mode (`set -euo pipefail`). With no argument it must print `SOURCE_FILE is required` to stderr and exit with status 1. A missing or unreadable source must make it fail (non-zero exit, no `copy complete`). A good source, even one with spaces in its name, must still be copied to deploy/app.conf without its comment lines.",
+  "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["set -euo pipefail", "trap", "stderr", "exit 1"],
+  "expected_time": "12m",
+  "concepts": ["set -euo pipefail", "exit status", "stderr", "${1:-}", "argument checks"],
   "module": "module-5-scripting",
   "level": "level-6-error-handling"
 }

@@ -1,1 +1,20 @@
-Example: `sort getopts-raw.txt | uniq > unique-sorted.txt`
+Open the script with `edit rotate.sh` and replace the two TODO comment lines with:
+
+while getopts ':n:d:v' opt; do
+  case $opt in
+    n) count=$OPTARG ;;
+    d) dir=$OPTARG ;;
+    v) verbose=1 ;;
+    *) usage ;;
+  esac
+done
+shift $((OPTIND - 1))
+[ -n "$dir" ] || usage
+
+- ':n:d:v'                 -n and -d take a value (colon after), -v does not; leading : = quiet errors
+- n) count=$OPTARG         the value that came with -n (works for -n 3, -n3 and -vn3)
+- *) usage                 '?' (unknown option) and ':' (value missing) both end in usage, exit 2
+- shift $((OPTIND - 1))    remove the options; "$@" now holds only the patterns
+- [ -n "$dir" ] || usage   -d is required
+
+Check: ./rotate.sh -vn3 -d logs; ./rotate.sh -n 3; echo "exit $?"

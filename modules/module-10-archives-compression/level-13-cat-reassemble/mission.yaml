@@ -1,15 +1,11 @@
 {
-  "name": "Cat Reassemble: Script Kickoff",
-  "description": "In the archives and compression lab, a task related to Cat Reassemble needs cleanup before the handoff.",
-  "objective": "Make jobs/cat-reassemble.sh executable, run it, and create the token file it writes",
+  "name": "Fourteen Pieces",
+  "description": "Last night's shop backup reached the restore host cut into backup.part1 ... backup.part14. The transfer had a hiccup on part 7 (see transfer.log), and the sender put the checksum of the whole file in backup.tar.gz.sha256.",
+  "objective": "Rebuild backup.tar.gz in the sandbox root from the parts so that it matches backup.tar.gz.sha256, then extract it into a new restored/ directory (restored/shop/... must hold exactly the files of the backup). Leave the parts in place.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Cat Reassemble",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "10m",
+  "concepts": ["cat to join files", "glob sort order", "brace expansion {1..14}", "sort -V", "sha256sum -c", "tar -xzf -C"],
   "module": "module-10-archives-compression",
   "level": "level-13-cat-reassemble"
 }

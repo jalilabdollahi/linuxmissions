@@ -1,15 +1,11 @@
 {
-  "name": "Awk Arena: Config Rewrite",
-  "description": "In the linux war games lab, a task related to Awk Arena needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in awk-arena.conf and save the fixed result to fixed.conf",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Awk Arena",
-    "sed",
-    "redirection"
-  ],
+  "name": "Invoice Mismatch",
+  "description": "Finance says the invoice totals do not match what the payment provider settled. Invoices are in several currencies (invoices.csv, amounts in units), the provider settles everything in EUR cents in a fixed-width file, and the daily rate table is in rates.csv. FORMAT.md describes the three files.",
+  "objective": "Write mismatch.csv: a header line `invoice,invoice_eur,provider_eur` followed by one line for every invoice whose amount converted to EUR (each invoice at the latest rate for its currency dated on or before the invoice date, rounded to cents) differs from the provider's settled amount by more than 0.01 EUR. Both amounts have two decimals, rows are sorted by invoice id.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["awk multi-file processing", "lookup tables by date", "fixed-width parsing with substr", "units vs cents", "rounding", "sort"],
   "module": "module-26-linux-wargames",
   "level": "level-19-awk-arena"
 }

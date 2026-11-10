@@ -46,6 +46,29 @@ cd linuxmissions
 ./play.sh
 ```
 
+On macOS, or on a Linux machine missing some tools, play inside the
+LinuxMissions container (needs Docker; your progress is still saved in this
+folder):
+
+```bash
+./play.sh --docker
+```
+
+Some levels use Linux-only tools (`/proc`, apt/dpkg, systemd file formats), so
+`--docker` is the recommended way to play on macOS.
+
+In Docker mode the sandboxes live inside the container, not in `/tmp/linuxmissions`
+on your Mac: the levels need Linux's own filesystem (case-sensitive names, ACLs,
+FIFOs, Linux file modes), which a folder shared from macOS does not provide. To
+look around, edit files or test in a second terminal tab while the game runs:
+
+```bash
+./play.sh --shell
+```
+
+It opens a shell in the same container, already in the current level's sandbox
+(`$SANDBOX` is set and `$SANDBOX/bin` is first on `PATH`, as in the game).
+
 To reset progress and start over from level 1:
 
 ```bash
@@ -95,7 +118,10 @@ These are available directly inside the game:
 
 | Command | Description |
 |---------|-------------|
-| `hint` | Reveal the next hint for the current level |
+| `hint` | Reveal the next hint. Each hint lowers the XP for the level (90%, 75%, 50%) |
+| `hints` | Show the hints you already revealed |
+| `validate` | Check your work and see what is still missing |
+| `edit <file>` | Open a file in a real editor (`$EDITOR`, else nano or vim); `nano`, `vim`, `less`, `man`, `top` also work directly |
 | `help` | Show the full command list |
 | `status` | Show progress and XP |
 | `objective` | Re-display the current objective |
@@ -103,7 +129,11 @@ These are available directly inside the game:
 | `skip` | Skip the current level with no XP |
 | `quit` / `exit` | Save progress and leave the game |
 | `Tab` | Autocomplete commands and sandbox file names |
+| `Ctrl-C` | Stop a running command such as `tail -f` or `sleep` |
 | `<any shell cmd>` | Run a real command inside the current sandbox |
+
+Multi-line input works: heredocs (`cat > script.sh <<'EOF'`), `if`/`for`/`while`
+blocks and lines ending in `|` or `\` continue on a `...>` prompt.
 
 Examples:
 
@@ -187,8 +217,9 @@ linuxmissions/
 │   └── certificate.py
 ├── scripts/
 │   ├── generate_levels.py
-│   ├── generate_expanded_curriculum.py
-│   └── generated_level_runtime.py
+│   ├── test_levels.py
+│   ├── test-levels-docker.sh
+│   └── check_duplicates.py
 └── modules/
     ├── module-1-filesystem/
     ├── module-2-text/
@@ -203,13 +234,15 @@ level-N-name/
 ├── mission.yaml
 ├── setup.sh
 ├── validate.sh
+├── solution.sh
 ├── hint-1.txt
 ├── hint-2.txt
 ├── hint-3.txt
 └── debrief.md
 ```
 
-Some generated levels also include a `level.json` file used by the shared setup/validation runtime.
+Every level is written by hand for its topic; see `docs/LEVEL_AUTHORING.md`. Shared
+stand-ins for tools that need root, a daemon or the network live in `mocks/`.
 
 ---
 
@@ -234,22 +267,21 @@ The game auto-saves as you play.
 
 ---
 
-## Content Generation
+## Writing And Testing Levels
 
-The project now includes both handcrafted levels and generated curriculum.
+How to write a level (file contract, validator rules, hint standard):
+[docs/LEVEL_AUTHORING.md](docs/LEVEL_AUTHORING.md).
 
-Useful scripts:
+Every level ships a reference `solution.sh`. The test runner checks that each
+level sets up cleanly, does **not** pass before any work is done, and **does**
+pass after its solution:
 
 ```bash
-python3 scripts/generate_expanded_curriculum.py
-python3 scripts/generate_levels.py
+scripts/test-levels-docker.sh                 # all levels, Ubuntu container, non-root
+scripts/test-levels-docker.sh module-4 -v     # one module, verbose
+scripts/test-levels-docker.sh --unit          # engine unit tests
+python3 scripts/generate_levels.py            # rebuild levels.json after adding levels
 ```
-
-Use these when:
-
-- regenerating the large module set
-- rebuilding `levels.json`
-- iterating on generated mission templates
 
 ---
 
@@ -271,11 +303,10 @@ It works well for:
 If you want to improve the game:
 
 - add handcrafted levels
-- refine generated templates
 - improve validators and debriefs
 - tighten the UI and mission flow
 
-Start with [SPEC.md](SPEC.md), then inspect `modules/`, `engine/`, and `scripts/`.
+Start with [docs/LEVEL_AUTHORING.md](docs/LEVEL_AUTHORING.md), then inspect `modules/`, `engine/`, and `scripts/`.
 
 ---
 

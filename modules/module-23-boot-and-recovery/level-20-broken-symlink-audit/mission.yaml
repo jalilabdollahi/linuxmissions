@@ -1,15 +1,11 @@
 {
-  "name": "Broken Symlink Audit: Noise Dedup",
-  "description": "In the boot and recovery lab, a task related to Broken Symlink Audit needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from broken-symlink-audit-raw.txt with sorted unique values",
+  "name": "Links That Only Work on the Rescue Host",
+  "description": "The rescue copy of the server's root filesystem in sysroot/ came from rsync, with all its symlinks. The links are meant for the server: an absolute target like /usr/bin/x means the server's /usr/bin/x, not the rescue system's. Several links are broken on the server, and some that look broken from here work there.",
+  "objective": "Write to broken_links.txt, sorted, one per line, the path (relative to sysroot/, for example usr/bin/foo) of every symlink in sysroot/ that is broken as the server will see it, as found (before your repairs). Loops count as broken. Then repair the three links in sysroot/etc/alternatives that point at versions that no longer exist, so they resolve to the versions that are installed. Change nothing else.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Broken Symlink Audit",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "30m",
+  "concepts": ["symlinks", "readlink", "find -type l", "absolute vs relative", "update-alternatives"],
   "module": "module-23-boot-and-recovery",
   "level": "level-20-broken-symlink-audit"
 }

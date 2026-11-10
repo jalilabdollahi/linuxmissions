@@ -1,15 +1,11 @@
 {
-  "name": "File: Capacity Report",
-  "description": "In the archives and compression lab, a task related to File needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "File",
-    "du",
-    "sort"
-  ],
+  "name": "What's in a Name",
+  "description": "80 chunks were carved out of the crashed upload volume into recovered/. The carver guessed their extensions, mostly wrong, and some chunks have none (RECOVERY-NOTES.txt). The upload service needs them sorted by what they really are.",
+  "objective": "Move every chunk from recovered/ to sorted/<type>/chunk-NNN.<type>, where <type> is its real content: gz, bz2, xz, zip, tar, tar.gz (a gzip that holds a tar archive), png, pdf or txt. Zero-byte chunks go to sorted/empty/chunk-NNN with no extension. Keep the content unchanged and leave nothing in recovered/.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["file -b", "file -z", "file --mime-type", "magic numbers", "case in a for loop", "${name%%.*}"],
   "module": "module-10-archives-compression",
   "level": "level-16-file"
 }

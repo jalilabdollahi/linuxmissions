@@ -1,1 +1,7 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  ./login-sim deploy; ./login-sim ops
+  cat sysroot/etc/environment sysroot/etc/profile sysroot/etc/profile.d/*.sh
+  ls -a sysroot/home/deploy      which of .bash_profile, .bash_login, .profile exist?
+bash reads ~/.bash_profile; only if it does not exist ~/.bash_login; only if that does not exist ~/.profile.
+/etc/environment is not a shell script: there are no variables in it, so $PATH stays the literal text "$PATH".
+A trailing or doubled colon in PATH is an empty component, which means the current directory. Every
+directory should be added once. See man bash, section INVOCATION.

@@ -1,17 +1,18 @@
-# Hostname: Alert Filter
+# Who Am I?
 
-## What you practiced
-- This level focused on **Hostname** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+The kernel keeps one hostname for the machine; `hostname`, `uname -n` and
+`/proc/sys/kernel/hostname` are three ways to read the same value. `sed`
+with a pattern anchored at the line start changes only the active setting,
+and leaves the commented example, `report_hostname` and `hostname_field`
+alone.
 
-## Commands to remember
-```bash
-grep 'ALERT' file.log
-grep -n PATTERN file.log
-grep -v PATTERN file.log
-```
+## Common mistakes
+- `sed 's/hostname.*/.../'` without an anchor rewrites the comment and the
+  other keys that contain the word.
+- Typing the name by hand from memory: use `$(hostname)`, it is never wrong.
+- Using single quotes around the sed script, so `$(hostname)` is not expanded.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Look for a filtering command that keeps only the alert lines in hostname.log.
+## Next step
+`hostnamectl` shows the static, transient and pretty hostnames on a
+systemd machine; `hostname -f` prints the fully qualified name.

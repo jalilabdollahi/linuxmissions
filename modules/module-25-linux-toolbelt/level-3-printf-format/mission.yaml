@@ -1,16 +1,11 @@
 {
-  "name": "Printf Format: Event Counter",
-  "description": "In the linux toolbelt lab, a task related to Printf Format needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in printf-format-events.txt and write the number to ok-count.txt",
+  "name": "Fixed-Width Billing Import",
+  "description": "The legacy billing importer reads positions, not delimiters, and rejects a file if even one line is a character off. Finance exported accounts.csv and needs it converted.",
+  "objective": "Write billing.dat from accounts.csv (skip the header line): one line per account, in the same order, formatted as ACCT, the account id as 6 digits with leading zeros, a |, the name left-aligned in exactly 12 characters (longer names are cut to 12), a |, and the amount right-aligned in 10 characters with two decimals. Example: ACCT000042|Acme Corp   |    149.50",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Printf Format",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["printf %06d", "printf %-12.12s", "printf %10.2f", "read -r with IFS", "field width and precision"],
   "module": "module-25-linux-toolbelt",
   "level": "level-3-printf-format"
 }

@@ -1,1 +1,9 @@
-Example: `mkdir -p organized/cat-review && mv inbox/cat-review.txt organized/cat-review/cat-review-notes.txt`
+cat -A app.conf
+sed -i -e 's/\r$//' -e 's/\xc2\xa0/ /g' -e 's/[[:space:]]*$//' app.conf
+cat -A app.conf
+
+- cat -A                 shows ^M, ^I, $ and M-BM- so you can see what is wrong (run it again to check)
+- s/\r$//                removes the carriage return at the end of every line
+- s/\xc2\xa0/ /g         turns each non-breaking space into a normal space, keeping "port = 8080"
+- s/[[:space:]]*$//      strips trailing blanks and tabs
+- sed -i                 writes the result back into app.conf

@@ -1,17 +1,19 @@
-# Apt Search: Path Realignment
+# Find the Right Package
 
-## What you practiced
-- This level focused on **Apt Search** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`apt-cache search` matches every word you give it against package names and
+descriptions, so adding words from what the tool *is* ("command-line", "validator")
+filters out the library, headers and docs that merely mention JSON Schema. Always
+confirm with `apt-cache show NAME`, which prints the full description and the Section.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- Taking the first hit. Ranking is alphabetical, not "best match"; the `python3-`
+  library and `-dev` package often come first.
+- Writing the whole search line (`name - description`) into the file instead of the name.
+- Picking a package that only looks similar: a schema *generator* is a command-line
+  tool too, but it does not validate.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/apt-search/apt-search-notes.txt.
+## Next step
+`apt-cache search --names-only` for name-only matches, `apt-cache policy NAME` for the
+version you would get, and `apt-file search /usr/bin/NAME` (when installed) to find which
+package ships a given command.

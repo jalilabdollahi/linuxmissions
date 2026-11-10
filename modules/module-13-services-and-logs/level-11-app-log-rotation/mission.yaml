@@ -1,15 +1,11 @@
 {
-  "name": "App Log Rotation: Restore Drill",
-  "description": "In the services and logs lab, a task related to App Log Rotation needs cleanup before the handoff.",
-  "objective": "Extract app-log-rotation-restore.tar.gz so the restored/app-log-rotation directory appears in the sandbox",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "App Log Rotation",
-    "tar",
-    "archive extraction"
-  ],
+  "name": "The File Nobody Writes",
+  "description": "The disk on app-05 keeps filling up although logrotate runs every night. Since last night's rotation the new var/log/app/app.log has stayed empty while app.log.1 keeps growing, and the old files can't be compressed or removed while the app is still writing to them.",
+  "objective": "Fix etc/logrotate.d/app so that after every rotation the running app writes its new lines into the new app.log and audit.log and the rotated files stop growing. The app's README forbids copytruncate, and the app should be signalled once per rotation, not once per file. The validator forces a real rotation to check. `systemctl` is a mock that runs the app as a real background process; logrotate is the real one (as non-root, give it a state file with -s).",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["logrotate create vs copytruncate", "postrotate / endscript", "sharedscripts", "inodes and open file descriptors", "/proc/PID/fd", "systemctl reload"],
   "module": "module-13-services-and-logs",
   "level": "level-11-app-log-rotation"
 }

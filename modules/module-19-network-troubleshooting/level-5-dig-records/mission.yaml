@@ -1,15 +1,11 @@
 {
-  "name": "Dig Records: Field Extract",
-  "description": "In the network troubleshooting lab, a task related to Dig Records needs cleanup before the handoff.",
-  "objective": "Extract the second column from dig-records-report.csv into owners.txt",
+  "name": "Where Does the Mail Go?",
+  "description": "Partners say mail to @shop.example bounces. A test DNS server with the production zone runs on 127.0.0.1 (port in dns.port), and TICKET.txt asks where mail for shop.example is supposed to go first.",
+  "objective": "Query the local DNS server and write mx.env with MX_HOST=<the primary mail exchanger of shop.example, the name in its MX record> and MX_IP=<the IPv4 address that name finally resolves to>.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Dig Records",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "10m",
+  "concepts": ["dig @server -p", "MX preference", "CNAME chains", "dig +short", "sort -n"],
   "module": "module-19-network-troubleshooting",
   "level": "level-5-dig-records"
 }

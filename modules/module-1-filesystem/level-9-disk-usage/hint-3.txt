@@ -1,2 +1,6 @@
-Save just the filename:
-find $SANDBOX -type f -printf "%s %p\n" | sort -rn | head -1 | awk '{print $2}' > $SANDBOX/biggest.txt
+  find . -type f -exec du -k {} + | sort -n | tail -3
+      every file with its size in KB, sorted; the last line is the biggest
+  find . -type f -exec du -k {} + | sort -n | tail -1 | cut -f2 > biggest.txt
+      same, keep only the last line, cut away the size (du separates it with a tab)
+      and save the path to biggest.txt
+  cat biggest.txt

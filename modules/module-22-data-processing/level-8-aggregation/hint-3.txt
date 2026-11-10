@@ -1,1 +1,10 @@
-Example: `find cleanup/aggregation -name '*.tmp' -delete`
+  printf 'endpoint\trequests\tbytes\tavg_ms\tmax_ms\n' > stats.tsv
+      the header, tab-separated
+  awk -F'\t' 'NR > 1 { ep = $4; sub(/\?.*/, "", ep); n[ep]++; bytes[ep] += $6; ms[ep] += $7; if ($7 > max[ep]) max[ep] = $7 } END { for (ep in n) printf "%s\t%d\t%d\t%.1f\t%d\n", ep, n[ep], bytes[ep], ms[ep] / n[ep], max[ep] }' gateway.tsv | sort -t $'\t' -k2,2nr >> stats.tsv
+      NR > 1          skip the header of gateway.tsv
+      sub(/\?.*/...)  /api/users?id=7 -> /api/users
+      n, bytes, ms    count, byte sum ("-" adds 0) and latency sum per endpoint
+      max             the largest latency seen so far for that endpoint
+      %.1f            average = sum / count with one decimal
+      sort -k2,2nr    busiest endpoint first
+  column -t stats.tsv

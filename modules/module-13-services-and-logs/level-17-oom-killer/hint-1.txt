@@ -1,0 +1,6 @@
+systemctl status reports says how it died. The details are in the kernel's
+messages, not in the unit's own log: what did the OOM killer kill, and in
+which cgroup was that process? A process name like "java" doesn't tell you
+which service it belongs to. How many kills are there over the two nights?
+Then the arithmetic: in what unit is anon-rss, and what does M mean in
+MemoryMax?

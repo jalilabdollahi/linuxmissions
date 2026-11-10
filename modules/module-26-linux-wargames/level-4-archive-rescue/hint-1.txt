@@ -1,1 +1,1 @@
-This is a sorting task followed by deduplication.
+Two traps in the delivery itself. What order does the shell give you `part.*` in, and does that match the order of the parts? And which of the twelve parts can you trust? The vendor note says one was cut short: compare sizes. Once the archive is whole, think about how to take out only one subtree, and look at the member list before you extract anything.

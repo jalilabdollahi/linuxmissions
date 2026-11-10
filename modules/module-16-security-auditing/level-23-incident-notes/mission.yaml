@@ -1,15 +1,11 @@
 {
-  "name": "Incident Notes: Backup Bundle",
-  "description": "In the security auditing lab, a task related to Incident Notes needs cleanup before the handoff.",
-  "objective": "Create incident-notes-backup.tar.gz containing the files under bundle/incident-notes",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Incident Notes",
-    "tar",
-    "compression"
-  ],
+  "name": "What Did They Leave Behind",
+  "description": "The account deploy was compromised last night. You have its home (home/deploy), the SSH log var/log/auth.log and the shell history. The attacker did not just look around: they planted ways to come back. The crontab of deploy is kept in a mock spool: use `bin/crontab -l` to read it and `bin/crontab -` or `bin/crontab FILE` to replace it.",
+  "objective": "Find every persistence mechanism the attacker left behind and remove it: a key in authorized_keys, a scheduled job in deploy's crontab, a change to the shell startup file home/deploy/.bashrc and a copy of a shell with the setuid bit under home/. Leave every legitimate key, cron job, alias and setuid program in place (usr/bin/passwd is legitimate), and keep the log and history as evidence. Then write the attacker's IP address and the fingerprint (SHA256:...) of the key they added, one per line, to iocs.txt, without any IP address or fingerprint that belongs to a legitimate user, to the scanner that only failed to log in, or to a legitimate key.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "45m",
+  "concepts": ["incident response", "auth.log", "authorized_keys", "crontab", "setuid", "IOCs", "find -newer"],
   "module": "module-16-security-auditing",
   "level": "level-23-incident-notes"
 }

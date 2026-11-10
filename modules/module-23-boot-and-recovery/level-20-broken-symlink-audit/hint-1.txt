@@ -1,1 +1,6 @@
-This is a sorting task followed by deduplication.
+Ask what each link means on the server rather than on the rescue system. `find -xtype l`
+tests links against the rescue host's own filesystem, so it is wrong in both directions:
+think about a link whose absolute target exists on the host but not in sysroot, and about one
+whose target exists in sysroot but not on the host. Some targets also go through other links
+(/bin and /lib are links themselves, and one link may point at another), and two links can
+point at each other. Build the answer by following each link inside sysroot.

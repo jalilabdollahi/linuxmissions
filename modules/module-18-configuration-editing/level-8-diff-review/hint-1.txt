@@ -1,1 +1,5 @@
-Use a targeted file search so you do not remove the wrong files.
+A plain `diff` compares bytes, so a tabs-to-spaces conversion makes nearly every
+line "different". Try it and see how long the output is. You need a comparison
+that ignores differences in whitespace and in blank lines. Which options of diff
+do that? Once the noise is gone, the remaining changed lines tell you the
+directives; each file keeps one directive per line.

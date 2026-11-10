@@ -1,15 +1,11 @@
 {
-  "name": "Service Reload: Field Extract",
-  "description": "In the package and release operations lab, a task related to Service Reload needs cleanup before the handoff.",
-  "objective": "Extract the second column from service-reload-report.csv into owners.txt",
+  "name": "Reload Without Dropping Connections",
+  "description": "Release 1.5 changes only the configuration of pricer, the local pricing daemon, and customers are connected to it right now (a long-lived feed is open). The daemon re-reads its config file when it receives SIGHUP. The new config is in release-1.5/pricer.conf, the live one in etc/pricer/pricer.conf, and the daemon's PID is in run/pricer.pid. The pricer tool is in bin/.",
+  "objective": "Deploy the 1.5 configuration into etc/pricer/pricer.conf (it must pass 'pricer --check', and only what is wrong in the shipped file may be changed) and make the running daemon use it without restarting it: the same process must keep running, /version on 127.0.0.1 (port from the config) must report config 1.5 with its markup, and the open feed connection must stay connected.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Service Reload",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "20m",
+  "concepts": ["config validation before reload", "SIGHUP", "kill -HUP", "PID files", "curl"],
   "module": "module-20-package-and-release-ops",
   "level": "level-22-service-reload"
 }

@@ -1,1 +1,7 @@
-Inspect the current mode first if you want to verify the change.
+Equal row counts hide two errors that cancel out: some invoices never arrived and
+others arrived twice. So compare the ids, not the counts.
+First make both files speak the same language: one line per invoice with the id in
+lowercase and the amount in cents, sorted on the id. Look carefully at source.csv
+before you split it on commas: is the amount always the third field? And what is
+0.29 * 100 in floating point? Try awk 'BEGIN { print int(0.29 * 100) }'.
+Then each section is one small question for sort, uniq, comm or join.

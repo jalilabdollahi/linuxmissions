@@ -1,1 +1,9 @@
-Example: `sort awk-rewrite-raw.txt | uniq > unique-sorted.txt`
+awk '$0 !~ /^#/ && NF == 5 && $5 == "B" { printf "%-12s %-15s %-5s %-7s %s\n", $1, $2, $3, 0, $5; next } { print }' upstreams.tab > upstreams.new
+mv upstreams.new upstreams.tab
+cat upstreams.tab
+
+- $0 !~ /^#/ && NF == 5   data rows only: comments and blank lines fail this test
+- $5 == "B"               exact rack match (not "web-b1" or a comment)
+- printf "%-12s ..."      prints the fields again with the original column widths, weight replaced by 0
+- next / { print }        rows that do not match are printed unchanged
+- mv                      replaces the table with the new version

@@ -1,1 +1,1 @@
-Use tar with create, gzip, and file flags.
+Which release is "the newest that never failed" is a question about the logs, not about names or about the `previous` link, which may be as bad as the current one. What counts as a failure in a health log line, and which field holds it? Careful with how you sort release names: 2.3.10 comes after 2.3.9. And think about what `ln -s` does when the name you give it already exists and points at a directory.

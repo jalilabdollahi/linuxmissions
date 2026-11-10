@@ -1,1 +1,4 @@
-Use chmod with octal mode 640.
+- Fields of a crontab line: minute hour day-of-month month day-of-week. A `*` in the minute field means every minute of the hour. `man 5 crontab`.
+- In a crontab command a bare `%` ends the command; everything after it becomes input. Write `\%`. Test: run the job line by hand with `sh -c`.
+- `cron-sim` prints "FIRED/DONE/EXIT"; exit 126 = not executable, 127 = command not found. `env -i PATH=/usr/bin:/bin sh -c 'collect-stats'` shows what cron sees.
+- A `PATH=...` line above the jobs sets it for all of them. `flock -n LOCKFILE command` gives up at once when the lock is taken (exit 1): add `|| true` so a skipped start is not a failure. `man flock`.

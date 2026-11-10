@@ -1,15 +1,11 @@
 {
-  "name": "Paste Columns: Permission Fix",
-  "description": "In the search and pipelines lab, a task related to Paste Columns needs cleanup before the handoff.",
-  "objective": "Set the mode of paste-columns.sh to 640",
+  "name": "Three Exports, One Report",
+  "description": "The monitoring tool can only export one metric per file: hosts.txt, cpu.txt and mem.txt, one value per line, all in the same host order. cpu.txt came from the Windows reporting box. The team wants a single table, and the CPU-saturated hosts as a list for `ansible --limit`.",
+  "objective": "Create report.tsv with one line per host: host, cpu, mem separated by tabs, in the order of hosts.txt, no header. Create limit.txt with one single line: the hosts whose cpu is 90 or more, joined with commas (web-03,db-01,...), in report order, without spaces or a trailing comma. Leave the three input files unchanged.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Paste Columns",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "10m",
+  "concepts": ["paste", "paste -d", "paste -s", "CRLF line endings", "tr -d '\\r'"],
   "module": "module-11-find-and-pipelines",
   "level": "level-12-paste-columns"
 }

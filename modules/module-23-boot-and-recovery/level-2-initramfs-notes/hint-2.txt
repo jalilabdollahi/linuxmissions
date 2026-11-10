@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  file sysroot/boot/initrd.img-*                   which compression each image uses
+  zcat IMAGE | cpio -t | grep nvme                 for gzip images
+  zstdcat IMAGE | cpio -t | grep nvme              for zstd images
+cpio -t lists an archive read from stdin without extracting it. An image can have
+nvme-core.ko and still lack nvme.ko; look at the exact file names. If zcat prints an
+error and the listing is empty, that says nothing about the image's content.
+More: man cpio, man lsinitramfs (on a real Ubuntu host)

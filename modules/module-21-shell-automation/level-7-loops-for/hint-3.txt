@@ -1,1 +1,30 @@
-Example: `head -n 3 loops-for-history.log > first3.txt` and `tail -n 3 loops-for-history.log > last3.txt`
+Type this at the prompt. It writes the whole script:
+
+cat > missing_backups.sh <<'EOF'
+#!/bin/bash
+# missing_backups.sh START END - print the days whose dump is missing or empty.
+usage() { echo "usage: missing_backups.sh START END   (YYYY-MM-DD)" >&2; exit 2; }
+[ "$#" -eq 2 ] || usage
+start=$(date -d "$1" +%F 2>/dev/null) || usage
+end=$(date -d "$2" +%F 2>/dev/null) || usage
+[[ $end < $start ]] && usage
+
+status=0
+for ((i = 0; ; i++)); do
+  day=$(date -d "$start + $i day" +%F)
+  [[ $day > $end ]] && break
+  if [ ! -s "backups/db-$day.sql.gz" ]; then
+    echo "$day"
+    status=1
+  fi
+done
+exit "$status"
+EOF
+
+- start=$(date -d "$1" +%F) || usage   a date that does not exist makes date fail: exit 2
+- for ((i = 0; ; i++))                 i = days since START; the loop ends with break
+- date -d "$start + $i day" +%F        the calendar does the counting: Oct 31 + 1 = Nov 1
+- [[ $day > $end ]] && break           ISO dates sort as text, so this means "after END"
+- [ ! -s FILE ]                        missing, or exists with 0 bytes
+
+Check: ./missing_backups.sh 2026-10-28 2026-11-03; echo "exit $?"

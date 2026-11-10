@@ -1,15 +1,11 @@
 {
-  "name": "Awk Sum: Backup Bundle",
-  "description": "In the search and pipelines lab, a task related to Awk Sum needs cleanup before the handoff.",
-  "objective": "Create awk-sum-backup.tar.gz containing the files under bundle/awk-sum",
+  "name": "NAS Storage Bill",
+  "description": "The NAS is 92% full and management wants to charge storage back to its users. Someone already ran find /nas -printf '%p\\t%u\\t%s\\t%TY-%Tm-%Td\\n' > files.lst 2>&1, so files.lst has one line per file: path, owner, size in bytes and last-modified date, separated by tabs. Paths contain spaces, a few files are tens of GiB, and the find errors went into the file too.",
+  "objective": "Write usage.txt with one line per user: the user name, the total size of their files in GiB (1 GiB = 1024^3 bytes), and the size of their files last modified before 2025-01-01 in GiB, separated by tabs, both numbers with exactly two decimals (e.g. amira<TAB>812.34<TAB>401.20). Sort the lines by total GiB, largest first.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Awk Sum",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "15m",
+  "concepts": ["awk -F'\\t'", "associative arrays", "END and for (k in a)", "printf %.2f", "string comparison of ISO dates", "sort -t -k -n -r"],
   "module": "module-11-find-and-pipelines",
   "level": "level-23-awk-sum"
 }

@@ -1,1 +1,7 @@
-Example: `mkdir -p organized/apt-search && mv inbox/apt-search.txt organized/apt-search/apt-search-notes.txt`
+apt-cache search command-line json schema validator | awk '{print $1}' > package.txt
+cat package.txt
+
+- apt-cache search ...   several words: a package must match every one of them
+- awk '{print $1}'       search prints "name - synopsis"; keep only the first column
+- > package.txt          save the name; cat shows what was written
+(check the pick first with: apt-cache show $(cat package.txt))

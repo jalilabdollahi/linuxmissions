@@ -1,1 +1,8 @@
-Example: `mkdir -p organized/grub-notes && mv inbox/grub-notes.txt organized/grub-notes/grub-notes-notes.txt`
+grep -n '^set default' sysroot/boot/grub/grub.cfg
+grep -n 'menuentry\|submenu' sysroot/boot/grub/grub.cfg
+echo "Ubuntu, with Linux 6.8.0-31-generic" > default_entry.txt
+echo "6.8.0-31-generic" > default_kernel.txt
+
+- set default="1>2": item 1 is the submenu, entry 2 inside it, counting from 0 in both places
+- the second grep lists the entries; the submenu's 3rd entry (index 2) is the plain 6.8.0-31 one
+- the title is the text between the quotes after menuentry; the version is in its linux /boot/vmlinuz-... line

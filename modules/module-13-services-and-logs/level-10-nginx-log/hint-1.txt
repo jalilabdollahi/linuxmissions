@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+Read the log_format in etc/nginx/nginx.conf first: it tells you which field is the status, which
+is the request time and which is the upstream response time. Then three questions per line:
+is it from 14:00 on, is it a 5xx, and which endpoint is it? An endpoint is the path; the
+"?id=..." part makes one endpoint look like hundreds of different URLs.
+Look at the last two numbers of a line: which one is the upstream's time?

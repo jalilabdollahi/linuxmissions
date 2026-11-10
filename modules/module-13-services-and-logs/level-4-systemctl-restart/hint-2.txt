@@ -1,1 +1,10 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  cat opt/api/README                   which signal makes the api re-read api.conf
+  systemctl reload api                 runs the unit's ExecReload= command; without one systemd
+                                       answers "Job type reload is not applicable"
+  systemctl show -p MainPID api        the PID that must not change
+In the unit's [Service] section, ExecReload= is the command systemd runs on reload; it can use
+$MAINPID, e.g.  ExecReload=/bin/kill -SIGNAL $MAINPID
+After editing a unit: systemctl daemon-reload (systemd re-reads unit files, it does NOT touch the
+running api), then systemctl reload api.
+Avoid restart and reload-or-restart: with no ExecReload= the latter restarts.
+Read more: man systemd.service (ExecReload=), man systemctl (reload, daemon-reload)

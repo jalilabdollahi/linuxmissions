@@ -1,1 +1,4 @@
-A short for-loop is the cleanest option here.
+Count carefully: the API limit is on data rows, and every file also needs the
+header. If you split the file as it is, which chunk gets the header, and how
+many data rows fit in it? Find a way to split only the data and give each
+piece its own header.

@@ -1,0 +1,28 @@
+#!/bin/bash
+# Walk the rules like the kernel: rules by priority, longest prefix in the
+# chosen table (lowest metric on a tie), next rule if the table has no match.
+cat > route.py <<'PY'
+import ipaddress as ip, re
+net = lambda s: ip.ip_network("0.0.0.0/0" if s in ("all", "default") else s, strict=False)
+rules = sorted((int(m[0]), net(m[1]), net(m[2] or "all"), m[3])
+               for m in re.findall(r"^(\d+):\s+from (\S+)(?: to (\S+))? lookup (\S+)", open("ip-rule.txt").read(), re.M))
+routes = []
+for line in open("ip-route-all.txt"):
+    w = line.split()
+    if w and "dev" in w and w[0] not in ("local", "broadcast"):
+        kv = {w[i]: w[i + 1] for i in range(len(w) - 1)}
+        routes.append((kv.get("table", "main"), net(w[0]), kv.get("via", "direct"), kv["dev"], int(kv.get("metric", 0))))
+for line in open("flows.txt"):
+    if line.startswith("#") or not line.strip():
+        continue
+    src, dst = line.split()[:2]
+    for _, frm, to, table in rules:
+        if ip.ip_address(src) in frm and ip.ip_address(dst) in to:
+            hits = [r for r in routes if r[0] == table and ip.ip_address(dst) in r[1]]
+            if hits:
+                best = max(hits, key=lambda r: (r[1].prefixlen, -r[4]))
+                print(src, dst, best[2], best[3])
+                break
+PY
+python3 route.py > flows.tsv
+cat flows.tsv

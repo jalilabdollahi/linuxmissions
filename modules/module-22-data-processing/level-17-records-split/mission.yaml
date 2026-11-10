@@ -1,15 +1,11 @@
 {
-  "name": "Records Split: Schedule Entry",
-  "description": "In the data processing lab, a task related to Records Split needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Orders By Region",
+  "description": "Every regional sales manager should get only their own region's October orders, but the shop exports one big all_orders.csv for all regions (region in column 3, rows in date order, regions mixed). Last month somebody split the file by hand; their files are still in by_region/, including one for a region that has since been merged away.",
+  "objective": "Fill by_region/ with exactly one file per region in all_orders.csv and nothing else. Each file is named after the region with every / replaced by - and every space by _, plus .csv (EU/West -> EU-West.csv, Asia Pacific -> Asia_Pacific.csv) and holds the header line of all_orders.csv followed by every row of that region, unchanged and in the original order. Leave all_orders.csv unchanged.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Records Split",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "15m",
+  "concepts": ["awk print > file", "one output file per field value", "header once per file", "gsub for safe file names", "close()"],
   "module": "module-22-data-processing",
   "level": "level-17-records-split"
 }

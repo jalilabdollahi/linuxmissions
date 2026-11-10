@@ -1,1 +1,8 @@
-Use `chmod +x jobs/cat-reassemble.sh` and then execute it.
+  cat A B C > whole            joins files byte for byte, in the order you name them
+  echo backup.part*            shows the glob order: alphabetical, so part1, part10, part11 ... part2
+  ls backup.part* | sort -V    "version" sort: part2 before part10
+  backup.part{1..14}           brace expansion: the shell writes out part1 part2 ... part14, in that order
+  sha256sum -c FILE.sha256     recomputes the checksum and prints OK or FAILED
+  tar -xzf ARCHIVE -C DIR      extract into DIR (create DIR first)
+On older macOS use `shasum -a 256 -c` instead of sha256sum.
+More: man cat, man sha256sum, and "Brace Expansion" in man bash

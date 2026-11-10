@@ -1,0 +1,4 @@
+systemd picks what to boot to from a "target", and the default one is a symlink in
+/etc/systemd/system called default.target. On the server that is under sysroot/. Where
+does it point now, and which target means "everything except a graphical login"?
+Careful with paths: the link will be followed by the server, not by this rescue system.

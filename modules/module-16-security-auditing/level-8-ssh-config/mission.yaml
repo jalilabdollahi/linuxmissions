@@ -1,15 +1,11 @@
 {
-  "name": "Ssh Config: Cleanup Sweep",
-  "description": "In the security auditing lab, a task related to Ssh Config needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/ssh-config and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Ssh Config",
-    "find",
-    "rm"
-  ],
+  "name": "First Match Wins",
+  "description": "The pentest report says this server still accepts root logins and password logins and allows ten authentication attempts per connection. Yet etc/ssh/sshd_config already says PermitRootLogin no. sshd's own view of the configuration is what counts, and you have a stand-in for it: `sshd -T -f etc/ssh/sshd_config` prints the effective settings (add `-C user=NAME,host=HOST,addr=IP` to see them for one connection).",
+  "objective": "Change the configuration under etc/ssh/ so that the effective settings are PermitRootLogin no, PasswordAuthentication no and MaxAuthTries 3, for every user including deploy and from every address. Everything else that is configured today (including the special rules for the backup user and for the internal network) must stay effective exactly as it is, and `sshd -t -f etc/ssh/sshd_config` must still pass.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "20m",
+  "concepts": ["sshd_config", "first value wins", "Include drop-ins", "Match blocks", "sshd -T"],
   "module": "module-16-security-auditing",
   "level": "level-8-ssh-config"
 }

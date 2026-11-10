@@ -1,1 +1,6 @@
-Use `ln -s` so current.conf points at the release file.
+  ls -la etc/skel etc/skel/.ssh      -a shows dotfiles; find etc/skel -printf '%m %p\n' shows modes too
+  cp SRC DST ; rm FILE               restore from usr/share/base-files/dot.*, remove leftovers
+  chmod 644 FILE ; chmod 700 DIR     fix modes (700 is for the directory itself)
+  bin/useradd -m dana                -m copies etc/skel into home/dana
+  bin/userdel -r dana                if you created her too early: remove her and her home, then start again
+More: man useradd (SKEL, -m), man 5 passwd

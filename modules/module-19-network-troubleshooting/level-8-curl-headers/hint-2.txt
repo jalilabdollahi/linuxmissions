@@ -1,1 +1,7 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+- `curl -I URL` sends a HEAD request. Browsers send GET. A server can (wrongly) answer them differently.
+- `curl -s -D - -o /dev/null URL` makes a GET, prints the response headers and throws the body away.
+- `-L` follows redirects; with `-D -` (or `-I`) curl then prints one header block per hop, the final page's block is the LAST one.
+- `-w` prints facts about the transfer after it is done: `%{url_effective}` (where curl ended up), `%{num_redirects}`, `%{http_code}`.
+- Header lines end in \r (CRLF); `tr -d '\r'` before you store them.
+
+Read more: `man curl` (-L, -D, -I, -w / --write-out).

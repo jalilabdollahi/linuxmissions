@@ -1,1 +1,18 @@
-Example: `grep 'ALERT' artifact-layout.log > alerts.txt`
+cat > build.sh <<'SCRIPT'
+#!/bin/bash
+set -e
+cd "$(dirname "$0")"
+rm -rf stage dist; mkdir -p stage dist
+cp -R src/agent stage/agent-1.4.2
+find stage -type d -exec chmod 755 {} +
+find stage -type f -exec chmod 644 {} +
+chmod 755 stage/agent-1.4.2/bin/*
+find stage/agent-1.4.2/conf -type f -exec chmod 640 {} +
+LC_ALL=C tar -C stage --exclude=.DS_Store --exclude='*.o' --exclude='*~' --sort=name --owner=0 --group=0 --numeric-owner --mtime=@1767225600 -cf - agent-1.4.2 | gzip -n > dist/agent-1.4.2.tar.gz
+SCRIPT
+bash build.sh && tar --numeric-owner -tvzf dist/agent-1.4.2.tar.gz | head -n 5
+
+- cp -R to stage/agent-1.4.2   gives the archive its top directory without touching your sources
+- find ... chmod              dirs 755, files 644, then bin/ 755 and conf/ 640 (find also reaches the hidden conf/.defaults)
+- tar --exclude ...           drops junk at any depth; --sort/--owner/--group/--numeric-owner/--mtime remove everything that varies
+- gzip -n                     no name and no timestamp in the gzip header, so the bytes are the same on every run

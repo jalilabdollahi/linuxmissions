@@ -1,15 +1,11 @@
 {
-  "name": "Backup Manifests: Alert Filter",
-  "description": "In the storage and backups lab, a task related to Backup Manifests needs cleanup before the handoff.",
-  "objective": "Write every alert line from backup-manifests.log into alerts.txt",
+  "name": "Ship It with a Manifest",
+  "description": "The release set in backup/ goes to the restore team, who will verify it file by file against a manifest you have to produce.",
+  "objective": "Write MANIFEST.tsv next to backup/ (not inside it): tab-separated, no header, one row per regular file (path, size in bytes, octal mode, sha256) and one row per symlink (path, the word symlink, its target), paths as find prints them inside backup/ (starting with ./), hidden files included, all rows in LC_ALL=C byte order. Do not change the tree.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Backup Manifests",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "30m",
+  "concepts": ["find -print0 / read -d ''", "stat -c %s %a", "sha256sum", "readlink vs hashing through links", "LC_ALL=C sort"],
   "module": "module-14-storage-and-backups",
   "level": "level-18-backup-manifests"
 }

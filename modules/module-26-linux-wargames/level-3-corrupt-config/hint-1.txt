@@ -1,1 +1,1 @@
-Count matching lines instead of copying them out by hand.
+Run the checker and fix what it says, but do not stop when it goes green: a file can pass and still not be what the ticket asked for. Compare the broken file with the last good one and read both side by side. How many different kinds of damage can you find (look at the invisible characters too)? Remember that only the ticket's changes belong in the result.

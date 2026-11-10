@@ -1,1 +1,7 @@
-Use chmod with octal mode 640.
+gpgv --keyring ./keys/release.gpg FILE.sig FILE     exit 0 only for a valid signature (a keyring path needs a slash; use an absolute one built from the script's own directory)
+(cd "$b" && sha256sum -c --status SHA256SUMS)       checks the listed files; --status prints nothing, only the exit code
+dpkg --compare-versions A gt B                      Debian order; sort -V or string comparison are not reliable for every case
+grep -qE "^## 1\.4\.4 - " CHANGELOG.md              match the heading, with the dots escaped and the " - " after the version
+tar --numeric-owner -tvzf X | awk ...               one line per member: permissions, owner/group (numbers), size, date, time, name
+Use reject() { echo "REJECT: $*"; exit 1; } for the failures and here=$(cd "$(dirname "$0")" && pwd) for prod/ and keys/.
+Test against builds/*, then break a copy of a build yourself.   More: man gpgv, man sha256sum

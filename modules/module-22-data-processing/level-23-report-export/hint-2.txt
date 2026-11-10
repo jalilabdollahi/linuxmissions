@@ -1,1 +1,14 @@
-Archive the directory contents without leaving anything out.
+CSV with awk -F'\t' -v OFS=, :
+  if ($i ~ /[",]/) { gsub(/"/, "\"\"", $i); $i = "\"" $i "\"" }   quote and double quotes
+  $1 = $1           forces awk to rebuild the line with OFS even if no field changed
+                    (otherwise lines without special fields keep their tabs)
+  printf '\xef\xbb\xbf' > export.csv   then append the CSV with >>
+JSON with jq:
+  jq -R -s '...'    -R reads raw text, -s gives the whole file as one string
+  split("\n"), split("\t")             lines, then fields
+  .[0] as $h | .[1:]                   the header, then the data rows
+  [$h, .] | transpose                  pairs [name, value]
+  map({key: .[0], value: .[1]}) | from_entries     an object
+  .amount |= tonumber                  string -> number for one key
+Check: jq '.[0]' export.json and python3 -c 'import csv,sys; print(list(csv.reader(open("export.csv")))[:3])'
+More: man jq (transpose, from_entries, tonumber), RFC 4180 section 2

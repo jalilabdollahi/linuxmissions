@@ -1,17 +1,20 @@
-# Mounts: Backup Bundle
+# Permission Denied on a Mount
 
-## What you practiced
-- This level focused on **Mounts** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A path belongs to the mount with the longest mount point that is a
+directory-wise prefix of it. When two mounts have the same mount point, the
+one mounted later is on top and hides the first. A bind mount shows the same
+device as its source but has a different root (`/ci` here), which findmnt
+prints in brackets, and it can carry different options: `noexec` forbids
+running programs from that mount, whatever the file mode says.
 
-## Commands to remember
-```bash
-tar -czf backup.tar.gz folder/
-tar -tf backup.tar.gz
-gzip file.txt
-```
+## Common mistakes
+- `grep /var/lib/ci/work`: it also finds `work-old` and `work/build-4`.
+- Taking the first matching line: that is the mount underneath.
+- Dropping the `[/ci]` from the source, or reading the super options (field
+  after the fstype) instead of the mount options.
+- Forgetting `\040`: a space in a path is escaped in mountinfo.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use tar with create, gzip, and file flags.
+## Next step
+`findmnt --target PATH` answers this on a live system, `findmnt -o+PROPAGATION`
+shows sharing, and `mount -o remount,exec /mountpoint` (as root) is the fix.

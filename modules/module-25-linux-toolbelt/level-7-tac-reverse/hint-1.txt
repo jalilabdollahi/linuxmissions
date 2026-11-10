@@ -1,1 +1,4 @@
-Use one command for the beginning of the file and another for the end.
+Reversing the whole file line by line scrambles every release: its lines come
+out upside down. What you want to reverse is whole blocks. Look at where each
+block begins (the ---- line) and ask: when you flip the blocks, which side of a
+block does its ---- line have to stay on?

@@ -1,15 +1,11 @@
 {
-  "name": "Pkill: Permission Fix",
-  "description": "In the monitoring and performance lab, a task related to Pkill needs cleanup before the handoff.",
-  "objective": "Set the mode of pkill.sh to 640",
+  "name": "Put Down the Stuck Reports",
+  "description": "The report runner has twelve workers, report-1 to report-12, each touching a heartbeat file in run/hb/ every few seconds. Three of them hung: their heartbeat is older than two minutes. They are blocking the report queue and have to be shut down cleanly (the workers flush state when they get SIGTERM), without disturbing the nine healthy workers or the supervisor.",
+  "objective": "Terminate exactly the workers whose heartbeat file in run/hb/ is older than 2 minutes, with the default (graceful) signal, so that each logs its clean-shutdown line in log/workers.log. Every healthy worker and the report supervisor must still be running afterwards.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Pkill",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "15m",
+  "concepts": ["find -mmin +N", "pkill -f with exact patterns", "SIGTERM vs SIGKILL", "regex anchors", "pgrep before pkill"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-12-pkill"
 }

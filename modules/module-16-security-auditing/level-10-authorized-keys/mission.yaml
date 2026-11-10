@@ -1,15 +1,11 @@
 {
-  "name": "Authorized Keys: Backup Bundle",
-  "description": "In the security auditing lab, a task related to Authorized Keys needs cleanup before the handoff.",
-  "objective": "Create authorized-keys-backup.tar.gz containing the files under bundle/authorized-keys",
+  "name": "Offboarding Day",
+  "description": "Three people left the company on Friday; offboard.txt lists their key fingerprints. The deploy account's authorized_keys still contains their keys, and the CI system's key can do far more than it should: it is a bare key with no restrictions at all.",
+  "objective": "Edit authorized_keys: remove exactly the keys whose fingerprints are in offboard.txt, leave every other key line unchanged, and restrict the CI key (comment ci-deploy@runner) so that it can only run /usr/local/bin/deploy-only, only from the 10.0.0.0/8 network, with port forwarding and a terminal disallowed. The file must still be accepted by `ssh-keygen -lf authorized_keys`.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Authorized Keys",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "20m",
+  "concepts": ["authorized_keys", "key fingerprints", "ssh-keygen -lf", "from= and command= options", "no-port-forwarding", "no-pty"],
   "module": "module-16-security-auditing",
   "level": "level-10-authorized-keys"
 }

@@ -1,1 +1,12 @@
-Example: `find cleanup/cleanup-sprint -name '*.tmp' -delete`
+pid=$(cat .lm-state/pid)
+held=$(lsof -p "$pid" -Fn | sed -n 's/^n//p' | grep "^$PWD/var/")
+is_held() { grep -qxF "$(realpath "$1")" <<<"$held"; }
+find var -name '*.log' -mtime +7 -print0 | while IFS= read -r -d '' f; do is_held "$f" || rm -- "$f"; done
+find var -name '*.log' -mtime +1 -print0 | while IFS= read -r -d '' f; do is_held "$f" || gzip -- "$f"; done
+find var/crash -name 'core.*' -mtime +30 -delete
+
+- lsof -p ... | sed   the list of files the batch job holds open
+- is_held             true if a given file is on that list
+- -mtime +7 ... rm    delete old logs that are not held (-print0 / read -d '' survive spaces and newlines)
+- -mtime +1 ... gzip  compress the 2-7 day old ones (older ones are already gone, held ones are skipped)
+- core.* -mtime +30   expired core dumps; .keep files never match any of these

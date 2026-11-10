@@ -1,17 +1,18 @@
 # The Password Leak
 
-## What you practiced
-- `grep -r` searches recursively through all files in a directory
-- `-l` prints only filenames, not matching lines (useful for audits)
-- `-n` adds line numbers; `-i` makes the search case-insensitive
+## Why it works
+`grep -r` reads every file under the starting folder, hidden ones included, and
+`-l` stops at the first match in each file and prints only its name. That gives
+one path per line, the list a security team needs. Matching `password=` also
+catches `db_password=` and `--password=`, which a search for a whole word would miss.
 
-## Security note
-Never hardcode passwords in config files. Use environment variables or a secrets manager (Vault, AWS Secrets Manager, etc.).
+## Common mistakes
+- Forgetting `-l`: you get `file:matching line`, which copies the secrets into
+  your report.
+- `grep -r password` (without `=`) also flags harmless lines such as
+  `password_min_length=12` and prompts like `password: `.
 
-## Commands to remember
-```bash
-grep -r "TODO" .                  # find all TODOs
-grep -rl "password" /etc          # which files mention password
-grep -rn "error" logs/            # with line numbers
-grep -ri "secret" . --include="*.conf"  # restrict to .conf files
-```
+## Learn next
+`grep -rn` adds line numbers, `-i` ignores case (to catch `PASSWORD=` too), and
+`--include='*.conf'` or `--exclude-dir=.git` limits which files are searched.
+Real projects use scanners like gitleaks, but they work on the same idea.

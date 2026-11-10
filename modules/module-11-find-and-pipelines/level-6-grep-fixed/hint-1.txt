@@ -1,1 +1,5 @@
-You need a stream editor or another text replacement tool.
+You need one search with 40 patterns, read from a file instead of typed in.
+Look closely at the keys: characters like . * + and $ mean something special
+in a regular expression, so a regex search for ak_ab.cd also matches ak_abXcd,
+and a key ending in $ never matches itself. And is the very last line of
+leaked.txt really a key?

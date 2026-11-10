@@ -1,1 +1,5 @@
-This is a sorting task followed by deduplication.
+Look at the tree before changing it: ls -laR srv/projects/apollo (or find with a
+-printf of the mode). Notice how many different modes there are, which entries are
+directories and which are programs, and what the TICKET.md asks of each kind. Which
+two special mode bits make a directory behave the way the ticket describes, and why
+would applying one mode to every entry make the data files executable?

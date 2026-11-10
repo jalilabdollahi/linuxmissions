@@ -1,1 +1,4 @@
-Count matching lines instead of copying them out by hand.
+Every line of billing.dat has three fields with a fixed number of characters.
+Look at your shortest and longest names and at amounts like `7` and `0.5`: what
+has to happen to each one so it fills its field exactly, no more and no less?
+The first line of accounts.csv is not an account.

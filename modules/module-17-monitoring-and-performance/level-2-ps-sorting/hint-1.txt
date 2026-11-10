@@ -1,1 +1,6 @@
-Look for a filtering command that keeps only the alert lines in ps-sorting.log.
+Five workers run next to other processes, and "most memory" can mean two
+different things: how much address space a process has reserved, or how much
+of it is really sitting in RAM right now. Which one matters when the box is
+swapping?
+ps can print both numbers for every process and sort by either. You only want
+processes that belong to the job runner, not everything on the machine.

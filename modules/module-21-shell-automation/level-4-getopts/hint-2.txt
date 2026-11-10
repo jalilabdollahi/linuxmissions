@@ -1,1 +1,11 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- `while getopts ':n:d:v' opt; do case $opt in ... esac; done`
+  The string lists the letters; a colon AFTER a letter means "takes a value",
+  which getopts puts in $OPTARG. getopts understands -vn3, -dlogs and -- by itself.
+- A colon at the very START of the string makes getopts quiet: for an unknown
+  option $opt is '?', for a missing value it is ':'. Send both to usage.
+- $OPTIND is the index of the first argument getopts did not use, so
+  `shift $((OPTIND - 1))` drops all the options and leaves the patterns.
+- getopts cannot know an option is required: after the loop, check
+  `[ -n "$dir" ] || usage`.
+
+Read more: help getopts

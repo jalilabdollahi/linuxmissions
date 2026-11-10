@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+Open etc/shadow and read man 5 shadow for the fields: when was the password last
+changed, and how many days is it valid? Together they give the day it expires, in days
+since 1970-01-01. Then the real work: which accounts have no usable expiry at all, which ones
+count as already expired, and which date field is not about the password?
+Compare today and the 14-day limit in the same unit (days), not as text.

@@ -1,1 +1,9 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+  tr -d '\r'                 delete every carriage return
+  grep -vx -- '--'           drop lines that are exactly -- (the first -- ends grep's
+                             options, so the pattern is not read as an option)
+  paste - - - -              read 4 lines from stdin and print them as one line,
+                             joined by tabs; repeat
+  paste -sd, -               join all lines of stdin into one line, with commas
+  cut -f1                    the first tab-separated field
+Order matters: remove the CRs before matching the separators.
+More: man paste, man grep

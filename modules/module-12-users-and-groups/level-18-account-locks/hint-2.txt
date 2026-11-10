@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+The comment (GECOS) field is the fifth colon-separated field and is itself a comma list:
+full name, room, phone, other (here: the email). Match whole parts, not substrings.
+  awk -F: '{ split($5, g, ","); print $1, g[1], g[4] }' etc/passwd
+Then use the sandbox's usermod once per account: -L locks the password (puts a ! in
+front of the hash), -e sets the day the account expires. Look at the usage:
+  bin/usermod --help
+Check the result with passwd -S USER, chage -l USER, or by reading etc/shadow.

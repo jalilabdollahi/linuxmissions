@@ -1,1 +1,6 @@
-You need a stream editor or another text replacement tool.
+Two lists have to be compared: what the image really contains and what the vendor
+says it should contain. The first one comes from searching the file tree for the
+special permission bits (look for `s` in the `ls -l` output of the usual suspects).
+Search the whole of rootfs/, including hidden folders, and do not trust names: a
+program called pkexec in the baseline may live at another path in the image.
+Remember the baseline starts with comment lines and its paths begin with `/`.

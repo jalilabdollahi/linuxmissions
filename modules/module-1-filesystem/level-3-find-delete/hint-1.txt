@@ -1,2 +1,3 @@
-First see what you're targeting:
-find $SANDBOX -name "*.tmp"
+Before deleting anything, get a complete list of what you are about to delete.
+Are some .tmp files inside hidden folders or folders with spaces in the name?
+Would your pattern also hit templates/*.tmpl or reports/notes.tmp.txt?

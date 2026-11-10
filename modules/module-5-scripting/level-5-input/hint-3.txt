@@ -1,4 +1,20 @@
-One valid solution is:
-while IFS='=' read -r key value; do
+Type this at the prompt. It replaces load_env.sh with a working loader:
+
+cat > load_env.sh <<'EOF'
+#!/bin/bash
+# Usage: source load_env.sh FILE
+while IFS='=' read -r key value || [ -n "$key" ]; do
+  case "$key" in
+    ''|'#'*) continue ;;
+  esac
   export "$key=$value"
 done < "$1"
+EOF
+
+- while ... done < "$1"            read the file given as the first argument, one line per loop
+- IFS='=' read -r key value        name before the first =, everything after it (more = included) in value
+- || [ -n "$key" ]                 also handle the last line when it has no newline
+- case ... ''|'#'*) continue       skip blank lines and comments
+- export "$key=$value"             set and export the variable; the value is stored as text, never run
+
+Try it: source load_env.sh app.env; echo "$APP_TITLE"; echo "$MOTD"; echo "$LOG_LEVEL"

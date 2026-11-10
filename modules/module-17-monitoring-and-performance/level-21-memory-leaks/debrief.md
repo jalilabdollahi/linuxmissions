@@ -1,17 +1,20 @@
-# Memory Leaks: Path Realignment
+# The Slow Leak
 
-## What you practiced
-- This level focused on **Memory Leaks** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A leak is not a size but a trend. Reading `VmRSS` from `/proc/PID/status` for
+every worker, waiting, and reading it again turns two numbers per process into
+a growth rate: `(RSS2 - RSS1) / seconds` in KiB/s. The workers that stay flat
+(the big one included) come out near zero, the leaker stands out, and the rate
+tells you how long you have: at 100 KiB/s it takes about 3 hours to leak a
+gigabyte, which is the number you hand to whoever decides between a restart now
+and a fix next week.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- Picking the process with the largest RSS: size is not growth.
+- Measuring for one second: allocation comes in steps, so short windows are noisy.
+- Mixing units: `VmRSS` is in KiB, `ps -o rss` too, but `top` may show MiB.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/memory-leaks/memory-leaks-notes.txt.
+## Next step
+`pidstat -r 5` (sysstat) reports memory growth per process, `smem` splits RSS
+into shared and private, and `/proc/PID/smaps_rollup` gives the detail.
+`vmstat 5` and `free -s 5` watch the whole host the same way.

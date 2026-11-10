@@ -1,15 +1,11 @@
 {
-  "name": "Apt Update: Noise Dedup",
-  "description": "In the package and release operations lab, a task related to Apt Update needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from apt-update-raw.txt with sorted unique values",
+  "name": "Stale Package Lists",
+  "description": "The vendor published a new agentd to the local vendor repository an hour ago, but apt still offers 2.4.0-1 as the newest version. The release notes say the new build fixes the crash you are chasing.",
+  "objective": "Make apt see the new agentd release, then write its version (the candidate apt now offers, for example 2.4.0-1) to candidate.txt as a single line. Only refresh apt's view of the repository; do not install the new version yet. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Apt Update",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "8m",
+  "concepts": ["apt update", "package lists", "apt-cache policy", "candidate version"],
   "module": "module-20-package-and-release-ops",
   "level": "level-4-apt-update"
 }

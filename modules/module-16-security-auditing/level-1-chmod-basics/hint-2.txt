@@ -1,1 +1,8 @@
-`mkdir -p organized/chmod-basics` followed by `mv inbox/chmod-basics.txt organized/chmod-basics/chmod-basics-notes.txt` is enough.
+chmod sets modes. Octal digits are owner, group, others (4 read, 2 write, 1 execute).
+  chmod 700 DIR            owner only, can enter the folder
+  chmod 600 FILE...        owner reads and writes, nobody else
+  chmod 644 FILE...        owner writes, everyone reads
+A private key (and authorized_keys and config) should be 600; public keys (*.pub)
+are meant to be shared, so 644 is right for them.
+Careful with `chmod -R`: it would give files the same mode as the folder.
+More: man chmod, man ssh (the section on identity files)

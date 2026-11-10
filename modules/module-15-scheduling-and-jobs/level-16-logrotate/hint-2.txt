@@ -1,1 +1,8 @@
-A du pipeline sorted numerically is a strong fit here.
+logrotate.conf has one block per log: /path/to/file { options }. Options you need:
+  rotate 5        how many old logs to keep
+  compress        gzip the old ones
+  delaycompress   leave the newest old log (.1) uncompressed until the next rotation
+  copytruncate    copy the file, then empty the original in place: the app's open file stays valid
+Command line: logrotate -d -s logrotate.state logrotate.conf   (-d = dry run)
+              logrotate -f -s logrotate.state logrotate.conf   (-f = rotate now, even if not due)
+Write the config with: edit logrotate.conf   (use the full path of app.log: echo $SANDBOX)

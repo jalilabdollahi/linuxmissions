@@ -1,16 +1,11 @@
 {
-  "name": "Test Brackets: Path Realignment",
-  "description": "In the shell environment lab, a task related to Test Brackets needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/test-brackets.txt to organized/test-brackets/test-brackets-notes.txt",
+  "name": "Gatekeeper",
+  "description": "guard.sh is the last check before a deploy: the pipeline runs `./guard.sh && ./deploy.sh`. Yesterday a release candidate went to production and a deploy with an empty DEPLOY_ENV went through, while the logs show lines like `[: too many arguments`. Meanwhile a perfectly good v1.4.0 was refused.",
+  "objective": "Fix guard.sh so that it follows RULES.txt for every possible value of DEPLOY_ENV and RELEASE (unset, empty, with spaces, with * or other odd characters): exit 0 when the deploy may go ahead, exit 1 when it must stop, and never let bash print an error. It is tested with many inputs you have not seen, run in a directory full of files.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Test Brackets",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "20m",
+  "concepts": ["[ ] vs [[ ]]", "quoting in tests", "-z / -n", "== with patterns", "=~ regex (unquoted)", "exit status 2 of a failed test"],
   "module": "module-9-shell-environment",
   "level": "level-21-test-brackets"
 }

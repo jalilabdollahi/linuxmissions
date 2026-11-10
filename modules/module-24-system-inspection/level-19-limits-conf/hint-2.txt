@@ -1,1 +1,8 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+`/proc/PID/limits` has a line "Max open files" with the soft and the hard
+value; `ls /proc/PID/fd | wc -l` counts the open descriptors (`prlimit
+--pid PID --nofile` shows the limits too). `/etc/security/limits.conf` is
+read by pam_limits when somebody logs in, and a systemd service is not a
+login. Services take `LimitNOFILE=` in the `[Service]` section of the unit
+or of a drop-in file `unit.service.d/NAME.conf`. Drop-ins are applied in the
+order of their names and the last assignment wins: look at what is already
+in that directory.

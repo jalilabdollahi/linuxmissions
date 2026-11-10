@@ -1,1 +1,10 @@
-Example: `tar -xzf rsync-delete-restore.tar.gz`
+rsync -a -n -i --delete --exclude=/.local-notes releases/ mirror/ | grep '^\*deleting' > plan.txt
+cat plan.txt
+rsync -a --delete --exclude=/.local-notes releases/ mirror/
+ls -A mirror mirror/.local-notes
+
+- -n -i            dry run with itemized output, so nothing changes yet
+- --delete         remove from mirror what is no longer in releases
+- --exclude=/.local-notes   keep the private notes: not copied, not deleted
+- grep '^\*deleting' > plan.txt   only the deletion announcements, saved for review
+- the second rsync  the same command without -n -i does the work

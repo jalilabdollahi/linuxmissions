@@ -1,4 +1,7 @@
-Why not just chmod -R 644?
-Because -R applies the same permission to both files AND directories.
-Directories need execute (x) to be traversed — 644 would lock you out!
-Always use find to set files and directories separately.
+  find webroot -type d -exec chmod 755 {} +
+      every directory, webroot itself included, gets rwxr-xr-x
+      (x on a directory = permission to enter it)
+  find webroot -type f -exec chmod 644 {} +
+      every file, .htaccess and "launch day.html" too, gets rw-r--r--
+  find webroot -exec ls -ld {} +
+      check the result

@@ -1,1 +1,4 @@
-This is a numeric aggregation task.
+Debian compares versions with its own rules, not with plain number or text ordering. Read
+versions.txt and look for the odd ones: a leading "N:" , a "~" before a suffix, a revision
+after the dash. Which of them should come before or after what you would expect? You do not
+have to work the rules out by hand: dpkg itself can answer "is A older than B?" for any pair.

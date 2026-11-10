@@ -1,1 +1,4 @@
-Use `ln -s` so current.conf points at the release file.
+- `cat -A mirror/SHA256SUMS`: `^M$` at the end of a line is a carriage return; `tr -d '\r'` removes it. A `*` before a name just marks binary mode, but `sha256sum -c` of a modified copy is easier if you normalise it.
+- `flock mirror/upload.lock true` waits until the uploader releases its lock, then returns; `flock -n` tries once. See `man flock`.
+- `sha256sum -c --quiet FILE` prints only failures and exits non-zero; run it from the directory the names are relative to, or rewrite the paths.
+- Compare sizes too, with `ls -l`: a file with the right size can still be wrong, and a short one is obviously cut off.

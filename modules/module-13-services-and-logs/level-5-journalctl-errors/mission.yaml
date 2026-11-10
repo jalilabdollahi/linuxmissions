@@ -1,15 +1,11 @@
 {
-  "name": "Journalctl Errors: Field Extract",
-  "description": "In the services and logs lab, a task related to Journalctl Errors needs cleanup before the handoff.",
-  "objective": "Extract the second column from journalctl-errors-report.csv into owners.txt",
+  "name": "Since the Window Opened",
+  "description": "Last night's maintenance on db-04 (kernel update, PostgreSQL restart, reboot) began at 23:40 server time. It is now 03:10 and the change manager wants every serious message logged since then, nothing more, for the post-change review.",
+  "objective": "Save to errors.txt every journal entry with priority err or more serious (err, crit, alert, emerg) logged since 2026-11-09 23:40 server time, from all units and the kernel, oldest first, in journalctl's short-iso format (one entry per line with ISO date, time and zone). `journalctl` is a mock that reads the journal export in var/log/journal; its clock is frozen at 2026-11-10 03:10 (Europe/Berlin).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Journalctl Errors",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "8m",
+  "concepts": ["journalctl -p", "syslog priorities 0-7", "--since with a date", "-o short-iso", "journalctl -b / --list-boots"],
   "module": "module-13-services-and-logs",
   "level": "level-5-journalctl-errors"
 }

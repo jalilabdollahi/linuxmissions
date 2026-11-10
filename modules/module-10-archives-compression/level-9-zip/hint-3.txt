@@ -1,1 +1,9 @@
-Example: `ln -s releases/zip.conf current.conf`
+  zip -r -FS -y handover.zip handover
+      -r      walk through the handover folder
+      -FS     sync the existing zip with the folder: update changed files,
+              add new ones, delete members whose file is gone; the comment stays
+      -y      keep docs/latest as a symlink
+  zipinfo handover.zip
+      check: no legacy.ini or migrate-v3.sh, docs/latest starts with lrwx
+  unzip -z handover.zip
+      the archive comment is still there

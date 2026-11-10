@@ -1,23 +1,21 @@
 # Column Harvest
 
-## What you practiced
-- `cut -d, -f1,3` — field separator `,`, extract fields 1 and 3
-- `awk -F, '{print $1","$3}'` — same idea but with awk's power for formatting
-- `awk` can reorder fields, compute values, and add custom delimiters
+## Why it works
+`awk -F,` splits every line on commas, so `$5` is the status and `$1`, `$3` are
+username and email. `$5 == "active"` compares the whole field, which is why
+`inactive`, `suspended` and the header row (`status`) were skipped. Printing
+`$1 "," $3` rebuilds a two-column CSV.
 
-## cut vs awk
-| Feature | cut | awk |
-|---------|-----|-----|
-| Simple extraction | Great | Works |
-| Reorder fields | No | Yes |
-| Math/logic | No | Yes |
-| Multi-char delimiters | No | Yes |
+## Common mistakes
+- `grep active users.csv` also matches `inactive`. Compare the field, or anchor
+  the text: `grep ',active$'`.
+- `awk -F, '{print $1,$3}'` prints a space between fields (awk's default output
+  separator), not a comma. Use `"," ` or `-v OFS=,`.
+- `cut` can only select columns, it cannot filter rows or reorder fields
+  (`cut -f3,1` still prints field 1 first).
 
-## Commands to remember
-```bash
-cut -d: -f1 /etc/passwd            # extract usernames
-cut -d, -f1,3 file.csv             # columns 1 and 3
-awk -F, '{print $1,$3}' file.csv   # space-separated output
-awk -F, 'NR>1 {print $1}' file     # skip header line
-awk '{print $NF}' file             # last field
-```
+## Learn next
+`awk -F, 'NR > 1'` skips a header line, `awk -F, -v OFS=, '{print $3, $1}'`
+swaps columns, and `column -s, -t users.csv` shows a CSV as an aligned table.
+Real CSV files can have commas inside quotes; for those, use a CSV-aware tool
+such as `mlr` or Python's csv module.

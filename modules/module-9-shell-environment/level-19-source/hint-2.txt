@@ -1,1 +1,14 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+- `${BASH_SOURCE[0]}` is the path of the file bash is reading right now, both
+  when it is sourced and when it is run. `$0` is the name of the running
+  program: the script when run, but "bash" (or "-bash") when sourced.
+- Absolute directory of the script:
+    here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  (works with relative paths like ../workon.sh too).
+- In a sourced file, `return 1` stops the file and gives status 1 to the
+  caller. `exit 1` ends the caller's whole shell.
+- Detect "run, not sourced": when they are equal, nobody sourced the file:
+    if [ "${BASH_SOURCE[0]}" = "$0" ]; then echo "... source ..." >&2; exit 1; fi
+  (exit is right there: in that case the script IS its own process.)
+- Edit with `edit workon.sh`.
+
+Read more: help source, help return, man bash (BASH_SOURCE)

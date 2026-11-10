@@ -1,11 +1,11 @@
 {
   "name": "The Great Migration",
-  "description": "A deployment script dropped all config files into the wrong directory. They need to be moved to their correct locations.",
-  "objective": "Move all .conf files from staging/ into production/ and rename app.conf.bak to app.conf",
-  "xp": 120,
-  "difficulty": "beginner",
+  "description": "Release 4.2 was unpacked into staging/ instead of production/. Before installing it you must keep a copy of the live app config, so you can roll back.",
+  "objective": "1) Copy production/app.conf to production/app.conf.old. 2) Move every .conf file from staging/ into production/. 3) Move staging/app.conf.new to production/app.conf. Afterwards only notes.txt may remain in staging/.",
+  "xp": 150,
+  "difficulty": "intermediate",
   "expected_time": "8m",
-  "concepts": ["mv", "cp", "rename", "glob"],
+  "concepts": ["cp", "mv", "rename", "glob"],
   "module": "module-1-filesystem",
   "level": "level-4-copy-move"
 }

@@ -1,0 +1,11 @@
+{
+  "name": "A Year of Hand Edits",
+  "description": "A web server was hand-edited for a year. The golden configuration is in golden/etc/, the server's live copy in live/etc/, and allowed-overrides.txt lists the local differences that are permitted. The audit wants a report and a clean server.",
+  "objective": "Write drift.txt with one path per line (relative to etc/, for example ssh/sshd_config) for exactly the files that drifted: changed content, changed mode only, missing from live, and extra files in live that are not allowed. Then restore everything: drifted files get golden's content and mode (but an allowed override line must survive inside a file that also drifted elsewhere), missing files are restored, and unallowed extra files are moved into quarantine/ instead of being deleted. Afterwards diff -r golden/etc live/etc may only show the allowed overrides, and modes must match golden.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "40m",
+  "concepts": ["diff -r", "mode-only drift", "cp -p", "merging an allowed override", "quarantining extra files"],
+  "module": "module-18-configuration-editing",
+  "level": "level-23-config-drift"
+}

@@ -1,17 +1,20 @@
-# Repo Keys: Restore Drill
+# Key Rotation
 
-## What you practiced
-- This level focused on **Repo Keys** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+apt verifies each repository's signed `InRelease` (or `Release` plus `Release.gpg`) against
+keys it trusts. A `signed-by=/path/keyring.gpg` option in the source line says: trust **this
+keyring, for this repository only**. `gpgv --keyring FILE InRelease` is the same check apt
+performs, so it tells you which of several keyrings is the right one. The vendor's old key
+cannot verify signatures made with the new one, and an unrelated product's key cannot verify
+anything here.
 
-## Commands to remember
-```bash
-tar -tf archive.tar.gz
-tar -xzf archive.tar.gz
-ls -R restored/
-```
+## Common mistakes
+- `[trusted=yes]`: apt stops checking the repository at all, so anyone who can write to the
+  mirror can ship packages. It "works" and is the wrong fix.
+- `apt-key add` or copying the key to `/etc/apt/trusted.gpg.d/`: deprecated, and the key is
+  then trusted for **every** repository.
+- A relative path in `signed-by`: apt needs an absolute one.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: List the archive if you want to inspect it first, then extract it.
+## Next step
+Keep keyrings in `/etc/apt/keyrings/` (one per vendor), and read the key's fingerprint
+with `gpg --show-keys` on a real machine before you trust a file that arrived by email.

@@ -1,15 +1,11 @@
 {
-  "name": "Set E: Alert Filter",
-  "description": "In the shell automation lab, a task related to Set E needs cleanup before the handoff.",
-  "objective": "Write every alert line from set-e.log into alerts.txt",
+  "name": "Set -e Was On",
+  "description": "deploy.sh starts with `set -e`, yet last night the database migration failed and the script carried on and put the release live anyway. POSTMORTEM.txt shows how to replay it: the stand-in bin/step logs every step to steps.log and fails the one named in FAIL_STEP.",
+  "objective": "Fix deploy.sh so that whichever step fails (fetch, build, migrate, schema-version or verify), it stops right after that step: no later step runs (above all not deploy) and it exits with a non-zero status. With no failing step it must still run fetch, build, migrate, schema-version, verify and deploy in that order and exit 0.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Set E",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["set -e exceptions", "&& lists", "functions called from if", "status of $( ) inside an argument", "|| return 1"],
   "module": "module-21-shell-automation",
   "level": "level-18-set-e"
 }

@@ -1,2 +1,4 @@
-Launch the script with a positive niceness value:
-nice -n 15 bash $SANDBOX/heavy.sh &
+Linux decides how to share the CPU partly by each process's "niceness": the
+nicer a process, the more it lets others go first. You can change it for a
+process that is already running, as long as you know which process it is.
+Which PID belongs to heavy.sh, and what is its niceness right now?

@@ -1,11 +1,11 @@
 {
   "name": "Needle in a Haystack",
-  "description": "A developer lost track of all Python files they created across several project directories.",
-  "objective": "Find every file ending in .py under the sandbox and write their paths to found.txt in the sandbox root",
-  "xp": 130,
+  "description": "A developer is moving to a new laptop and needs a list of every Python file they wrote, spread over three projects and a hidden virtualenv.",
+  "objective": "Write the path of every regular file whose name ends in .py, one per line, to found.txt in the sandbox root (relative paths like ./project-a/x.py or absolute paths are both fine)",
+  "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "8m",
-  "concepts": ["find", "output redirection", ">", "glob"],
+  "expected_time": "6m",
+  "concepts": ["find", "-name", "-type f", "output redirection"],
   "module": "module-1-filesystem",
   "level": "level-5-find-by-name"
 }

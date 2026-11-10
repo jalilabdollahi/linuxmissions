@@ -1,1 +1,9 @@
-Use `chmod +x jobs/watch-command.sh` and then execute it.
+watch re-runs a command every N seconds:
+  watch -n1 'CMD'       run CMD every second and show its output
+  watch -g -n1 'CMD'    the same, but exit as soon as CMD's output changes
+  watch -g ... && NEXT  NEXT runs right after watch exits
+-g exits on ANY change, so `ls -A spool | wc -l` would stop at the first
+upload (25 -> 24). Watch something whose output changes only when the
+queue is empty, e.g. a test that prints a word only then.
+ls -A lists hidden entries (names starting with a dot) too; plain ls doesn't.
+Read more: man watch (-g / --chgexit)

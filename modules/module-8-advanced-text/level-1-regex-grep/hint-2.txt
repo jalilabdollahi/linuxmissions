@@ -1,1 +1,7 @@
-IPv4 addresses are four dot-separated number groups.
+grep options that matter:
+  -E        extended regex: ( ) groups and {n,m} repeats without backslashes
+  -o        print only the matched part, each match on its own line
+  -w        only matches that are whole "words" (not touching letters, digits or _)
+Regex pieces: [0-9]{1,3} = 1 to 3 digits, \. = a literal dot, (...){3} = repeat a group 3 times.
+Then remove duplicates with sort -u.
+Read more: man grep, man 7 regex

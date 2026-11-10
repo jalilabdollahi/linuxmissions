@@ -1,2 +1,7 @@
-Save it:
-grep " POST " $SANDBOX/access.log | awk '{print $1}' | sort | uniq -c | sort -rn > $SANDBOX/post_ips.txt
+  grep '"POST ' access.log | awk '{print $1}' | sort | uniq -c | sort -rn > post_ips.txt
+      grep '"POST '   keeps lines whose request starts with POST (not URLs like /docs/POST-requests)
+      awk '{print $1}' keeps just the client IP
+      sort | uniq -c  counts requests per IP
+      sort -rn        ranks by that count, highest first
+      > post_ips.txt  saves the ranking
+  cat post_ips.txt

@@ -1,1 +1,27 @@
-Example: `tar -xzf history-restore.tar.gz`
+Type these at the prompt. First a UTC timeline of the whole history file:
+
+awk '/^#[0-9]+$/ { t = substr($0, 2); next } { print t, $0 }' home/deploy/.bash_history | while read -r t cmd; do printf '%s  %s\n' "$(date -u -d "@$t" '+%F %T')" "$cmd"; done > timeline.txt
+day="$(sed -n 's/^Date: *//p' INCIDENT.txt)"
+grep "^$day 0[12]:" timeline.txt
+
+D was set to the uploads directory at 02:03; the find ... -delete in the window used it. Save that line:
+
+line="$(grep "^$day 02:[12]" timeline.txt | grep -e '-delete')"
+echo "$line" | cut -c1-19 > when.txt
+echo "$line" | cut -c22- > culprit.txt
+
+Then fix the shell settings (the new lines override the old ones above them):
+
+cat >> home/deploy/.bashrc <<'EOF'
+HISTSIZE=100000
+HISTFILESIZE=100000
+HISTTIMEFORMAT='%F %T '
+HISTCONTROL=ignoredups
+shopt -s histappend
+EOF
+
+- awk ... | while read ...   pair each #epoch with its command and print the time in UTC (macOS: date -u -r "$t")
+- grep "^$day 0[12]:"        the incident night, 01:00 to 02:59
+- grep "^$day 02:[12]"       inside that, 02:10 to 02:29: the only line there with -delete
+- cut -c1-19 / cut -c22-     the timestamp part / the command part of the timeline line
+- HISTCONTROL=ignoredups     still skips repeats, but no longer drops commands typed with a leading space

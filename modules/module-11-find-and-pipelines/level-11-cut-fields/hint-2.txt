@@ -1,1 +1,9 @@
-Use tar extraction flags and point at the archive file.
+  head -1 FILE | tr '\t' '\n' | cat -n
+                               number the header's columns
+  cut -f LIST FILE             print the tab-separated fields in LIST: 2,5,9 or 1-10,12-
+                               (cut always prints them in FILE order, even with -f9,2,5)
+  cut --complement -f N        every field except N (GNU only; on macOS use ranges)
+  awk -F'\t' -v OFS='\t' '{ print $5, $2 }'
+                               split on tabs only, print fields in ANY order, tab between
+  paste A B C                  glue files side by side, tab-separated
+More: man cut, man awk

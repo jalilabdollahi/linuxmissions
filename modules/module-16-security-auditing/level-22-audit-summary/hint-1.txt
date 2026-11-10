@@ -1,1 +1,4 @@
-This is a delimiter-based column extraction task.
+Five separate questions, five small searches; combine them only at the end. Read policy.txt carefully
+for each category: what is in scope (regular files only? which folders?) and what the detail should be. Several
+look-alikes are deliberately not findings (directories, symlinks, placeholders, files outside scope), and for sshd the
+configuration text is not what counts: ask sshd for the effective settings, including the ones the file never mentions.

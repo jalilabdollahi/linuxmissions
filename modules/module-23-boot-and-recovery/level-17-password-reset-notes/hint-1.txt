@@ -1,1 +1,0 @@
-This mission is about cron field order and exact syntax.

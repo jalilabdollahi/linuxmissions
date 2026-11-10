@@ -1,1 +1,4 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  find DIR -type f -name 'PATTERN' -print0     NUL-terminated names (a NUL cannot be in a file name)
+  xargs -0 CMD                                  split the input on NULs instead of blanks and quotes
+Quote the pattern so the shell does not expand it. Before deleting, try
+`... | xargs -0 ls -d` to see what would go. More: man find, man xargs

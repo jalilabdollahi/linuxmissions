@@ -1,1 +1,7 @@
-Use tar extraction flags and point at the archive file.
+  rsync -a --delete SRC/ DEST/        make DEST match SRC, deleting extra files
+  -n (--dry-run) -i (--itemize-changes)   report what would happen, change nothing; deletions are shown as "*deleting  PATH"
+  --exclude=/.local-notes             excluded paths are neither copied nor deleted (a leading / anchors at the top of the transfer)
+  --filter='P /.local-notes'          the same, as an explicit "protect" rule
+Do NOT use --delete-excluded: it deletes excluded paths on the receiving side too.
+Both directories need the trailing slash on the source (releases/) so that its contents, not the directory, are synced. Use grep '^\*deleting' to keep the deletion lines.
+More: man rsync (FILTER RULES, --delete)

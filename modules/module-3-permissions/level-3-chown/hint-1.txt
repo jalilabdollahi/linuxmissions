@@ -1,3 +1,4 @@
-Check current ownership:
-ls -la $SANDBOX/config/
-whoami
+Every file has an owner and a group, shown in the long listing (ls -l) as the
+3rd and 4th columns. Who are you on this system, and which groups are you in?
+Compare that with the owner of each path: you can only change modes or groups
+of files whose owner column is your name.

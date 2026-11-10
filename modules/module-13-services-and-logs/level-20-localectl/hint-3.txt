@@ -1,1 +1,0 @@
-Example: `sort localectl-raw.txt | uniq > unique-sorted.txt`

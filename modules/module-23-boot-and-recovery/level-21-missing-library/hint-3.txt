@@ -1,1 +1,11 @@
-Example: `mkdir -p organized/missing-library && mv inbox/missing-library.txt organized/missing-library/missing-library-notes.txt`
+D=$(ls -d rescue/usr/lib/*/)
+N=$(for f in rescue/usr/bin/jq $D*.so*; do readelf -d $f 2>/dev/null | sed -n 's/.*(NEEDED).*\[\(.*\)\]/\1/p'; done | sort -u | while read n; do [ -e $D$n ] || echo $n; done | head -n1); echo "missing: $N"
+P=$(for p in pkgcache/*.deb; do dpkg-deb -c $p | grep "/$N\." >/dev/null && echo $p; done); echo "package: $P"
+mkdir -p unpacked && dpkg-deb -x $P unpacked
+F=$(ls unpacked/usr/lib/*/$N.*); cp $F $D; ln -s $(basename $F) $D$N
+rescue/ld.so --library-path "$PWD/$D" rescue/usr/bin/jq --version
+
+- the first loops over jq and every library in the toolkit, collects the NEEDED names and prints the first one the directory does not have
+- the package is the one whose file list contains a file named like the library followed by a dot and the version (the old release ships a different SONAME)
+- dpkg-deb -x unpacks it, cp puts the versioned file into the toolkit directory and ln -s adds the SONAME link next to it
+- the last command runs jq through the toolkit's loader and libraries

@@ -1,1 +1,11 @@
-Example: `mkdir -p organized/package-verify && mv inbox/package-verify.txt organized/package-verify/package-verify-notes.txt`
+dpkg -V > verify.txt
+awk 'NF == 3 && $2 == "c" { print $3 }' verify.txt | sort > conffiles-changed.txt
+awk 'NF == 2 { print $2 }' verify.txt | sort > tampered.txt
+for f in $(cat tampered.txt); do pkg=$(dpkg -S "$f" | cut -d: -f1); deb=$(ls repos/main/pool/main/*/"$pkg"/"$pkg"_*.deb); dpkg-deb --fsys-tarfile "$deb" | tar -xOf - ".$f" > "rootfs$f"; done
+dpkg -V
+
+- dpkg -V > verify.txt        flags + optional "c" + path for each file that no longer matches its package
+- awk NF == 3 / NF == 2       with the "c" marker it is a conffile (admin edits are allowed), without it the file is tampered
+- dpkg -S                     the owning package; the .deb sits in repos/main/pool/main/<letter>/<package>/
+- dpkg-deb --fsys-tarfile | tar -xOf - ./path     extracts the original file to stdout; > writes it over the altered one
+- final dpkg -V               should list only the conffiles

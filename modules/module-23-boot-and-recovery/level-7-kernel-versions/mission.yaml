@@ -1,15 +1,11 @@
 {
-  "name": "Kernel Versions: History Window",
-  "description": "In the boot and recovery lab, a task related to Kernel Versions needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of kernel-versions-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Kernel Versions",
-    "head",
-    "tail"
-  ],
+  "name": "Kernel Cleanup in /boot",
+  "description": "/boot is 98 % full and the next kernel update fails. Six kernels are installed on the server (its disk is mounted at sysroot/). Keep the one the server is running right now (uname-r.txt) and the newest installed one, and remove the rest.",
+  "objective": "In sysroot/, remove every kernel except the running one and the newest installed one: their vmlinuz-, initrd.img-, config-, System.map- files in boot/ and the lib/modules/<version>/ directories. Then make the links in boot/ right: vmlinuz and initrd.img point at the newest kernel, vmlinuz.old and initrd.img.old at the running one. Leave everything else in boot/ alone.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["kernel versions", "sort -V", "globbing", "ln -sfn", "/boot housekeeping"],
   "module": "module-23-boot-and-recovery",
   "level": "level-7-kernel-versions"
 }

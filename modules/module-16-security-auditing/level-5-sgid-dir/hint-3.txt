@@ -1,1 +1,8 @@
-Example: `cut -d, -f2 sgid-dir-report.csv > owners.txt`
+find projects -type d -exec chmod g+s {} +
+find projects -type d ! -perm -2000
+find projects -type f -perm -2000
+
+- find projects -type d     every directory, hidden ones and ones with spaces included
+- -exec chmod g+s {} +      set the setgid bit on all of them; other bits stay
+- ! -perm -2000             directories still missing the bit (prints nothing when done)
+- -type f -perm -2000       files wrongly carrying setgid (also prints nothing)

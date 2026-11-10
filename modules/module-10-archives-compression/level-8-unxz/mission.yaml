@@ -1,15 +1,11 @@
 {
-  "name": "Unxz: Cleanup Sweep",
-  "description": "In the archives and compression lab, a task related to Unxz needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/unxz and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Unxz",
-    "find",
-    "rm"
-  ],
+  "name": "Size Before You Unpack",
+  "description": "Five database exports arrived as exports/*.sql.xz. Before anyone unpacks them on the small staging volume, ops wants the exact total uncompressed size in bytes for the capacity ticket. The first one needed is the customers table.",
+  "objective": "Write the exact total uncompressed size of the five exports/*.sql.xz files, in bytes, as a single number in total_bytes.txt. Then restore exports/customers.sql (its uncompressed content). Keep all five .xz files unchanged, and do not leave any other uncompressed export in exports/.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["xz -l", "xz --robot", "unxz -k", "awk sum"],
   "module": "module-10-archives-compression",
   "level": "level-8-unxz"
 }

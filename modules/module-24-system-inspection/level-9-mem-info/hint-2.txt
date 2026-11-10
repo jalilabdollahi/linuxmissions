@@ -1,1 +1,7 @@
-Use `ln -s` so current.conf points at the release file.
+MemAvailable is the kernel's own estimate of memory available to
+applications. All sizes in meminfo are in kB: divide by 1024 for MiB (awk
+`int($2 / 1024)` rounds down).
+Reserved huge pages are HugePages_Total multiplied by Hugepagesize, and
+Hugepagesize is not always 2048 kB. Compare that with Shmem and
+SUnreclaim. awk can remember the values as it reads each file and decide in
+an END block.

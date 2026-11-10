@@ -1,1 +1,7 @@
-This is a delimiter-based column extraction task.
+`du` only counts files that still have a name. Space can also be held by a
+file that was deleted while a process still has it open: the data stays until
+the last descriptor is closed. Which process would hold something like
+that, and where does the kernel list the files a process has open? The order
+of your steps matters here: once the holder exits, the data is gone for good.
+For the cleanup, think about which old files must not be deleted even if
+they are old.

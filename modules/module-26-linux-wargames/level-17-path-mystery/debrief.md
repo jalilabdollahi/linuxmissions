@@ -1,17 +1,13 @@
-# Path Mystery: Schedule Entry
+## What you did
 
-## What you practiced
-- This level focused on **Path Mystery** in a safe sandbox.
-- The shortest path usually combines `crontab` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+You stopped debugging your own shell and reproduced CI's: a clean environment, non-interactive bash, a specific PATH and `BASH_ENV`. Three things stood in front of 2.4.1: an exported function defined in the `BASH_ENV` file (functions beat PATH), a stale `~/.local/bin` symlink, and a wrapper in `usr/local/bin`. The alias in `.bashrc` and the PATH line in `.profile` only affect interactive or login shells, so they are not part of the CI problem.
 
-## Commands to remember
-```bash
-crontab -l
-printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt
-cat crontab.txt
-```
+## Common mistakes
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This mission is about cron field order and exact syntax.
+- Testing with `type -a` in your login shell: it shows the alias and your own PATH, not CI's.
+- Deleting `.ci_env` entirely: it also carried `DEPLOY_ENV=prod`.
+- Overwriting the old binary with the new one "fixes" the output but breaks the other team that pins 1.x.
+
+## Next
+
+`bash -x` and `env -i bash --noprofile --norc -c 'type -a cmd'` reproduce a clean shell; `command -V name` and `declare -F name` tell function from file.

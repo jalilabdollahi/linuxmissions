@@ -1,1 +1,7 @@
-An awk one-liner can skip the header and add the second field.
+  cat lsblk.txt blkid.txt         label, size and filesystem of every new volume, and its UUID
+  ./fstab-lint                    checks every line; run it after each edit
+  man fstab                       the six fields and the options
+A line can name its source as UUID=..., or as LABEL=... when the label is unique. The type
+field has to match what the disk really contains. The option that decides whether a missing
+disk stops the boot is nofail (see man systemd.mount for x-systemd.device-timeout=). A mount
+point that does not exist in sysroot/ is also an error. Edit sysroot/etc/fstab with edit, nano or sed.

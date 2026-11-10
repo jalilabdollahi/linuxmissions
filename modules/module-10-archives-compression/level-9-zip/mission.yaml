@@ -1,15 +1,11 @@
 {
-  "name": "Zip: Link Repair",
-  "description": "In the archives and compression lab, a task related to Zip needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/zip.conf",
+  "name": "Refresh the Hand-over",
+  "description": "Every week the client gets handover.zip, a zip of the handover/ folder. Last week's zip is still here, and their portal identifies it by its archive comment, so it has to be refreshed in place rather than built from scratch. Since last week, files in handover/ were changed, added and deleted, and docs/latest now points to the v4 release notes.",
+  "objective": "Update handover.zip so that it matches handover/ exactly: same member paths (handover/...), current content, no files that were deleted from the folder, and handover/docs/latest stored as a symbolic link (not as a copy of the file it points to). The archive comment that is in handover.zip now must still be there. Do not change handover/.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Zip",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "10m",
+  "concepts": ["zip -r", "zip -FS (filesync)", "zip -y", "unzip -l / unzip -z"],
   "module": "module-10-archives-compression",
   "level": "level-9-zip"
 }

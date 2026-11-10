@@ -1,1 +1,4 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+- `pgrep -f app.py` gives the PID; `tr '\0' '\n' < /proc/PID/environ` shows where its config lives; `ls -l /proc/PID/fd` shows which file it holds open.
+- `grep -rn LOG_LEVEL app/` shows every place the level is set. Files are read in name order and the last one wins.
+- The app re-reads its config and reopens its log on SIGHUP (`kill -HUP PID`). Truncating in place (`truncate -s 0 FILE`) keeps the same inode; `rm` does not free a file that is still open.
+- `logrotate -d -s logrotate.state rotate.conf` is a dry run that prints errors; look at which file it says it is "considering". `man logrotate`: copytruncate.

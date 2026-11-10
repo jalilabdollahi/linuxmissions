@@ -1,1 +1,3 @@
-You need a stream editor or another text replacement tool.
+Think of it as two lists of paths, the one in the manifest and the one on disk. What is on one list only, on the other only, on both? That already gives two of the three sections.
+For the files on both lists, a different size or mode is not the question: is the content the same as when the manifest was written? Which column of the manifest answers that?
+Look at the first column of the manifest and at what `find` prints from inside restored/: do they use the same notation? Also be careful with names that contain spaces.

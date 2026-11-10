@@ -1,1 +1,1 @@
-Write the schedule into crontab.txt using the standard five time fields.
+Read `deploy-sim`: it shows HOME, PATH and the BASH_ENV file. A non-interactive bash skips ~/.bashrc and ~/.profile but does read $BASH_ENV, and a shell function beats every PATH entry. `./deploy-sim --which` shows what the lookup ends up with. In `type -a deployctl` order is: alias, function, then PATH directories left to right; `ls -l` shows where a symlink points. `man bash` (INVOCATION) lists which files each kind of shell reads.

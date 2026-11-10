@@ -1,1 +1,5 @@
-Look for clues in the packet contents, not just the port number.
+Read the capture with tcpdump and look at a few lines: who talks to whom, on which ports, and with which Flags. [S] is a connection attempt (SYN), [S.] is "yes, this port is open" (SYN-ACK), [R.] is "closed" (RST-ACK).
+
+Two questions:
+- Several hosts send SYNs. What makes a port scan different from a busy client or a password-guessing bot? Count the right thing.
+- To learn which ports are open, which packets do you look at, and in which direction?

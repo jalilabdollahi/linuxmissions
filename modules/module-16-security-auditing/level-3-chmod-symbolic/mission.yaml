@@ -1,16 +1,11 @@
 {
-  "name": "Chmod Symbolic: Event Counter",
-  "description": "In the security auditing lab, a task related to Chmod Symbolic needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in chmod-symbolic-events.txt and write the number to ok-count.txt",
+  "name": "Capital X",
+  "description": "The release tarball for the app's config tree, etc-app/, was extracted from a build box with a sloppy umask: group and others can write almost everything. Services still need to read it and enter its folders, and the helper scripts must still run.",
+  "objective": "Fix etc-app/ recursively: nobody but the owner may write anywhere, everybody may read every file and enter every folder, and the scripts keep their execute permission for everyone. Plain data files must not become executable, and file contents stay as they are.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Chmod Symbolic",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["chmod -R", "symbolic modes", "capital X", "ls -lR"],
   "module": "module-16-security-auditing",
   "level": "level-3-chmod-symbolic"
 }

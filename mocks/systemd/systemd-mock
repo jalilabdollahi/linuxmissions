@@ -1,0 +1,4525 @@
+#!/usr/bin/env python3
+"""LinuxMissions mock systemd toolkit (python3 stdlib only, Python >= 3.8).
+
+One multi-call program. The name it is run under picks the tool:
+
+    systemctl   journalctl   systemd-analyze   timedatectl
+
+(`systemd-mock TOOL ARGS...` works too.) A level's setup.sh copies the tools it
+needs into the sandbox with plain `cp` (which follows the symlinks in
+mocks/systemd/). The tools treat a "fake root" as "/": /etc/systemd/system
+means $ROOT/etc/systemd/system. $ROOT is $LM_ROOT, or else the directory that
+holds the tool (a trailing bin/, sbin/, usr/ or local/ is skipped when that
+directory has no etc/).
+
+Mock-only data lives in $ROOT/.lm/: `now` (frozen clock), `boot-timing`
+(systemd-analyze data), `boot_id`, and systemd/ (runtime state). The journal is
+JSON lines (`journalctl -o json`) in $ROOT/var/log/journal/*.json plus the
+entries the mock itself writes to $ROOT/run/log/journal/runtime.json.
+
+Output formats and exit codes follow systemd 255 on Ubuntu 24.04. See
+mocks/README.md for everything a level author needs.
+"""
+import fcntl
+import fnmatch
+import glob
+import hashlib
+import json
+import os
+import re
+import shlex
+import signal
+import subprocess
+import sys
+import threading
+import time
+from datetime import datetime, timedelta, timezone
+
+VERSION_TEXT = ("systemd 255 (255.4-1ubuntu8)\n"
+                "+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL "
+                "+BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 "
+                "-PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK "
+                "-XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified")
+
+ROOT = ""
+PROG = "systemctl"
+TIMESCALE = 1.0
+FIXED_PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+HOST_FALLBACK_DIRS = ("/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/", "/usr/local/bin/", "/usr/local/sbin/")
+
+
+class Fail(Exception):
+    """Print msg to stderr and exit with code."""
+
+    def __init__(self, msg, code=1):
+        Exception.__init__(self, msg)
+        self.msg = msg
+        self.code = code
+
+
+def err(msg):
+    sys.stderr.write(msg + "\n")
+
+
+def unsupported(what):
+    raise Fail("mock: %s not supported" % what, 1)
+
+
+# --------------------------------------------------------------------- paths
+
+def find_root():
+    env = os.environ.get("LM_ROOT")
+    if env:
+        return os.path.abspath(env)
+    cur = os.path.dirname(os.path.abspath(sys.argv[0]))
+    while os.path.basename(cur) in ("bin", "sbin", "usr", "local") and not os.path.isdir(os.path.join(cur, "etc")):
+        parent = os.path.dirname(cur)
+        if parent == cur:
+            break
+        cur = parent
+    return cur
+
+
+def rp(path):
+    """Fake-root path ('/etc/x' or 'etc/x') -> real path."""
+    return os.path.join(ROOT, path.lstrip("/"))
+
+
+def disp(real):
+    """Real path inside ROOT -> path as seen from inside the fake root."""
+    rel = os.path.relpath(real, ROOT)
+    return "/" if rel == "." else "/" + rel
+
+
+def root_resolve(path):
+    """Resolve an absolute fake-root path, following symlinks inside ROOT
+    (absolute link targets are read relative to ROOT, as a chroot would)."""
+    parts = [p for p in path.split("/") if p and p != "."]
+    done = []
+    hops = 0
+    while parts:
+        p = parts.pop(0)
+        if p == "..":
+            if done:
+                done.pop()
+            continue
+        cand = os.path.join(ROOT, *(done + [p]))
+        if os.path.islink(cand):
+            hops += 1
+            if hops > 40:
+                return cand
+            target = os.readlink(cand)
+            if target.startswith("/"):
+                done = []
+            parts = [x for x in target.split("/") if x and x != "."] + parts
+            continue
+        done.append(p)
+    return os.path.join(ROOT, *done) if done else ROOT
+
+
+def read_text(path, default=None):
+    try:
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            return fh.read()
+    except OSError:
+        return default
+
+
+def write_atomic(path, text):
+    d = os.path.dirname(path)
+    os.makedirs(d, exist_ok=True)
+    tmp = "%s.tmp.%d" % (path, os.getpid())
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(text)
+    os.replace(tmp, path)
+
+
+# --------------------------------------------------------------------- clock
+
+_TZ = None
+
+
+def tz_from_name(name):
+    if name in ("UTC", "Etc/UTC", "GMT", "Etc/GMT", "Z", "Etc/Universal", "Universal", "Zulu"):
+        return timezone.utc
+    m = re.match(r"^(?:UTC|GMT)?([+-])(\d{1,2}):?(\d{2})?$", name)
+    if m:
+        mins = int(m.group(2)) * 60 + int(m.group(3) or 0)
+        if m.group(1) == "-":
+            mins = -mins
+        label = "%s%02d%02d" % (m.group(1), abs(mins) // 60, abs(mins) % 60)
+        return timezone(timedelta(minutes=mins), label)
+    try:
+        from zoneinfo import ZoneInfo
+        return ZoneInfo(name)
+    except Exception:
+        return None
+
+
+def tz_name():
+    name = os.environ.get("LM_TZ", "").strip()
+    if not name:
+        txt = read_text(rp("etc/timezone"), "")
+        name = txt.strip().split("\n")[0].strip() if txt else ""
+    if not name:
+        lt = rp("etc/localtime")
+        if os.path.islink(lt):
+            target = os.readlink(lt)
+            i = target.find("zoneinfo/")
+            if i >= 0:
+                name = target[i + 9:]
+    return name or "Etc/UTC"
+
+
+def get_tz():
+    global _TZ
+    if _TZ is None:
+        _TZ = tz_from_name(tz_name()) or timezone.utc
+    return _TZ
+
+
+def clock_spec():
+    s = os.environ.get("LM_NOW", "").strip()
+    if not s:
+        s = (read_text(rp(".lm/now"), "") or "").strip()
+    return s
+
+
+_NOW_CACHE = []
+
+
+def now():
+    if _NOW_CACHE:
+        return _NOW_CACHE[0]
+    spec = clock_spec()
+    if spec:
+        t = parse_timestamp(spec, time.time())
+        if t is not None:
+            _NOW_CACHE.append(t)
+            return t
+    return time.time()
+
+
+def localdt(ts, utc=False):
+    return datetime.fromtimestamp(ts, timezone.utc if utc else get_tz())
+
+
+def tzabbr(d):
+    name = d.tzname()
+    if not name or name.startswith("UTC+") or name.startswith("UTC-"):
+        name = d.strftime("%z")
+    return name
+
+
+def fmt_ts(ts, utc=False):
+    """'Tue 2026-11-10 03:04:05 UTC' like systemd's format_timestamp()."""
+    if ts is None:
+        return ""
+    d = localdt(ts, utc)
+    return d.strftime("%a %Y-%m-%d %H:%M:%S ") + tzabbr(d)
+
+
+USEC_MIN = 60 * 10**6
+SPAN_UNITS = {
+    "us": 1e-6, "usec": 1e-6, "\u00b5s": 1e-6, "ms": 1e-3, "msec": 1e-3,
+    "s": 1, "sec": 1, "second": 1, "seconds": 1,
+    "m": 60, "min": 60, "minute": 60, "minutes": 60,
+    "h": 3600, "hr": 3600, "hour": 3600, "hours": 3600,
+    "d": 86400, "day": 86400, "days": 86400,
+    "w": 604800, "week": 604800, "weeks": 604800,
+    "M": 2629800, "month": 2629800, "months": 2629800,
+    "y": 31557600, "year": 31557600, "years": 31557600,
+}
+
+
+def parse_timespan(s, default_unit=1.0):
+    """'1h 30min', '500ms', '5' -> seconds (float). None if invalid."""
+    s = s.strip()
+    if s == "infinity":
+        return float("inf")
+    if not s:
+        return None
+    total = 0.0
+    pos = 0
+    rx = re.compile(r"\s*(\d+(?:\.\d*)?)\s*([A-Za-z\u00b5]*)")
+    while pos < len(s):
+        m = rx.match(s, pos)
+        if not m or m.end() == pos:
+            return None
+        num, unit = m.group(1), m.group(2)
+        if unit:
+            if unit not in SPAN_UNITS:
+                return None
+            total += float(num) * SPAN_UNITS[unit]
+        else:
+            total += float(num) * default_unit
+        pos = m.end()
+        while pos < len(s) and s[pos].isspace():
+            pos += 1
+    return total
+
+
+TS_TABLE = [("y", 31557600 * 10**6), ("month", 2629800 * 10**6), ("w", 604800 * 10**6),
+            ("d", 86400 * 10**6), ("h", 3600 * 10**6), ("min", 60 * 10**6), ("s", 10**6),
+            ("ms", 1000), ("us", 1)]
+
+
+def format_timespan(usec, accuracy=1):
+    """systemd's format_timespan(): '2min 28.871s', '330ms', 'infinity'."""
+    if usec is None or usec == float("inf"):
+        return "infinity"
+    usec = int(usec)
+    if usec <= 0:
+        return "0"
+    accuracy = max(1, accuracy)
+    out = []
+    t = usec
+    something = False
+    for suffix, unit in TS_TABLE:
+        if t <= 0:
+            break
+        if t < accuracy and something:
+            break
+        if t < unit:
+            continue
+        a, b = divmod(t, unit)
+        done = False
+        if t < USEC_MIN and b > 0:
+            j = 0
+            cc = unit
+            while cc > 1:
+                j += 1
+                cc //= 10
+            cc = accuracy
+            while cc > 1:
+                b //= 10
+                j -= 1
+                cc //= 10
+            if j > 0:
+                out.append("%d.%0*d%s" % (a, j, b, suffix))
+                t = 0
+                done = True
+        if not done:
+            out.append("%d%s" % (a, suffix))
+            t = b
+        something = True
+    return " ".join(out) if out else "0"
+
+
+def fmt_rel(ts, ref=None):
+    """systemd's format_timestamp_relative(): '5min ago', '1 day 2h ago'."""
+    if ref is None:
+        ref = now()
+    d = int(round((ref - ts) * 1e6))
+    suffix = "ago" if d >= 0 else "left"
+    d = abs(d)
+    S = 10**6
+    MIN = 60 * S
+    H = 60 * MIN
+    D = 24 * H
+    W = 7 * D
+    MON = 2629800 * S
+    Y = 31557600 * S
+
+    def pl(n, one, many):
+        return "%d %s" % (n, one if n == 1 else many)
+    if d >= Y:
+        return "%s %s %s" % (pl(d // Y, "year", "years"), pl((d % Y) // MON, "month", "months"), suffix)
+    if d >= MON:
+        return "%s %s %s" % (pl(d // MON, "month", "months"), pl((d % MON) // D, "day", "days"), suffix)
+    if d >= W:
+        return "%s %s %s" % (pl(d // W, "week", "weeks"), pl((d % W) // D, "day", "days"), suffix)
+    if d >= 2 * D:
+        return "%d days %s" % (d // D, suffix)
+    if d >= 25 * H:
+        return "1 day %dh %s" % ((d - D) // H, suffix)
+    if d >= 6 * H:
+        return "%dh %s" % (d // H, suffix)
+    if d >= H:
+        return "%dh %dmin %s" % (d // H, (d % H) // MIN, suffix)
+    if d >= 5 * MIN:
+        return "%dmin %s" % (d // MIN, suffix)
+    if d >= MIN:
+        return "%dmin %ds %s" % (d // MIN, (d % MIN) // S, suffix)
+    if d >= S:
+        return "%ds %s" % (d // S, suffix)
+    if d >= 1000:
+        return "%dms %s" % (d // 1000, suffix)
+    if d > 0:
+        return "%dus %s" % (d, suffix)
+    return "now"
+
+
+WEEKDAYS = {"mon", "tue", "wed", "thu", "fri", "sat", "sun", "monday", "tuesday", "wednesday",
+            "thursday", "friday", "saturday", "sunday"}
+
+
+def parse_timestamp(spec, ref):
+    """systemd.time(7) timestamps -> epoch seconds, None if invalid."""
+    s = spec.strip()
+    if not s:
+        return None
+    tz = get_tz()
+    if s == "now":
+        return ref
+    if s in ("today", "yesterday", "tomorrow"):
+        d = localdt(ref).date() + timedelta(days={"today": 0, "yesterday": -1, "tomorrow": 1}[s])
+        return datetime(d.year, d.month, d.day, tzinfo=tz).timestamp()
+    if s == "epoch":
+        return 0.0
+    if s.startswith("@"):
+        try:
+            return float(s[1:])
+        except ValueError:
+            return None
+    if s[0] in "+-":
+        span = parse_timespan(s[1:])
+        if span is None:
+            return None
+        return ref + span if s[0] == "+" else ref - span
+    m = re.match(r"^(.+?)\s+(ago|left)$", s)
+    if m:
+        span = parse_timespan(m.group(1))
+        if span is None:
+            return None
+        return ref - span if m.group(2) == "ago" else ref + span
+    m = re.match(r"^(.*\d)\s*(Z|[+-]\d\d:?\d\d)$", s)
+    if m and ":" in m.group(1):
+        s = m.group(1)
+        tz = tz_from_name("UTC" if m.group(2) == "Z" else m.group(2))
+    else:
+        m = re.match(r"^(.*\S)\s+([A-Za-z][A-Za-z0-9_+/-]*)$", s)
+        if m and m.group(2).lower() not in WEEKDAYS:
+            z = tz_from_name(m.group(2))
+            if z is None:
+                return None
+            s, tz = m.group(1), z
+    m = re.match(r"^([A-Za-z]+),?\s+(.*)$", s)
+    if m:
+        if m.group(1).lower() not in WEEKDAYS:
+            return None
+        s = m.group(2)
+    m = re.match(r"^(\d{4}|\d{2})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?)?$", s)
+    if m:
+        y = int(m.group(1))
+        if len(m.group(1)) == 2:
+            y += 2000 if y < 69 else 1900
+        mo, da = int(m.group(2)), int(m.group(3))
+        hh, mi, ss, frac = m.group(4), m.group(5), m.group(6), m.group(7)
+    else:
+        m = re.match(r"^(\d{1,2}):(\d{2})(?::(\d{2})(?:\.(\d{1,6}))?)?$", s)
+        if not m:
+            return None
+        d = datetime.fromtimestamp(ref, tz).date()
+        y, mo, da = d.year, d.month, d.day
+        hh, mi, ss, frac = m.group(1), m.group(2), m.group(3), m.group(4)
+    try:
+        dt = datetime(y, mo, da, int(hh or 0), int(mi or 0), int(ss or 0),
+                      int((frac or "0").ljust(6, "0")), tzinfo=tz)
+    except ValueError:
+        return None
+    return dt.timestamp()
+
+
+def parse_bytes(v):
+    """systemd parse_size(): '1.5G' -> bytes (base 1024). None if invalid."""
+    v = v.strip()
+    if v == "infinity":
+        return "infinity"
+    m = re.match(r"^(\d+(?:\.\d+)?)\s*([KMGTPE]?)B?$", v)
+    if not m:
+        return None
+    mult = 1024 ** " KMGTPE".index(m.group(2) or " ")
+    return int(float(m.group(1)) * mult)
+
+
+# ------------------------------------------------------------------ hostname
+
+def hostname():
+    h = os.environ.get("LM_HOSTNAME", "").strip()
+    if not h:
+        txt = read_text(rp("etc/hostname"), "") or ""
+        h = txt.strip().split("\n")[0].strip()
+    return h or "localhost"
+
+
+# -------------------------------------------------------------------- journal
+
+RUNTIME_JOURNAL = "run/log/journal/runtime.json"
+_BOOT_ID = []
+
+
+def journal_files():
+    env = os.environ.get("LM_JOURNAL")
+    if env:
+        return [p for p in env.split(":") if p]
+    files = []
+    for d in ("var/log/journal", "run/log/journal"):
+        base = rp(d)
+        found = sorted(glob.glob(os.path.join(base, "*.json")) + glob.glob(os.path.join(base, "*", "*.json")))
+        runtime = rp(RUNTIME_JOURNAL)
+        files += [f for f in found if f != runtime]
+    if os.path.exists(rp(RUNTIME_JOURNAL)):
+        files.append(rp(RUNTIME_JOURNAL))
+    return files
+
+
+def _norm_value(v):
+    if isinstance(v, list) and all(isinstance(x, int) for x in v):
+        return bytes(v).decode("utf-8", "replace")
+    if isinstance(v, bool):
+        return "1" if v else "0"
+    if isinstance(v, (int, float)):
+        return str(v)
+    if isinstance(v, str):
+        return v
+    return json.dumps(v)
+
+
+def load_entries(files=None):
+    if files is None:
+        files = journal_files()
+    rows = []
+    seq = 0
+    ref = now()
+    for f in files:
+        try:
+            fh = open(f, encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        with fh:
+            for line in fh:
+                line = line.strip()
+                if not line.startswith("{"):
+                    continue
+                try:
+                    e = json.loads(line)
+                except ValueError:
+                    continue
+                if not isinstance(e, dict):
+                    continue
+                e = dict((k, _norm_value(v)) for k, v in e.items() if v is not None)
+                rt = e.get("__REALTIME_TIMESTAMP", "")
+                if not rt.isdigit():
+                    t = parse_timestamp(rt, ref) if rt else None
+                    if t is None:
+                        continue
+                    e["__REALTIME_TIMESTAMP"] = str(int(round(t * 1e6)))
+                rows.append((int(e["__REALTIME_TIMESTAMP"]), seq, e))
+                seq += 1
+    rows.sort(key=lambda r: (r[0], r[1]))
+    entries = [r[2] for r in rows]
+    cur = current_boot_id(entries)
+    for e in entries:
+        if not e.get("_BOOT_ID"):
+            e["_BOOT_ID"] = cur
+    return entries
+
+
+def current_boot_id(entries=None):
+    if _BOOT_ID:
+        return _BOOT_ID[0]
+    b = (read_text(rp(".lm/boot_id"), "") or "").strip()
+    if not b:
+        if entries is None:
+            entries = load_entries_raw_boot()
+        for e in reversed(entries):
+            if e.get("_BOOT_ID"):
+                b = e["_BOOT_ID"]
+                break
+    if not b:
+        b = hashlib.md5(("lm-boot:" + hostname()).encode()).hexdigest()
+    _BOOT_ID.append(b)
+    return b
+
+
+def load_entries_raw_boot():
+    """Entries (only time and boot id) without filling in defaults."""
+    rows = []
+    for f in journal_files():
+        txt = read_text(f, "") or ""
+        for line in txt.splitlines():
+            if '"_BOOT_ID"' not in line:
+                continue
+            try:
+                e = json.loads(line)
+            except ValueError:
+                continue
+            rt = str(e.get("__REALTIME_TIMESTAMP", ""))
+            t = int(rt) if rt.isdigit() else int((parse_timestamp(rt, time.time()) or 0) * 1e6)
+            rows.append((t, {"_BOOT_ID": str(e.get("_BOOT_ID"))}))
+    rows.sort(key=lambda r: r[0])
+    return [r[1] for r in rows]
+
+
+def jlog(message, unit=None, ident="systemd", pid=1, prio=6, sunit=None, transport="journal", extra=None):
+    """Append one entry to the runtime journal."""
+    e = {"__REALTIME_TIMESTAMP": str(int(now() * 1e6)), "_BOOT_ID": current_boot_id(),
+         "PRIORITY": str(prio), "SYSLOG_FACILITY": "3", "SYSLOG_IDENTIFIER": ident,
+         "_PID": str(pid), "_HOSTNAME": hostname(), "_TRANSPORT": transport}
+    if ident == "systemd" and pid == 1:
+        e["_COMM"] = "systemd"
+        e["_SYSTEMD_UNIT"] = "init.scope"
+    if unit:
+        e["UNIT"] = unit
+    if sunit:
+        e["_SYSTEMD_UNIT"] = sunit
+    if extra:
+        e.update(extra)
+    e["MESSAGE"] = message
+    path = rp(RUNTIME_JOURNAL)
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        fd = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o644)
+        try:
+            os.write(fd, (json.dumps(e) + "\n").encode("utf-8"))
+        finally:
+            os.close(fd)
+    except OSError:
+        pass
+
+
+# ---------------------------------------------------------------- unit files
+
+UNIT_TYPES = ("service", "socket", "target", "timer", "path", "mount", "automount", "swap",
+              "slice", "scope", "device")
+UNIT_SUFFIXES = tuple("." + t for t in UNIT_TYPES)
+UNIT_DIRS = ["etc/systemd/system.control", "run/systemd/system.control", "run/systemd/transient",
+             "etc/systemd/system", "run/systemd/system", "usr/local/lib/systemd/system",
+             "usr/lib/systemd/system", "lib/systemd/system"]
+
+BUILTIN = {
+    "multi-user.target": ("Multi-User System", "Requires=basic.target\nConflicts=rescue.service rescue.target\n"
+                          "After=basic.target rescue.service rescue.target\nAllowIsolate=yes\n"),
+    "graphical.target": ("Graphical Interface", "Requires=multi-user.target\nWants=display-manager.service\n"
+                         "Conflicts=rescue.service rescue.target\n"
+                         "After=multi-user.target rescue.service rescue.target display-manager.service\n"
+                         "AllowIsolate=yes\n"),
+    "basic.target": ("Basic System", "Requires=sysinit.target\n"
+                     "Wants=sockets.target timers.target paths.target slices.target\n"
+                     "After=sysinit.target sockets.target paths.target slices.target tmp.mount\n"),
+    "sysinit.target": ("System Initialization", "Wants=local-fs.target swap.target\n"
+                       "After=local-fs.target swap.target emergency.service emergency.target\n"),
+    "network.target": ("Network", "After=network-pre.target\nRefuseManualStart=yes\n"),
+    "network-pre.target": ("Preparation for Network", "RefuseManualStart=yes\n"),
+    "network-online.target": ("Network is Online", "Requires=network.target\nAfter=network.target\n"),
+    "local-fs.target": ("Local File Systems", ""),
+    "remote-fs.target": ("Remote File Systems", ""),
+    "swap.target": ("Swaps", ""),
+    "sockets.target": ("Socket Units", ""),
+    "timers.target": ("Timer Units", ""),
+    "paths.target": ("Path Units", ""),
+    "slices.target": ("Slice Units", ""),
+    "getty.target": ("Login Prompts", ""),
+    "nss-lookup.target": ("Host and Network Name Lookups", ""),
+    "time-sync.target": ("System Time Synchronized", ""),
+    "rescue.target": ("Rescue Mode", "Requires=sysinit.target rescue.service\nAfter=sysinit.target rescue.service\n"
+                      "AllowIsolate=yes\n"),
+    "emergency.target": ("Emergency Mode", "Requires=emergency.service\nAfter=emergency.service\nAllowIsolate=yes\n"),
+    "shutdown.target": ("System Shutdown", "RefuseManualStart=yes\n"),
+    "reboot.target": ("System Reboot", "AllowIsolate=yes\n"),
+}
+
+
+def builtin_text(name):
+    desc, body = BUILTIN[name]
+    return "[Unit]\nDescription=%s\nDocumentation=man:systemd.special(7)\n%s" % (desc, body)
+
+
+def unit_type(name):
+    return name.rsplit(".", 1)[1] if "." in name else ""
+
+
+def mangle(name, default=".service"):
+    if name.endswith(UNIT_SUFFIXES):
+        return name
+    if name.startswith("/"):
+        return name
+    return name + default
+
+
+def split_instance(name):
+    """'foo@eu.service' -> ('foo@.service', 'eu'); others -> (None, None)."""
+    m = re.match(r"^([^@]+)@([^@]*)(\.[a-z]+)$", name)
+    if not m:
+        return None, None
+    return m.group(1) + "@" + m.group(3), m.group(2)
+
+
+def unit_dirs():
+    seen = set()
+    out = []
+    for d in UNIT_DIRS:
+        real = rp(d)
+        if not os.path.isdir(real):
+            continue
+        key = os.path.realpath(real)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append((real, "/" + d))
+    return out
+
+
+def find_fragment(name):
+    """-> (state, display_path, real_path). state: ok|masked|builtin|not-found."""
+    tmpl, inst = split_instance(name)
+    names = [name] + ([tmpl] if tmpl and inst else [])
+    dirs = unit_dirs()
+    for n in names:
+        for real_dir, disp_dir in dirs:
+            p = os.path.join(real_dir, n)
+            if os.path.islink(p):
+                if os.readlink(p) == "/dev/null":
+                    return "masked", disp_dir + "/" + n, None
+                real = root_resolve(disp_dir + "/" + n)
+                if os.path.isfile(real):
+                    return "ok", disp(real), real
+                continue
+            if os.path.isfile(p):
+                return "ok", disp_dir + "/" + n, p
+    if name in BUILTIN:
+        return "builtin", "/usr/lib/systemd/system/" + name, None
+    return "not-found", None, None
+
+
+def find_dropins(name):
+    tmpl, inst = split_instance(name)
+    bases = [name] + ([tmpl] if tmpl and inst else []) + [unit_type(name)]
+    chosen = {}
+    for base in bases:
+        for real_dir, disp_dir in unit_dirs():
+            d = os.path.join(real_dir, base + ".d")
+            try:
+                entries = os.listdir(d)
+            except OSError:
+                continue
+            for f in entries:
+                if not f.endswith(".conf") or f in chosen:
+                    continue
+                p = os.path.join(d, f)
+                if os.path.islink(p) and os.readlink(p) == "/dev/null":
+                    chosen[f] = None
+                    continue
+                if os.path.isfile(p):
+                    chosen[f] = ("%s/%s.d/%s" % (disp_dir, base, f), p)
+    return [chosen[f] for f in sorted(chosen) if chosen[f]]
+
+
+def disk_record(name):
+    state, frag, real = find_fragment(name)
+    rec = {"name": name, "state": state, "fragment": frag, "files": []}
+    if state == "ok":
+        rec["files"].append([frag, read_text(real, "")])
+    elif state == "builtin":
+        rec["files"].append([frag, builtin_text(name)])
+    if state in ("ok", "builtin"):
+        for dpath, real in find_dropins(name):
+            rec["files"].append([dpath, read_text(real, "")])
+    return rec
+
+
+def parse_ini(text):
+    """-> list of (section, key, value, lineno). Lines ending in '\\' continue."""
+    out = []
+    section = None
+    lines = text.split("\n")
+    i = 0
+    while i < len(lines):
+        lineno = i + 1
+        line = lines[i]
+        i += 1
+        while line.rstrip().endswith("\\") and i < len(lines):
+            nxt = lines[i]
+            i += 1
+            if nxt.lstrip().startswith(("#", ";")):
+                continue
+            line = line.rstrip()[:-1] + " " + nxt.strip()
+        s = line.strip()
+        if not s or s[0] in "#;":
+            continue
+        if s.startswith("[") and s.endswith("]"):
+            section = s[1:-1]
+            out.append((section, None, None, lineno))
+            continue
+        if "=" not in s:
+            out.append((section, s, None, lineno))
+            continue
+        k, v = s.split("=", 1)
+        out.append((section, k.strip(), v.strip(), lineno))
+    return out
+
+
+LIST_KEYS = set("""Wants Requires Requisite BindsTo PartOf Upholds Conflicts Before After OnFailure OnSuccess
+WantedBy RequiredBy UpheldBy Also Alias Documentation ReadWritePaths ReadOnlyPaths InaccessiblePaths ExecPaths
+NoExecPaths SuccessExitStatus RestartPreventExitStatus RestartForceExitStatus EnvironmentFile Environment
+ExecStart ExecStartPre ExecStartPost ExecStop ExecStopPost ExecReload ExecCondition PassEnvironment
+UnsetEnvironment SupplementaryGroups PropagatesReloadTo ReloadPropagatedFrom JoinsNamespaceOf
+RequiresMountsFor BindPaths BindReadOnlyPaths RuntimeDirectory StateDirectory CacheDirectory LogsDirectory
+ConfigurationDirectory""".split())
+SPLIT_KEYS = set("""Wants Requires Requisite BindsTo PartOf Upholds Conflicts Before After OnFailure OnSuccess
+WantedBy RequiredBy UpheldBy Also Alias PropagatesReloadTo ReloadPropagatedFrom""".split())
+
+UNIT_KEYS = set("""Description Documentation Wants Requires Requisite BindsTo PartOf Upholds Conflicts Before
+After OnFailure OnSuccess PropagatesReloadTo ReloadPropagatedFrom PropagatesStopTo StopPropagatedFrom
+JoinsNamespaceOf RequiresMountsFor OnFailureJobMode IgnoreOnIsolate StopWhenUnneeded RefuseManualStart
+RefuseManualStop AllowIsolate DefaultDependencies CollectMode FailureAction SuccessAction
+FailureActionExitStatus SuccessActionExitStatus JobTimeoutSec JobRunningTimeoutSec JobTimeoutAction
+JobTimeoutRebootArgument StartLimitIntervalSec StartLimitBurst StartLimitAction RebootArgument SourcePath
+OnSuccessJobMode SurviveFinalKillSignal""".split())
+SERVICE_KEYS = set("""Type ExitType RemainAfterExit GuessMainPID PIDFile BusName ExecStart ExecStartPre
+ExecStartPost ExecCondition ExecReload ExecStop ExecStopPost RestartSec RestartSteps RestartMaxDelaySec
+TimeoutStartSec TimeoutStopSec TimeoutAbortSec TimeoutSec TimeoutStartFailureMode TimeoutStopFailureMode
+RuntimeMaxSec RuntimeRandomizedExtraSec WatchdogSec Restart RestartMode SuccessExitStatus
+RestartPreventExitStatus RestartForceExitStatus RootDirectoryStartOnly NonBlocking NotifyAccess Sockets
+FileDescriptorStoreMax FileDescriptorStorePreserve USBFunctionDescriptors USBFunctionStrings OOMPolicy
+OpenFile ReloadSignal StartLimitInterval StartLimitIntervalSec StartLimitBurst StartLimitAction
+FailureAction SuccessAction RebootArgument""".split())
+EXEC_KEYS = set("""WorkingDirectory RootDirectory RootImage RootImageOptions RootHash RootVerity MountAPIVFS
+User Group DynamicUser SupplementaryGroups PAMName Environment EnvironmentFile PassEnvironment
+UnsetEnvironment StandardInput StandardOutput StandardError StandardInputText StandardInputData
+SyslogIdentifier SyslogFacility SyslogLevel SyslogLevelPrefix LogLevelMax LogExtraFields LogRateLimitIntervalSec
+LogRateLimitBurst LogNamespace TTYPath TTYReset TTYVHangup TTYVTDisallocate UMask Nice OOMScoreAdjust
+CPUSchedulingPolicy CPUSchedulingPriority CPUSchedulingResetOnFork CPUAffinity NUMAPolicy NUMAMask
+IOSchedulingClass IOSchedulingPriority CapabilityBoundingSet AmbientCapabilities NoNewPrivileges SecureBits
+ProtectSystem ProtectHome PrivateTmp PrivateDevices PrivateNetwork PrivateUsers PrivateIPC PrivateMounts
+ProtectKernelTunables ProtectKernelModules ProtectKernelLogs ProtectControlGroups ProtectClock ProtectHostname
+ProtectProc ProcSubset ReadWritePaths ReadOnlyPaths InaccessiblePaths ExecPaths NoExecPaths
+TemporaryFileSystem BindPaths BindReadOnlyPaths RuntimeDirectory StateDirectory CacheDirectory LogsDirectory
+ConfigurationDirectory RuntimeDirectoryMode StateDirectoryMode CacheDirectoryMode LogsDirectoryMode
+ConfigurationDirectoryMode RuntimeDirectoryPreserve RestrictAddressFamilies RestrictNamespaces
+RestrictRealtime RestrictSUIDSGID RestrictFileSystems LockPersonality MemoryDenyWriteExecute SystemCallFilter
+SystemCallArchitectures SystemCallErrorNumber SystemCallLog RemoveIPC KeyringMode UtmpIdentifier UtmpMode
+IgnoreSIGPIPE TimerSlackNSec Personality LoadCredential LoadCredentialEncrypted SetCredential
+SetCredentialEncrypted ImportCredential MountFlags NetworkNamespacePath IPCNamespacePath SELinuxContext
+AppArmorProfile SmackProcessLabel CoredumpFilter KillMode KillSignal RestartKillSignal FinalKillSignal
+SendSIGKILL SendSIGHUP WatchdogSignal CPUAccounting CPUWeight StartupCPUWeight CPUQuota CPUQuotaPeriodSec
+AllowedCPUs StartupAllowedCPUs AllowedMemoryNodes MemoryAccounting MemoryMin MemoryLow MemoryHigh MemoryMax
+MemorySwapMax MemoryZSwapMax MemoryLimit TasksAccounting TasksMax IOAccounting IOWeight StartupIOWeight
+IODeviceWeight IOReadBandwidthMax IOWriteBandwidthMax IOReadIOPSMax IOWriteIOPSMax IODeviceLatencyTargetSec
+IPAccounting IPAddressAllow IPAddressDeny IPIngressFilterPath IPEgressFilterPath DeviceAllow DevicePolicy Slice
+Delegate DelegateSubgroup ManagedOOMSwap ManagedOOMMemoryPressure ManagedOOMMemoryPressureLimit
+ManagedOOMPreference MemoryPressureWatch MemoryPressureThresholdSec CPUShares StartupCPUShares BlockIOWeight
+BlockIOAccounting SocketBindAllow SocketBindDeny RestrictNetworkInterfaces NFTSet""".split())
+INSTALL_KEYS = set("Alias WantedBy RequiredBy UpheldBy Also DefaultInstance".split())
+FREE_SECTIONS = set("Socket Timer Path Mount Automount Swap Slice Scope".split())
+EXEC_PREFIX_KEYS = ("Limit", "Condition", "Assert")
+
+SERVICE_TYPES = ("simple", "exec", "forking", "oneshot", "dbus", "notify", "notify-reload", "idle")
+RESTART_VALUES = ("no", "on-success", "on-failure", "on-abnormal", "on-watchdog", "on-abort", "always")
+
+
+def parse_exec(value):
+    """systemd ExecStart= syntax -> dict(prefix, path, argv, ignore, line) or None."""
+    v = value.strip()
+    prefix = ""
+    while v and v[0] in "-@:+!|":
+        prefix += v[0]
+        v = v[1:]
+    try:
+        words = shlex.split(v, posix=True)
+    except ValueError:
+        return None
+    if not words:
+        return None
+    path = words[0]
+    argv = words[1:] if "@" in prefix else words
+    if "@" in prefix and not argv:
+        return None
+    return {"prefix": prefix, "path": path, "argv": argv, "ignore": "-" in prefix, "line": v.strip()}
+
+
+def host_variants(path):
+    """/bin/x and /usr/bin/x are the same file on a merged-/usr system (Ubuntu), not on macOS."""
+    out = [path]
+    for a, b in (("/bin/", "/usr/bin/"), ("/sbin/", "/usr/sbin/")):
+        if path.startswith(a):
+            out.append(b + path[len(a):])
+        elif path.startswith(b):
+            out.append(a + path[len(b):])
+    return out
+
+
+def resolve_exec(path):
+    """Executable as seen by the fake root -> (real path or None, reason)."""
+    if path.startswith("/"):
+        real = root_resolve(path)
+        if os.path.lexists(rp(path)) or os.path.exists(real):
+            return real, None
+        if path.startswith(HOST_FALLBACK_DIRS):
+            for cand in host_variants(path):
+                if os.path.exists(cand):
+                    return cand, None
+        return None, "missing"
+    for d in FIXED_PATH.split(":"):
+        real = root_resolve(d + "/" + path)
+        if os.path.isfile(real) and os.access(real, os.X_OK):
+            return real, None
+    for d in FIXED_PATH.split(":"):
+        cand = d + "/" + path
+        if os.path.isfile(cand) and os.access(cand, os.X_OK):
+            return cand, None
+    return None, "missing"
+
+
+class Unit(object):
+    def __init__(self, rec):
+        self.rec = rec
+        self.name = rec["name"]
+        self.type = unit_type(self.name)
+        self.template, self.instance = split_instance(self.name)
+        self.state = rec["state"]
+        self.fragment = rec.get("fragment")
+        self.files = rec.get("files", [])
+        self.dropins = [f[0] for f in self.files[1:]]
+        self.assign = []
+        self.warnings = []
+        self.errors = []
+        for path, text in self.files:
+            for sec, key, val, lineno in parse_ini(text):
+                if key is None:
+                    if sec not in ("Unit", "Install", "Service") and sec not in FREE_SECTIONS \
+                            and not sec.startswith("X-"):
+                        self.warnings.append("%s:%d: Unknown section '%s'. Ignoring." % (path, lineno, sec))
+                    continue
+                if sec is None:
+                    self.warnings.append("%s:%d: Assignment outside of section. Ignoring." % (path, lineno))
+                    continue
+                if val is None:
+                    self.warnings.append("%s:%d: Missing '=', ignoring line." % (path, lineno))
+                    continue
+                if not self._known(sec, key):
+                    if not sec.startswith("X-") and not key.startswith("X-"):
+                        self.warnings.append("%s:%d: Unknown key name '%s' in section '%s', ignoring."
+                                             % (path, lineno, key, sec))
+                    continue
+                self.assign.append((sec, key, self.expand(val), path, lineno))
+        self.load_state = {"ok": "loaded", "builtin": "loaded", "masked": "masked",
+                           "not-found": "not-found"}[self.state]
+        if self.load_state == "loaded" and self.type == "service":
+            self._validate_service()
+        if self.errors:
+            self.load_state = "bad-setting"
+
+    def _known(self, sec, key):
+        if sec == "Unit":
+            return key in UNIT_KEYS or key.startswith(("Condition", "Assert"))
+        if sec == "Install":
+            return key in INSTALL_KEYS
+        if sec == "Service":
+            return key in SERVICE_KEYS or key in EXEC_KEYS or key.startswith(EXEC_PREFIX_KEYS)
+        if sec in FREE_SECTIONS:
+            return True
+        return False
+
+    def expand(self, v):
+        tmpl_prefix = self.name.split("@")[0] if "@" in self.name else self.name.rsplit(".", 1)[0]
+        table = {"n": self.name, "N": self.name.rsplit(".", 1)[0], "p": tmpl_prefix,
+                 "i": self.instance or "", "I": self.instance or "", "j": tmpl_prefix.split("-")[-1],
+                 "f": "/" + (self.instance or tmpl_prefix), "h": "/root", "u": "root", "U": "0",
+                 "t": "/run", "S": "/var/lib", "C": "/var/cache", "L": "/var/log", "E": "/etc",
+                 "T": "/tmp", "V": "/var/tmp", "H": hostname(), "l": hostname().split(".")[0], "%": "%"}
+        if "%" not in v:
+            return v
+        return re.sub(r"%(.)", lambda m: table.get(m.group(1), m.group(0)), v)
+
+    # ---- values
+    def values(self, sec, key):
+        res = []
+        for s, k, v, _p, _l in self.assign:
+            if s == sec and k == key:
+                if v == "" and key in LIST_KEYS:
+                    res = []
+                else:
+                    res.append(v)
+        return res
+
+    def get(self, sec, key, default=None):
+        vals = [v for s, k, v, _p, _l in self.assign if s == sec and k == key]
+        return vals[-1] if vals else default
+
+    def svc(self, key, default=None):
+        return self.get("Service", key, default)
+
+    def deps(self, key, sec="Unit"):
+        out = []
+        for v in self.values(sec, key):
+            for w in v.split():
+                w = mangle(w)
+                if w not in out:
+                    out.append(w)
+        return out
+
+    def where(self, sec, key):
+        for s, k, _v, p, ln in reversed(self.assign):
+            if s == sec and k == key:
+                return p, ln
+        return self.fragment, 0
+
+    def description(self):
+        return self.get("Unit", "Description") or self.name
+
+    def bool(self, sec, key, default=False):
+        v = self.get(sec, key)
+        if v is None:
+            return default
+        return v.lower() in ("1", "yes", "true", "on")
+
+    def stype(self):
+        t = self.svc("Type")
+        if t is None or t not in SERVICE_TYPES:
+            if self.svc("BusName"):
+                return "dbus"
+            return "simple"
+        return t
+
+    def restart(self):
+        r = self.svc("Restart", "no")
+        return r if r in RESTART_VALUES else "no"
+
+    def execs(self, key):
+        out = []
+        for v in self.values("Service", key):
+            c = parse_exec(v)
+            if c:
+                out.append(c)
+        return out
+
+    def timespan(self, key, default, sec="Service"):
+        v = self.get(sec, key)
+        if v is None:
+            return default
+        t = parse_timespan(v)
+        return default if t is None else t
+
+    def start_limit(self):
+        interval = self.get("Unit", "StartLimitIntervalSec") or self.svc("StartLimitIntervalSec") \
+            or self.svc("StartLimitInterval")
+        iv = parse_timespan(interval) if interval else 10.0
+        burst = self.get("Unit", "StartLimitBurst") or self.svc("StartLimitBurst") or "5"
+        try:
+            b = int(burst)
+        except ValueError:
+            b = 5
+        return (10.0 if iv is None else iv), b
+
+    def install_info(self):
+        return any(self.values("Install", k) for k in ("WantedBy", "RequiredBy", "UpheldBy", "Alias", "Also")) \
+            or (self.template and self.get("Install", "DefaultInstance"))
+
+    def _validate_service(self):
+        t = self.svc("Type")
+        if t is not None and t not in SERVICE_TYPES:
+            p, ln = self.where("Service", "Type")
+            self.warnings.append("%s:%d: Failed to parse service type, ignoring: %s" % (p, ln, t))
+        r = self.svc("Restart")
+        if r is not None and r not in RESTART_VALUES:
+            p, ln = self.where("Service", "Restart")
+            self.warnings.append("%s:%d: Failed to parse service restart specifier, ignoring: %s" % (p, ln, r))
+        for key in ("ExecStart", "ExecStartPre", "ExecStartPost", "ExecStop", "ExecStopPost", "ExecReload",
+                    "ExecCondition"):
+            for s, k, v, p, ln in self.assign:
+                if s != "Service" or k != key or v == "":
+                    continue
+                c = parse_exec(v)
+                if c is None:
+                    self.errors.append("%s:%d: Invalid command line, ignoring: %s" % (p, ln, v))
+                    continue
+                path = c["path"]
+                if path.startswith("/"):
+                    continue
+                if "/" in path:
+                    self.errors.append("%s:%d: Neither a valid executable name nor an absolute path: %s"
+                                       % (p, ln, path))
+                    continue
+                real, _ = resolve_exec(path)
+                if real is None:
+                    self.errors.append('%s:%d: Executable "%s" not found in path "%s"' % (p, ln, path, FIXED_PATH))
+        starts = self.values("Service", "ExecStart")
+        st = self.stype()
+        if len(starts) > 1 and st != "oneshot":
+            self.errors.append("%s: Service has more than one ExecStart= setting, which is only allowed "
+                               "for Type=oneshot services. Refusing." % self.name)
+        if not starts and not self.values("Service", "ExecStop") and st != "oneshot":
+            self.errors.append("%s: Service has no ExecStart=, ExecStop=, or SuccessAction=. Refusing." % self.name)
+        elif not starts and st == "oneshot" and not self.values("Service", "ExecStop"):
+            self.errors.append("%s: Service has no ExecStart=, ExecStop=, or SuccessAction=. Refusing." % self.name)
+        wd = self.svc("WorkingDirectory")
+        if wd and not wd.lstrip("-").startswith("/") and wd.lstrip("-") != "~":
+            p, ln = self.where("Service", "WorkingDirectory")
+            self.warnings.append("%s:%d: WorkingDirectory= path is not absolute, ignoring: %s" % (p, ln, wd))
+
+
+# ------------------------------------------------------------ loaded snapshot
+
+def state_dir():
+    return rp(".lm/systemd")
+
+
+class Lock(object):
+    def __enter__(self):
+        os.makedirs(state_dir(), exist_ok=True)
+        self.fh = open(os.path.join(state_dir(), "lock"), "a")
+        fcntl.flock(self.fh, fcntl.LOCK_EX)
+        return self
+
+    def __exit__(self, *a):
+        fcntl.flock(self.fh, fcntl.LOCK_UN)
+        self.fh.close()
+
+
+def snapshot_path():
+    return os.path.join(state_dir(), "loaded.json")
+
+
+def load_snapshot():
+    txt = read_text(snapshot_path())
+    if not txt:
+        return {}
+    try:
+        return json.loads(txt)
+    except ValueError:
+        return {}
+
+
+def save_snapshot(snap):
+    write_atomic(snapshot_path(), json.dumps(snap, sort_keys=True))
+
+
+_UNIT_CACHE = {}
+
+
+def get_unit(name):
+    """The unit as the (mock) manager has it loaded."""
+    if name in _UNIT_CACHE:
+        return _UNIT_CACHE[name]
+    with Lock():
+        snap = load_snapshot()
+        rec = snap.get(name)
+        if rec is None:
+            rec = disk_record(name)
+            snap[name] = rec
+            save_snapshot(snap)
+            u = Unit(rec)
+            log_load_problems(u)
+        else:
+            u = Unit(rec)
+    _UNIT_CACHE[name] = u
+    return u
+
+
+def disk_unit(name):
+    return Unit(disk_record(name))
+
+
+def changed_on_disk(name):
+    snap = load_snapshot()
+    rec = snap.get(name)
+    if rec is None:
+        return False
+    return disk_record(name) != rec
+
+
+def warn_changed(name):
+    if changed_on_disk(name):
+        err("Warning: The unit file, source configuration file or drop-ins of %s changed on disk. "
+            "Run 'systemctl daemon-reload' to reload units." % name)
+
+
+def log_load_problems(u):
+    for w in u.warnings:
+        jlog(w, unit=u.name, prio=4)
+    for e in u.errors:
+        jlog(e, unit=u.name, prio=3)
+    if u.errors:
+        jlog("%s: Unit configuration has fatal error, unit will not be started." % u.name, unit=u.name, prio=3)
+
+
+def units_on_disk():
+    names = set()
+    for real_dir, _d in unit_dirs():
+        try:
+            entries = os.listdir(real_dir)
+        except OSError:
+            continue
+        for e in entries:
+            if e.endswith(UNIT_SUFFIXES) and not os.path.isdir(os.path.join(real_dir, e)):
+                names.add(e)
+    return names
+
+
+def wants_dir(name, kind):
+    out = []
+    for real_dir, _d in unit_dirs():
+        d = os.path.join(real_dir, "%s.%s" % (name, kind))
+        try:
+            entries = sorted(os.listdir(d))
+        except OSError:
+            continue
+        for e in entries:
+            if e.endswith(UNIT_SUFFIXES) and e not in out:
+                out.append(e)
+    return out
+
+
+def wants_dir_units():
+    names = set()
+    for real_dir, _d in unit_dirs():
+        try:
+            entries = os.listdir(real_dir)
+        except OSError:
+            continue
+        for e in entries:
+            if e.endswith((".wants", ".requires", ".upholds")):
+                try:
+                    names.update(x for x in os.listdir(os.path.join(real_dir, e)) if x.endswith(UNIT_SUFFIXES))
+                except OSError:
+                    pass
+    return names
+
+
+def state_names():
+    d = os.path.join(state_dir(), "units")
+    try:
+        return set(f[:-6] for f in os.listdir(d) if f.endswith(".state"))
+    except OSError:
+        return set()
+
+
+def all_unit_names():
+    names = units_on_disk() | set(BUILTIN) | state_names() | wants_dir_units() | set(load_snapshot())
+    return sorted(n for n in names if not (split_instance(n)[0] and split_instance(n)[1] == ""))
+
+
+def daemon_reload(log=True):
+    with Lock():
+        old = load_snapshot()
+        names = units_on_disk() | set(old) | state_names() | wants_dir_units()
+        snap = {}
+        for n in sorted(names):
+            if split_instance(n)[0] and split_instance(n)[1] == "":
+                continue
+            snap[n] = disk_record(n)
+        save_snapshot(snap)
+    _UNIT_CACHE.clear()
+    if log:
+        jlog("Reloading requested from client PID %d ('systemctl')..." % os.getpid())
+        jlog("Reloading...")
+    for n in sorted(snap):
+        if snap[n]["state"] == "ok":
+            u = Unit(snap[n])
+            if u.warnings or u.errors:
+                log_load_problems(u)
+    if log:
+        jlog("Reloading finished in 112 ms.")
+
+
+# --------------------------------------------------------------- unit state
+
+DEFAULT_STATE = {"ActiveState": "inactive", "SubState": "dead", "Result": "success", "MainPID": "0",
+                 "ExecMainPID": "0", "ExecMainCode": "0", "ExecMainStatus": "0", "NRestarts": "0"}
+CODE_NAMES = {"0": "", "1": "exited", "2": "killed", "3": "dumped",
+              "exited": "exited", "killed": "killed", "dumped": "dumped", "": ""}
+CODE_NUMS = {"exited": "1", "killed": "2", "dumped": "3"}
+
+
+def state_file(name):
+    return os.path.join(state_dir(), "units", name + ".state")
+
+
+def read_state(name):
+    st = dict(DEFAULT_STATE)
+    txt = read_text(state_file(name))
+    if txt:
+        for line in txt.splitlines():
+            if "=" in line and not line.startswith("#"):
+                k, v = line.split("=", 1)
+                st[k.strip()] = v.strip()
+    st["ExecMainCode"] = CODE_NUMS.get(st.get("ExecMainCode", "0"), st.get("ExecMainCode", "0"))
+    return st
+
+
+def write_state(name, st):
+    lines = ["%s=%s" % (k, st[k]) for k in sorted(st)]
+    write_atomic(state_file(name), "\n".join(lines) + "\n")
+
+
+def update_state(name, **kw):
+    with Lock():
+        st = read_state(name)
+        st.update(dict((k, str(v)) for k, v in kw.items()))
+        write_state(name, st)
+        return st
+
+
+def stamp():
+    return "@%.6f" % now()
+
+
+def st_time(st, key):
+    v = st.get(key, "")
+    if not v:
+        return None
+    return parse_timestamp(v, now())
+
+
+def pid_alive(pid):
+    try:
+        pid = int(pid)
+    except (TypeError, ValueError):
+        return False
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError:
+        return False
+    try:
+        with open("/proc/%d/stat" % pid) as fh:
+            return fh.read().rsplit(")", 1)[1].split()[0] != "Z"
+    except (OSError, IndexError):
+        pass
+    try:
+        out = subprocess.run(["ps", "-o", "stat=", "-p", str(pid)], stdout=subprocess.PIPE,
+                             stderr=subprocess.DEVNULL, universal_newlines=True).stdout.strip()
+    except OSError:
+        return True
+    return bool(out) and not out.startswith("Z")
+
+
+def live_state(name):
+    """State with stale 'running' entries (supervisor gone) cleaned up."""
+    st = read_state(name)
+    sup = st.get("LMSupervisorPID", "")
+    if sup and st["ActiveState"] in ("active", "activating", "deactivating", "reloading") \
+            and not pid_alive(sup) and not pid_alive(st.get("MainPID", "0")):
+        st = update_state(name, ActiveState="failed", SubState="failed", Result="signal", MainPID="0",
+                          LMSupervisorPID="", LMJob="", StateChangeTimestamp=stamp())
+    return st
+
+
+def eff_state(name):
+    """live_state(), but targets in the default target's tree count as reached."""
+    st = live_state(name)
+    if unit_type(name) == "target" and not os.path.exists(state_file(name)) and name in boot_closure():
+        st = dict(st)
+        st["ActiveState"], st["SubState"] = "active", "active"
+    return st
+
+
+def proc_table():
+    try:
+        out = subprocess.run(["ps", "-A", "-o", "pid=,pgid=,args="], stdout=subprocess.PIPE,
+                             stderr=subprocess.DEVNULL, universal_newlines=True).stdout
+    except OSError:
+        return []
+    rows = []
+    for line in out.splitlines():
+        parts = line.split(None, 2)
+        if len(parts) >= 2 and parts[0].isdigit() and parts[1].isdigit():
+            rows.append((int(parts[0]), int(parts[1]), parts[2] if len(parts) > 2 else ""))
+    return rows
+
+
+def comm_of(pid):
+    txt = read_text("/proc/%s/comm" % pid)
+    if txt:
+        return txt.strip()
+    try:
+        out = subprocess.run(["ps", "-o", "comm=", "-p", str(pid)], stdout=subprocess.PIPE,
+                             stderr=subprocess.DEVNULL, universal_newlines=True).stdout.strip()
+        return os.path.basename(out) or "?"
+    except OSError:
+        return "?"
+
+
+EXIT_NAMES = {0: "SUCCESS", 1: "FAILURE", 2: "INVALIDARGUMENT", 3: "NOTIMPLEMENTED", 4: "NOPERMISSION",
+              5: "NOTINSTALLED", 6: "NOTCONFIGURED", 7: "NOTRUNNING", 200: "CHDIR", 201: "NICE", 202: "FDS",
+              203: "EXEC", 204: "MEMORY", 205: "LIMITS", 206: "OOM_ADJUST", 207: "SIGNAL_MASK", 208: "STDIN",
+              209: "STDOUT", 210: "CHROOT", 211: "IOPRIO", 212: "TIMERSLACK", 213: "SECUREBITS",
+              214: "SETSCHEDULER", 215: "CPUAFFINITY", 216: "GROUP", 217: "USER", 218: "CAPABILITIES",
+              219: "CGROUP", 220: "SETSID", 221: "CONFIRM", 222: "STDERR", 224: "PAM", 225: "NETWORK",
+              226: "NAMESPACE", 227: "NO_NEW_PRIVILEGES", 228: "SECCOMP", 229: "SELINUX_CONTEXT",
+              230: "PERSONALITY", 231: "APPARMOR_PROFILE", 232: "ADDRESS_FAMILIES", 233: "RUNTIME_DIRECTORY",
+              235: "CHOWN", 236: "SMACK_PROCESS_LABEL", 237: "KEYRING", 238: "STATE_DIRECTORY",
+              239: "CACHE_DIRECTORY", 240: "LOGS_DIRECTORY", 241: "CONFIGURATION_DIRECTORY",
+              242: "NUMA_POLICY", 243: "CREDENTIALS", 245: "BPF"}
+
+
+def sig_name(n):
+    try:
+        return signal.Signals(int(n)).name[3:]
+    except (ValueError, TypeError):
+        return str(n)
+
+
+def sig_num(name):
+    name = str(name).upper()
+    if name.isdigit():
+        return int(name)
+    if not name.startswith("SIG"):
+        name = "SIG" + name
+    try:
+        return int(getattr(signal, name))
+    except AttributeError:
+        return None
+
+
+def fmt_exit(code, status):
+    """('exited', 203) -> 'code=exited, status=203/EXEC'."""
+    code = CODE_NAMES.get(str(code), str(code))
+    try:
+        status = int(status)
+    except (TypeError, ValueError):
+        status = 0
+    if code == "exited":
+        name = EXIT_NAMES.get(status)
+        return "code=exited, status=%d%s" % (status, "/" + name if name else "")
+    return "code=%s, signal=%s" % (code, sig_name(status))
+
+
+# ------------------------------------------------------- enablement / links
+
+def links_to(name):
+    """Install symlinks for name: [(real link path, display path)] in etc/ and run/."""
+    out = []
+    for base in ("etc/systemd/system", "run/systemd/system"):
+        real_base = rp(base)
+        try:
+            entries = os.listdir(real_base)
+        except OSError:
+            continue
+        for e in entries:
+            if e.endswith((".wants", ".requires", ".upholds")):
+                p = os.path.join(real_base, e, name)
+                if os.path.islink(p):
+                    out.append((p, "/%s/%s/%s" % (base, e, name)))
+    return out
+
+
+def enabled_state(name):
+    state, frag, _real = find_fragment(name)
+    if state == "masked":
+        return "masked"
+    if state == "not-found":
+        return None
+    if state == "builtin":
+        return "static"
+    links = links_to(name)
+    if any(l[1].startswith("/etc/") for l in links):
+        return "enabled"
+    if links:
+        return "enabled-runtime"
+    u = disk_unit(name)
+    for a in u.deps("Alias", "Install"):
+        if os.path.islink(rp("etc/systemd/system/" + a)):
+            return "enabled"
+    tmpl, inst = split_instance(name)
+    if tmpl and inst == "":
+        for real_dir, _ in unit_dirs():
+            for sub in glob.glob(os.path.join(real_dir, "*.wants", name.split("@")[0] + "@*")):
+                if os.path.islink(sub):
+                    return "indirect"
+    if not u.install_info():
+        return "static"
+    if not any(u.values("Install", k) for k in ("WantedBy", "RequiredBy", "UpheldBy", "Alias")):
+        return "indirect"
+    return "disabled"
+
+
+def is_enabled_ok(s):
+    return s in ("enabled", "enabled-runtime", "static", "alias", "indirect", "generated", "linked",
+                 "linked-runtime", "transient")
+
+
+NO_INSTALL = """The unit files have no installation config (WantedBy=, RequiredBy=, UpheldBy=,
+Also=, or Alias= settings in the [Install] section, and DefaultInstance= for
+template units). This means they are not meant to be enabled or disabled using systemctl.
+
+Possible reasons for having these kinds of units are:
+\u2022 A unit may be statically enabled by being symlinked from another unit's
+  .wants/, .requires/, or .upholds/ directory.
+\u2022 A unit's purpose may be to act as a helper for some other unit which has
+  a requirement dependency on it.
+\u2022 A unit may be started when needed via activation (socket, path, timer,
+  D-Bus, udev, scripted systemctl call, ...).
+\u2022 In case of template units, the unit is meant to be enabled with some
+  instance name specified."""
+
+
+def make_link(link_disp, target, changes):
+    real = rp(link_disp)
+    if os.path.islink(real) and os.readlink(real) == target:
+        return
+    os.makedirs(os.path.dirname(real), exist_ok=True)
+    if os.path.islink(real):
+        os.unlink(real)
+    os.symlink(target, real)
+    changes.append("Created symlink %s \u2192 %s." % (link_disp, target))
+
+
+def do_enable(name, runtime, changes, seen=None):
+    seen = seen if seen is not None else set()
+    if name in seen:
+        return True
+    seen.add(name)
+    state, frag, _real = find_fragment(name)
+    if state == "not-found":
+        raise Fail("Failed to enable unit: Unit file %s does not exist." % name)
+    if state == "masked":
+        raise Fail("Failed to enable unit: Unit file %s is masked." % frag)
+    if state == "builtin":
+        return False
+    u = disk_unit(name)
+    tmpl, inst = split_instance(name)
+    if tmpl and inst == "":
+        di = u.get("Install", "DefaultInstance")
+        if not di:
+            return False
+        name = name.replace("@.", "@%s." % di)
+    base = "/run/systemd/system" if runtime else "/etc/systemd/system"
+    did = False
+    for t in u.deps("WantedBy", "Install"):
+        make_link("%s/%s.wants/%s" % (base, t, name), frag, changes)
+        did = True
+    for t in u.deps("RequiredBy", "Install"):
+        make_link("%s/%s.requires/%s" % (base, t, name), frag, changes)
+        did = True
+    for t in u.deps("UpheldBy", "Install"):
+        make_link("%s/%s.upholds/%s" % (base, t, name), frag, changes)
+        did = True
+    for a in u.deps("Alias", "Install"):
+        make_link("%s/%s" % (base, a), frag, changes)
+        did = True
+    for a in u.deps("Also", "Install"):
+        did = do_enable(a, runtime, changes, seen) or did
+    return did
+
+
+def do_disable(name, changes, seen=None):
+    seen = seen if seen is not None else set()
+    if name in seen:
+        return
+    seen.add(name)
+    state, _frag, _real = find_fragment(name)
+    if state == "not-found":
+        raise Fail("Failed to disable unit: Unit file %s does not exist." % name)
+    for real, d in links_to(name):
+        os.unlink(real)
+        changes.append('Removed "%s".' % d)
+    if state == "ok":
+        u = disk_unit(name)
+        for a in u.deps("Alias", "Install"):
+            for base in ("/etc/systemd/system", "/run/systemd/system"):
+                p = rp("%s/%s" % (base, a))
+                if os.path.islink(p) and os.readlink(p) != "/dev/null":
+                    os.unlink(p)
+                    changes.append('Removed "%s/%s".' % (base, a))
+        for a in u.deps("Also", "Install"):
+            do_disable(a, changes, seen)
+
+
+def get_default():
+    for base in ("etc/systemd/system", "run/systemd/system", "usr/local/lib/systemd/system",
+                 "usr/lib/systemd/system", "lib/systemd/system"):
+        p = rp(base + "/default.target")
+        if os.path.islink(p):
+            return os.path.basename(os.readlink(p))
+        if os.path.isfile(p):
+            return "default.target"
+    return "graphical.target"
+
+
+def resolve_alias(name):
+    if name == "default.target":
+        d = get_default()
+        return d if d != "default.target" else name
+    return name
+
+
+# ------------------------------------------------------------- exec helpers
+
+def parse_env_assignments(value):
+    try:
+        words = shlex.split(value, posix=True)
+    except ValueError:
+        return []
+    out = []
+    for w in words:
+        if "=" in w and re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", w):
+            k, v = w.split("=", 1)
+            out.append((k, v))
+    return out
+
+
+def parse_env_file(text):
+    """systemd's environment file parser (KEY=VALUE, quotes, comments; CR ends a line)."""
+    out = []
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    lines = text.split("\n")
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        i += 1
+        while line.endswith("\\") and i < len(lines) and not line.lstrip().startswith(("#", ";")):
+            line = line[:-1] + lines[i]
+            i += 1
+        s = line.strip()
+        if not s or s[0] in "#;" or "=" not in s:
+            continue
+        k, v = s.split("=", 1)
+        k = k.strip()
+        if k.startswith("export "):
+            k = k[7:].strip()
+        if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", k):
+            continue
+        v = v.strip()
+        if len(v) >= 2 and v[0] == v[-1] and v[0] in "'\"":
+            q = v[0]
+            v = v[1:-1]
+            if q == '"':
+                v = re.sub(r'\\(["\\`$\n])', r"\1", v)
+        else:
+            v = re.sub(r"\\(.)", r"\1", v)
+        out.append((k, v))
+    return out
+
+
+def expand_argv(argv, env):
+    out = []
+    for w in argv:
+        m = re.match(r"^\$([A-Za-z_][A-Za-z0-9_]*)$", w)
+        if m:
+            out.extend(env.get(m.group(1), "").split())
+            continue
+        out.append(re.sub(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}", lambda mm: env.get(mm.group(1), ""), w))
+    return out
+
+
+def root_arg(a):
+    """Rewrite '/fake/path' (or --opt=/fake/path) to the sandbox path when it exists there."""
+    pre = ""
+    val = a
+    m = re.match(r"^(--?[A-Za-z0-9_-]+=)(/.*)$", a)
+    if m:
+        pre, val = m.group(1), m.group(2)
+    if not val.startswith("/") or val.startswith(ROOT + "/"):
+        return a
+    real = rp(val)
+    if os.path.lexists(real) or os.path.isdir(os.path.dirname(real)) and os.path.dirname(val) != "/":
+        return pre + real
+    return a
+
+
+class ExecFail(Exception):
+    def __init__(self, status, msgs, result="exit-code"):
+        Exception.__init__(self, msgs[0] if msgs else str(status))
+        self.status = status
+        self.msgs = msgs
+        self.result = result
+
+
+def passwd_lookup(user):
+    txt = read_text(rp("etc/passwd"))
+    if txt is None:
+        return {}
+    for line in txt.splitlines():
+        f = line.split(":")
+        if len(f) >= 7 and (f[0] == user or f[2] == user):
+            return {"name": f[0], "uid": f[2], "gid": f[3], "home": f[5], "shell": f[6]}
+    return None
+
+
+def service_env(u, mainpid=None):
+    """Environment the service process gets. Raises ExecFail(resources)."""
+    env = {"PATH": FIXED_PATH, "LANG": os.environ.get("LANG", "C.UTF-8"), "LM_ROOT": ROOT,
+           "INVOCATION_ID": hashlib.md5(("%s%f" % (u.name, time.time())).encode()).hexdigest(),
+           "SYSTEMD_EXEC_PID": str(os.getpid())}
+    if os.environ.get("TZ"):
+        env["TZ"] = os.environ["TZ"]
+    user = u.svc("User")
+    if user:
+        pw = passwd_lookup(user)
+        if pw:
+            env.update({"USER": pw["name"], "LOGNAME": pw["name"], "HOME": pw["home"], "SHELL": pw["shell"]})
+        else:
+            env.update({"USER": user, "LOGNAME": user})
+    for v in u.values("Service", "Environment"):
+        for k, val in parse_env_assignments(v):
+            env[k] = val
+    for v in u.values("Service", "EnvironmentFile"):
+        optional = v.startswith("-")
+        path = v.lstrip("-").strip()
+        real = root_resolve(path)
+        txt = read_text(real) if os.path.isfile(real) else None
+        if txt is None:
+            if optional:
+                continue
+            raise ExecFail(0, ["Failed to load environment files: No such file or directory",
+                               "Failed to run 'start' task: No such file or directory"], "resources")
+        for k, val in parse_env_file(txt):
+            env[k] = val
+    if mainpid:
+        env["MAINPID"] = str(mainpid)
+    return env
+
+
+def exec_prep(u, cmd, env):
+    """-> (real executable, argv, cwd). Raises ExecFail for 200/203/217."""
+    shown = cmd["path"]
+    user = u.svc("User")
+    if user and os.path.exists(rp("etc/passwd")) and passwd_lookup(user) is None:
+        raise ExecFail(217, ["Failed to determine user credentials: No such process",
+                             "Failed at step USER spawning %s: No such process" % shown])
+    wd = u.svc("WorkingDirectory")
+    cwd = ROOT
+    if wd:
+        optional = wd.startswith("-")
+        w = wd.lstrip("-")
+        if w == "~":
+            pw = passwd_lookup(user) if user else None
+            w = (pw or {}).get("home", "/root")
+        real = root_resolve(w)
+        if os.path.isdir(real):
+            cwd = real
+        elif not optional:
+            raise ExecFail(200, ["Changing to the requested working directory failed: No such file or directory",
+                                 "Failed at step CHDIR spawning %s: No such file or directory" % shown])
+    real, _why = resolve_exec(cmd["path"])
+    if real is None:
+        raise ExecFail(203, ["Failed to locate executable %s: No such file or directory" % shown,
+                             "Failed at step EXEC spawning %s: No such file or directory" % shown])
+    if os.path.isdir(real) or not os.access(real, os.X_OK):
+        raise ExecFail(203, ["Failed to execute %s: Permission denied" % shown,
+                             "Failed at step EXEC spawning %s: Permission denied" % shown])
+    argv = expand_argv(cmd["argv"], env)
+    if not argv:
+        argv = [cmd["path"]]
+    args = [argv[0] if "@" in cmd["prefix"] else real] + [root_arg(a) for a in argv[1:]]
+    return real, args, cwd
+
+
+def _libc():
+    try:
+        import ctypes
+        import ctypes.util
+        return ctypes.CDLL(ctypes.util.find_library("c") or None, use_errno=True)
+    except Exception:
+        return None
+
+
+LIBC = None
+
+
+def exec_trampoline(args):
+    """`--lm-exec ROOT UNIT REAL SHOWN ARGV0 ARGS...` or `--lm-exec ROOT UNIT --exit CODE`:
+    new process group, die with the supervisor (Linux), default signals, then exec."""
+    try:
+        os.setpgid(0, 0)
+    except OSError:
+        pass
+    libc = _libc()
+    if libc is not None and sys.platform.startswith("linux"):
+        try:
+            libc.prctl(1, int(signal.SIGKILL), 0, 0, 0)   # PR_SET_PDEATHSIG
+        except Exception:
+            pass
+    for s in ("SIGPIPE", "SIGXFSZ", "SIGINT", "SIGTERM", "SIGHUP", "SIGQUIT"):
+        if hasattr(signal, s):
+            signal.signal(getattr(signal, s), signal.SIG_DFL)
+    unit = args[1]
+    if args[2] == "--exit":
+        os._exit(int(args[3]))
+    real, shown, argv = args[2], args[3], args[4:]
+    try:
+        sys.stdout.flush()
+        os.execv(real, argv)
+    except OSError as e:
+        reason = os.strerror(e.errno) if e.errno else str(e)
+        jlog("%s: Failed to execute %s: %s" % (unit, shown, reason), unit=unit, prio=3)
+        jlog("%s: Failed at step EXEC spawning %s: %s" % (unit, shown, reason), unit=unit, prio=3)
+        os._exit(203)
+
+
+# ----------------------------------------------------------------- supervisor
+
+class Supervisor(object):
+    """Runs one service: ExecStartPre/ExecStart/ExecStartPost, Restart= policy,
+    stop requests (SIGTERM from systemctl), journal output."""
+
+    def __init__(self, name):
+        self.name = name
+        self.u = get_unit(name)
+        self.stop_req = False
+        self.main_pid = 0
+        self.main_own = True
+        self.pgid = 0
+        self.reaped = {}
+        self.threads = []
+        self.desc = self.u.description()
+        self.processes = []
+
+    def log(self, msg, prio=6):
+        jlog(msg, unit=self.name, prio=prio)
+
+    def on_term(self, *_a):
+        self.stop_req = True
+
+    def reap(self):
+        while True:
+            try:
+                pid, status = os.waitpid(-1, os.WNOHANG)
+            except ChildProcessError:
+                return
+            except InterruptedError:
+                continue
+            if pid == 0:
+                return
+            self.reaped[pid] = status
+
+    def wait_for(self, pid, timeout=None, interruptible=True, own=True):
+        """-> raw wait status, or None (stop requested / timeout)."""
+        start = time.time()
+        while True:
+            self.reap()
+            if pid in self.reaped:
+                return self.reaped.pop(pid)
+            if not own and not pid_alive(pid):
+                return 0
+            if interruptible and self.stop_req:
+                return None
+            if timeout is not None and time.time() - start > timeout:
+                return None
+            time.sleep(0.02)
+
+    @staticmethod
+    def decode(status):
+        if os.WIFEXITED(status):
+            return "exited", os.WEXITSTATUS(status)
+        sig = os.WTERMSIG(status)
+        return ("dumped" if os.WCOREDUMP(status) else "killed"), sig
+
+    def output_targets(self):
+        so = self.u.svc("StandardOutput", "journal")
+        se = self.u.svc("StandardError", "inherit")
+
+        def opn(spec):
+            for pfx, mode in (("file:", "r+"), ("append:", "a"), ("truncate:", "w")):
+                if spec.startswith(pfx):
+                    real = root_resolve(spec[len(pfx):])
+                    if mode == "r+" and not os.path.exists(real):
+                        mode = "w"
+                    try:
+                        fh = open(real, mode)
+                        return fh
+                    except OSError:
+                        return subprocess.DEVNULL
+            if spec == "null":
+                return subprocess.DEVNULL
+            return subprocess.PIPE
+        out = opn(so)
+        errt = subprocess.STDOUT if se == "inherit" or se == so else opn(se)
+        return out, errt
+
+    def pump(self, stream, pid, ident):
+        prefix_ok = self.u.bool("Service", "SyslogLevelPrefix", True)
+        for raw in iter(stream.readline, b""):
+            line = raw.decode("utf-8", "replace").rstrip("\n")
+            prio = 6
+            m = re.match(r"^<([0-7])>(.*)$", line)
+            if m and prefix_ok:
+                prio, line = int(m.group(1)), m.group(2)
+            jlog(line, ident=ident, pid=pid, prio=prio, sunit=self.name, transport="stdout",
+                 extra={"_COMM": ident[:15]})
+        try:
+            stream.close()
+        except OSError:
+            pass
+
+    def spawn(self, cmd, env, kind):
+        """Start one command; -> pid. A failing exec becomes a short-lived process
+        exiting with systemd's code (203/EXEC, 200/CHDIR, 217/USER), like the real fork."""
+        self.spawn_failed = False
+        self.spawn_msgs = []
+        try:
+            real, args, cwd = exec_prep(self.u, cmd, env)
+        except ExecFail as e:
+            if kind == "ExecStart":
+                self.spawn_msgs = list(e.msgs)
+            else:
+                for m in e.msgs:
+                    self.log("%s: %s" % (self.name, m), prio=3)
+            self.spawn_failed = True
+            return self.fake_exit(e.status)
+        out, errt = self.output_targets()
+        ident = self.u.svc("SyslogIdentifier") or os.path.basename(cmd["argv"][0] if cmd["argv"] else cmd["path"])
+        tramp = [sys.executable, self_path(), "--lm-exec", ROOT, self.name, real, cmd["path"]] + args
+        p = subprocess.Popen(tramp, cwd=cwd, env=env, stdin=subprocess.DEVNULL, stdout=out, stderr=errt,
+                             close_fds=True)
+        p.returncode = 0   # reaped by waitpid(-1); keep Popen from complaining
+        if out is subprocess.PIPE:
+            t = threading.Thread(target=self.pump, args=(p.stdout, p.pid, ident))
+            t.daemon = True
+            t.start()
+            self.threads.append(t)
+        return p.pid
+
+    def fake_exit(self, code):
+        p = subprocess.Popen([sys.executable, self_path(), "--lm-exec", ROOT, self.name, "--exit", str(code)],
+                             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        p.returncode = 0
+        return p.pid
+
+    def record(self, pid, kind, cmd, code="", status=""):
+        for pr in self.processes:
+            if pr["pid"] == pid:
+                pr["code"], pr["status"] = code, status
+                break
+        else:
+            self.processes.append({"pid": pid, "kind": kind, "cmd": cmd["line"], "code": code, "status": status})
+        update_state(self.name, LMProcesses=json.dumps(self.processes))
+
+    def flush_spawn_msgs(self):
+        for m in getattr(self, "spawn_msgs", []):
+            self.log("%s: %s" % (self.name, m), prio=3)
+        self.spawn_msgs = []
+
+    def run_cmd(self, cmd, env, kind, timeout=None):
+        """Run a control command to completion -> (ok, code, status)."""
+        pid = self.spawn(cmd, env, kind)
+        self.record(pid, kind, cmd)
+        st = self.wait_for(pid, timeout=timeout, interruptible=False)
+        if st is None:
+            try:
+                os.killpg(pid, signal.SIGKILL)
+            except OSError:
+                pass
+            st = self.wait_for(pid, interruptible=False)
+        code, status = self.decode(st)
+        self.record(pid, kind, cmd, code, status)
+        ok = (code == "exited" and status == 0) or cmd["ignore"]
+        if not (code == "exited" and status == 0):
+            self.log("%s: Control process exited, %s" % (self.name, fmt_exit(code, status)),
+                     prio=6 if cmd["ignore"] else 5)
+        return ok, code, status
+
+    def clean_exit(self, code, status):
+        success = set()
+        for v in self.u.values("Service", "SuccessExitStatus"):
+            for w in v.split():
+                success.add(w)
+        if code == "exited":
+            return status == 0 or str(status) in success
+        if code == "killed":
+            return status in (signal.SIGHUP, signal.SIGINT, signal.SIGTERM, signal.SIGPIPE) \
+                or sig_name(status) in success or ("SIG" + sig_name(status)) in success
+        return False
+
+    def should_restart(self, code, status, result):
+        policy = self.u.restart()
+        prevent = set()
+        for v in self.u.values("Service", "RestartPreventExitStatus"):
+            prevent.update(v.split())
+        if code == "exited" and str(status) in prevent:
+            return False
+        if code in ("killed", "dumped") and (sig_name(status) in prevent or "SIG" + sig_name(status) in prevent):
+            return False
+        clean = result == "success"
+        if policy == "always":
+            return True
+        if policy == "on-success":
+            return clean
+        if policy == "on-failure":
+            return not clean
+        if policy == "on-abnormal":
+            return result in ("signal", "core-dump", "timeout", "watchdog")
+        if policy == "on-abort":
+            return result in ("signal", "core-dump")
+        return False
+
+    def kill_group(self, sig):
+        mode = self.u.svc("KillMode", "control-group")
+        targets = []
+        if self.main_pid:
+            targets.append(("pid", self.main_pid))
+        if mode in ("control-group", "mixed") and self.pgid:
+            targets.append(("pg", self.pgid))
+        for kind, pid in targets:
+            if mode == "none":
+                continue
+            try:
+                if kind == "pg":
+                    os.killpg(pid, sig if mode == "control-group" else signal.SIGKILL)
+                else:
+                    os.kill(pid, sig)
+            except OSError:
+                pass
+
+    def kill_leftovers(self):
+        if self.u.svc("KillMode", "control-group") not in ("control-group", "mixed") or not self.pgid:
+            return
+        for sig in (signal.SIGTERM, signal.SIGKILL):
+            try:
+                os.killpg(self.pgid, sig)
+            except OSError:
+                return
+            time.sleep(0.05)
+            self.reap()
+
+    def finish_job(self, result):
+        update_state(self.name, LMJob="", LMJobResult=result)
+
+    def main(self):
+        global LIBC
+        LIBC = _libc()
+        signal.signal(signal.SIGTERM, self.on_term)
+        signal.signal(signal.SIGINT, self.on_term)
+        signal.signal(signal.SIGHUP, signal.SIG_IGN)
+        if LIBC is not None and sys.platform.startswith("linux"):
+            try:
+                LIBC.prctl(36, 1, 0, 0, 0)  # PR_SET_CHILD_SUBREAPER
+            except Exception:
+                pass
+        update_state(self.name, LMSupervisorPID=os.getpid())
+        try:
+            self.loop()
+        finally:
+            with Lock():
+                st = read_state(self.name)
+                if st.get("LMSupervisorPID") == str(os.getpid()):
+                    st["LMSupervisorPID"] = ""
+                    st["LMJob"] = ""
+                    if st["ActiveState"] in ("activating", "deactivating", "reloading") or \
+                            (st["ActiveState"] == "active" and st["SubState"] == "running"):
+                        st.update(ActiveState="failed", SubState="failed", Result="protocol", MainPID="0")
+                    write_state(self.name, st)
+
+    def loop(self):
+        first = True
+        nrestarts = 0
+        while True:
+            if not first:
+                interval, burst = self.u.start_limit()
+                with Lock():
+                    st = read_state(self.name)
+                    times = prune_starts(st, interval)
+                    if burst > 0 and interval > 0 and len(times) >= burst:
+                        st.update(ActiveState="failed", SubState="failed", Result="start-limit-hit", MainPID="0",
+                                  LMSupervisorPID="", StateChangeTimestamp=stamp(), InactiveEnterTimestamp=stamp())
+                        write_state(self.name, st)
+                        self.log("%s: Start request repeated too quickly." % self.name, prio=4)
+                        self.log("%s: Failed with result 'start-limit-hit'." % self.name, prio=4)
+                        self.log("Failed to start %s - %s." % (self.name, self.desc), prio=3)
+                        return
+                    times.append(time.time())
+                    st["LMStartTimes"] = ",".join("%.3f" % t for t in times)
+                    write_state(self.name, st)
+            outcome = self.run_once(first)
+            first = False
+            if outcome is None:
+                return
+            code, status, result = outcome
+            if self.stop_req:
+                self.stopped(result)
+                return
+            if result != "skip" and self.should_restart(code, status, result):
+                update_state(self.name, ActiveState="activating", SubState="auto-restart", Result=result,
+                             MainPID="0", StateChangeTimestamp=stamp())
+                delay = self.u.timespan("RestartSec", 0.1) * TIMESCALE
+                end = time.time() + delay
+                while time.time() < end and not self.stop_req:
+                    time.sleep(min(0.05, max(0.0, end - time.time())))
+                if self.stop_req:
+                    update_state(self.name, ActiveState="inactive", SubState="dead", LMSupervisorPID="",
+                                 StateChangeTimestamp=stamp(), InactiveEnterTimestamp=stamp())
+                    return
+                nrestarts += 1
+                update_state(self.name, NRestarts=nrestarts)
+                self.log("%s: Scheduled restart job, restart counter is at %d." % (self.name, nrestarts))
+                self.log("Stopped %s - %s." % (self.name, self.desc))
+                continue
+            return
+
+    def run_once(self, first):
+        """One activation. -> (code, status, result) after the service went down, or None when done."""
+        u = self.u
+        stype = u.stype()
+        self.processes = []
+        self.main_pid = 0
+        self.pgid = 0
+        update_state(self.name, ActiveState="activating", SubState="start-pre", MainPID="0", Result="success",
+                     LMProcesses="[]", StateChangeTimestamp=stamp())
+        self.log("Starting %s - %s..." % (self.name, self.desc))
+        try:
+            env = service_env(u)
+        except ExecFail as e:
+            for m in e.msgs:
+                self.log("%s: %s" % (self.name, m), prio=3)
+            return self.failed("resources", None, None, starting=True)
+        update_state(self.name, LMEnvironment=json.dumps(sorted("%s=%s" % kv for kv in env.items())))
+        for cmd in u.execs("ExecStartPre"):
+            ok, code, status = self.run_cmd(cmd, env, "ExecStartPre", timeout=u.timespan("TimeoutStartSec", 90))
+            if self.stop_req:
+                return self.failed("success", None, None, starting=True, quiet=True)
+            if not ok:
+                res = "exit-code" if code == "exited" else ("core-dump" if code == "dumped" else "signal")
+                return self.failed(res, code, status, starting=True)
+        starts = u.execs("ExecStart")
+        if not starts:
+            self.set_up(stype, remain=True)
+            return None
+        main_result = None
+        for i, cmd in enumerate(starts):
+            update_state(self.name, SubState="start")
+            pid = self.spawn(cmd, env, "ExecStart")
+            self.record(pid, "ExecStart", cmd)
+            self.main_pid = pid
+            self.main_own = True
+            self.pgid = pid
+            update_state(self.name, MainPID=pid, ExecMainPID=pid, ExecMainStartTimestamp=stamp(),
+                         ExecMainCode="0", ExecMainStatus="0")
+            if stype in ("oneshot", "forking"):
+                self.flush_spawn_msgs()
+                st = self.wait_for(pid, timeout=u.timespan("TimeoutStartSec", 90) * TIMESCALE
+                                   if stype == "forking" else None)
+                if st is None:
+                    if self.stop_req:
+                        self.do_stop_sequence(env)
+                        return None
+                    self.kill_group(signal.SIGKILL)
+                    self.wait_for(pid, interruptible=False)
+                    return self.failed("timeout", None, None, starting=True)
+                code, status = self.decode(st)
+                self.record(pid, "ExecStart", cmd, code, status)
+                update_state(self.name, ExecMainCode=CODE_NUMS[code], ExecMainStatus=status,
+                             ExecMainExitTimestamp=stamp(), MainPID="0")
+                if not (code == "exited" and status == 0) and not cmd["ignore"] \
+                        and not self.clean_exit(code, status):
+                    self.log("%s: Main process exited, %s" % (self.name, fmt_exit(code, status)),
+                             prio=5)
+                    res = "exit-code" if code == "exited" else ("core-dump" if code == "dumped" else "signal")
+                    self.kill_leftovers()
+                    return self.failed(res, code, status, starting=True)
+                if stype == "forking":
+                    main_result = self.forked_main()
+                    break
+                continue
+            break
+        if stype == "oneshot":
+            self.main_pid = 0
+            self.kill_leftovers()
+            for cmd in u.execs("ExecStartPost"):
+                self.run_cmd(cmd, env, "ExecStartPost")
+            if u.bool("Service", "RemainAfterExit"):
+                self.set_up(stype, remain=True)
+                return None
+            self.log("%s: Deactivated successfully." % self.name)
+            self.log("Finished %s - %s." % (self.name, self.desc))
+            update_state(self.name, ActiveState="inactive", SubState="dead", Result="success", LMSupervisorPID="",
+                         StateChangeTimestamp=stamp(), InactiveEnterTimestamp=stamp())
+            self.finish_job("done")
+            self.run_stop_post(env)
+            return None
+        if stype == "forking" and main_result is None:
+            return self.failed("protocol", None, None, starting=True)
+        if stype == "exec" and self.spawn_failed:
+            self.flush_spawn_msgs()
+            st = self.wait_for(self.main_pid, interruptible=False)
+            code, status = self.decode(st)
+            self.record(self.main_pid, "ExecStart", starts[0], code, status)
+            update_state(self.name, ExecMainCode=CODE_NUMS[code], ExecMainStatus=status,
+                         ExecMainExitTimestamp=stamp(), MainPID="0")
+            self.log("%s: Main process exited, %s" % (self.name, fmt_exit(code, status)), prio=5)
+            return self.failed("exit-code", code, status, starting=True)
+        self.set_up(stype)
+        self.flush_spawn_msgs()
+        env_main = dict(env)
+        env_main["MAINPID"] = str(self.main_pid)
+        for cmd in u.execs("ExecStartPost"):
+            self.run_cmd(cmd, env_main, "ExecStartPost")
+        st = self.wait_for(self.main_pid, own=self.main_own)
+        if st is None:
+            self.do_stop_sequence(env_main)
+            return None
+        code, status = self.decode(st)
+        self.record(self.main_pid, "ExecStart", starts[0], code, status)
+        update_state(self.name, ExecMainCode=CODE_NUMS[code], ExecMainStatus=status, ExecMainExitTimestamp=stamp(),
+                     MainPID="0")
+        self.kill_leftovers()
+        if self.clean_exit(code, status):
+            result = "success"
+        else:
+            result = "exit-code" if code == "exited" else ("core-dump" if code == "dumped" else "signal")
+            self.log("%s: Main process exited, %s" % (self.name, fmt_exit(code, status)), prio=5)
+        for cmd in u.execs("ExecStopPost"):
+            self.run_cmd(cmd, env_main, "ExecStopPost")
+        if result == "success":
+            if u.bool("Service", "RemainAfterExit"):
+                update_state(self.name, ActiveState="active", SubState="exited")
+                return None
+            self.log("%s: Deactivated successfully." % self.name)
+            restart = self.should_restart(code, status, result)
+            update_state(self.name, ActiveState="inactive", SubState="dead", Result="success",
+                         LMSupervisorPID="" if not restart else os.getpid(), StateChangeTimestamp=stamp(),
+                         InactiveEnterTimestamp=stamp(), ActiveExitTimestamp=stamp())
+            return code, status, result
+        self.log("%s: Failed with result '%s'." % (self.name, result), prio=4)
+        restart = self.should_restart(code, status, result)
+        update_state(self.name, ActiveState="failed" if not restart else "activating",
+                     SubState="failed" if not restart else "auto-restart", Result=result,
+                     LMSupervisorPID="" if not restart else os.getpid(),
+                     StateChangeTimestamp=stamp(), InactiveEnterTimestamp=stamp(), ActiveExitTimestamp=stamp())
+        return code, status, result
+
+    def _is_child(self, pid):
+        txt = read_text("/proc/%d/stat" % pid)
+        if txt:
+            try:
+                return int(txt.rsplit(")", 1)[1].split()[1]) == os.getpid()
+            except (IndexError, ValueError):
+                return False
+        return False
+
+    def forked_main(self):
+        pidfile = self.u.svc("PIDFile")
+        if pidfile:
+            for _ in range(50):
+                txt = read_text(root_resolve(pidfile))
+                if txt and txt.strip().isdigit() and pid_alive(int(txt.strip())):
+                    self.main_pid = int(txt.strip())
+                    self.main_own = self._is_child(self.main_pid)
+                    break
+                time.sleep(0.02)
+            else:
+                self.log("%s: Can't open PID file %s (yet?) after start: No such file or directory"
+                         % (self.name, pidfile), prio=4)
+                return None
+        else:
+            left = sorted(p for p, pg, _a in proc_table() if pg == self.pgid and pid_alive(p))
+            if not left:
+                return None
+            self.main_pid = left[0]
+        self.main_own = self._is_child(self.main_pid)
+        try:
+            self.pgid = os.getpgid(self.main_pid)
+        except OSError:
+            pass
+        update_state(self.name, MainPID=self.main_pid, ExecMainPID=self.main_pid)
+        return self.main_pid
+
+    def set_up(self, stype, remain=False):
+        sub = "exited" if remain else "running"
+        update_state(self.name, ActiveState="active", SubState=sub, Result="success",
+                     StateChangeTimestamp=stamp(), ActiveEnterTimestamp=stamp())
+        self.log("%s %s - %s." % ("Finished" if stype == "oneshot" else "Started", self.name, self.desc))
+        self.finish_job("done")
+
+    def failed(self, result, code, status, starting=False, quiet=False):
+        if not quiet:
+            self.log("%s: Failed with result '%s'." % (self.name, result), prio=4)
+            if starting:
+                self.log("Failed to start %s - %s." % (self.name, self.desc), prio=3)
+        restart = result not in ("resources", "protocol", "success") and \
+            self.should_restart(code, status, result)
+        if result == "success":
+            update_state(self.name, ActiveState="inactive", SubState="dead", LMSupervisorPID="",
+                         StateChangeTimestamp=stamp(), InactiveEnterTimestamp=stamp())
+        else:
+            update_state(self.name, ActiveState="activating" if restart else "failed",
+                         SubState="auto-restart" if restart else "failed", Result=result, MainPID="0",
+                         LMSupervisorPID=os.getpid() if restart else "",
+                         StateChangeTimestamp=stamp(), InactiveEnterTimestamp=stamp())
+        self.finish_job("failed:" + result if result != "success" else "done")
+        if code is None:
+            return (None, None, "skip") if not restart else ("exited", 1, result)
+        return code, status, result
+
+    def run_stop_post(self, env):
+        for cmd in self.u.execs("ExecStopPost"):
+            self.run_cmd(cmd, env, "ExecStopPost")
+
+    def do_stop_sequence(self, env):
+        u = self.u
+        self.stop_req = True
+        update_state(self.name, ActiveState="deactivating", SubState="stop", StateChangeTimestamp=stamp())
+        self.log("Stopping %s - %s..." % (self.name, self.desc))
+        alive = self.main_pid and (self.main_pid not in self.reaped) and pid_alive(self.main_pid)
+        env2 = dict(env)
+        env2["MAINPID"] = str(self.main_pid or "")
+        for cmd in u.execs("ExecStop"):
+            self.run_cmd(cmd, env2, "ExecStop", timeout=u.timespan("TimeoutStopSec", 90) * TIMESCALE)
+        result = "success"
+        if alive:
+            update_state(self.name, SubState="stop-sigterm")
+            sig = sig_num(u.svc("KillSignal", "SIGTERM")) or signal.SIGTERM
+            self.kill_group(sig)
+            own = self.main_own
+            st = self.wait_for(self.main_pid, timeout=u.timespan("TimeoutStopSec", 90) * TIMESCALE,
+                               interruptible=False, own=own)
+            if st is None:
+                self.log("%s: State 'stop-sigterm' timed out. Killing." % self.name, prio=4)
+                self.log("%s: Killing process %d (%s) with signal SIGKILL." % (self.name, self.main_pid,
+                                                                                comm_of(self.main_pid)), prio=4)
+                self.kill_group(signal.SIGKILL)
+                st = self.wait_for(self.main_pid, timeout=5, interruptible=False, own=own)
+                result = "timeout"
+            if st is not None:
+                code, status = self.decode(st)
+                update_state(self.name, ExecMainCode=CODE_NUMS[code], ExecMainStatus=status,
+                             ExecMainExitTimestamp=stamp())
+                for pr in self.processes:
+                    if pr["pid"] == self.main_pid:
+                        pr["code"], pr["status"] = code, status
+                update_state(self.name, LMProcesses=json.dumps(self.processes))
+        self.kill_leftovers()
+        self.run_stop_post(env2)
+        self.stopped(result)
+
+    def stopped(self, result="success"):
+        if result == "success":
+            self.log("%s: Deactivated successfully." % self.name)
+            update_state(self.name, ActiveState="inactive", SubState="dead", Result="success", MainPID="0",
+                         LMSupervisorPID="", LMJob="", StateChangeTimestamp=stamp(),
+                         InactiveEnterTimestamp=stamp(), ActiveExitTimestamp=stamp())
+        else:
+            self.log("%s: Failed with result '%s'." % (self.name, result), prio=4)
+            update_state(self.name, ActiveState="failed", SubState="failed", Result=result, MainPID="0",
+                         LMSupervisorPID="", LMJob="", StateChangeTimestamp=stamp(),
+                         InactiveEnterTimestamp=stamp())
+        self.log("Stopped %s - %s." % (self.name, self.desc))
+
+
+def prune_starts(st, interval):
+    times = []
+    for t in st.get("LMStartTimes", "").split(","):
+        try:
+            times.append(float(t))
+        except ValueError:
+            pass
+    return [t for t in times if t > time.time() - interval * TIMESCALE]
+
+
+# ------------------------------------------------------------ job execution
+
+def self_path():
+    return os.path.abspath(sys.argv[0])
+
+
+def job_failed_msg(name, result):
+    tail = '\nSee "systemctl status %s" and "journalctl -xeu %s" for details.' % (name, name)
+    if result == "start-limit-hit":
+        return ("Job for %s failed because start of the service was attempted too often.%s\n"
+                'To force a start use "systemctl reset-failed %s"\nfollowed by "systemctl start %s" again.'
+                % (name, tail, name, name))
+    if result == "dependency":
+        return "A dependency job for %s failed. See 'journalctl -xe' for details." % name
+    reasons = {"exit-code": "the control process exited with error code",
+               "signal": "a fatal signal was delivered to the control process",
+               "core-dump": "a fatal signal was delivered causing the control process to dump core",
+               "timeout": "a timeout was exceeded",
+               "resources": "of unavailable resources or another system error",
+               "protocol": "the service did not take the steps required by its unit configuration"}
+    if result in reasons:
+        return "Job for %s failed because %s.%s" % (name, reasons[result], tail)
+    return "Job for %s failed.%s" % (name, tail)
+
+
+def start_one(name, wait=True):
+    """Start one unit (no dependencies). -> (ok, result)."""
+    u = get_unit(name)
+    if u.type != "service":
+        st = live_state(name)
+        if st["ActiveState"] != "active":
+            update_state(name, ActiveState="active", SubState="active" if u.type == "target" else "running",
+                         Result="success", StateChangeTimestamp=stamp(), ActiveEnterTimestamp=stamp())
+            if u.type == "target":
+                jlog("Reached target %s - %s." % (name, u.description()), unit=name)
+        return True, "done"
+    with Lock():
+        st = read_state(name)
+        sup = st.get("LMSupervisorPID", "")
+        if st["ActiveState"] in ("active", "reloading") or (st["ActiveState"] in ("activating", "deactivating")
+                                                            and sup and pid_alive(sup)):
+            return True, "done"
+        interval, burst = u.start_limit()
+        times = prune_starts(st, interval)
+        if burst > 0 and interval > 0 and len(times) >= burst:
+            st.update(ActiveState="failed", SubState="failed", Result="start-limit-hit",
+                      StateChangeTimestamp=stamp())
+            write_state(name, st)
+            jlog("%s: Start request repeated too quickly." % name, unit=name, prio=4)
+            jlog("%s: Failed with result 'start-limit-hit'." % name, unit=name, prio=4)
+            jlog("Failed to start %s - %s." % (name, u.description()), unit=name, prio=3)
+            return False, "start-limit-hit"
+        times.append(time.time())
+        st.update(ActiveState="activating", SubState="start", Result="success", LMJob="start", LMJobResult="",
+                  NRestarts="0", MainPID="0", LMProcesses="[]", StateChangeTimestamp=stamp(),
+                  InactiveExitTimestamp=stamp(), LMStartTimes=",".join("%.3f" % t for t in times))
+        write_state(name, st)
+    env = dict(os.environ)
+    env["LM_ROOT"] = ROOT
+    p = subprocess.Popen([sys.executable, self_path(), "--lm-supervise", name, "--lm-root", ROOT],
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         close_fds=True, start_new_session=True, env=env)
+    update_state(name, LMSupervisorPID=p.pid)
+    if not wait:
+        return True, "done"
+    limit = time.time() + max(5.0, u.timespan("TimeoutStartSec", 90) * TIMESCALE + 5)
+    while time.time() < limit:
+        st = read_state(name)
+        if not st.get("LMJob"):
+            break
+        if p.poll() is not None:
+            st = read_state(name)
+            break
+        time.sleep(0.02)
+    res = st.get("LMJobResult", "") or "done"
+    if res.startswith("failed:"):
+        return False, res.split(":", 1)[1]
+    return True, "done"
+
+
+def stop_one(name):
+    u = get_unit(name)
+    st = live_state(name)
+    if u.type != "service":
+        if st["ActiveState"] != "inactive":
+            update_state(name, ActiveState="inactive", SubState="dead", StateChangeTimestamp=stamp())
+            if u.type == "target":
+                jlog("Stopped target %s - %s." % (name, u.description()), unit=name)
+        return
+    sup = st.get("LMSupervisorPID", "")
+    if sup and pid_alive(sup):
+        try:
+            os.kill(int(sup), signal.SIGTERM)
+        except OSError:
+            pass
+        limit = time.time() + u.timespan("TimeoutStopSec", 90) * TIMESCALE + 10
+        while time.time() < limit and pid_alive(sup):
+            time.sleep(0.02)
+        return
+    main = st.get("MainPID", "0")
+    if st["ActiveState"] in ("active", "activating", "deactivating", "reloading"):
+        jlog("Stopping %s - %s..." % (name, u.description()), unit=name)
+        run_control_cmds(name, u, "ExecStop", main)
+        if pid_alive(main):
+            try:
+                os.kill(int(main), signal.SIGTERM)
+            except OSError:
+                pass
+        run_control_cmds(name, u, "ExecStopPost", main)
+        jlog("%s: Deactivated successfully." % name, unit=name)
+        jlog("Stopped %s - %s." % (name, u.description()), unit=name)
+        update_state(name, ActiveState="inactive", SubState="dead", Result="success", MainPID="0",
+                     LMSupervisorPID="", StateChangeTimestamp=stamp(), InactiveEnterTimestamp=stamp())
+
+
+def is_activeish(name):
+    return live_state(name)["ActiveState"] in ("active", "activating", "reloading", "deactivating")
+
+
+def fwd_deps(u, kinds=("Requires", "Requisite", "Wants", "BindsTo", "Upholds")):
+    out = []
+    for k in kinds:
+        for d in u.deps(k):
+            if d not in out:
+                out.append(d)
+    for kind, key in (("wants", "Wants"), ("requires", "Requires"), ("upholds", "Upholds")):
+        if key in kinds:
+            for d in wants_dir(u.name, kind):
+                if d not in out:
+                    out.append(d)
+    return out
+
+
+def reverse_deps(name, kinds):
+    """Units that have name in one of kinds (Requires/BindsTo/PartOf/Wants...)."""
+    out = []
+    for n in all_unit_names():
+        if n == name:
+            continue
+        u = get_unit(n)
+        if u.load_state not in ("loaded", "bad-setting"):
+            continue
+        if name in fwd_deps(u, tuple(k for k in kinds if k != "PartOf")) or \
+                ("PartOf" in kinds and name in u.deps("PartOf")):
+            out.append(n)
+    return out
+
+
+def ordered(names, units):
+    """Topological order by After=/Before=; ties alphabetical. -> (order, cycle messages, dropped)."""
+    names = list(dict.fromkeys(names))
+    nset = set(names)
+    after = dict((n, set()) for n in names)
+    for n in names:
+        u = units[n]
+        for a in u.deps("After"):
+            if a in nset and a != n:
+                after[n].add(a)
+        for b in u.deps("Before"):
+            if b in nset and b != n:
+                after[b].add(n)
+        if not default_deps(u):
+            continue
+        if u.type == "target":
+            # systemd.target(5): Wants=/Requires= are complemented with After=
+            for d in fwd_deps(u, ("Requires", "Wants", "BindsTo")):
+                if d in nset and d != n and default_deps(units[d]) and n not in units[d].deps("After"):
+                    after[n].add(d)
+        elif u.type == "service":
+            for d in ("sysinit.target", "basic.target"):
+                if d in nset and n not in units[d].deps("After") and n not in fwd_deps(units[d]):
+                    after[n].add(d)
+    msgs = []
+    dropped = []
+    order = []
+    remaining = set(names)
+    while remaining:
+        ready = sorted(n for n in remaining if not (after[n] & remaining))
+        if ready:
+            n = ready[0]
+            order.append(n)
+            remaining.discard(n)
+            continue
+        cycle = find_cycle(remaining, after)
+        start = cycle[0]
+        for c in cycle[1:]:
+            msgs.append("%s: Found ordering cycle on %s/start" % (start, c))
+        msgs.append("%s: Found dependency on %s/start" % (start, start))
+        victim = None
+        for c in reversed(cycle):
+            if units[c].type != "target":
+                victim = c
+                break
+        victim = victim or cycle[-1]
+        msgs.append("%s: Job %s/start deleted to break ordering cycle starting with %s/start"
+                    % (start, victim, start))
+        remaining.discard(victim)
+        dropped.append(victim)
+    return order, msgs, dropped
+
+
+def default_deps(u):
+    if u.name in NO_DEFAULT_DEPS:
+        return False
+    return u.get("Unit", "DefaultDependencies", "yes").lower() not in ("no", "false", "0", "off")
+
+
+NO_DEFAULT_DEPS = set(["sysinit.target", "local-fs.target", "swap.target", "sockets.target", "timers.target",
+                       "paths.target", "slices.target", "basic.target", "network-pre.target", "emergency.target",
+                       "shutdown.target", "reboot.target", "rescue.target"])
+
+
+def find_cycle(nodes, after):
+    for start in sorted(nodes):
+        path = [start]
+        seen = {start: 0}
+        cur = start
+        while True:
+            nxt = sorted(a for a in after[cur] if a in nodes)
+            if not nxt:
+                break
+            cur = nxt[0]
+            if cur in seen:
+                return path[seen[cur]:]
+            seen[cur] = len(path)
+            path.append(cur)
+    return sorted(nodes)[:1]
+
+
+def start_transaction(requested, console=False):
+    """Start requested units and what they pull in. -> list of (unit, ok, result)."""
+    units = {}
+    pulled = []
+    required = {}
+    queue = [resolve_alias(n) for n in requested]
+    while queue:
+        n = queue.pop(0)
+        if n in units:
+            continue
+        u = get_unit(n)
+        units[n] = u
+        pulled.append(n)
+        if u.load_state != "loaded":
+            continue
+        for d in fwd_deps(u, ("Requires", "BindsTo")):
+            required.setdefault(d, set()).add(n)
+            queue.append(d)
+        for d in fwd_deps(u, ("Wants", "Upholds")):
+            dd = get_unit(d)
+            if dd.load_state in ("loaded",):
+                queue.append(d)
+    order, msgs, dropped = ordered(pulled, units)
+    for m in msgs:
+        start = m.split(":", 1)[0]
+        jlog(m, unit=start, prio=4 if "deleted" in m else 3)
+        if console:
+            print(m)
+    results = []
+    failed = set()
+    for n in order:
+        u = units[n]
+        desc = u.description()
+        afters = set(u.deps("After"))
+        for b_name in units:
+            if n in units[b_name].deps("Before"):
+                afters.add(b_name)
+        need = [d for d in fwd_deps(u, ("Requires", "BindsTo", "Requisite"))]
+        bad_dep = [d for d in need if d in failed and d in afters]
+        for d in u.deps("Requisite"):
+            if not is_activeish(d) and d not in order:
+                bad_dep.append(d)
+        if u.load_state == "not-found":
+            failed.add(n)
+            results.append((n, False, "not-found"))
+            continue
+        if u.load_state == "masked":
+            failed.add(n)
+            results.append((n, False, "masked"))
+            continue
+        if u.load_state == "bad-setting":
+            failed.add(n)
+            results.append((n, False, "bad-setting"))
+            if console:
+                print("[FAILED] Failed to start %s - %s." % (n, desc))
+            continue
+        if bad_dep:
+            failed.add(n)
+            jlog("Dependency failed for %s - %s." % (n, desc), unit=n, prio=3)
+            jlog("%s: Job %s/start failed with result 'dependency'." % (n, n), unit=n, prio=4)
+            results.append((n, False, "dependency"))
+            if console:
+                print("[DEPEND] Dependency failed for %s - %s." % (n, desc))
+            continue
+        for c in u.deps("Conflicts"):
+            if is_activeish(c):
+                stop_one(c)
+        ok, res = start_one(n)
+        results.append((n, ok, res))
+        if not ok:
+            failed.add(n)
+        if console:
+            if ok and u.type == "target":
+                print("[  OK  ] Reached target %s - %s." % (n, desc))
+            elif ok and u.type == "service" and u.stype() == "oneshot":
+                print("[  OK  ] Finished %s - %s." % (n, desc))
+            elif ok:
+                print("[  OK  ] Started %s - %s." % (n, desc))
+            else:
+                print("[FAILED] Failed to start %s - %s." % (n, desc))
+    for d in dropped:
+        results.append((d, False, "cycle"))
+    return results
+
+
+def stop_set(name):
+    """name plus units that must stop with it (Requires=, BindsTo=, PartOf= on it), dependents first."""
+    out = [name]
+    queue = [name]
+    while queue:
+        n = queue.pop(0)
+        for r in reverse_deps(n, ("Requires", "BindsTo", "PartOf")):
+            if r not in out:
+                out.append(r)
+                queue.append(r)
+    return list(reversed(out))
+
+
+# --------------------------------------------------------------- systemctl
+
+class Opts(object):
+    def __init__(self):
+        self.all = False
+        self.failed = False
+        self.now = False
+        self.legend = True
+        self.plain = False
+        self.quiet = False
+        self.value = False
+        self.props = []
+        self.types = []
+        self.states = []
+        self.reverse = False
+        self.runtime = False
+        self.lines = 10
+        self.signal = "SIGTERM"
+        self.kill_whom = "all"
+        self.no_block = False
+        self.force = False
+
+
+SYSTEMCTL_UNSUPPORTED_OPTS = ("--user", "--global", "-H", "--host", "-M", "--machine", "--root", "--image",
+                              "--job-mode", "--what", "--preset-mode", "--check-inhibitors", "--wait",
+                              "--with-dependencies", "--timestamp", "-o", "--output", "--firmware-setup",
+                              "--boot-loader-menu", "--boot-loader-entry", "--reboot-argument", "--marked",
+                              "--drop-in", "--when", "-T", "--show-transaction", "-i", "--ignore-inhibitors")
+
+
+def parse_systemctl_args(argv):
+    o = Opts()
+    args = []
+    i = 0
+    with_arg = {"-p": "props", "--property": "props", "-P": "P", "-t": "types", "--type": "types",
+                "--state": "states", "-s": "signal", "--signal": "signal", "-n": "lines", "--lines": "lines",
+                "--kill-whom": "kill_whom", "--kill-who": "kill_whom"}
+    while i < len(argv):
+        a = argv[i]
+        i += 1
+        if a == "--":
+            args.extend(argv[i:])
+            break
+        if not a.startswith("-") or a == "-":
+            args.append(a)
+            continue
+        key, val = a, None
+        if a.startswith("--") and "=" in a:
+            key, val = a.split("=", 1)
+        elif not a.startswith("--") and len(a) > 2:
+            if a[:2] in with_arg:
+                key, val = a[:2], a[2:]
+            elif all(c in "alqrf" for c in a[1:]):
+                for c in a[1:]:
+                    argv.insert(i, "-" + c)
+                continue
+        if key in with_arg:
+            if val is None:
+                if i >= len(argv):
+                    raise Fail("%s: option '%s' requires an argument" % (PROG, key))
+                val = argv[i]
+                i += 1
+            dest = with_arg[key]
+            if dest == "props":
+                o.props += [p for p in val.split(",") if p]
+            elif dest == "P":
+                o.props += [p for p in val.split(",") if p]
+                o.value = True
+            elif dest == "types":
+                for t in val.split(","):
+                    if t in UNIT_TYPES:
+                        o.types.append(t)
+                    elif t in ("help",):
+                        print("\n".join(UNIT_TYPES))
+                        raise SystemExit(0)
+                    else:
+                        o.states.append(t)
+            elif dest == "states":
+                o.states += [s for s in val.split(",") if s]
+            elif dest == "signal":
+                o.signal = val
+            elif dest == "lines":
+                try:
+                    o.lines = int(val)
+                except ValueError:
+                    raise Fail("Failed to parse lines '%s'" % val)
+            elif dest == "kill_whom":
+                o.kill_whom = val
+            continue
+        if key in ("-a", "--all"):
+            o.all = True
+        elif key == "--failed":
+            o.failed = True
+        elif key == "--now":
+            o.now = True
+        elif key == "--no-legend":
+            o.legend = False
+        elif key == "--legend":
+            o.legend = val not in ("no", "false", "0")
+        elif key == "--plain":
+            o.plain = True
+        elif key in ("-q", "--quiet"):
+            o.quiet = True
+        elif key == "--value":
+            o.value = True
+        elif key == "--reverse":
+            o.reverse = True
+        elif key == "--runtime":
+            o.runtime = True
+        elif key == "--no-block":
+            o.no_block = True
+        elif key in ("-f", "--force"):
+            o.force = True
+        elif key in ("--no-pager", "-l", "--full", "--system", "--no-ask-password", "--no-reload",
+                     "--no-warn", "-r", "--recursive", "--show-types", "--after", "--before", "--no-wall"):
+            pass
+        elif key == "--version":
+            print(VERSION_TEXT)
+            raise SystemExit(0)
+        elif key in ("-h", "--help"):
+            print("%s [OPTIONS...] COMMAND ...\n\nMock of systemctl for LinuxMissions; see mocks/README.md." % PROG)
+            raise SystemExit(0)
+        elif key in SYSTEMCTL_UNSUPPORTED_OPTS:
+            unsupported("option %s" % key)
+        elif key.startswith("--"):
+            raise Fail("%s: unrecognized option '%s'" % (PROG, key))
+        else:
+            raise Fail("%s: invalid option -- '%s'" % (PROG, key.lstrip("-")[:1]))
+    return o, args
+
+
+def need_units(args, verb):
+    if not args:
+        raise Fail("Too few arguments.")
+    return [resolve_alias(mangle(a)) for a in args]
+
+
+def glyph(active):
+    if active in ("active", "reloading", "refreshing"):
+        return "\u25cf"
+    if active == "failed":
+        return "\u00d7"
+    if active in ("activating", "deactivating"):
+        return "\u25cf"
+    return "\u25cb"
+
+
+def cmd_start(o, args, verb):
+    names = need_units(args, verb)
+    rc = 0
+    for n in names:
+        u = get_unit(n)
+        warn_changed(n)
+        if u.load_state == "not-found":
+            err("Failed to %s %s: Unit %s not found." % (verb, n, n))
+            rc = 5
+            continue
+        if u.load_state == "masked":
+            err("Failed to %s %s: Unit %s is masked." % (verb, n, n))
+            rc = 1
+            continue
+        if u.load_state == "bad-setting":
+            err("Failed to %s %s: Unit %s has a bad unit file setting.\n"
+                "See system logs and 'systemctl status %s' for details." % (verb, n, n, n))
+            rc = 1
+            continue
+        if verb == "start" and u.bool("Unit", "RefuseManualStart"):
+            err("Failed to start %s: Operation refused, unit %s may be requested by dependency only "
+                "(it is configured to refuse manual start/stop).\nSee system logs and 'systemctl status %s' "
+                "for details." % (n, n, n))
+            rc = 4
+            continue
+        results = start_transaction([n])
+        for name, ok, res in results:
+            if name == n and not ok:
+                if res == "cycle":
+                    err("Failed to start %s: Transaction order is cyclic. See system logs for details.\n"
+                        "See system logs and 'systemctl status %s' for details." % (n, n))
+                else:
+                    err(job_failed_msg(n, res))
+                rc = 1
+            elif name == n and ok and get_unit(n).type == "service" and not o.no_block:
+                pass
+    return rc
+
+
+def cmd_stop(o, args):
+    names = need_units(args, "stop")
+    rc = 0
+    for n in names:
+        u = get_unit(n)
+        if u.load_state == "not-found" and not os.path.exists(state_file(n)):
+            err("Failed to stop %s: Unit %s not loaded." % (n, n))
+            rc = 5
+            continue
+        warn_changed(n)
+        for m in stop_set(n):
+            if is_activeish(m):
+                stop_one(m)
+    return rc
+
+
+def cmd_restart(o, args, verb):
+    names = need_units(args, verb)
+    rc = 0
+    for n in names:
+        u = get_unit(n)
+        if verb in ("try-restart", "condrestart", "try-reload-or-restart") and not is_activeish(n):
+            continue
+        if verb in ("reload-or-restart", "try-reload-or-restart") and u.values("Service", "ExecReload") \
+                and is_activeish(n) and u.load_state == "loaded":
+            rc = max(rc, do_reload(n, u))
+            continue
+        if u.load_state == "not-found":
+            err("Failed to %s %s: Unit %s not found." % ("restart" if "restart" in verb else verb, n, n))
+            rc = 5
+            continue
+        stopped = []
+        for m in stop_set(n):
+            if is_activeish(m):
+                stop_one(m)
+                stopped.append(m)
+        rc = max(rc, cmd_start(o, [n], "restart"))
+        others = [m for m in stopped if m != n]
+        if others:
+            start_transaction(others)
+    return rc
+
+
+def do_reload(n, u):
+    warn_changed(n)
+    if u.type != "service" or not u.values("Service", "ExecReload"):
+        err("Failed to reload %s: Job type reload is not applicable for unit %s." % (n, n))
+        return 1
+    st = live_state(n)
+    if st["ActiveState"] not in ("active",):
+        err("%s is not active, cannot reload." % n)
+        return 1
+    desc = u.description()
+    update_state(n, ActiveState="reloading", SubState="reload")
+    jlog("Reloading %s - %s..." % (n, desc), unit=n)
+    ok = run_control_cmds(n, u, "ExecReload", st.get("MainPID", "0"))
+    update_state(n, ActiveState="active", SubState=st.get("SubState", "running"))
+    if not ok:
+        jlog("Reload failed for %s - %s." % (n, desc), unit=n, prio=3)
+        err(job_failed_msg(n, "exit-code"))
+        return 1
+    jlog("Reloaded %s - %s." % (n, desc), unit=n)
+    return 0
+
+
+def run_control_cmds(n, u, key, mainpid="0"):
+    """Run ExecReload=/ExecStop=-style commands synchronously from systemctl. -> ok."""
+    try:
+        env = service_env(u, mainpid=mainpid)
+    except ExecFail:
+        env = {"MAINPID": str(mainpid), "PATH": FIXED_PATH, "LM_ROOT": ROOT}
+    for cmd in u.execs(key):
+        try:
+            real, args, cwd = exec_prep(u, cmd, env)
+        except ExecFail as e:
+            for m in e.msgs:
+                jlog("%s: %s" % (n, m), unit=n, prio=3)
+            if cmd["ignore"]:
+                continue
+            return False
+        p = subprocess.Popen(args, executable=real, cwd=cwd, env=env, stdin=subprocess.DEVNULL,
+                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output = p.communicate()[0]
+        for line in output.decode("utf-8", "replace").splitlines():
+            jlog(line, ident=os.path.basename(cmd["path"]), pid=p.pid, sunit=n, transport="stdout")
+        if p.returncode != 0 and not cmd["ignore"]:
+            code, status = ("exited", p.returncode) if p.returncode >= 0 else ("killed", -p.returncode)
+            jlog("%s: Control process exited, %s" % (n, fmt_exit(code, status)), unit=n, prio=5)
+            return False
+    return True
+
+
+def cmd_reload(o, args):
+    rc = 0
+    for n in need_units(args, "reload"):
+        u = get_unit(n)
+        if u.load_state == "not-found":
+            err("Failed to reload %s: Unit %s not found." % (n, n))
+            rc = 5
+            continue
+        rc = max(rc, do_reload(n, u))
+    return rc
+
+
+def cmd_is_active(o, args):
+    any_ok = False
+    for a in need_units(args, "is-active"):
+        s = eff_state(a)["ActiveState"]
+        if not o.quiet:
+            print(s)
+        any_ok = any_ok or s == "active"
+    return 0 if any_ok else 3
+
+
+def cmd_is_failed(o, args):
+    any_ok = False
+    for a in need_units(args, "is-failed"):
+        s = live_state(a)["ActiveState"]
+        if not o.quiet:
+            print(s)
+        any_ok = any_ok or s == "failed"
+    return 0 if any_ok else 1
+
+
+def cmd_is_enabled(o, args):
+    any_ok = False
+    rc_missing = False
+    for a in need_units(args, "is-enabled"):
+        s = enabled_state(a)
+        if s is None:
+            err("Failed to get unit file state for %s: No such file or directory" % a)
+            rc_missing = True
+            continue
+        if not o.quiet:
+            print(s)
+        any_ok = any_ok or is_enabled_ok(s)
+    if rc_missing and not any_ok:
+        return 1
+    return 0 if any_ok else 1
+
+
+def cmd_enable(o, args, verb):
+    names = need_units(args, verb)
+    changes = []
+    no_install = False
+    for n in names:
+        if verb == "reenable":
+            do_disable(n, changes)
+        if not do_enable(n, o.runtime, changes):
+            no_install = True
+    for c in changes:
+        if not o.quiet:
+            print(c)
+    daemon_reload()
+    if no_install and not changes:
+        err(NO_INSTALL)
+    rc = 0
+    if o.now:
+        rc = cmd_start(o, names, "start")
+    return rc
+
+
+def cmd_disable(o, args):
+    names = need_units(args, "disable")
+    changes = []
+    for n in names:
+        do_disable(n, changes)
+    for c in changes:
+        if not o.quiet:
+            print(c)
+    daemon_reload()
+    if o.now:
+        return cmd_stop(o, names)
+    return 0
+
+
+def cmd_mask(o, args):
+    names = need_units(args, "mask")
+    changes = []
+    base = "/run/systemd/system" if o.runtime else "/etc/systemd/system"
+    for n in names:
+        link = rp("%s/%s" % (base, n))
+        if os.path.islink(link) and os.readlink(link) == "/dev/null":
+            continue
+        if os.path.lexists(link) and not os.path.islink(link):
+            raise Fail("Failed to mask unit: File %s/%s already exists." % (base, n))
+        os.makedirs(os.path.dirname(link), exist_ok=True)
+        if os.path.islink(link):
+            os.unlink(link)
+        os.symlink("/dev/null", link)
+        changes.append("Created symlink %s/%s \u2192 /dev/null." % (base, n))
+    for c in changes:
+        if not o.quiet:
+            print(c)
+    daemon_reload()
+    if o.now:
+        return cmd_stop(o, names)
+    return 0
+
+
+def cmd_unmask(o, args):
+    names = need_units(args, "unmask")
+    for n in names:
+        for base in ("/etc/systemd/system", "/run/systemd/system"):
+            link = rp("%s/%s" % (base, n))
+            if os.path.islink(link) and os.readlink(link) == "/dev/null":
+                os.unlink(link)
+                if not o.quiet:
+                    print('Removed "%s/%s".' % (base, n))
+    daemon_reload()
+    return 0
+
+
+def cmd_daemon_reload(o, args):
+    daemon_reload()
+    return 0
+
+
+def dropin_lines(u):
+    if not u.dropins:
+        return []
+    groups = []
+    for p in u.dropins:
+        d, f = p.rsplit("/", 1)
+        if groups and groups[-1][0] == d:
+            groups[-1][1].append(f)
+        else:
+            groups.append((d, [f]))
+    lines = []
+    for i, (d, files) in enumerate(groups):
+        lines.append(("    Drop-In: " if i == 0 else "             ") + d)
+        lines.append("             \u2514\u2500" + ", ".join(files))
+    return lines
+
+
+def process_lines(u, st):
+    try:
+        procs = json.loads(st.get("LMProcesses") or "[]")
+    except ValueError:
+        procs = []
+    main = st.get("MainPID", "0")
+    lines = []
+    if not procs and st.get("ExecMainPID", "0") not in ("0", "") and st.get("ExecMainCode", "0") != "0":
+        starts = u.execs("ExecStart")
+        line = starts[0]["line"] if starts else ""
+        procs = [{"pid": st["ExecMainPID"], "kind": "ExecStart", "cmd": line, "code": st["ExecMainCode"],
+                  "status": st.get("ExecMainStatus", "0")}]
+    for p in procs:
+        if not p.get("code") or str(p.get("code")) == "0":
+            continue
+        if str(p["pid"]) == main and main != "0":
+            continue
+        lines.append("    Process: %s %s=%s (%s)" % (p["pid"], p["kind"], p["cmd"], fmt_exit(p["code"], p["status"])))
+    return lines
+
+
+def status_one(name, o, out):
+    u = get_unit(name)
+    st = eff_state(name)
+    has_state = os.path.exists(state_file(name))
+    if u.load_state == "not-found" and not has_state:
+        err("Unit %s could not be found." % name)
+        return 4
+    active = st["ActiveState"]
+    desc = u.description()
+    head = "%s %s" % (glyph(active), name)
+    if u.load_state in ("loaded", "bad-setting") and desc != name:
+        head += " - " + desc
+    out.append(head)
+    if u.load_state == "loaded":
+        es = enabled_state(name) or "disabled"
+        if es in ("static", "masked", "alias", "indirect", "generated", "transient"):
+            out.append("     Loaded: loaded (%s; %s)" % (u.fragment, es))
+        else:
+            out.append("     Loaded: loaded (%s; %s; preset: enabled)" % (u.fragment, es))
+    elif u.load_state == "masked":
+        out.append("     Loaded: masked (Reason: Unit %s is masked.)" % name)
+    elif u.load_state == "not-found":
+        out.append("     Loaded: not-found (Reason: Unit %s not found.)" % name)
+    else:
+        out.append("     Loaded: bad-setting (Reason: Unit %s has a bad unit file setting.)" % name)
+    out.extend(dropin_lines(u))
+    sub = st.get("SubState", "dead")
+    since = st_time(st, "StateChangeTimestamp")
+    if active == "failed":
+        shown = "failed (Result: %s)" % st.get("Result", "exit-code")
+    elif active == "activating" and sub == "auto-restart":
+        shown = "activating (auto-restart) (Result: %s)" % st.get("Result", "exit-code")
+    else:
+        shown = "%s (%s)" % (active, sub)
+    if since is not None:
+        shown += " since %s; %s" % (fmt_ts(since), fmt_rel(since))
+    out.append("     Active: " + shown)
+    docs = []
+    for d in u.values("Unit", "Documentation"):
+        docs += d.split()
+    for i, d in enumerate(docs):
+        out.append(("       Docs: " if i == 0 else "             ") + d)
+    out.extend(process_lines(u, st))
+    main = st.get("MainPID", "0")
+    if main not in ("0", "") and active in ("active", "reloading", "deactivating", "activating") \
+            and sub != "auto-restart":
+        out.append("   Main PID: %s (%s)" % (main, comm_of(main) if pid_alive(main) else "?"))
+        procs = []
+        try:
+            pg = os.getpgid(int(main))
+            procs = [(p, a) for p, g, a in proc_table() if g == pg]
+        except (OSError, ValueError):
+            procs = []
+        if not procs and pid_alive(main):
+            procs = [(int(main), comm_of(main))]
+        if procs:
+            out.append("      Tasks: %d (limit: 4558)" % len(procs))
+            out.append("     CGroup: /system.slice/%s" % name)
+            for i, (p, a) in enumerate(procs):
+                tree = "\u2514\u2500" if i == len(procs) - 1 else "\u251c\u2500"
+                out.append("             %s%d %s" % (tree, p, a))
+    elif st.get("ExecMainPID", "0") not in ("0", "") and st.get("ExecMainCode", "0") != "0":
+        out.append("   Main PID: %s (%s)" % (st["ExecMainPID"], fmt_exit(st["ExecMainCode"],
+                                                                     st.get("ExecMainStatus", "0"))))
+    if o.lines > 0:
+        cur = current_boot_id()
+        ents = [e for e in load_entries() if e.get("_BOOT_ID") == cur and unit_match(e, [name])]
+        ents = ents[-o.lines:]
+        if ents:
+            out.append("")
+            for e in ents:
+                out.extend(format_entry(e, "short", False, True))
+    return 3 if active != "active" else 0
+
+
+def cmd_status(o, args):
+    if not args:
+        return status_overview()
+    rc = 0
+    blocks = []
+    for n in [resolve_alias(mangle(a)) for a in args]:
+        out = []
+        r = status_one(n, o, out)
+        if out:
+            blocks.append("\n".join(out))
+        if r == 4:
+            rc = 4 if rc == 0 else rc
+        elif r == 3 and rc == 0:
+            rc = 3
+        if out:
+            sys.stdout.write(("\n" if len(blocks) > 1 else "") + blocks[-1] + "\n")
+            sys.stdout.flush()
+            warn_changed(n)
+    return rc
+
+
+def status_overview():
+    names = [n for n in all_unit_names()]
+    failed = [n for n in names if live_state(n)["ActiveState"] == "failed"]
+    state = "degraded" if failed else "running"
+    print("%s %s" % ("\u00d7" if failed else "\u25cf", hostname()))
+    print("    State: %s" % state)
+    print("    Units: %d loaded (incl. loaded aliases)" % len(names))
+    print("     Jobs: 0 queued")
+    print("   Failed: %d units" % len(failed))
+    return 0
+
+
+def cmd_is_system_running(o, args):
+    failed = [n for n in all_unit_names() if live_state(n)["ActiveState"] == "failed"]
+    s = "degraded" if failed else "running"
+    if not o.quiet:
+        print(s)
+    return 1 if failed else 0
+
+
+def table(rows, right=()):
+    widths = [max(len(r[i]) for r in rows) for i in range(len(rows[0]))]
+    out = []
+    for r in rows:
+        cells = []
+        for i, c in enumerate(r):
+            if i == len(r) - 1:
+                cells.append(c)
+            elif i in right:
+                cells.append(c.rjust(widths[i]))
+            else:
+                cells.append(c.ljust(widths[i]))
+        out.append(" ".join(cells).rstrip())
+    return out
+
+
+def match_patterns(name, pats):
+    return not pats or any(fnmatch.fnmatchcase(name, p) or fnmatch.fnmatchcase(name, mangle(p)) for p in pats)
+
+
+def cmd_list_units(o, args):
+    states = list(o.states)
+    if o.failed:
+        states.append("failed")
+    rows = []
+    for n in all_unit_names():
+        if o.types and unit_type(n) not in o.types:
+            continue
+        if not match_patterns(n, args):
+            continue
+        tmpl, inst = split_instance(n)
+        u = get_unit(n)
+        st = eff_state(n)
+        active = st["ActiveState"]
+        sub = st["SubState"]
+        if u.type != "service" and active == "active" and sub == "running":
+            sub = "active"
+        load = u.load_state
+        if load == "not-found" and not os.path.exists(state_file(n)):
+            continue
+        if states:
+            if not (load in states or active in states or sub in states):
+                continue
+        elif not o.all and active == "inactive" and load != "not-found":
+            continue
+        rows.append((n, load, active, sub, u.description() if load != "not-found" else n))
+    if not rows and not o.legend:
+        return 0
+    lines = []
+    prefixw = 0 if o.plain else 2
+    header = ("UNIT", "LOAD", "ACTIVE", "SUB", "DESCRIPTION")
+    body = [r for r in rows]
+    tab = table(([header] if o.legend else []) + body)
+    if o.legend:
+        lines.append(" " * prefixw + tab[0])
+        tab = tab[1:]
+    for r, line in zip(body, tab):
+        mark = "\u25cf " if r[2] == "failed" or r[1] in ("not-found", "bad-setting") else "  "
+        lines.append(("" if o.plain else mark) + line)
+    if o.legend:
+        lines.append("")
+        lines.append("Legend: LOAD   \u2192 Reflects whether the unit definition was properly loaded.")
+        lines.append("        ACTIVE \u2192 The high-level unit activation state, i.e. generalization of SUB.")
+        lines.append("        SUB    \u2192 The low-level unit activation state, values depend on unit type.")
+        lines.append("")
+        if o.all:
+            lines.append("%d loaded units listed." % len(rows))
+        else:
+            lines.append("%d loaded units listed. Pass --all to see loaded but inactive units, too." % len(rows))
+        lines.append("To show all installed unit files use 'systemctl list-unit-files'.")
+    print("\n".join(lines))
+    return 0
+
+
+_CLOSURE = []
+
+
+def boot_closure():
+    if _CLOSURE:
+        return _CLOSURE[0]
+    seen = set()
+    queue = [get_default()]
+    while queue:
+        n = queue.pop()
+        if n in seen:
+            continue
+        seen.add(n)
+        u = get_unit(n)
+        if u.type == "target":
+            queue.extend(d for d in fwd_deps(u, ("Requires", "Wants", "BindsTo")) if unit_type(d) == "target")
+    _CLOSURE.append(seen)
+    return seen
+
+
+def cmd_list_unit_files(o, args):
+    rows = []
+    for n in sorted(units_on_disk() | set(BUILTIN)):
+        if o.types and unit_type(n) not in o.types:
+            continue
+        if not match_patterns(n, args):
+            continue
+        s = enabled_state(n)
+        if s is None:
+            continue
+        if o.states and s not in o.states:
+            continue
+        preset = "-" if s in ("static", "indirect", "alias", "generated", "transient") else "enabled"
+        if s == "masked":
+            preset = "enabled"
+        rows.append((n, s, preset))
+    header = ("UNIT FILE", "STATE", "PRESET")
+    tab = table(([header] if o.legend else []) + rows) if (rows or o.legend) else []
+    for line in tab:
+        print(line)
+    if o.legend:
+        print("")
+        print("%d unit files listed." % len(rows))
+    return 0
+
+
+def cmd_list_dependencies(o, args):
+    name = resolve_alias(mangle(args[0])) if args else get_default()
+    print(name)
+    if o.reverse:
+        kinds = ("Requires", "Requisite", "Wants", "BindsTo", "PartOf", "Upholds")
+    seen = set([name])
+
+    def children(n):
+        if o.reverse:
+            kids = reverse_deps(n, kinds)
+        else:
+            u = get_unit(n)
+            kids = fwd_deps(u, ("Requires", "Requisite", "Wants", "BindsTo", "Upholds"))
+            kids += [p for p in reverse_deps(n, ("PartOf",)) if p not in kids]
+        return sorted(kids, key=lambda k: (unit_type(k) == "target", k))
+
+    def walk(n, prefix):
+        kids = children(n)
+        for i, k in enumerate(kids):
+            last = i == len(kids) - 1
+            st = eff_state(k)["ActiveState"]
+            print("%s %s%s%s" % (glyph(st), prefix, "\u2514\u2500" if last else "\u251c\u2500", k))
+            if k in seen:
+                continue
+            if unit_type(k) == "target" or o.all:
+                seen.add(k)
+                walk(k, prefix + ("  " if last else "\u2502 "))
+    walk(name, "")
+    return 0
+
+
+def cmd_cat(o, args):
+    names = need_units(args, "cat")
+    rc = 0
+    first = True
+    for n in names:
+        rec = disk_record(n)
+        if rec["state"] not in ("ok", "builtin"):
+            if rec["state"] == "masked":
+                err("Unit %s is masked." % n)
+            else:
+                err("No files found for %s." % n)
+            rc = 1
+            continue
+        if not first:
+            print("")
+        first = False
+        if changed_on_disk(n):
+            print("# Warning: %s changed on disk, the version systemd has loaded is outdated.\n"
+                  "# This output shows the current version of the unit's original fragment and drop-in files.\n"
+                  "# If fragments or drop-ins were added or removed, they are not properly reflected in this output.\n"
+                  "# Run 'systemctl daemon-reload' to reload units." % n)
+        for i, (path, text) in enumerate(rec["files"]):
+            if i:
+                print("")
+            print("# " + path)
+            sys.stdout.write(text if text.endswith("\n") or not text else text + "\n")
+    return rc
+
+
+def quote_env(s):
+    if re.search(r"[\s\"'\\]", s):
+        return '"%s"' % s.replace("\\", "\\\\").replace('"', '\\"')
+    return s
+
+
+def fmt_exec_prop(c, st, kind):
+    procs = []
+    try:
+        procs = json.loads(st.get("LMProcesses") or "[]")
+    except ValueError:
+        pass
+    pid, code, status, start = 0, "(null)", "0/0", "[n/a]"
+    for p in procs:
+        if p.get("kind") == kind and p.get("cmd") == c["line"]:
+            pid = p["pid"]
+            if p.get("code"):
+                code = CODE_NAMES.get(str(p["code"]), str(p["code"]))
+                status = str(p["status"])
+            t = st_time(st, "ExecMainStartTimestamp")
+            start = "[%s]" % fmt_ts(t) if t else "[n/a]"
+    return "{ path=%s ; argv[]=%s ; ignore_errors=%s ; start_time=%s ; stop_time=[n/a] ; pid=%s ; code=%s ; status=%s }" \
+        % (c["path"], " ".join(c["argv"]), "yes" if c["ignore"] else "no", start, pid, code, status)
+
+
+def unit_props(name):
+    u = get_unit(name)
+    st = live_state(name)
+    P = []
+
+    def add(k, v):
+        P.append((k, "" if v is None else str(v)))
+
+    def ts(key):
+        t = st_time(st, key)
+        return fmt_ts(t) if t is not None else ""
+    if u.type == "service":
+        add("Type", u.stype())
+        add("ExitType", u.svc("ExitType", "main"))
+        add("Restart", u.restart())
+        add("RestartMode", u.svc("RestartMode", "normal"))
+        if u.svc("PIDFile"):
+            add("PIDFile", u.svc("PIDFile"))
+        add("NotifyAccess", u.svc("NotifyAccess", "none"))
+        add("RestartUSec", format_timespan(u.timespan("RestartSec", 0.1) * 1e6))
+        add("TimeoutStartUSec", format_timespan(u.timespan("TimeoutStartSec", u.timespan("TimeoutSec", 90)) * 1e6))
+        add("TimeoutStopUSec", format_timespan(u.timespan("TimeoutStopSec", u.timespan("TimeoutSec", 90)) * 1e6))
+        add("RuntimeMaxUSec", format_timespan(u.timespan("RuntimeMaxSec", float("inf")) * 1e6))
+        add("WatchdogUSec", format_timespan(u.timespan("WatchdogSec", 0) * 1e6))
+        add("RemainAfterExit", "yes" if u.bool("Service", "RemainAfterExit") else "no")
+        add("GuessMainPID", "yes")
+        add("MainPID", st.get("MainPID", "0"))
+        add("ControlPID", "0")
+        add("Result", st.get("Result", "success"))
+        add("NRestarts", st.get("NRestarts", "0"))
+        add("ExecMainStartTimestamp", ts("ExecMainStartTimestamp"))
+        add("ExecMainExitTimestamp", ts("ExecMainExitTimestamp"))
+        add("ExecMainPID", st.get("ExecMainPID", "0"))
+        add("ExecMainCode", st.get("ExecMainCode", "0"))
+        add("ExecMainStatus", st.get("ExecMainStatus", "0"))
+        for key in ("ExecCondition", "ExecStartPre", "ExecStart", "ExecStartPost", "ExecReload", "ExecStop",
+                    "ExecStopPost"):
+            for c in u.execs(key):
+                add(key, fmt_exec_prop(c, st, key))
+        env = []
+        for v in u.values("Service", "Environment"):
+            env += ["%s=%s" % kv for kv in parse_env_assignments(v)]
+        add("Environment", " ".join(quote_env(e) for e in env))
+        for v in u.values("Service", "EnvironmentFile"):
+            add("EnvironmentFiles", "%s (ignore_errors=%s)" % (v.lstrip("-"), "yes" if v.startswith("-") else "no"))
+        if u.svc("WorkingDirectory"):
+            add("WorkingDirectory", u.svc("WorkingDirectory").lstrip("-"))
+        if u.svc("User"):
+            add("User", u.svc("User"))
+        if u.svc("Group"):
+            add("Group", u.svc("Group"))
+        add("UMask", u.svc("UMask", "0022"))
+        lim = u.svc("LimitNOFILE")
+        soft, hard = "1024", "524288"
+        if lim:
+            parts = lim.split(":")
+            soft = parts[0].replace("infinity", "infinity")
+            hard = parts[1] if len(parts) > 1 else parts[0]
+        add("LimitNOFILE", hard)
+        add("LimitNOFILESoft", soft)
+        for key in ("MemoryMin", "MemoryLow", "MemoryHigh", "MemoryMax", "MemorySwapMax"):
+            v = u.svc(key)
+            if key == "MemoryMax" and v is None:
+                v = u.svc("MemoryLimit")
+            default = "0" if key in ("MemoryMin", "MemoryLow") else "infinity"
+            if v is None:
+                add(key, default)
+            else:
+                b = parse_bytes(v)
+                add(key, v if b is None else b)
+        cq = u.svc("CPUQuota")
+        if cq and cq.endswith("%"):
+            try:
+                add("CPUQuotaPerSecUSec", format_timespan(float(cq[:-1]) / 100 * 1e6))
+            except ValueError:
+                add("CPUQuotaPerSecUSec", "infinity")
+        else:
+            add("CPUQuotaPerSecUSec", "infinity")
+        add("CPUWeight", u.svc("CPUWeight", "[not set]"))
+        add("TasksMax", u.svc("TasksMax", "4558"))
+        add("KillMode", u.svc("KillMode", "control-group"))
+        add("KillSignal", str(sig_num(u.svc("KillSignal", "SIGTERM")) or 15))
+        add("NoNewPrivileges", "yes" if u.bool("Service", "NoNewPrivileges") else "no")
+        ps = u.svc("ProtectSystem", "no")
+        add("ProtectSystem", {"true": "yes", "1": "yes", "false": "no", "0": "no"}.get(ps, ps))
+        ph = u.svc("ProtectHome", "no")
+        add("ProtectHome", {"true": "yes", "1": "yes", "false": "no", "0": "no"}.get(ph, ph))
+        add("PrivateTmp", "yes" if u.bool("Service", "PrivateTmp") else "no")
+        add("ReadWritePaths", " ".join(u.values("Service", "ReadWritePaths")))
+        add("ReadOnlyPaths", " ".join(u.values("Service", "ReadOnlyPaths")))
+        add("StandardOutput", u.svc("StandardOutput", "journal"))
+        add("StandardError", u.svc("StandardError", "inherit"))
+        if u.svc("SyslogIdentifier"):
+            add("SyslogIdentifier", u.svc("SyslogIdentifier"))
+    add("Id", name)
+    add("Names", name)
+    for key in ("Requires", "Requisite", "Wants", "BindsTo", "PartOf", "Upholds", "Conflicts", "Before", "After",
+                "OnFailure"):
+        vals = u.deps(key)
+        if key == "Wants":
+            vals += [w for w in wants_dir(name, "wants") if w not in vals]
+        if key == "Requires":
+            vals += [w for w in wants_dir(name, "requires") if w not in vals]
+        if vals:
+            add(key, " ".join(vals))
+    wb = []
+    for base in ("etc/systemd/system", "run/systemd/system", "usr/lib/systemd/system", "lib/systemd/system"):
+        for p in glob.glob(rp(base) + "/*.wants/" + name):
+            t = os.path.basename(os.path.dirname(p))[:-6]
+            if t not in wb:
+                wb.append(t)
+    if wb:
+        add("WantedBy", " ".join(wb))
+    rb = []
+    for base in ("etc/systemd/system", "run/systemd/system", "usr/lib/systemd/system", "lib/systemd/system"):
+        for p in glob.glob(rp(base) + "/*.requires/" + name):
+            t = os.path.basename(os.path.dirname(p))[:-9]
+            if t not in rb:
+                rb.append(t)
+    if rb:
+        add("RequiredBy", " ".join(rb))
+    docs = []
+    for d in u.values("Unit", "Documentation"):
+        docs += d.split()
+    add("Description", u.description())
+    if docs:
+        add("Documentation", " ".join(quote_env(d) for d in docs))
+    add("LoadState", u.load_state)
+    add("ActiveState", st.get("ActiveState"))
+    add("SubState", st.get("SubState"))
+    add("FragmentPath", u.fragment if u.load_state != "masked" else "")
+    add("DropInPaths", " ".join(u.dropins))
+    add("UnitFileState", enabled_state(name) or "")
+    es = enabled_state(name) or ""
+    add("UnitFilePreset", "" if es in ("static", "", "indirect") else "enabled")
+    add("StateChangeTimestamp", ts("StateChangeTimestamp"))
+    add("ActiveEnterTimestamp", ts("ActiveEnterTimestamp"))
+    add("ActiveExitTimestamp", ts("ActiveExitTimestamp"))
+    add("InactiveEnterTimestamp", ts("InactiveEnterTimestamp"))
+    add("InactiveExitTimestamp", ts("InactiveExitTimestamp"))
+    add("CanStart", "yes" if not u.bool("Unit", "RefuseManualStart") else "no")
+    add("CanStop", "yes")
+    add("CanReload", "yes" if u.values("Service", "ExecReload") else "no")
+    add("RefuseManualStart", "yes" if u.bool("Unit", "RefuseManualStart") else "no")
+    interval, burst = u.start_limit()
+    add("StartLimitIntervalUSec", format_timespan(interval * 1e6))
+    add("StartLimitBurst", burst)
+    add("StartLimitAction", u.get("Unit", "StartLimitAction", "none"))
+    known = set(k for k, _ in P)
+    for sec, key, _v, _p, _l in u.assign:
+        if key not in known:
+            vals = u.values(sec, key)
+            P.append((key, " ".join(vals) if key in LIST_KEYS else (vals[-1] if vals else "")))
+            known.add(key)
+    return P
+
+
+def cmd_show(o, args):
+    if not args:
+        unsupported("systemctl show without a unit name is")
+    first = True
+    for n in [resolve_alias(mangle(a)) for a in args]:
+        props = unit_props(n)
+        if not first:
+            print("")
+        first = False
+        for k, v in props:
+            if o.props and k not in o.props:
+                continue
+            if not o.props and not o.all and v == "":
+                continue
+            print(v if o.value else "%s=%s" % (k, v))
+    return 0
+
+
+SET_PROPERTY_OK = set("""MemoryMax MemoryHigh MemoryLow MemoryMin MemorySwapMax MemoryZSwapMax MemoryLimit
+CPUQuota CPUQuotaPeriodSec CPUWeight StartupCPUWeight CPUShares AllowedCPUs StartupAllowedCPUs TasksMax
+IOWeight StartupIOWeight CPUAccounting MemoryAccounting TasksAccounting IOAccounting IPAccounting
+IPAddressAllow IPAddressDeny DeviceAllow DevicePolicy ManagedOOMSwap ManagedOOMMemoryPressure
+ManagedOOMPreference""".split())
+SECTION_FOR = {"service": "Service", "socket": "Socket", "slice": "Slice", "scope": "Scope", "mount": "Mount",
+               "swap": "Swap"}
+
+
+def cmd_set_property(o, args):
+    if len(args) < 2:
+        raise Fail("Too few arguments.")
+    name = resolve_alias(mangle(args[0]))
+    u = get_unit(name)
+    if u.load_state == "not-found":
+        raise Fail("Failed to set unit properties on %s: Unit %s not found." % (name, name))
+    sec = SECTION_FOR.get(u.type)
+    if sec is None:
+        raise Fail("Failed to set unit properties on %s: Cannot set property, or unknown property." % name)
+    base = "/run/systemd/system.control" if o.runtime else "/etc/systemd/system.control"
+    new_files = []
+    for a in args[1:]:
+        if "=" not in a:
+            raise Fail("Failed to parse property assignment: %s" % a)
+        k, v = a.split("=", 1)
+        if k not in SET_PROPERTY_OK:
+            raise Fail("Failed to set unit properties on %s: Cannot set property %s, or unknown property." % (name, k))
+        val = v
+        if k.startswith("Memory") and k not in ("MemoryAccounting",):
+            if v.endswith("%"):
+                val = v
+            else:
+                b = parse_bytes(v)
+                if b is None:
+                    raise Fail("Failed to parse %s value %s" % (k, v))
+                val = str(b)
+        if k == "MemoryLimit":
+            k = "MemoryMax"
+        path = "%s/%s.d/50-%s.conf" % (base, name, k)
+        text = ("# This is a drop-in unit file extension, created via \"systemctl set-property\"\n"
+                "# or an equivalent operation. Do not edit.\n[%s]\n%s=%s\n" % (sec, k, val))
+        write_atomic(rp(path), text)
+        new_files.append([path, text])
+    with Lock():
+        snap = load_snapshot()
+        rec = snap.get(name) or disk_record(name)
+        frag = rec["files"][:1]
+        drops = [f for f in rec["files"][1:] if f[0] not in [n[0] for n in new_files]] + new_files
+        drops.sort(key=lambda f: f[0].rsplit("/", 1)[1])
+        rec["files"] = frag + drops
+        snap[name] = rec
+        save_snapshot(snap)
+    _UNIT_CACHE.pop(name, None)
+    return 0
+
+
+def cmd_get_default(o, args):
+    print(get_default())
+    return 0
+
+
+def cmd_set_default(o, args):
+    if len(args) != 1:
+        raise Fail("Too few arguments." if not args else "Too many arguments.")
+    name = mangle(args[0], ".target")
+    state, frag, _real = find_fragment(name)
+    if state == "not-found":
+        raise Fail("Failed to set default target: Unit file %s does not exist." % name)
+    if state == "masked":
+        raise Fail("Failed to set default target: Unit file %s is masked." % frag)
+    link = rp("etc/systemd/system/default.target")
+    if os.path.islink(link) and os.readlink(link) == frag:
+        return 0
+    if os.path.lexists(link):
+        os.unlink(link)
+        print('Removed "/etc/systemd/system/default.target".')
+    os.makedirs(os.path.dirname(link), exist_ok=True)
+    os.symlink(frag, link)
+    print("Created symlink /etc/systemd/system/default.target \u2192 %s." % frag)
+    daemon_reload()
+    return 0
+
+
+def cmd_reset_failed(o, args):
+    names = [resolve_alias(mangle(a)) for a in args] if args else all_unit_names()
+    for n in names:
+        if not os.path.exists(state_file(n)):
+            if args and get_unit(n).load_state == "not-found":
+                err("Failed to reset failed state of unit %s: Unit %s not loaded." % (n, n))
+                return 1
+            continue
+        with Lock():
+            st = read_state(n)
+            if st["ActiveState"] == "failed":
+                st.update(ActiveState="inactive", SubState="dead", Result="success")
+            st["LMStartTimes"] = ""
+            write_state(n, st)
+    return 0
+
+
+def cmd_kill(o, args):
+    names = need_units(args, "kill")
+    sig = sig_num(o.signal)
+    if sig is None:
+        raise Fail("Failed to parse signal string %s." % o.signal)
+    for n in names:
+        st = live_state(n)
+        main = st.get("MainPID", "0")
+        if not pid_alive(main):
+            continue
+        try:
+            if o.kill_whom == "main":
+                os.kill(int(main), sig)
+            else:
+                os.killpg(os.getpgid(int(main)), sig)
+        except OSError:
+            pass
+    return 0
+
+
+def cmd_mock_boot(o, args):
+    """Mock-only: simulate a reboot. Stops every running service, then starts the
+    default target (or the one given) with its dependency tree, printing console lines."""
+    for n in all_unit_names():
+        st = live_state(n)
+        if st["ActiveState"] in ("active", "activating", "reloading", "deactivating"):
+            stop_one(n)
+    for n in state_names():
+        with Lock():
+            st = read_state(n)
+            st.update(ActiveState="inactive", SubState="dead", Result="success", MainPID="0", LMSupervisorPID="",
+                      LMStartTimes="", NRestarts="0", LMJob="")
+            write_state(n, st)
+    daemon_reload(log=False)
+    target = resolve_alias(mangle(args[0], ".target")) if args else get_default()
+    jlog("mock-boot: starting %s" % target, prio=6)
+    results = start_transaction([target], console=True)
+    time.sleep(0.3 * max(TIMESCALE, 0.1))
+    failed = [n for n in all_unit_names() if live_state(n)["ActiveState"] == "failed"]
+    for n in failed:
+        if not any(r[0] == n and not r[1] for r in results):
+            print("[FAILED] %s failed after it was started." % n)
+    return 1 if failed or any(not ok for _n, ok, _r in results) else 0
+
+
+SYSTEMCTL_VERBS_UNSUPPORTED = set("""isolate list-timers list-sockets list-paths list-jobs list-machines
+list-automounts edit revert link preset preset-all add-wants add-requires show-environment set-environment
+unset-environment import-environment reboot poweroff halt kexec suspend hibernate hybrid-sleep
+suspend-then-hibernate rescue emergency default exit switch-root freeze thaw clean bind mount-image
+service-log-level service-log-target log-level log-target whoami help cancel service-watchdogs soft-reboot
+sleep""".split())
+
+
+def systemctl_main(argv):
+    o, args = parse_systemctl_args(list(argv))
+    if not args:
+        verb = "list-units"
+    else:
+        verb, args = args[0], args[1:]
+    if o.failed and verb == "list-units":
+        pass
+    table_ = {
+        "start": lambda: cmd_start(o, args, "start"),
+        "stop": lambda: cmd_stop(o, args),
+        "restart": lambda: cmd_restart(o, args, "restart"),
+        "try-restart": lambda: cmd_restart(o, args, "try-restart"),
+        "condrestart": lambda: cmd_restart(o, args, "try-restart"),
+        "reload-or-restart": lambda: cmd_restart(o, args, "reload-or-restart"),
+        "try-reload-or-restart": lambda: cmd_restart(o, args, "try-reload-or-restart"),
+        "force-reload": lambda: cmd_restart(o, args, "try-reload-or-restart"),
+        "reload": lambda: cmd_reload(o, args),
+        "is-active": lambda: cmd_is_active(o, args),
+        "is-failed": lambda: cmd_is_failed(o, args),
+        "is-enabled": lambda: cmd_is_enabled(o, args),
+        "is-system-running": lambda: cmd_is_system_running(o, args),
+        "enable": lambda: cmd_enable(o, args, "enable"),
+        "reenable": lambda: cmd_enable(o, args, "reenable"),
+        "disable": lambda: cmd_disable(o, args),
+        "mask": lambda: cmd_mask(o, args),
+        "unmask": lambda: cmd_unmask(o, args),
+        "daemon-reload": lambda: cmd_daemon_reload(o, args),
+        "daemon-reexec": lambda: cmd_daemon_reload(o, args),
+        "status": lambda: cmd_status(o, args),
+        "show": lambda: cmd_show(o, args),
+        "cat": lambda: cmd_cat(o, args),
+        "list-units": lambda: cmd_list_units(o, args),
+        "list-unit-files": lambda: cmd_list_unit_files(o, args),
+        "list-dependencies": lambda: cmd_list_dependencies(o, args),
+        "set-property": lambda: cmd_set_property(o, args),
+        "get-default": lambda: cmd_get_default(o, args),
+        "set-default": lambda: cmd_set_default(o, args),
+        "reset-failed": lambda: cmd_reset_failed(o, args),
+        "kill": lambda: cmd_kill(o, args),
+        "mock-boot": lambda: cmd_mock_boot(o, args),
+    }
+    if verb in table_:
+        return table_[verb]()
+    if verb in SYSTEMCTL_VERBS_UNSUPPORTED:
+        unsupported("systemctl %s is" % verb)
+    raise Fail("Unknown command verb '%s'." % verb)
+
+
+# --------------------------------------------------------------- journalctl
+
+PRIO_NAMES = ["emerg", "alert", "crit", "err", "warning", "notice", "info", "debug"]
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+
+def prio_level(s):
+    s = s.strip().lower()
+    if s.isdigit() and 0 <= int(s) <= 7:
+        return int(s)
+    if s in PRIO_NAMES:
+        return PRIO_NAMES.index(s)
+    return None
+
+
+def unit_match(e, units):
+    for u in units:
+        for f in ("_SYSTEMD_UNIT", "UNIT", "OBJECT_SYSTEMD_UNIT", "COREDUMP_UNIT"):
+            v = e.get(f)
+            if v and (v == u or fnmatch.fnmatchcase(v, u)):
+                return True
+    return False
+
+
+def entry_ts(e):
+    return int(e["__REALTIME_TIMESTAMP"]) / 1e6
+
+
+def format_entry(e, mode, utc, show_host=True):
+    t = int(e["__REALTIME_TIMESTAMP"])
+    sec = t / 1e6
+    msg = e.get("MESSAGE", "")
+    ident = e.get("SYSLOG_IDENTIFIER") or e.get("_COMM") or "unknown"
+    pid = e.get("_PID") or e.get("SYSLOG_PID") or ""
+    if e.get("_TRANSPORT") == "kernel":
+        ident, pid = "kernel", ""
+    host = e.get("_HOSTNAME", hostname())
+    d = localdt(sec, utc)
+    usec = t % 1000000
+    if mode == "short":
+        stamp_ = "%s %02d %02d:%02d:%02d" % (MONTHS[d.month - 1], d.day, d.hour, d.minute, d.second)
+    elif mode == "short-precise":
+        stamp_ = "%s %02d %02d:%02d:%02d.%06d" % (MONTHS[d.month - 1], d.day, d.hour, d.minute, d.second, usec)
+    elif mode in ("short-iso", "short-iso-precise"):
+        z = d.strftime("%z")
+        z = z[:3] + ":" + z[3:] if len(z) == 5 else z
+        frac = ".%06d" % usec if mode == "short-iso-precise" else ""
+        stamp_ = d.strftime("%Y-%m-%dT%H:%M:%S") + frac + z
+    elif mode == "short-full":
+        stamp_ = fmt_ts(sec, utc)
+    elif mode == "short-unix":
+        stamp_ = "%d.%06d" % (t // 1000000, usec)
+    elif mode == "short-monotonic":
+        mono = int(e.get("__MONOTONIC_TIMESTAMP", "0") or 0)
+        stamp_ = "[%5d.%06d]" % (mono // 1000000, mono % 1000000)
+    else:
+        stamp_ = ""
+    prefix = stamp_ + (" " + host if show_host else "") + " " + ident + ("[%s]" % pid if pid else "") + ": "
+    lines = msg.split("\n")
+    out = [prefix + lines[0]]
+    for extra in lines[1:]:
+        out.append(" " * len(prefix) + extra)
+    return out
+
+
+class JOpts(object):
+    pass
+
+
+JOURNAL_UNSUPPORTED = ("--user", "--user-unit", "-f", "--follow", "-M", "--machine", "-m", "--merge",
+                       "--namespace", "--root", "--image", "--cursor", "--after-cursor", "--cursor-file",
+                       "--show-cursor", "--interval", "--verify", "--verify-key", "--setup-keys", "--sync",
+                       "--relinquish-var", "--smart-relinquish-var", "--flush", "--rotate", "--vacuum-size",
+                       "--vacuum-time", "--vacuum-files", "--update-catalog", "--list-catalog", "--dump-catalog",
+                       "--new-id128", "--facility", "--list-namespaces", "--output-fields", "--header",
+                       "--directory", "-D", "--invocation", "-I")
+
+
+def journalctl_main(argv):
+    o = JOpts()
+    o.units, o.idents, o.xidents = [], [], []
+    o.prio = None
+    o.since = o.until = None
+    o.grep = None
+    o.case = None
+    o.lines = None
+    o.reverse = False
+    o.output = "short"
+    o.utc = False
+    o.host = True
+    o.quiet = False
+    o.boot = None
+    o.kernel = False
+    o.list_boots = False
+    o.field = None
+    o.fields = False
+    o.files = None
+    o.matches = []
+    o.disk_usage = False
+    i = 0
+    argv = list(argv)
+    with_arg = {"-u": "unit", "--unit": "unit", "-p": "prio", "--priority": "prio", "-S": "since", "--since": "since",
+                "-U": "until", "--until": "until", "-g": "grep", "--grep": "grep", "-o": "output", "--output": "output",
+                "-t": "ident", "--identifier": "ident", "-T": "xident", "--exclude-identifier": "xident",
+                "-F": "field", "--field": "field", "--file": "file"}
+
+    def boot_arg_ok(s):
+        return bool(re.match(r"^([-+]?\d+|[0-9a-fA-F]{32}([-+]\d+)?|all)$", s))
+    while i < len(argv):
+        a = argv[i]
+        i += 1
+        if not a.startswith("-") or a == "-":
+            if a == "+":
+                o.matches.append("+")
+            elif "=" in a and re.match(r"^[A-Z0-9_]+=", a):
+                o.matches.append(a)
+            else:
+                unsupported("journalctl match '%s' (use FIELD=VALUE or -u UNIT) is" % a)
+            continue
+        key, val = a, None
+        if a.startswith("--") and "=" in a:
+            key, val = a.split("=", 1)
+        elif not a.startswith("--") and len(a) > 2:
+            if a[:2] in with_arg or a[:2] in ("-n", "-b"):
+                key, val = a[:2], a[2:]
+            elif all(c in "xeqrkalm" for c in a[1:]):
+                for c in reversed(a[1:]):
+                    argv.insert(i, "-" + c)
+                continue
+        if key in with_arg:
+            if val is None:
+                if i >= len(argv):
+                    raise Fail("journalctl: option '%s' requires an argument" % key)
+                val = argv[i]
+                i += 1
+            dest = with_arg[key]
+            if dest == "unit":
+                o.units.append(resolve_alias(mangle(val)) if not any(c in val for c in "*?[") else val)
+            elif dest == "prio":
+                o.prio = val
+            elif dest == "since":
+                o.since = val
+            elif dest == "until":
+                o.until = val
+            elif dest == "grep":
+                o.grep = val
+            elif dest == "output":
+                o.output = val
+            elif dest == "ident":
+                o.idents.append(val)
+            elif dest == "xident":
+                o.xidents.append(val)
+            elif dest == "field":
+                o.field = val
+            elif dest == "file":
+                o.files = (o.files or []) + (glob.glob(val) or [val])
+            continue
+        if key in ("-n", "--lines"):
+            if val is None and i < len(argv) and re.match(r"^(\+?\d+|all)$", argv[i]):
+                val = argv[i]
+                i += 1
+            if val is None or val == "":
+                o.lines = 10
+            elif val == "all":
+                o.lines = None
+            elif re.match(r"^\+?\d+$", val):
+                o.lines = ("+", int(val[1:])) if val.startswith("+") else int(val)
+            else:
+                raise Fail("Failed to parse lines '%s'" % val)
+        elif key in ("-b", "--boot"):
+            if val is None and i < len(argv) and boot_arg_ok(argv[i]):
+                val = argv[i]
+                i += 1
+            o.boot = val if val not in (None, "") else "0"
+        elif key in ("-k", "--dmesg"):
+            o.kernel = True
+        elif key in ("-r", "--reverse"):
+            o.reverse = True
+        elif key in ("-e", "--pager-end"):
+            if o.lines is None:
+                o.lines = 1000
+        elif key in ("-q", "--quiet"):
+            o.quiet = True
+        elif key == "--utc":
+            o.utc = True
+        elif key == "--no-hostname":
+            o.host = False
+        elif key == "--list-boots":
+            o.list_boots = True
+        elif key in ("-N", "--fields"):
+            o.fields = True
+        elif key == "--case-sensitive":
+            o.case = val not in ("no", "false", "0")
+        elif key == "--disk-usage":
+            o.disk_usage = True
+        elif key in ("--no-pager", "-x", "--catalog", "-a", "--all", "-l", "--full", "--system", "--no-full",
+                     "--no-tail", "--show-cursor"):
+            pass
+        elif key == "--version":
+            print(VERSION_TEXT)
+            return 0
+        elif key in ("-h", "--help"):
+            print("journalctl [OPTIONS...] [MATCHES...]\n\nMock of journalctl for LinuxMissions; see mocks/README.md.")
+            return 0
+        elif key in JOURNAL_UNSUPPORTED:
+            unsupported("option %s" % key)
+        elif key.startswith("--"):
+            raise Fail("journalctl: unrecognized option '%s'" % key)
+        else:
+            raise Fail("journalctl: invalid option -- '%s'" % key.lstrip("-")[:1])
+
+    modes = ("short", "short-precise", "short-iso", "short-iso-precise", "short-full", "short-unix",
+             "short-monotonic", "cat", "json", "json-pretty", "json-sse", "json-seq", "verbose", "export",
+             "with-unit")
+    if o.output not in modes:
+        raise Fail("Unknown output format '%s'." % o.output)
+    if o.output in ("json-sse", "json-seq", "export", "with-unit"):
+        unsupported("output mode '%s'" % o.output)
+    ref = now()
+    entries = load_entries(o.files)
+    if o.disk_usage:
+        size = sum(os.path.getsize(f) for f in (o.files or journal_files()) if os.path.exists(f))
+        print("Archived and active journals take up %s in the file system." % human_size(size))
+        return 0
+    boots = []
+    for e in entries:
+        b = e.get("_BOOT_ID")
+        if b not in [x[0] for x in boots]:
+            boots.append([b, entry_ts(e), entry_ts(e)])
+        else:
+            for x in boots:
+                if x[0] == b:
+                    x[2] = entry_ts(e)
+    boots.sort(key=lambda x: x[1])
+    cur = current_boot_id(entries)
+    ids = [b[0] for b in boots]
+    cur_idx = ids.index(cur) if cur in ids else len(ids) - 1
+    if o.list_boots:
+        if not boots:
+            raise Fail("No boot found.")
+        rows = [("IDX", "BOOT ID", "FIRST ENTRY", "LAST ENTRY")]
+        for k, b in enumerate(boots):
+            rows.append((str(k - cur_idx), b[0], fmt_ts(b[1], o.utc), fmt_ts(b[2], o.utc)))
+        for line in table(rows, right=(0,)):
+            print(line)
+        return 0
+    if o.kernel and o.boot is None:
+        o.boot = "0"
+    boot_id = None
+    if o.boot is not None and o.boot != "all":
+        m = re.match(r"^([0-9a-fA-F]{32})?([-+]?\d+)?$", o.boot)
+        if not m:
+            raise Fail("Failed to parse boot descriptor '%s'" % o.boot)
+        if m.group(1):
+            if m.group(1).lower() not in ids:
+                raise Fail("No journal boot entry found from the specified boot (%s)." % o.boot)
+            k = ids.index(m.group(1).lower()) + int(m.group(2) or 0)
+        else:
+            off = int(m.group(2) or 0)
+            k = cur_idx + off if off <= 0 else off - 1
+        if not (0 <= k < len(ids)):
+            raise Fail("No journal boot entry found from the specified boot offset (%s)." % o.boot)
+        boot_id = ids[k]
+    pmin, pmax = 0, 7
+    if o.prio is not None:
+        if ".." in o.prio:
+            a, b = o.prio.split("..", 1)
+            la = prio_level(a) if a else 0
+            lb = prio_level(b) if b else 7
+            if la is None or lb is None:
+                raise Fail("Failed to parse log level range %s" % o.prio)
+            pmin, pmax = min(la, lb), max(la, lb)
+        else:
+            lv = prio_level(o.prio)
+            if lv is None:
+                raise Fail("Unknown log level %s" % o.prio)
+            pmax = lv
+    t_from = t_to = None
+    if o.since is not None:
+        t_from = parse_timestamp(o.since, ref)
+        if t_from is None:
+            raise Fail("Failed to parse timestamp: %s" % o.since)
+    if o.until is not None:
+        t_to = parse_timestamp(o.until, ref)
+        if t_to is None:
+            raise Fail("Failed to parse timestamp: %s" % o.until)
+    if t_from is not None and t_to is not None and t_from > t_to:
+        raise Fail("--since= must be before --until=.")
+    rx = None
+    if o.grep is not None:
+        flags = 0
+        if o.case is False or (o.case is None and o.grep == o.grep.lower()):
+            flags = re.IGNORECASE
+        try:
+            rx = re.compile(o.grep, flags)
+        except re.error as ex:
+            raise Fail('Failed to compile pattern "%s": %s' % (o.grep, ex))
+    groups = [[]]
+    for m in o.matches:
+        if m == "+":
+            groups.append([])
+        else:
+            groups[-1].append(m.split("=", 1))
+
+    def match_groups(e):
+        groups_ = [g for g in groups if g]
+        if not groups_:
+            return True
+        for g in groups_:
+            byfield = {}
+            for f, v in g:
+                byfield.setdefault(f, []).append(v)
+            if all(e.get(f) in vs for f, vs in byfield.items()):
+                return True
+        return False
+    sel = []
+    for e in entries:
+        if boot_id is not None and e.get("_BOOT_ID") != boot_id:
+            continue
+        if o.kernel and e.get("_TRANSPORT") != "kernel":
+            continue
+        if o.units and not unit_match(e, o.units):
+            continue
+        if o.idents and e.get("SYSLOG_IDENTIFIER") not in o.idents:
+            continue
+        if o.xidents and e.get("SYSLOG_IDENTIFIER") in o.xidents:
+            continue
+        if o.prio is not None:
+            p = e.get("PRIORITY", "")
+            if not p.isdigit() or not (pmin <= int(p) <= pmax):
+                continue
+        ts = entry_ts(e)
+        if t_from is not None and ts < t_from:
+            continue
+        if t_to is not None and ts > t_to:
+            continue
+        if rx is not None and not rx.search(e.get("MESSAGE", "")):
+            continue
+        if not match_groups(e):
+            continue
+        sel.append(e)
+    if o.field:
+        seen = []
+        for e in sel:
+            v = e.get(o.field)
+            if v is not None and v not in seen:
+                seen.append(v)
+        for v in seen:
+            print(v)
+        return 0
+    if o.fields:
+        names = sorted(set(k for e in entries for k in e))
+        for n in names:
+            print(n)
+        return 0
+    if isinstance(o.lines, tuple):
+        sel = sel[:o.lines[1]]
+    elif o.lines is not None:
+        sel = sel[-o.lines:] if o.lines > 0 else []
+    if o.reverse:
+        sel = list(reversed(sel))
+    if not sel:
+        if not o.quiet and o.output not in ("json", "json-pretty", "cat"):
+            print("-- No entries --")
+        return 0
+    out = []
+    prev_boot = None
+    for e in sel:
+        if o.output.startswith("short"):
+            if prev_boot is not None and e.get("_BOOT_ID") != prev_boot:
+                out.append("-- Boot %s --" % e.get("_BOOT_ID"))
+            prev_boot = e.get("_BOOT_ID")
+            out.extend(format_entry(e, o.output, o.utc, o.host))
+        elif o.output == "cat":
+            out.append(e.get("MESSAGE", ""))
+        elif o.output == "json":
+            out.append(json.dumps(json_order(e), separators=(",", ":"), ensure_ascii=False))
+        elif o.output == "json-pretty":
+            out.append(json.dumps(json_order(e), indent="\t", ensure_ascii=False))
+        elif o.output == "verbose":
+            t = int(e["__REALTIME_TIMESTAMP"])
+            d = localdt(t / 1e6, o.utc)
+            out.append("%s.%06d %s [s=mock;b=%s]" % (d.strftime("%a %Y-%m-%d %H:%M:%S"), t % 1000000, tzabbr(d),
+                                                  e.get("_BOOT_ID", "")))
+            for k in sorted(e):
+                if not k.startswith("__"):
+                    out.append("    %s=%s" % (k, e[k]))
+    try:
+        sys.stdout.write("\n".join(out) + "\n")
+        sys.stdout.flush()
+    except BrokenPipeError:
+        pass
+    return 0
+
+
+def json_order(e):
+    keys = ["__CURSOR", "__REALTIME_TIMESTAMP", "__MONOTONIC_TIMESTAMP", "_BOOT_ID"]
+    res = {}
+    if "__CURSOR" not in e:
+        res["__CURSOR"] = "s=mock;b=%s;t=%x" % (e.get("_BOOT_ID", ""), int(e["__REALTIME_TIMESTAMP"]))
+    for k in keys:
+        if k in e:
+            res[k] = e[k]
+    for k in e:
+        if k not in res:
+            res[k] = e[k]
+    return res
+
+
+def human_size(n):
+    for unit in ("B", "K", "M", "G", "T"):
+        if n < 1024 or unit == "T":
+            return ("%d%s" % (n, unit)) if unit == "B" else ("%.1f%s" % (n, unit))
+        n /= 1024.0
+
+
+# ---------------------------------------------------------- systemd-analyze
+
+def boot_timing():
+    """Read $ROOT/.lm/boot-timing. -> (phases dict ms, units dict name -> (activating_ms, active_ms, after))."""
+    txt = read_text(os.environ.get("LM_BOOT_TIMING") or rp(".lm/boot-timing"))
+    if txt is None:
+        return None
+    phases = {}
+    units = {}
+    for line in txt.splitlines():
+        line = line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        parts = line.split()
+        if len(parts) == 2 and parts[0] in ("firmware", "loader", "kernel", "initrd", "userspace"):
+            phases[parts[0]] = float(parts[1])
+            continue
+        if len(parts) >= 3:
+            after = None
+            for extra in parts[3:]:
+                if extra.startswith("after="):
+                    after = [mangle(x) for x in extra[6:].split(",") if x]
+            units[parts[0]] = (float(parts[1]), float(parts[2]), after)
+    return phases, units
+
+
+def analyze_not_finished():
+    raise Fail("Bootup is not yet finished (org.freedesktop.systemd1.Manager.FinishTimestampMonotonic=0).\n"
+               "Please try again later.\n"
+               "Hint: Use 'systemctl list-jobs' to see active jobs", 1)
+
+
+def analyze_blame(args):
+    bt = boot_timing()
+    if bt is None:
+        analyze_not_finished()
+    _phases, units = bt
+    rows = [(int(round((end - start) * 1000)), n) for n, (start, end, _a) in units.items() if end > start]
+    rows.sort(key=lambda r: (-r[0], r[1]))
+    texts = [(format_timespan(us, 1000), n) for us, n in rows]
+    w = max([len(t) for t, _ in texts] or [0])
+    for t, n in texts:
+        print("%s %s" % (t.rjust(w), n))
+    return 0
+
+
+def analyze_time(args):
+    bt = boot_timing()
+    if bt is None:
+        analyze_not_finished()
+    phases, units = bt
+    parts = []
+    total = 0.0
+    for k in ("firmware", "loader", "kernel", "initrd", "userspace"):
+        if k in phases:
+            parts.append("%s (%s)" % (format_timespan(phases[k] * 1000, 1000), k))
+            total += phases[k]
+    print("Startup finished in %s = %s " % (" + ".join(parts), format_timespan(total * 1000, 1000)))
+    target = get_default()
+    if target in units:
+        print("%s reached after %s in userspace." % (target, format_timespan(units[target][1] * 1000, 1000)))
+    return 0
+
+
+def analyze_critical_chain(args):
+    bt = boot_timing()
+    if bt is None:
+        analyze_not_finished()
+    _phases, units = bt
+    names = [resolve_alias(mangle(a)) for a in args] or [get_default()]
+    print('The time when unit became active or started is printed after the "@" character.\n'
+          'The time the unit took to start is printed after the "+" character.\n')
+
+    def times(n):
+        t = units.get(n)
+        if not t:
+            return None
+        return int(t[0] * 1000), int(t[1] * 1000)
+
+    def afters(n):
+        t = units.get(n)
+        deps = []
+        if t and t[2] is not None:
+            deps = list(t[2])
+        st, _f, _r = find_fragment(n)
+        if st in ("ok", "builtin"):
+            for d in disk_unit(n).deps("After"):
+                if d not in deps:
+                    deps.append(d)
+        return deps
+
+    def label(n, tm):
+        if tm is None:
+            return n
+        start, end = tm
+        if end - start > 0:
+            return "%s @%s +%s" % (n, format_timespan(start, 1000), format_timespan(end - start, 1000))
+        if end > 0:
+            return "%s @%s" % (n, format_timespan(end, 1000))
+        return n
+
+    def walk(n, level, branches, visited):
+        deps = [d for d in afters(n) if times(d) and times(d)[1] > 0]
+        if not deps:
+            return
+        deps.sort(key=lambda d: -times(d)[1])
+        longest = times(deps[0])[1]
+        sel = [d for d in deps if longest - times(d)[1] <= 0]
+        for idx, d in enumerate(sel):
+            last = idx == len(sel) - 1
+            prefix = ""
+            for lv in range(level, 0, -1):
+                prefix += "\u2502 " if branches & (1 << (lv - 1)) else "  "
+            print(prefix + ("\u2514\u2500" if last else "\u251c\u2500") + label(d, times(d)))
+            if d in visited:
+                continue
+            visited.add(d)
+            walk(d, level + 1, (branches << 1) | (0 if last else 1), visited)
+
+    for n in names:
+        tm = times(n)
+        if tm:
+            start, end = tm
+            if end - start > 0:
+                print("%s +%s" % (n, format_timespan(end - start, 1000)))
+            elif end > 0:
+                print("%s @%s" % (n, format_timespan(end, 1000)))
+            else:
+                print(n)
+        else:
+            print(n)
+        walk(n, 0, 0, set([n]))
+    return 0
+
+
+def analyze_verify(args):
+    if not args:
+        raise Fail("Too few arguments.")
+    rc = 0
+    for a in args:
+        real = None
+        if a.startswith("/") and not a.startswith(ROOT + "/"):
+            real = root_resolve(a) if os.path.isfile(root_resolve(a)) else None
+        elif os.path.isfile(a):
+            real = os.path.abspath(a)
+        if real is not None:
+            name = os.path.basename(a)
+            shown = disp(real) if real.startswith(ROOT + "/") else real
+            rec = {"name": name, "state": "ok", "fragment": shown, "files": [[shown, read_text(real, "")]]}
+            for dpath, dreal in find_dropins(name):
+                rec["files"].append([dpath, read_text(dreal, "")])
+        else:
+            name = resolve_alias(mangle(a))
+            rec = disk_record(name)
+            if rec["state"] == "not-found":
+                err("%s: Failed to load configuration: No such file or directory" % name)
+                err("Failed to prepare filename %s: No such file or directory" % a)
+                rc = 1
+                continue
+            if rec["state"] == "masked":
+                err("%s: Unit is masked." % name)
+                rc = 1
+                continue
+        u = Unit(rec)
+        for w in u.warnings:
+            err(w)
+        for e in u.errors:
+            err(e)
+        if u.errors:
+            err("%s: Unit configuration has fatal error, unit will not be started." % name)
+            rc = 1
+            continue
+        if u.type == "service":
+            for key in ("ExecStartPre", "ExecStart", "ExecStartPost", "ExecReload", "ExecStop", "ExecStopPost"):
+                for c in u.execs(key):
+                    if c["ignore"]:
+                        continue
+                    real, _ = resolve_exec(c["path"])
+                    if real is None or os.path.isdir(real) or not os.access(real, os.X_OK):
+                        why = "No such file or directory" if real is None else "Permission denied"
+                        err("%s: Command %s is not executable: %s" % (name, c["path"], why))
+                        rc = 1
+        for key in ("Requires", "Requisite", "BindsTo"):
+            for d in u.deps(key):
+                if find_fragment(d)[0] == "not-found":
+                    err("%s: Failed to create %s/start: Unit %s not found." % (name, d, d))
+                    rc = 1
+    return rc
+
+
+def systemd_analyze_main(argv):
+    args = [a for a in argv if not a.startswith("-")]
+    for a in argv:
+        if a in ("--no-pager", "--system", "-q", "--quiet"):
+            continue
+        if a == "--version":
+            print(VERSION_TEXT)
+            return 0
+        if a.startswith("-"):
+            unsupported("option %s" % a)
+    verb = args[0] if args else "time"
+    rest = args[1:]
+    if verb == "time":
+        return analyze_time(rest)
+    if verb == "blame":
+        return analyze_blame(rest)
+    if verb == "critical-chain":
+        return analyze_critical_chain(rest)
+    if verb == "verify":
+        return analyze_verify(rest)
+    if verb in ("plot", "dot", "dump", "cat-config", "unit-files", "unit-paths", "exit-status", "capability",
+                "condition", "syscall-filter", "filesystems", "calendar", "timestamp", "timespan", "security",
+                "inspect-elf", "malloc", "fdstore", "image-policy", "pcrs", "srk", "log-level", "log-target",
+                "service-watchdogs", "architectures", "smbios11"):
+        unsupported("systemd-analyze %s is" % verb)
+    raise Fail("Unknown command verb '%s'." % verb)
+
+
+# -------------------------------------------------------------- timedatectl
+
+def timedatectl_main(argv):
+    args = [a for a in argv if not a.startswith("-")]
+    for a in argv:
+        if a in ("--no-pager", "--no-ask-password", "-a", "--all", "-p", "--value"):
+            continue
+        if a.startswith("--property="):
+            continue
+        if a == "--version":
+            print(VERSION_TEXT)
+            return 0
+        if a.startswith("-"):
+            unsupported("option %s" % a)
+    verb = args[0] if args else "status"
+    t = now()
+    name = tz_name()
+    tz = get_tz()
+    local = localdt(t)
+    utc = localdt(t, True)
+    if verb == "status":
+        rows = [("Local time", local.strftime("%a %Y-%m-%d %H:%M:%S ") + tzabbr(local)),
+                ("Universal time", utc.strftime("%a %Y-%m-%d %H:%M:%S UTC")),
+                ("RTC time", utc.strftime("%a %Y-%m-%d %H:%M:%S")),
+                ("Time zone", "%s (%s, %s)" % (name, tzabbr(local), local.strftime("%z"))),
+                ("System clock synchronized", "yes"),
+                ("NTP service", "active"),
+                ("RTC in local TZ", "no")]
+        w = max(len(k) for k, _ in rows)
+        for k, v in rows:
+            print("%s: %s" % (k.rjust(w), v))
+        return 0
+    if verb == "show":
+        print("Timezone=%s" % name)
+        print("LocalRTC=no")
+        print("CanNTP=yes")
+        print("NTP=yes")
+        print("NTPSynchronized=yes")
+        print("TimeUSec=%s" % (local.strftime("%a %Y-%m-%d %H:%M:%S ") + tzabbr(local)))
+        print("RTCTimeUSec=%s" % (utc.strftime("%a %Y-%m-%d %H:%M:%S UTC")))
+        return 0
+    if verb == "list-timezones":
+        try:
+            from zoneinfo import available_timezones
+            zones = sorted(available_timezones())
+        except Exception:
+            zones = ["Etc/UTC"]
+        print("\n".join(zones))
+        return 0
+    if verb == "set-timezone":
+        if len(args) != 2:
+            raise Fail("Too few arguments." if len(args) < 2 else "Too many arguments.")
+        z = args[1]
+        if tz_from_name(z) is None or not re.match(r"^[A-Za-z0-9_+/-]+$", z) or z.startswith("+") \
+                or (z[0] == "-"):
+            raise Fail("Failed to set time zone: Invalid or not installed time zone '%s'" % z)
+        write_atomic(rp("etc/timezone"), z + "\n")
+        lt = rp("etc/localtime")
+        if os.path.lexists(lt):
+            os.unlink(lt)
+        os.symlink("/usr/share/zoneinfo/" + z, lt)
+        return 0
+    if verb in ("set-time", "set-local-rtc", "set-ntp", "timesync-status", "show-timesync", "ntp-servers",
+                "revert"):
+        unsupported("timedatectl %s is" % verb)
+    raise Fail("Unknown command verb '%s'." % verb)
+
+
+# --------------------------------------------------------------------- main
+
+def main():
+    global ROOT, PROG, TIMESCALE
+    argv = sys.argv[1:]
+    if argv[:1] == ["--lm-exec"]:
+        ROOT = argv[1]
+        exec_trampoline(argv[1:])
+        return 203
+    if argv[:1] == ["--lm-supervise"]:
+        name = argv[1]
+        if argv[2:3] == ["--lm-root"]:
+            os.environ["LM_ROOT"] = argv[3]
+        ROOT = find_root()
+        try:
+            TIMESCALE = float(os.environ.get("LM_TIMESCALE", "1") or 1)
+        except ValueError:
+            TIMESCALE = 1.0
+        try:
+            os.chdir(ROOT)
+        except OSError:
+            pass
+        Supervisor(name).main()
+        return 0
+    PROG = os.path.basename(sys.argv[0])
+    if PROG in ("systemd-mock", "systemd-mock.py") and argv:
+        PROG, argv = argv[0], argv[1:]
+    ROOT = find_root()
+    try:
+        TIMESCALE = float(os.environ.get("LM_TIMESCALE", "1") or 1)
+    except ValueError:
+        TIMESCALE = 1.0
+    tools = {"systemctl": systemctl_main, "journalctl": journalctl_main,
+             "systemd-analyze": systemd_analyze_main, "timedatectl": timedatectl_main}
+    if PROG not in tools:
+        err("systemd-mock: run as one of: %s" % ", ".join(sorted(tools)))
+        return 1
+    try:
+        return tools[PROG](argv) or 0
+    except Fail as e:
+        err(e.msg)
+        return e.code
+    except BrokenPipeError:
+        return 0
+    except KeyboardInterrupt:
+        return 130
+
+
+if __name__ == "__main__":
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+    sys.exit(main())

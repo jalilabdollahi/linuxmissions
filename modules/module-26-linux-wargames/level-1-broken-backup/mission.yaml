@@ -1,15 +1,17 @@
 {
-  "name": "Broken Backup: Path Realignment",
-  "description": "In the linux war games lab, a task related to Broken Backup needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/broken-backup.txt to organized/broken-backup/broken-backup-notes.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Green Log, Empty Archive",
+  "description": "Nightly backups have reported success for a week, but the restore test found last night's archive nearly empty (see RESTORE-TEST.md).",
+  "objective": "Fix backup.sh so that, when cron runs it (a bare environment, started from some other directory), it archives the whole 'office share/data' tree into backups/ (hidden files and names with spaces included), and so that it exits non-zero when tar cannot read a file. Leave a fresh archive in backups/ that restores the tree exactly.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
   "concepts": [
-    "Broken Backup",
-    "mkdir",
-    "mv",
-    "cp"
+    "incident triage",
+    "tar -tzf",
+    "quoting and word splitting",
+    "globs and dotfiles",
+    "pipefail",
+    "cron environment"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-1-broken-backup"

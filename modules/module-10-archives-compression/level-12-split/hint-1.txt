@@ -1,1 +1,6 @@
-Inspect the current mode first if you want to verify the change.
+Two jobs: cut the file into pieces of a fixed number of bytes, named so that
+`part-*` sorts them in the right order, and write a checksum of the whole
+backup. Careful with units: to most Linux tools "5M" means 5 x 1024 x 1024 =
+5,242,880 bytes, which is more than the share accepts. And think about how the
+checksum file names the backup: the vendor has only a db-backup.tar.gz in their
+own folder.

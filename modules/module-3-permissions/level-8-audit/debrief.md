@@ -1,21 +1,19 @@
 # World Writable Files
 
-## What you practiced
-- `find -perm /o+w` finds files where "others" have write permission
-- `chmod o-w` removes write from "others" without touching owner/group
-- Combining `find -exec chmod` is a single-pass security fix
+## Why it works
+`find -perm -o+w` (or `-perm -002`) matches files where *at least* the
+"others write" bit is set, so it finds 666, 777, 646 and 662 alike. `chmod o-w`
+is a *relative* change: it clears that one bit and keeps the rest, which matters
+because `shared.csv` is group-writable and `run backup.sh` is a script on purpose.
 
-## Security context
-World-writable files are a common finding in security audits. An attacker who can write to a config or script file could:
-- Inject malicious code into startup scripts
-- Alter application configuration
-- Replace executables (if also executable)
+## Common mistakes
+- `chmod -R 644 app`: no more world-writable files, but scripts lose `x` and
+  group-writable data stops being writable for the team. A security fix that
+  breaks the app gets rolled back.
+- `chmod go-w`: removes the group's write too, which nobody asked for.
+- Looping with `for f in $(find ...)`: the name `run backup.sh` splits into two
+  words. `-exec ... {} +` passes each name intact.
 
-## Commands to remember
-```bash
-find / -perm /o+w -type f 2>/dev/null       # system-wide audit
-find /etc -perm /o+w 2>/dev/null            # check /etc
-find . -perm /o+w -exec chmod o-w {} \;    # fix them all
-chmod o-w file                              # fix one file
-chmod 644 file                              # set explicitly
-```
+## Learn next
+Directories can be world-writable too: `find / -xdev -type d -perm -0002 ! -perm -1000`
+lists world-writable directories *without* the sticky bit, a classic audit item.

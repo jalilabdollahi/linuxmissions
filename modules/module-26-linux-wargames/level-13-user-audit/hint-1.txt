@@ -1,1 +1,1 @@
-This task usually takes two steps: fix execute permission, then run the script.
+A key is identified by its body, not by the comment at the end of the line, and the same key can be in more than one place. Which accounts besides the departed people's own can log in over ssh? And "root" is not the only account that can have UID 0: how would you list every account by its numeric ID rather than by its name? Look at what you are about to change before changing it: one key has a comment that mentions a departed person.

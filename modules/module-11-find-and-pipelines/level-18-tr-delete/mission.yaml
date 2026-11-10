@@ -1,15 +1,11 @@
 {
-  "name": "Tr Delete: Alert Filter",
-  "description": "In the search and pipelines lab, a task related to Tr Delete needs cleanup before the handoff.",
-  "objective": "Write every alert line from tr-delete.log into alerts.txt",
+  "name": "Serial Console Cleanup",
+  "description": "A database server failed to mount its backup share after a reboot. The datacenter tech captured the serial console (boot messages and a short login session) in console.raw for the incident ticket, but the capture is full of carriage returns, NUL padding bytes, terminal bells and ANSI colour codes, and the ticket system shows it as garbage.",
+  "objective": "Write console.txt: the text of console.raw, line by line, with every carriage return (\\r), NUL byte, bell character (\\a) and ANSI colour sequence (ESC [ ... m) removed. Everything else stays exactly as it is, including the tabs in the /etc/hosts lines and the empty lines.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Tr Delete",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["od -c / cat -A", "tr -d with octal escapes", "tr -cd and character classes", "ANSI escape sequences", "sed with $'...' quoting"],
   "module": "module-11-find-and-pipelines",
   "level": "level-18-tr-delete"
 }

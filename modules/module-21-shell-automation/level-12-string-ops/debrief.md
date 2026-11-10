@@ -1,17 +1,28 @@
-# String Ops: Permission Fix
+# Name Tag
 
-## What you practiced
-- This level focused on **String Ops** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Every `$(echo "$file" | cut ...)` starts a subshell and an external
+program. On a runner that has only bash, those programs do not exist, and
+even where they do, a dozen of them per file add up in a release loop.
+Parameter expansion and `[[ =~ ]]` are part of bash itself.
 
-## Commands to remember
-```bash
-chmod 750 script.sh
-ls -l script.sh
-stat -c '%a %n' script.sh
-```
+The regex does two jobs at once. Anchored with `^...$`, it rejects anything
+that is not exactly NAME-VERSION-OS-ARCH.EXT, and its groups land in
+`BASH_REMATCH`. The name may contain hyphens and digits, so the strict
+`X.Y.Z` version is what decides where the name ends: in
+`a-1-2-3.4.5-darwin-arm64.tar.gz`, only `3.4.5` fits.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the current mode first if you want to verify the change.
+The same split works with expansions alone, reading from the right:
+`${v##*-}` is the last field (`amd64.tar.gz`), `${v%-*}` the rest, and
+`${x%%.*}` / `${x#*.}` separate the architecture from the extension.
+
+## Common mistakes
+- Cutting at the first hyphen or first dot: the name and the version both
+  contain them.
+- Quoting the regex on the right of `=~`: bash then matches it as plain text.
+- Forgetting the anchors: `tool-1.2.3-linux-amd64.tar.gz.sig` would match.
+
+## Learn next
+`${v/old/new}` and `${v//old/new}` replace text, `${v:offset:length}` takes
+a substring, and `${#v}` is the length, all without starting a process. To
+see which programs a script really starts, run it with `strace -f -e execve`.

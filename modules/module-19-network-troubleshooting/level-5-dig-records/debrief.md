@@ -1,17 +1,23 @@
-# Dig Records: Field Extract
+# Where Does the Mail Go?
 
-## What you practiced
-- This level focused on **Dig Records** in a safe sandbox.
-- The shortest path usually combines `cut` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A sending mail server sorts the MX records by preference and tries the
+*lowest* number first; the others are backups. dig returns them in whatever
+order the server sends, and a plain `sort` compares text, so "20" comes before
+"5": `sort -n` compares numbers. Asking for the A record of the primary MX
+returns the whole CNAME chain (mx → mailrelay → edge), and the last line of
+`+short` is the address.
 
-## Commands to remember
-```bash
-cut -d, -f2 file.csv
-awk -F, '{print $2}' file.csv
-column -s, -t file.csv
-```
+The chain is also a likely reason for the bounces: an MX target must be a
+name with A/AAAA records, not an alias (RFC 2181 section 10.3). Many mail
+servers follow the CNAME anyway, some refuse.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a delimiter-based column extraction task.
+## Common mistakes
+- Taking the first MX dig prints, or the highest number.
+- Writing the CNAME target as MX_HOST: the MX record names the host, the CNAMEs are its aliases.
+- Forgetting `-p`: dig then asks port 53, where no server is listening.
+
+## Learn next
+`dig +trace NAME` follows the delegation from the root servers down (needs
+internet), and `dig NAME MX +noall +answer +additional` shows the addresses the
+server sends along with the MX answer, when it has them.

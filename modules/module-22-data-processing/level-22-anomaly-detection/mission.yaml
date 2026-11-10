@@ -1,15 +1,11 @@
 {
-  "name": "Anomaly Detection: Field Extract",
-  "description": "In the data processing lab, a task related to Anomaly Detection needs cleanup before the handoff.",
-  "objective": "Extract the second column from anomaly-detection-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Anomaly Detection",
-    "cut",
-    "awk"
-  ],
+  "name": "Traffic Anomalies",
+  "description": "Monitoring exported 30 days of daily request counts per host to requests.csv (date,host,requests). The on-call team wants an anomaly check they can rerun on every month's export: web-01 serves a hundred times more requests than mail-01, so one fixed threshold is useless. The export has gaps (NaN or empty values).",
+  "objective": "Write an executable detect.sh that is run as ./detect.sh FILE and prints CSV to stdout: the header host,date,value,zscore, then one line per anomaly, sorted by host and then date. A value is an anomaly when it is more than 3 standard deviations above or below the mean of its own host, using the population standard deviation (divide by n) over that host's numeric values only. Values that are not numbers are left out of everything; a host whose values never change has no anomalies. value is copied as written, zscore = (value - mean) / sd with 2 decimals. Save its output for requests.csv as anomalies.csv. detect.sh will also be run on another file.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["mean and population standard deviation", "per-key statistics in awk", "z-score", "filtering non-numeric values", "reusable script with $1", "sort -t, -k1,1 -k2,2"],
   "module": "module-22-data-processing",
   "level": "level-22-anomaly-detection"
 }

@@ -1,17 +1,26 @@
-# Watch Command: Script Kickoff
+# Drain Then Switch
 
-## What you practiced
-- This level focused on **Watch Command** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`watch -g` (`--chgexit`) runs the command every `-n` seconds and exits the
+first time its output differs from the first run. So the trick is to watch
+a command whose output changes exactly once, at the event you are waiting
+for: `ls -A spool | wc -l | grep -x 0` prints nothing until the count is 0.
+`&&` then starts the switch within a second of the queue emptying.
 
-## Commands to remember
-```bash
-chmod +x script.sh
-./script.sh
-bash script.sh
-```
+`ls -A` matters: the in-flight uploads were `.upload-*.part` files, which
+plain `ls` hides. Counting only visible files reports an empty queue
+several seconds too early.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task usually takes two steps: fix execute permission, then run the script.
+## Common mistakes
+- `watch -g 'ls -A spool | wc -l'`: the output changes at the first upload
+  (25 → 24), so watch exits long before the queue is empty.
+- `watch` without `-g` never exits; Ctrl-C stops it, and `&&` then skips
+  the switch.
+- Polling without a pause (`until ...; do :; done`) burns a CPU core;
+  always `sleep` in a loop.
+
+## Next step
+In scripts, the same wait is a loop: `until [ -z "$(ls -A spool)" ]; do sleep 1; done`.
+Put a limit on any wait: `timeout 120 watch -g ...` gives up after two
+minutes. On Linux, `inotifywait -e delete spool/` reacts to the change
+without polling.

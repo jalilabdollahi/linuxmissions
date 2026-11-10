@@ -1,1 +1,4 @@
-Inspect the sandbox, then create the missing path for organized/tee-append/tee-append-notes.txt.
+You need the output in two places at once: your screen and the end of a file.
+A redirect only does one of those, and `>` replaces the file's content. Look at
+what the script prints on its own (run it once and watch), and ask which of its
+lines would reach a pipe and which would not.

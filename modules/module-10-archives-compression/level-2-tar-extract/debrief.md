@@ -1,17 +1,21 @@
-# Tar Extract: Alert Filter
+# Just the Nginx Config
 
-## What you practiced
-- This level focused on **Tar Extract** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Members named after the archive file are extracted, everything else is
+skipped. Naming a directory member pulls in the whole subtree, symlinks
+included. The backup was made with `tar -C / .`-style names, so every path
+starts with `./`, and `etc/nginx` and `./etc/nginx` are different names to tar.
+`-C restore` puts the stored path (`etc/nginx/...`) under `restore/`.
 
-## Commands to remember
-```bash
-grep 'ALERT' file.log
-grep -n PATTERN file.log
-grep -v PATTERN file.log
-```
+## Common mistakes
+- `tar -xzf etc-backup.tar.gz etc/nginx` gives "Not found in archive" because
+  of the missing `./`. Listing first (`tar -tzf ... | head`) shows the real names.
+- `--wildcards '*nginx*'` also restores `etc/logrotate.d/nginx`,
+  `etc/default/nginx` and the ufw profile.
+- Extracting everything and deleting the rest takes time and, on a real server,
+  can overwrite live files if you forget `-C`.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Look for a filtering command that keeps only the alert lines in tar-extract.log.
+## Learn next
+`--strip-components=N` drops the first N parts of each path while extracting,
+handy when you want the files without their old directory prefix. `tar -dzf` (`--compare`) shows which files on disk
+differ from the archive, a quick way to see what was broken.

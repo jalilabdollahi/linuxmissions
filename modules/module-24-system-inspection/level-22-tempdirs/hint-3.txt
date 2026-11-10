@@ -1,1 +1,11 @@
-Example: `cut -d, -f2 tempdirs-report.csv > owners.txt`
+for f in /proc/[0-9]*/fd/*; do case "$(readlink $f 2>/dev/null)" in *"/tmp/app-debug.log (deleted)") fd=$f;; esac; done; echo $fd
+mkdir -p recovered; cp $fd recovered/app-debug.log; pid=${fd#/proc/}; pid=${pid%%/*}; kill $pid
+find tmp -type f -mtime +7 -print0 | while IFS= read -r -d '' x; do fuser -s "$x" 2>/dev/null || rm -- "$x"; done
+ls -la tmp
+
+- the for loop           look at every descriptor of every process and remember the one whose target is the deleted app-debug.log
+- cp $fd recovered/...   reading the descriptor's link yields the file's data, although the name is gone
+- pid=${fd#/proc/} ...   the PID is the part of the path after /proc/
+- kill $pid              only after the copy: now the space is freed
+- find -type f -mtime +7 regular files older than 7 days (sockets and fresh files are not selected)
+- fuser -s "$x" || rm    delete only files that no process has open (the agent's lock stays)

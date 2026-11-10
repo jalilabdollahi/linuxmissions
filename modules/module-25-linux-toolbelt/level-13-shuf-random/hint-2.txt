@@ -1,1 +1,4 @@
-Use `chmod +x jobs/shuf-random.sh` and then execute it.
+  shuf -n 25 FILE                         pick 25 random lines
+  shuf --random-source=FILE ...           take the random bytes from FILE instead of the system
+  tail -n +2 FILE                         everything from line 2 on (skips the header)
+The same file with the same seed gives the same draw. More: man shuf

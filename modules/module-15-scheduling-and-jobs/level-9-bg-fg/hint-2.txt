@@ -1,1 +1,9 @@
-Use `ln -s` so current.conf points at the release file.
+CMD &            start CMD as a background job; the shell prints [1] and the PID
+jobs -l          list jobs with their state (Running / Stopped) and PID
+kill -STOP %1    pause job 1 (what Ctrl-Z does to a foreground job; Ctrl-Z does not reach
+                 the game's shell, so use this)
+bg %1            continue job 1 in the background (sends SIGCONT)
+fg %1            continue job 1 in the foreground and wait for it
+wait %1          wait until job 1 has finished
+The export only runs about a minute: start it, pause it right away, then take the snapshot.
+More: help jobs, help bg, man 7 signal

@@ -1,2 +1,12 @@
-Use echo to print the greeting:
-echo "Hello, $1!"
+- `$1` is the first argument. `bash greet.sh "Ada Lovelace"` passes ONE argument, because the quotes keep the two words together.
+- `${1:-stranger}` gives the value of `$1`, or `stranger` if `$1` is empty or missing.
+- Store it in a variable (`name=...`, no spaces around `=`) and print it inside double quotes: `echo "Hello, $name!"`.
+
+Two ways to put the lines into greet.sh:
+- `edit greet.sh` opens it in an editor; type the lines and save.
+- or type a heredoc at the prompt. Everything up to a line that is exactly EOF goes into the file:
+cat > greet.sh <<'EOF'
+(the lines of the script)
+EOF
+
+Read more: `man bash`, section "Parameter Expansion".

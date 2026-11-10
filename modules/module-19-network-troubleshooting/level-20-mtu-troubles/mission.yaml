@@ -1,15 +1,11 @@
 {
-  "name": "Mtu Troubles: Noise Dedup",
-  "description": "In the network troubleshooting lab, a task related to Mtu Troubles needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from mtu-troubles-raw.txt with sorted unique values",
+  "name": "Too Big to Arrive",
+  "description": "TICKET.txt: since the VPN to Frankfurt went live, ssh over it works but uploads and git pushes hang. Something on the path drops large packets without telling anyone. The network team left `vpnping HOST SIZE` (on your PATH), which sends one don't-fragment echo through the tunnel like `ping -c 1 -M do -s SIZE`; each probe takes a second or two.",
+  "objective": "Measure the path MTU through the tunnel to 10.99.0.1 (the largest IP packet, headers included, that gets through) with vpnping and write that number to pmtu.txt. Then set wg0's mtu in netplan/60-vpn.yaml to it, changing nothing else in the file.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Mtu Troubles",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "20m",
+  "concepts": ["path MTU discovery", "ping -M do -s", "IP + ICMP header size (28 bytes)", "binary search in bash", "netplan mtu", "PMTU black holes"],
   "module": "module-19-network-troubleshooting",
   "level": "level-20-mtu-troubles"
 }

@@ -1,1 +1,3 @@
-You need a stream editor or another text replacement tool.
+List the folder with `ls uploads` and `ls -b uploads` (-b shows special characters escaped).
+
+Before the shell runs a command, it splits the line at spaces, treats ( ) as syntax, replaces $name with a variable's value and pairs up quotes. Each of the three names contains at least one of those characters. Which files would `mv uploads/Q3 report (final).pdf archive/` actually touch?

@@ -1,14 +1,16 @@
 {
-  "name": "Config Storm: Metric Sum",
-  "description": "In the linux war games lab, a task related to Config Storm needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of config-storm-metrics.csv and write the total to total.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
+  "name": "Config Storm",
+  "description": "Config management pushed a broken template to all 12 services overnight (OVERNIGHT.md). The env files came from another system, and the live configs may contain changes someone made by hand.",
+  "objective": "Make every rendered/<service>.conf exactly template.conf with its ${NAME} placeholders filled from env/<service>.env (raw values, a bare $RUNTIME_DIR stays literal), and write drift.txt: the sorted list of services whose live/<service>.conf has real manual changes (comment and blank-line differences do not count). template.conf and live/ must stay untouched.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
   "concepts": [
-    "Config Storm",
-    "awk",
-    "numeric aggregation"
+    "envsubst with a variable list",
+    "reading env files as data",
+    "CRLF and export prefixes",
+    "diff on filtered input",
+    "drift detection"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-15-config-storm"

@@ -1,15 +1,11 @@
 {
-  "name": "Automation Calendar: Permission Fix",
-  "description": "In the scheduling and jobs lab, a task related to Automation Calendar needs cleanup before the handoff.",
-  "objective": "Set the mode of automation-calendar.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Automation Calendar",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Monday's Batch Window",
+  "description": "Monday's batch window (00:00 to 06:00) keeps colliding: the DB backup runs while the reindex holds its locks, and the sales report starts before the order export has finished (PLAN.txt). The real runtimes are in durations.log.",
+  "objective": "Reschedule the heavy jobs in crontab.txt (heavy = p95 runtime of 30 minutes or more, measured from durations.log, definition in PLAN.txt) so that on Monday every heavy line fires once in the window, each heavy run finishes by 06:00, no two heavy runs overlap, and report-sales starts only after export-orders has finished. Only the minute and hour fields of heavy lines may change; every other line stays exactly as it is. bin/cron-expand lists fire times.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["cron field expansion", "p95 with awk and sort", "capacity planning", "job dependencies", "cron-expand"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-24-automation-calendar"
 }

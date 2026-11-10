@@ -1,16 +1,11 @@
 {
-  "name": "Ping Host: Event Counter",
-  "description": "In the network troubleshooting lab, a task related to Ping Host needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in ping-host-events.txt and write the number to ok-count.txt",
+  "name": "Laggy VPN",
+  "description": "Users at several sites say the VPN is laggy. The NOC pinged the VPN gateway of each site 50 times and saved the outputs in pings/; the provider wants to know which sites lose packets and which have jitter (TICKET.txt).",
+  "objective": "Write lossy.txt with the sites (file names in pings/ without .txt) that have more than 2 % packet loss, and jittery.txt with the sites whose rtt mdev is above 20 ms. One site per line, any order.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Ping Host",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["ping statistics", "packet loss", "rtt min/avg/max/mdev", "awk fields", "duplicates and errors"],
   "module": "module-19-network-troubleshooting",
   "level": "level-3-ping-host"
 }

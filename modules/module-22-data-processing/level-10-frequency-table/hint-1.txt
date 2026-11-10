@@ -1,1 +1,6 @@
-Use tar with create, gzip, and file flags.
+Two things per line: the hour and the first digit of the status. In
+[10/Nov/2026:14:03:22 +0000] the hour is between the first and second colon.
+The status is the first number after the quoted request; but is it always
+the 9th whitespace field? Look at lines whose request is not "METHOD path
+HTTP/1.1" (grep -v '"[A-Z]* /' access.log). Finally, a pivot table needs a row
+for every hour, including the hours where nothing was logged.

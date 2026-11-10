@@ -1,1 +1,7 @@
-Example: `cut -d, -f2 numeric-sort-report.csv > owners.txt`
+  tail -n +2 readings.csv | sort -t, -k3,3gr | head -n 10 > top10.txt
+      tail -n +2      drop the header line
+      -t, -k3,3       sort on the third comma-separated field
+      g               compare as general numbers, so 1.2e3 = 1200
+      r               highest first
+      head -n 10      keep the top 10
+  cat top10.txt

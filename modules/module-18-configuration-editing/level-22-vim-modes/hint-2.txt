@@ -1,1 +1,9 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+In vi, press Esc, then type commands after a colon. Ranges go in front of the command:
+  :120,180s/^http_port 3128/http_port 3129/       substitute only on those lines
+  :/^# LEGACY/,/^# END LEGACY/g/^acl /d           delete matching lines, inside a range
+  :/^# ---- local overrides/r snippet.conf        read a file in after a line
+  J (normal mode, on the first line)               join the next line to this one
+  :wq                                              write and quit
+Without a range `:g/acl/d` deletes every acl line in the file. If you prefer, sed
+does the same with addresses (`120,180s/...`, `/start/,/end/{...}`, `r file`, `N`).
+More: vi's :help, man sed

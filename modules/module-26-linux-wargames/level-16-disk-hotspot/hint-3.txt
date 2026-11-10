@@ -1,1 +1,8 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+Sample every worker's wchar twice and pick the one that grew most, then record it, stop only it and clean up:
+  for p in $(pgrep -x worker); do echo $p $(awk '/^wchar/{print $2}' /proc/$p/io); done > s1.txt
+  sleep 2
+  for p in $(pgrep -x worker); do echo $p $(awk '/^wchar/{print $2}' /proc/$p/io); done > s2.txt
+  pid=$(join s1.txt s2.txt | awk '{print $3-$2, $1}' | sort -n | tail -1 | cut -d' ' -f2)
+  echo "$pid $(readlink /proc/$pid/exe)" > culprit.txt
+  kill $pid; sleep 1; rm -f spool/.dump-* s1.txt s2.txt
+The first two loops read the cumulative bytes each worker has written, join pairs the two samples per PID, the awk/sort picks the biggest delta, readlink resolves the executable, and kill plus rm stop the writer and remove its hidden .dump files.

@@ -1,1 +1,5 @@
-Inspect the sandbox, then create the missing path for organized/package-verify/package-verify-notes.txt.
+dpkg remembers a checksum for every file of every installed package, so the system can tell you
+what no longer matches. Ask it to verify all packages and read the output carefully: the lines are
+not all the same kind. Which marker tells a configuration file from a program or document file,
+and why would you treat the two groups differently? For restoring you need the original package
+file: where did this system's packages come from?

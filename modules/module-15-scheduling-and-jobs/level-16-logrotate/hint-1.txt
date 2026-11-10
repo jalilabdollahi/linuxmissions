@@ -1,1 +1,5 @@
-Measure directory sizes before deciding which one is largest.
+Think about what a normal rotation does to a file that a process holds open: the name
+changes, but the process keeps writing to the same file under its new name. So where would
+the app's next lines go? You need a way to rotate without the app noticing, and a way to
+keep the newest old log readable. And before you rotate for real, which logrotate option
+shows what it would do without doing it?

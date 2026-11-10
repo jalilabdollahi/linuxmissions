@@ -1,1 +1,6 @@
-Use tar extraction flags and point at the archive file.
+  expand            turns tabs into spaces, aligning to tab stops (every 8 columns by default)
+  expand -t 2       tab stops every 2 columns
+  expand -i         only convert the *initial* tabs of each line, leave the others alone
+Do not write the result into the file you are reading from: `cmd < f > f` empties f
+before cmd reads it. Write to a new name, check it with `diff`, then `mv` it over.
+More: man expand

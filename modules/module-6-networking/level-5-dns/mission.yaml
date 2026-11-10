@@ -1,11 +1,11 @@
 {
   "name": "Name Resolution",
-  "description": "DNS lookups are mocked in this sandbox. Resolve the provided hostnames and record the answers.",
-  "objective": "Resolve each hostname in hosts.txt with mock_dig.sh and save `host ip` pairs to resolved.txt",
-  "xp": 210,
-  "difficulty": "intermediate",
-  "expected_time": "9m",
-  "concepts": ["dig", "dns", "hostnames", "loops"],
+  "description": "Before moving the internal services to a new network, the team needs every name in hosts.txt mapped to its current addresses. This sandbox has no DNS server, so `./dig` stands in for dig: same options and output format, answering from the internal zone.",
+  "objective": "Look up each name in hosts.txt with ./dig and write resolved.txt with one line `NAME ADDRESS` per IPv4 address (A record) the name finally resolves to. Follow CNAMEs to the address, give a name with two addresses two lines, and write `NAME NXDOMAIN` for a name that does not exist. Order does not matter.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["dig", "dig +short", "A and CNAME records", "NXDOMAIN", "loops"],
   "module": "module-6-networking",
   "level": "level-5-dns"
 }

@@ -1,1 +1,5 @@
-Example: `head -n 3 tac-reverse-history.log > first3.txt` and `tail -n 3 tac-reverse-history.log > last3.txt`
+  tac -b -s '----' CHANGES > CHANGES.newest-first
+      -s '----'   cut the file into records at each ---- separator, not at each newline
+      -b          the separator is glued to the front of its record, so it stays in front of its block
+      tac         prints the records last to first
+  head -8 CHANGES.newest-first

@@ -1,15 +1,11 @@
 {
-  "name": "Source: Config Rewrite",
-  "description": "In the shell environment lab, a task related to Source needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in source.conf and save the fixed result to fixed.conf",
+  "name": "Workon",
+  "description": "The team's workon.sh is supposed to drop you into a project with its settings loaded. COMPLAINTS.txt: run as ./workon.sh it does nothing, sourced it only works from the repo root, and a typo in the project name closes the whole terminal. (Careful: that last one is real. Try the broken script in a throwaway shell such as `bash -c '...'`, not in this game shell; if it closes, type `reset`.)",
+  "objective": "Fix workon.sh so that `source /path/to/workon.sh NAME` works from any directory: it changes the caller's directory to projects/NAME and exports PROJECT=NAME plus the settings from that project's .project.env. For an unknown name it prints an error on stderr and returns a non-zero status, leaving the caller's shell open and unchanged. When it is run as a program instead of sourced, it exits non-zero with a message that mentions `source`.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Source",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["source / .", "running vs sourcing", "return vs exit", "${BASH_SOURCE[0]} vs $0", "set -a"],
   "module": "module-9-shell-environment",
   "level": "level-19-source"
 }

@@ -1,11 +1,11 @@
 {
   "name": "Pattern Mastery",
-  "description": "A log file mixes text, usernames, and IP addresses. Pull out just the IPv4 addresses into a clean report.",
-  "objective": "Extract all IPv4 addresses from app.log and save them to ips.txt",
-  "xp": 200,
-  "difficulty": "beginner",
-  "expected_time": "7m",
-  "concepts": ["grep -E", "regex", "IPv4", "patterns"],
+  "description": "Security wants to know every host that touched the app today. The addresses are buried in app.log: after client=, with a :port, in [brackets], two on one line, next to version and build numbers that look a lot like IPs.",
+  "objective": "Write every distinct IPv4 address that appears in app.log to ips.txt, one address per line, each listed once (any order).",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["grep -E", "grep -o", "grep -w", "regex quantifiers {n,m}", "sort -u"],
   "module": "module-8-advanced-text",
   "level": "level-1-regex-grep"
 }

@@ -1,1 +1,9 @@
-Use tar extraction flags and point at the archive file.
+- pgrep -a PATTERN prints PID and full command line of the matches; pgrep -f
+  matches against the whole command line instead of the process name.
+- pgrep -P PPID lists only the children of that parent (give it the PID of
+  supervisor B, found with pgrep -f 'supervisor.sh B').
+- Options can be combined: pgrep -f -P PPID PATTERN keeps matches that are
+  children of PPID.
+- PATTERN is an extended regex: `emails` also matches `emails-archive`; anchor
+  the end of the queue name (a space or the end of the line follows the exact name).
+- ps -eo pid,ppid,cmd shows PPID next to the command line, to double-check. man pgrep.

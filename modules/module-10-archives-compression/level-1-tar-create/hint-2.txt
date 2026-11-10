@@ -1,1 +1,6 @@
-`mkdir -p organized/tar-create` followed by `mv inbox/tar-create.txt organized/tar-create/tar-create-notes.txt` is enough.
+  tar -czf NAME.tar.gz DIR        c = create, z = gzip, f = archive file name
+  tar -C SOMEWHERE ...            change into SOMEWHERE before reading the paths that follow
+  tar -tzf NAME.tar.gz            list the stored names to check them
+Name the directory itself (not DIR/*): tar then walks into it and takes hidden
+files too. Write the archive outside the folder you pack.
+More: man tar  (look for --directory)

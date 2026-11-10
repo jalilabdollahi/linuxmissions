@@ -1,1 +1,14 @@
-Example: `chmod 640 sources-list.sh`
+apt update 2>&1 | grep -E '^(W|E):'
+ls repos/ubuntu/dists/
+sed -i 's/noble-update[a-z-]* /noble-updates /' rootfs/etc/apt/sources.list.d/ubuntu.sources
+: > rootfs/etc/apt/sources.list
+cat rootfs/etc/apt/sources.list.d/vendor.list
+printf 'Types: deb\nURIs: file:%s/repos/vendor\nSuites: stable\nComponents: main\nSigned-By: %s/rootfs/etc/apt/keyrings/vendor.gpg\n' "$SANDBOX" "$SANDBOX" > rootfs/etc/apt/sources.list.d/vendor.sources
+rm rootfs/etc/apt/sources.list.d/vendor.list
+apt update 2>&1 | grep -E '^(W|E):' || echo clean
+
+- ls dists/     the suite is noble-updates; the sources have a typo
+- sed           fixes the suite name in ubuntu.sources (the Ubuntu archive lives in ubuntu.sources)
+- : > sources.list   empties the old file, whose entries repeat ubuntu.sources
+- printf > vendor.sources   the vendor entry in deb822 form (URI, suite, component, key from vendor.list)
+- rm vendor.list    the old one-line entry would be a duplicate

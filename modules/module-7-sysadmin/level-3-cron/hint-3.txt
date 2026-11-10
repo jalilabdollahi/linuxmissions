@@ -1,2 +1,10 @@
-Write this exact line into crontab.txt:
-0 3 * * * $SANDBOX/cleanup.sh
+echo "0 3 * * 1-5 $SANDBOX/cleanup.sh" >> crontab.txt
+cat crontab.txt
+
+- 0 3          minute 0, hour 3 = 03:00
+- * *          every day of the month, every month
+- 1-5          Monday to Friday
+- $SANDBOX/cleanup.sh   the double quotes let the shell write the real absolute path
+                        (e.g. /tmp/linuxmissions/.../cleanup.sh) into the file; cron itself
+                        does not know $SANDBOX, so the variable must not stay in the file
+- >>           append to crontab.txt, keeping the existing jobs

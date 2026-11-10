@@ -1,17 +1,23 @@
-# Wrong Owner
+# Who Owns This?
 
-## What you practiced
-- `chown user file` changes owner
-- `chown user:group file` changes both owner and group
-- `chown -R` applies recursively to directories
-- Only root can change ownership to someone else
+## Why it works
+`stat` (or `ls -l`) shows each file's owner and group. Linux's rules are short:
+- only the **owner** (or root) may `chmod` a file or `chgrp` it, and only to a
+  group the owner belongs to (`id` lists yours);
+- only **root** may `chown` a file to another user. A normal user cannot give
+  files away, and cannot take them either.
 
-## Commands to remember
-```bash
-chown alice file                 # change owner to alice
-chown alice:developers file      # change owner and group
-chown :developers file           # change group only (same as chgrp)
-chown -R www-data /var/www       # web server fix
-stat -c "%U %G" file             # show owner and group
-ls -la                           # shows owner and group in columns 3 & 4
-```
+So when a deploy says "Operation not permitted" on `/etc/passwd`, no `chmod`
+trick will help: the fix is `sudo`, or changing the deploy so it does not need
+to touch root's files.
+
+## Common mistakes
+- Reading the group column as "who can write". The group only matters together
+  with the mode bits: `root shadow -rw-r-----` lets the shadow group *read*.
+- Running `ls -l /var/mail` and reading the contents instead of the directory
+  itself; use `ls -ld` for a directory's own owner.
+
+## Learn next
+`chown user:group file` (as root) changes both at once, and `chgrp GROUP file` lets
+you, as owner, hand a file to one of your own groups. For audits:
+`find /srv -not -user www-data` lists everything a service account does not own.

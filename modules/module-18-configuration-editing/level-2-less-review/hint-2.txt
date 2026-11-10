@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+In `less nginx-full.conf` type /server_name uploads and press Enter, then n for
+the next match. Or without a pager:
+  grep -n 'server_name uploads' nginx-full.conf     the line number of the vhost
+  sed -n '300,340p' nginx-full.conf                  print a range of lines
+  grep -A25 'server_name uploads' nginx-full.conf    the match plus 25 lines after it
+The server-level directive is indented one level (8 spaces here); the one in a
+location block is indented further. More: man less, man grep

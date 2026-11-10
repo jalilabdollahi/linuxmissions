@@ -1,1 +1,3 @@
-This task wants a symbolic link, not a copy.
+Readers open latest.tar.gz by its name at any moment. Which operations on a name are all-or-nothing? Writing a file is not; renaming one is. So the new content has to be complete under a different name before it takes the public one.
+Where should that other name live, so that the rename really is a rename? And what has the file system been told about the data when the rename happens: is it already on the disk, or still in memory?
+Look at the file's mode afterwards, too.

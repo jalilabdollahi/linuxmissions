@@ -1,1 +1,9 @@
-Example: `chmod 640 pci-review.sh`
+awk -v RS= -F'\n' '{ drv = 0; mod = "-"; for (i = 2; i <= NF; i++) { if ($i ~ /Kernel driver in use:/) drv = 1; if ($i ~ /Kernel modules:/) { mod = $i; sub(/.*Kernel modules: */, "", mod); sub(/[ ,].*/, "", mod) } } if ($1 ~ /\[0[12][0-9a-f][0-9a-f]\]:/ && !drv) { slot = $1; sub(/ .*/, "", slot); id = $1; while (match(id, /\[[0-9a-f][0-9a-f][0-9a-f][0-9a-f]:[0-9a-f][0-9a-f][0-9a-f][0-9a-f]\]/)) { last = substr(id, RSTART, RLENGTH); id = substr(id, RSTART + RLENGTH) } print slot, last, mod } }' capture/lspci.txt > unbound.txt
+cat unbound.txt
+
+- -v RS= -F'\n'              one device per record, each line a field ($1 is the header line)
+- $i ~ /Kernel driver in use:/   remember whether a driver is bound
+- sub(...) on the modules line   keep only the first module name; mod stays - if there is none
+- $1 ~ /\[0[12]../           class code 01xx or 02xx in the header line
+- the while/match loop       walks over all [....] groups and keeps the last one: vendor:device
+- print slot, last, mod      slot, [vendor:device], module

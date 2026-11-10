@@ -1,1 +1,6 @@
-This is a sorting task followed by deduplication.
+Each unit directory is a small database of plain files, one value or group
+of values per file. Look at one directory and read the file names: which
+files are about the memory limit, which about OOM events and which about CPU
+throttling? Several files have similar names (limits, soft limits, swap
+limits, CPU limits), so make sure you take the one that really is the memory
+limit. Some units have no limit at all, and some counters can be zero.

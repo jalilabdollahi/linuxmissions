@@ -1,1 +1,6 @@
-Example: `find cleanup/unxz -name '*.tmp' -delete`
+  xz -l --robot exports/*.xz | awk '$1 == "totals" {print $5}' > total_bytes.txt
+      --robot prints exact byte counts; the "totals" line sums all files and
+      its 5th field is the uncompressed size; awk prints just that number
+  cat total_bytes.txt
+  unxz -k exports/customers.sql.xz
+      restore exports/customers.sql; -k keeps the .xz next to it

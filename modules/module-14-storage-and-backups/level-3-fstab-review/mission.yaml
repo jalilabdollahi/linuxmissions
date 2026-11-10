@@ -1,16 +1,11 @@
 {
-  "name": "Fstab Review: Event Counter",
-  "description": "In the storage and backups lab, a task related to Fstab Review needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in fstab-review-events.txt and write the number to ok-count.txt",
+  "name": "Fstab After the Disk Swap",
+  "description": "web-07 has been stuck in emergency mode since a disk swap: etc/fstab still names the old disks. You have a copy of the file and the output of blkid for the new disks.",
+  "objective": "Edit etc/fstab so that each of its four entries refers to its new disk by UUID= (taken from blkid.txt), the USB backup disk at /mnt/usb-backup no longer blocks boot when it is missing, and the last column is right: pass 1 for the root file system, 0 for swap and 0 or 2 for the others. Keep the comments, the types, the swap mount point and each entry's other options.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Fstab Review",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["fstab fields", "UUID=", "nofail", "fsck pass number", "blkid output"],
   "module": "module-14-storage-and-backups",
   "level": "level-3-fstab-review"
 }

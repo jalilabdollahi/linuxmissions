@@ -1,3 +1,8 @@
-Verify with:
-ls -la $SANDBOX/etc/myapp/
-readlink $SANDBOX/etc/myapp/active.conf
+  cd etc/myapp
+      work in the link's own folder, so relative paths mean the same thing to you and to the link
+  ln -sf v2/config.conf active.conf
+      -s makes a symbolic link, -f replaces the old one that pointed at v1
+  ls -l active.conf
+      should show: active.conf -> v2/config.conf
+  cd "$SANDBOX"
+      back to the sandbox root

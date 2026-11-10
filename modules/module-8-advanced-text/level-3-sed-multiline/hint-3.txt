@@ -1,3 +1,9 @@
-One valid approach is:
-sed '/# EXTRA CONFIG/a\
-include /etc/myapp/extra.conf' app.conf > app.conf.new && mv app.conf.new app.conf
+sed '/listen 8443/,/^}/{
+/# EXTRA CONFIG/a\
+    include /etc/myapp/extra.conf;
+}' app.conf > app.conf.new && mv app.conf.new app.conf
+
+- /listen 8443/,/^}/{ ... }   only the lines from "listen 8443" to the first "}" at the start of a line
+- /# EXTRA CONFIG/a\          inside that range, after the marker line, append ...
+- include ...;                ... this text (the a\ text continues on the next line)
+- > app.conf.new && mv ...    write a new file, replace the original only if sed succeeded

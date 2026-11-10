@@ -1,15 +1,11 @@
 {
-  "name": "Ionice Notes: Link Repair",
-  "description": "In the monitoring and performance lab, a task related to Ionice Notes needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/ionice-notes.conf",
+  "name": "The Backup That Ate the Disk",
+  "description": "A colleague started a tar backup of srv/data by hand during business hours, and the database's disk latency has gone through the roof. The backup is 70% done and must not be stopped, but it must stop starving the database.",
+  "objective": "Without stopping or killing anything, put the running backup into the idle I/O scheduling class: the tar process and the gzip compressor that runs below it. The database process (opt/db/dbserver.sh) must keep the I/O class it has.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Ionice Notes",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "15m",
+  "concepts": ["ionice -c3 -p", "reading ionice -p", "parent and child processes", "pgrep -P", "idle I/O class"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-9-ionice-notes"
 }

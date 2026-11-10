@@ -1,17 +1,19 @@
-# Motd: Capacity Report
+# Stale Login Banner
 
-## What you practiced
-- This level focused on **Motd** in a safe sandbox.
-- The shortest path usually combines `du` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+At login, PAM's `pam_motd` runs the scripts in `/etc/update-motd.d` in name order and
+prints their output as the message of the day. It uses the rules of `run-parts`: a
+file takes part only if it is **executable**, and (in the `--lsbsysinit` mode used
+here) only if its name has nothing but letters, digits, `_` and `-`. So `chmod -x`
+parks a script without deleting it, and the two-digit prefix (`50-`) puts the new
+script between `10-` and `90-`. The script computes the number each time, which is
+why the validator changed what `df` reports before checking again.
 
-## Commands to remember
-```bash
-du -s datasets/*
-du -sh datasets/* | sort -h
-sort -n report.txt | tail -n 1
-```
+## Common mistakes
+- `50-disk.sh`: the dot makes run-parts skip the file, silently. No error, no output.
+- A one-digit prefix such as `5-disk`: names sort as text, so it comes after `10-sysinfo`, not before it. Two digits keep the order obvious.
+- Forgetting `chmod +x` on the new file.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Measure directory sizes before deciding which one is largest.
+## Next step
+`run-parts --test /etc/update-motd.d` lists what would run without running it, which
+is the quickest way to find a script that is being skipped.

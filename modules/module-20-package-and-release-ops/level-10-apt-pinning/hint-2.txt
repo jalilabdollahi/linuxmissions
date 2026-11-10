@@ -1,0 +1,9 @@
+apt-cache policy          plain, without a package: every repository with its priority and a
+                          "release o=...,a=...,n=...,c=..." line (a = archive/suite, n = codename)
+Pin file format (rootfs/etc/apt/preferences.d/NAME.pref):
+    Package: ripgrep
+    Pin: release a=SUITE
+    Pin-Priority: NUMBER
+The number has to beat the main archive's 500. Match the field apt printed, not the one you expect
+(compare a= and n= for the backports line). A file not ending in .pref (or with no extension) is ignored.
+Check with apt-cache policy ripgrep fd-find.   More: man apt_preferences

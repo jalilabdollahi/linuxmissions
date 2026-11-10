@@ -1,16 +1,11 @@
 {
-  "name": "Tar Tunnel: Path Realignment",
-  "description": "In the linux war games lab, a task related to Tar Tunnel needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/tar-tunnel.txt to organized/tar-tunnel/tar-tunnel-notes.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Tar Tunnel",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "name": "Tar Tunnel",
+  "description": "alpha/data has to reach bravo, and the only channel between the two hosts is the text relay (./relay send): ASCII lines of at most 76 characters, messages of at most 64 KB. Whatever you send arrives in bravo/inbox/ as separate messages, in no particular order. The tree has binary files, symlinks, a hard-linked pair, odd modes and old modification times.",
+  "objective": "Get bravo/data into existence as an exact copy of alpha/data: same content, modes, symlinks, hard links (one inode, not two copies) and modification times. Use only the relay to move the data; alpha/data itself must stay unchanged.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["tar over a text channel", "base64", "split and reassembly with sequence numbers", "hard links and symlinks in tar", "tar -p (preserve permissions)", "reordering unordered messages"],
   "module": "module-26-linux-wargames",
   "level": "level-21-tar-tunnel"
 }

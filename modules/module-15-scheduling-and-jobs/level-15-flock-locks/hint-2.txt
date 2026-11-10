@@ -1,1 +1,7 @@
-An awk one-liner can skip the header and add the second field.
+flock(1) takes an advisory lock on a file; the lock belongs to the open file descriptor
+and disappears when every process holding it has exited.
+  exec 9> sync.lock      opens fd 9 on the lock file for the rest of the script
+  flock -n 9             -n = do not wait: fail at once (exit 1) if someone else holds it
+Put this near the top of sync.sh, right after the `cd`, and decide what to print and which
+status to exit with when flock fails. man flock has the details.
+To try it: SYNC_SECONDS=5 ./sync.sh & ./sync.sh; echo $?

@@ -1,0 +1,11 @@
+{
+  "name": "One Package From Backports",
+  "description": "The team needs ripgrep 14 from the noble-backports repository for a new log search feature. Backports also carries newer fd-find and bat, and nobody wants those: the rest of the server stays on the main archive.",
+  "objective": "Write a preferences file in rootfs/etc/apt/preferences.d/ so that apt offers ripgrep from backports while every other package keeps its candidate from the main archive. Leave the existing preferences alone, and don't install or upgrade anything. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["apt_preferences", "Pin: release a=", "Pin-Priority", "NotAutomatic backports", "apt-cache policy"],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-10-apt-pinning"
+}

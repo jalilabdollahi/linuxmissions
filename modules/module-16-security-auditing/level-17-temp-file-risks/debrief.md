@@ -1,17 +1,17 @@
-# Temp File Risks: Schedule Entry
+# The Predictable Temp File
 
-## What you practiced
-- This level focused on **Temp File Risks** in a safe sandbox.
-- The shortest path usually combines `crontab` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A fixed name such as `/tmp/report.tmp` can be created in advance by anyone, as a symlink to a file the
+job's owner can write. The shell's `>` follows the link and overwrites the victim. `mktemp` picks a random
+name and creates the file with `O_EXCL` (it fails rather than follow anything that exists) and mode 600, so
+there is no window for others. `trap '...' EXIT` runs the cleanup on every way out, including `exit` from
+`set -e` after a failed command, which a plain `rm` on the last line never reaches.
 
-## Commands to remember
-```bash
-crontab -l
-printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt
-cat crontab.txt
-```
+## Common mistakes
+- `$$` or `$RANDOM` in the name: still guessable, and a symlink can be planted for every PID.
+- `tmp=$(mktemp)` without the trap: safe, but the file piles up whenever the script fails.
+- `touch "$tmp"; chmod 600 "$tmp"` after the fact: the same race as with a key file.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This mission is about cron field order and exact syntax.
+## Next step
+`mktemp -d` creates a private directory for several work files, and `trap ... EXIT INT TERM` also covers
+signals. `man 7 symlink` explains how links are followed; `fs.protected_symlinks` is the kernel's partial defence in sticky directories.

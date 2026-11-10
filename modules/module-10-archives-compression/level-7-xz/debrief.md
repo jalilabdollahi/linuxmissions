@@ -1,17 +1,21 @@
-# Xz: History Window
+# Month by Month
 
-## What you practiced
-- This level focused on **Xz** in a safe sandbox.
-- The shortest path usually combines `head` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+The glob `logs/app-$m-*.log` selects by the date in the name, which is the day
+the log covers. `tar -cJf` pipes the tar stream through xz. Joining the steps
+with `&&` means `rm` runs only when tar succeeded and `xz -t` found the archive
+intact, so a full disk or a typo never costs you the originals.
 
-## Commands to remember
-```bash
-head -n 3 file.log
-tail -n 3 file.log
-tail -f file.log
-```
+## Common mistakes
+- Selecting by modification time (`find -newermt 2026-09-01 ! -newermt
+  2026-10-01`): each log is closed after midnight, so the 30th of September has
+  an October mtime and lands in the wrong archive.
+- Running the `rm` on its own line after the loop: if one month failed, its
+  logs are deleted anyway.
+- `tar -cJf archive.tar.xz logs/` packs every month, including the current one.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use one command for the beginning of the file and another for the end.
+## Learn next
+`xz -t` checks the compression, not whether the right files went in. GNU tar
+can compare an archive with the files on disk: `tar -dJf archive/2026-09.tar.xz`
+reports any difference. `tar --remove-files` deletes each file once it is
+archived, and `xz -T0` compresses with all CPU cores.

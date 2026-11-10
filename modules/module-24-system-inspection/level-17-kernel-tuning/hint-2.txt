@@ -1,1 +1,7 @@
-Write the schedule into crontab.txt using the standard five time fields.
+`sysctl -n NAME` prints one live value (dots in the name correspond to
+slashes under /proc/sys, e.g. `cat /proc/sys/vm/swappiness`). A sysctl.d
+file holds one `name = value` per line; `#` starts a comment.
+`ip_local_port_range` has two values, low and high, separated by
+whitespace: keep the current high end and only fix the start. A value
+already above its minimum is fine, so it must not be written down, and
+certainly not lowered.

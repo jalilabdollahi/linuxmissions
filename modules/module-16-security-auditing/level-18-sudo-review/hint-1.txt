@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in sudo-review.log.
+For every rule ask: if I may run exactly this as root, can I get a root shell out of it? Programs that
+open an editor or a pager, that run other programs (find, tar) or that take arbitrary arguments are the usual
+suspects; so is a script I can modify myself (ownership.txt shows who owns what). Remember that sudo
+only reads some of the files in sudoers.d, and that a rule can hide behind a Cmnd_Alias.

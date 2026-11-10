@@ -1,1 +1,14 @@
-Example: `find cleanup/syslog-triage -name '*.tmp' -delete`
+One awk pass over the hour: normalise the tag, weigh repeated-message lines, sum, sort:
+
+awk '$3 >= "02:00:00" && $3 <= "02:59:59" {
+       prog = $5; sub(/\[[0-9]+\]/, "", prog); sub(/:$/, "", prog)
+       n = ($6 == "message" && $7 == "repeated") ? $8 : 1
+       count[prog] += n
+     }
+     END { for (p in count) print count[p], p }' var/log/syslog | sort -rn | head -3 > top-programs.txt
+cat top-programs.txt
+
+- $3 >= "02:00:00" && $3 <= "02:59:59"   only the hour in question (all lines are from Nov 10)
+- sub(...) twice                          "orders-api[2231]:" and "orders-api:" both become orders-api
+- n = ... $8 : 1                          "message repeated 412 times" counts as 412 messages
+- sort -rn | head -3                      biggest first, top three, as "count program"

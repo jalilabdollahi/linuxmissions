@@ -1,1 +1,7 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+find can test permission bits: `-perm -0002` means "all these bits are set" (here: others
+can write), and `! -perm -1000` means "the sticky bit is not set". Combine them with
+`-type d`. Then read the list line by line, not word by word:
+  find srv -type d -perm -0002 ! -perm -1000 | sort > fixed.txt
+  while IFS= read -r d; do chmod +t "$d"; done < fixed.txt
+Check with `ls -ld` on a few directories: the last permission character becomes t.
+More: man find (the -perm section), man chmod

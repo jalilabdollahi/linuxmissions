@@ -1,1 +1,14 @@
-A du pipeline sorted numerically is a strong fit here.
+- `<<EOF` (unquoted): $var, $(cmd) and `cmd` are expanded while the text is
+  written. `<<'EOF'` (quoted): nothing is expanded.
+- Inside an unquoted heredoc, `\$` writes a literal $:
+    cat <<EOF
+    server_name $domain;           -> server_name shop.example.com;
+    proxy_set_header Host \$host;  -> proxy_set_header Host $host;
+    EOF
+  Backslashes before other characters (like `\.` in the regex) stay as they are.
+- So both heredocs can be unquoted, with \$ on every nginx variable and on
+  the generated script's own $1, $path and $url.
+- Argument check first:  [ $# -ne 2 ] || [[ ! $2 =~ ^[0-9]+$ ]]  ->
+  usage message with >&2, then exit 2, before anything is written.
+
+Read more: man bash, "Here Documents".

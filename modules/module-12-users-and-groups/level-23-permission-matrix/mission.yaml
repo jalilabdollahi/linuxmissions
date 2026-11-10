@@ -1,15 +1,11 @@
 {
-  "name": "Permission Matrix: Backup Bundle",
-  "description": "In the users and groups lab, a task related to Permission Matrix needs cleanup before the handoff.",
-  "objective": "Create permission-matrix-backup.tar.gz containing the files under bundle/permission-matrix",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Permission Matrix",
-    "tar",
-    "compression"
-  ],
+  "name": "Who Can Touch What",
+  "description": "Before granting the audit team access on file-02, the security lead wants to know exactly who can already read and write six files, for five users. The stat output of the six files and of the directories above them was captured in stat.txt, with the server's passwd and group files alongside.",
+  "objective": "Write matrix.csv with a header line user,path,read,write and one row per user and file (5 users x 6 files = 30 rows), where read and write are yes or no: whether that user can read the file's contents and whether they can modify it, given the owner/group/other rules, group membership including supplementary groups and primary groups, and the directories on the way to the file. The users are kim, tomas, priya, wen and alex; the files are listed in paths.txt. Treat all five as ordinary users (no root, no ACLs).",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["owner/group/other precedence", "directory execute bit and path traversal", "supplementary and primary groups", "stat -c output"],
   "module": "module-12-users-and-groups",
   "level": "level-23-permission-matrix"
 }

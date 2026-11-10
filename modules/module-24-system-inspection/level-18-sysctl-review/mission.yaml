@@ -1,15 +1,11 @@
 {
-  "name": "Sysctl Review: Alert Filter",
-  "description": "In the system inspection lab, a task related to Sysctl Review needs cleanup before the handoff.",
-  "objective": "Write every alert line from sysctl-review.log into alerts.txt",
+  "name": "Which File Wins?",
+  "description": "k8s-node-12 behaves as if net.ipv4.ip_forward were 0, although /etc/sysctl.conf sets it to 1. The node's sysctl configuration was captured under capture/ (see TICKET.md).",
+  "objective": "Work out, for every key set anywhere in capture/ (etc/sysctl.conf, etc/sysctl.d, run/sysctl.d, usr/lib/sysctl.d), the value systemd-sysctl ends up applying and the file that set it. Write effective.txt with one line `key=value path` per key, sorted by key. Write keys with dots, collapse repeated spaces inside values, and give the path under capture/ as systemd finds the file (on this Ubuntu node etc/sysctl.d/99-sysctl.conf is a symlink to ../sysctl.conf, and it counts under that name). Keys that only a hidden file sets are not applied and must not be listed.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Sysctl Review",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "40m",
+  "concepts": ["systemd-sysctl precedence", "sysctl.d directories", "same-named file masking", "lexicographic file order", "sysctl key syntax"],
   "module": "module-24-system-inspection",
   "level": "level-18-sysctl-review"
 }

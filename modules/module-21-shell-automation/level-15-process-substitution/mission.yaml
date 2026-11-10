@@ -1,15 +1,11 @@
 {
-  "name": "Process Substitution: Metric Sum",
-  "description": "In the shell automation lab, a task related to Process Substitution needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of process-substitution-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Process Substitution",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Stale Accounts",
+  "description": "The quarterly access audit runs stale_accounts.sh to find server accounts whose owners have left. It prints TOTAL 0 every time, it lists root and daemon, and on the audit runner it dies because it cannot create temp files. AUDIT.txt has the rules.",
+  "objective": "Fix stale_accounts.sh so that `bash stale_accounts.sh USERS_EXPORT HR_ROSTER` prints, sorted, one per line, every human account (uid 1000 to 59999) whose login HR does not list as active or leave (HR writes logins in capitals), then `TOTAL n`. It runs in a read-only directory with an unwritable TMPDIR, so it may not create any file: use process substitution `<( )` instead of temp files. It is also run on a second export and roster.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["<(cmd) process substitution", "done < <(cmd)", "pipelines run in subshells", "comm -23", "no temp files"],
   "module": "module-21-shell-automation",
   "level": "level-15-process-substitution"
 }

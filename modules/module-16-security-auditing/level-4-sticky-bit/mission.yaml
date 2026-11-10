@@ -1,15 +1,11 @@
 {
-  "name": "Sticky Bit: Noise Dedup",
-  "description": "In the security auditing lab, a task related to Sticky Bit needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from sticky-bit-raw.txt with sorted unique values",
+  "name": "Files That Vanish",
+  "description": "Users of the shared upload areas under srv/ complain that their files keep disappearing: somebody else deleted them. A shared folder that everyone can write to lets everyone delete anything in it unless the sticky bit is set.",
+  "objective": "Set the sticky bit on every world-writable directory under srv/ that does not have it yet, and change nothing else: directories that already have it, directories that are not world-writable and all files keep their modes. Write the paths of the directories you fixed, one per line, to fixed.txt.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Sticky Bit",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "10m",
+  "concepts": ["sticky bit", "find -type d -perm", "chmod +t", "world-writable directories"],
   "module": "module-16-security-auditing",
   "level": "level-4-sticky-bit"
 }

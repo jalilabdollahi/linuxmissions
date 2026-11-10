@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+- `pwd` (same as `pwd -L`) prints the LOGICAL path: the way you got there, symlinks included.
+- `pwd -P` prints the PHYSICAL path: every symlink resolved, all the way down.
+- `cd -P DIR` enters the real directory directly; `cd -` jumps back to where you were before.
+- `readlink deploy/current` only prints the text of ONE link (releases/live); `readlink -f` resolves all of them.
+- Write a command's output to a file with `> FILE`. Use "$SANDBOX/name.txt" while you are in a subdirectory, so the file lands in the sandbox root.
+
+Read more: `help pwd`, `help cd`.

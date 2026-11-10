@@ -1,2 +1,6 @@
-Save the background PID right after starting it:
-nice -n 15 bash $SANDBOX/heavy.sh & echo $! > $SANDBOX/pid.txt
+  pgrep -f heavy.sh           PID of the process whose command line has heavy.sh
+  ps -o pid,ni,args -p PID    show its niceness (NI column)
+  renice VALUE -p PID         set the niceness of a running process
+Niceness goes from -20 (greediest) to 19 (nicest); the default is 0. A normal
+user may only raise it. nice -n VALUE CMD is for starting a NEW process.
+More: man renice, man nice

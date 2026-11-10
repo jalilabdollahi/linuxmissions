@@ -1,1 +1,29 @@
-Example: `chmod +x jobs/arithmetic.sh && jobs/arithmetic.sh`
+Type this at the prompt. It replaces quota_report.sh:
+
+cat > quota_report.sh <<'SCRIPT'
+#!/bin/bash
+# quota_report.sh USAGE_FILE
+total=0
+{
+  read -r header
+  while IFS=$'\t' read -r user used quota; do
+    used=$(( 10#$used ))
+    quota=$(( 10#$quota ))
+    total=$(( total + used ))
+    (( quota == 0 )) && continue
+    pct=$(( used * 100 / quota ))
+    if (( pct >= 90 )); then
+      echo "$user $pct%"
+    fi
+  done
+} < "$1"
+echo "TOTAL $(( total / 1024 )) MiB"
+SCRIPT
+
+- { read -r header; while ...; done; } < "$1"   the first read eats the header line
+- $(( 10#$used ))                 read 00921600 as decimal, not as octal
+- total in KiB, / 1024 once at the end   no rounding error per user
+- (( quota == 0 )) && continue    unlimited: counted in the total, never listed
+- used * 100 / quota              multiply first, or every percent is 0
+
+Try it: bash quota_report.sh usage.tsv

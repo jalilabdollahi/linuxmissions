@@ -1,1 +1,8 @@
-Example: `grep -c '^ok$' id-command-events.txt > ok-count.txt`
+grep -L -E '[=,][0-9]+\(www-data\)' id-*.txt | sed -e 's/^id-//' -e 's/\.txt$//' > missing.txt
+echo "$(id -u) $(id -g)" > me.txt
+cat missing.txt me.txt
+
+- grep -L -E ...       the capture files with no group named exactly www-data,
+                       whether as gid= (primary) or inside groups=
+- sed                  strips id- and .txt so only the host name is left
+- id -u / id -g        your own UID and primary GID, as numbers

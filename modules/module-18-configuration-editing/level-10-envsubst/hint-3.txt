@@ -1,1 +1,10 @@
-Example: `tar -czf envsubst-backup.tar.gz bundle/envsubst`
+set -a
+. ./deploy.env
+set +a
+envsubst '$APP_HOST $APP_PORT' < nginx.conf.tmpl > nginx.conf
+cat nginx.conf
+
+- set -a / set +a     everything assigned in between is exported to child processes
+- . ./deploy.env      reads APP_HOST and APP_PORT into the shell
+- '$APP_HOST $APP_PORT'  the shell-format list: only these two (also in ${APP_PORT} form) are replaced
+- < ... > nginx.conf  template in, rendered file out; the template itself stays untouched

@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Run ./login-sim deploy and ./login-sim ops and compare them: one is wrong in more ways than
+the other, so some faults are system-wide and some belong to deploy. Follow the order in which a login
+reads its files: what is set before the shell starts, then /etc/profile and what it includes, then
+exactly one of the user's own files. Which of deploy's files is actually read? A fix in a file that is
+never read changes nothing. And read the PATH literally, character by character: odd symbols mean something.

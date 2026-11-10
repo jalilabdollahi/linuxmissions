@@ -1,1 +1,9 @@
-Example: `mkdir -p organized/namespaces-notes && mv inbox/namespaces-notes.txt organized/namespaces-notes/namespaces-notes-notes.txt`
+hp=$(jq -r '.namespaces[] | select(.type=="pid" and .pid==1) | .ns' capture/lsns.json); hn=$(jq -r '.namespaces[] | select(.type=="net" and .pid==1) | .ns' capture/lsns.json)
+awk -v hp=$hp -v hn=$hn 'NR > 1 && $3 != hp && $4 == hn {print $1, $5}' capture/ps.txt | sort -n > host_net.txt
+cat host_net.txt
+
+- jq ... select(.pid==1)     the PID and network namespace inodes of PID 1: the host's
+- NR > 1                     skip the header line of ps.txt
+- $3 != hp                   PIDNS different from the host: its own PID namespace
+- $4 == hn                   NETNS equal to the host's: the host network
+- print $1, $5 | sort -n     PID and command, in PID order

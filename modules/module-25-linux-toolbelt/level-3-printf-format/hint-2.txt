@@ -1,1 +1,6 @@
-A grep count or grep piped into wc can produce the number you need.
+printf takes a format with a width, and for strings and numbers a precision:
+  %6d       integer padded to 6 with spaces      %06d   padded with zeros
+  %-12s     left-aligned in 12 columns           %.12s  at most 12 characters
+  %10.2f    right-aligned in 10, two decimals
+Read the CSV with `while IFS=, read -r a b c; do ...; done`, and `tail -n +2`
+starts at line 2. Check a line with `head -3 billing.dat`. More: man 1 printf

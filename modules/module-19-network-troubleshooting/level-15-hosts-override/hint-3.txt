@@ -1,1 +1,16 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' hosts-override-metrics.csv > total.txt`
+Type these at the prompt:
+
+getent hosts db.corp.example
+grep -n -w -F db.corp.example etc/hosts | grep -v '^[0-9]*:#'
+line=$(grep -n -w -F db.corp.example etc/hosts | grep -v '^[0-9]*:#' | head -1 | cut -d: -f1)
+echo "etc/hosts:$line" > cause.txt
+sed -i.bak "${line}s/ db\.corp\.example\$//" etc/hosts
+getent hosts db.corp.example
+
+- getent prints the old address together with db-a's names: the answer comes from db-a's line in etc/hosts
+- grep -n -w -F ... | grep -v ':#'   lines that really mention the name; the first one wins, the colleague's line further down is never reached
+- cause.txt                          that line's number, before you change the file
+- sed "${line}s/ db\.corp\.example$//"  deletes only the alias at the end of that line; db-a and reports-db keep their entry
+- the second getent now falls through to the colleague's line (or DNS), both the new primary
+
+Or open the file with `edit etc/hosts` and delete the alias by hand.

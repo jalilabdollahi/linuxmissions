@@ -1,1 +1,7 @@
-Example: `grep -c '^ok$' printf-format-events.txt > ok-count.txt`
+  tail -n +2 accounts.csv | while IFS=, read -r id name amount; do printf 'ACCT%06d|%-12.12s|%10.2f\n' "$id" "$name" "$amount"; done > billing.dat
+      tail -n +2        drop the header line
+      IFS=, read -r     split each line on commas into id, name and amount
+      %06d              the id with leading zeros, 6 digits
+      %-12.12s          the name cut to 12 characters, then left-aligned and padded to 12
+      %10.2f            the amount with 2 decimals, right-aligned in 10
+  head -3 billing.dat

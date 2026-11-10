@@ -1,1 +1,7 @@
-The remote endpoint is the last column, and you only need the IP part before the colon.
+- awk fields: $1 State, $4 Local Address:Port, $5 Peer Address:Port.
+- Filter: `$1 == "ESTAB" && $4 ~ /:443$/`
+- `sub(/:[0-9]+$/, "", $5)` deletes only the final `:port`, so IPv6 addresses stay intact.
+- Count identical lines: `sort | uniq -c` prints "COUNT VALUE"; then `sort -nr` puts the biggest count first and `head -1` keeps it.
+- `awk '{ print $2, $1 }'` swaps the two columns into "IP COUNT".
+
+Read more: `man uniq` (-c), `man sort` (-n, -r), `man awk` (sub). On a live server: `ss -tn state established '( sport = :443 )'`.

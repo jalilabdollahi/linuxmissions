@@ -1,15 +1,11 @@
 {
-  "name": "Modprobe Notes: Backup Bundle",
-  "description": "In the boot and recovery lab, a task related to Modprobe Notes needs cleanup before the handoff.",
-  "objective": "Create modprobe-notes-backup.tar.gz containing the files under bundle/modprobe-notes",
+  "name": "The Driver That Never Loads",
+  "description": "The new 10 GbE NIC driver ixgbe will not load on the server, not even by hand. The server's disk is mounted at sysroot/, and the helper ./modprobe-sim reads its module database and modprobe.d configuration the way the real modprobe would (it never loads anything).",
+  "objective": "Find what in sysroot/etc/modprobe.d/ stops ixgbe from loading and neutralise only that (comment it out or remove it), so that ./modprobe-sim -n -v ixgbe prints its insmod chain. Change nothing else in modprobe.d, and leave the helper alone.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Modprobe Notes",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "15m",
+  "concepts": ["modprobe.d", "blacklist vs install", "modules.dep", "options", "grep -r"],
   "module": "module-23-boot-and-recovery",
   "level": "level-10-modprobe-notes"
 }

@@ -1,1 +1,4 @@
-Count matching lines instead of copying them out by hand.
+Don't assume the column number: read each file's header line. With 5 or 7
+names on one line it is easy to miscount, so put one name per line and number
+them. Watch out for names that only contain "email". Then take that column
+from every line except the header, old file first.

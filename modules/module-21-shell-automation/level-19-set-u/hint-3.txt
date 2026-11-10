@@ -1,1 +1,31 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' set-u.conf > fixed.conf`
+Type this at the prompt. It replaces clean_build.sh:
+
+cat > clean_build.sh <<'SCRIPT'
+#!/bin/bash
+# clean_build.sh [TARGET]   PROJECT (required), DEBUG (optional)
+set -u
+: "${PROJECT:?PROJECT must name a project in workspace/}"
+target="${1:-}"
+debug="${DEBUG:-0}"
+here="$(cd "$(dirname "$0")" && pwd)"
+root="$here/workspace/$PROJECT"
+outdir=build
+if [ "$debug" = 1 ]; then
+  echo "clean_build: project $root" >&2
+fi
+if [ -n "$target" ]; then
+  [ "$debug" = 1 ] && echo "clean_build: removing $outdir/$target" >&2
+  rm -rf "$root/$outdir/$target"
+else
+  [ "$debug" = 1 ] && echo "clean_build: emptying $outdir/" >&2
+  rm -rf "$root/$outdir/"*
+fi
+echo "clean_build: done"
+SCRIPT
+
+- set -u                    any unset variable stops the script (the old $out_dir typo would now abort)
+- ${PROJECT:?message}       PROJECT unset or empty: print the message, exit non-zero, before any rm
+- ${1:-} and ${DEBUG:-0}    optional inputs get a default, so set -u accepts them
+- $outdir                   the spelling that is actually assigned
+
+Try it: ./clean_build.sh; echo $?; PROJECT=shop ./clean_build.sh; ls workspace/shop

@@ -1,16 +1,11 @@
 {
-  "name": "Rescue Shell: Event Counter",
-  "description": "In the boot and recovery lab, a task related to Rescue Shell needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in rescue-shell-events.txt and write the number to ok-count.txt",
+  "name": "Sudo Cannot Resolve Host",
+  "description": "You booted a rescue system and the broken server's disk is mounted at sysroot/. The admins renamed the server last week, and now sudo on it complains \"unable to resolve host\". The rescue system has its own etc/ too, so mind which one you edit.",
+  "objective": "Fix the server's sysroot/etc/hosts so the 127.0.1.1 line carries the name found in the server's sysroot/etc/hostname. Keep every other line of that file. The rescue system's own etc/hosts and etc/hostname must stay unchanged. The helper ./sudo-in-sysroot true shows what sudo on the server would say.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Rescue Shell",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["rescue system", "root-relative paths", "/etc/hosts", "/etc/hostname", "sed -i"],
   "module": "module-23-boot-and-recovery",
   "level": "level-3-rescue-shell"
 }

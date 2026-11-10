@@ -1,1 +1,12 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' journalctl-unit.conf > fixed.conf`
+Take the window from the ticket, then filter by unit and time and print the messages only:
+
+cat TICKET.txt
+from=$(grep -o '2026-11-10 [0-9:]* to' TICKET.txt | cut -d' ' -f1,2)
+to="2026-11-10 $(grep -o 'to [0-9:]*' TICKET.txt | cut -d' ' -f2)"
+journalctl -u payment.service --since "$from" --until "$to" -o cat > payment.txt
+cat payment.txt
+
+- from=... to=...      the two times from TICKET.txt (or type them yourself: --since "2026-11-10 01:31")
+- -u payment.service   only this unit: no payment-sync, no payment@eu, but the payment-migrate
+                       step and systemd's Stopping/Started lines are included
+- -o cat               messages without timestamps, as the auditors asked

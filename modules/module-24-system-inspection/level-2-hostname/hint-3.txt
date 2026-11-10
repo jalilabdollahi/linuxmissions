@@ -1,1 +1,7 @@
-Example: `grep 'ALERT' hostname.log > alerts.txt`
+sed -i "s/^hostname = .*/hostname = $(hostname)/" agent.conf
+grep -n hostname agent.conf
+
+- sed -i                  edit the file in place
+- s/^hostname = .*/.../   only a line that STARTS with "hostname = " (not the # example, not report_hostname)
+- $(hostname)             the shell inserts this machine's name; double quotes let it expand
+- grep -n hostname        show every hostname line with its number, to check the result

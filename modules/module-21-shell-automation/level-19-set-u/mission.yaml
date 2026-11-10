@@ -1,15 +1,11 @@
 {
-  "name": "Set U: Config Rewrite",
-  "description": "In the shell automation lab, a task related to Set U needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in set-u.conf and save the fixed result to fixed.conf",
+  "name": "Typo in rm",
+  "description": "clean_build.sh empties a project's build/ folder before every CI build. Last night it deleted all of workspace/shop, sources included, and when a job forgot to set PROJECT it deleted every project (INCIDENT.txt). Running the draft really deletes files here; type reset to get them back.",
+  "objective": "Harden clean_build.sh: turn on `set -u` so an unset variable stops it, and find the bug. With PROJECT unset or empty it must exit non-zero and delete nothing. `PROJECT=NAME ./clean_build.sh` must empty workspace/NAME/build (keeping the folder) and touch nothing else, also when no TARGET argument and no DEBUG are given; `PROJECT=NAME ./clean_build.sh TARGET` removes only build/TARGET; DEBUG=1 adds messages on stderr. It is tested on a workspace you have not seen.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Set U",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["set -u", "${1:-} and ${VAR:-default}", "${VAR:?message}", "empty vs unset", "guarding rm -rf"],
   "module": "module-21-shell-automation",
   "level": "level-19-set-u"
 }

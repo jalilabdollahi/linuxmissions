@@ -1,1 +1,8 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+There are two ways to get "old mode minus what is not allowed":
+  chmod with symbolic removal   chmod g-w,o-rwx FILE   (only ever takes bits away)
+  arithmetic on the octal mode  $(( 8#640 & 8#$mode ))  (bash arithmetic, base 8)
+Work out which bits 640 and 750 do NOT allow, then remove just those:
+  640 = rw- r-- ---      750 = rwx r-x ---
+Use `find app -type f -exec chmod ... {} +` to hit every file, and keep app/bin apart
+(`-path app/bin -prune -o` skips it). Note the folder app/bin/ is not a file.
+More: man chmod, man find

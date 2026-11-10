@@ -1,1 +1,9 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' md5sum-metrics.csv > total.txt`
+  mkdir dupes
+  md5sum photos/* | sort | awk 'seen[$1]++' | cut -c35- | while IFS= read -r f; do mv -- "$f" dupes/; done
+      md5sum         hash every file
+      sort           equal hashes end up next to each other
+      awk 'seen[$1]++'   keep only the 2nd, 3rd ... line of each hash (the first copy stays)
+      cut -c35-      drop the hash and the two spaces, leaving the file name
+      while read ... mv  move each extra copy; "$f" keeps spaces and quotes intact
+  ls photos | wc -l; ls dupes | wc -l
+      how many distinct pictures there are, and how many copies you moved

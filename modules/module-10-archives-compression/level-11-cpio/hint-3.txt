@@ -1,1 +1,8 @@
-Example: `tar -xzf cpio-restore.tar.gz`
+  gzip -dc initrd.img | cpio -t | grep '\.ko$' | sed 's|.*/||' > modules.txt
+      decompress (zcat initrd.img does the same on Linux), list the members (-t),
+      keep the .ko lines, cut off the directories
+  (cd initrd-root && gzip -dc ../initrd.img | cpio -idmv 'etc/*')
+      in a subshell: go into initrd-root/, decompress the image and extract (-i)
+      only members matching etc/* (names are stored without a leading ./),
+      creating directories (-d) and keeping mtimes (-m); you stay where you were
+  ls -R initrd-root

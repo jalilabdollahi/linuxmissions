@@ -1,0 +1,14 @@
+sed -i.bak '/deploy-1.4/d' home/.bash_profile
+echo '[ -f ~/.bashrc ] && . ~/.bashrc' >> home/.bash_profile
+sed -i.bak '/^alias deploy=/d' home/.bashrc
+sed -i.bak '/^deploy() {$/,/^}$/d' home/.config/team/helpers.sh
+
+- /deploy-1.4/d in .bash_profile   remove the PATH line that pinned the 1.4 binary first
+- . ~/.bashrc from .bash_profile   login shells now get the same PATH and shortcuts as tabs
+- /^alias deploy=/d in .bashrc     remove the alias to the rsync script
+- /^deploy() {$/,/^}$/d            remove the deploy() function block from helpers.sh
+                                   (ll, gs and mkcd stay untouched)
+
+Check both kinds of shell:
+env -i HOME=$SANDBOX/home PATH=/usr/bin:/bin bash -l -i -c 'type -a deploy'
+env -i HOME=$SANDBOX/home PATH=/usr/bin:/bin bash -i -c 'type -t deploy ll mkcd'

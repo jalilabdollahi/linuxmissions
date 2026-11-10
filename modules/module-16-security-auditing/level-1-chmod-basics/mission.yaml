@@ -1,16 +1,11 @@
 {
-  "name": "Chmod Basics: Path Realignment",
-  "description": "In the security auditing lab, a task related to Chmod Basics needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/chmod-basics.txt to organized/chmod-basics/chmod-basics-notes.txt",
+  "name": "Unprotected Private Key",
+  "description": "A teammate copied the deploy user's home folder from a USB stick and now `ssh -i home/.ssh/id_ed25519 ...` refuses to work with \"UNPROTECTED PRIVATE KEY FILE\". The permissions did not survive the trip.",
+  "objective": "Lock down home/.ssh the way OpenSSH demands: the folder itself private to its owner, every private key readable and writable by the owner only, public keys world-readable, and authorized_keys and config private to the owner. Do not change file contents and do not touch anything else under home/.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Chmod Basics",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "8m",
+  "concepts": ["chmod", "ls -la", "ssh strict modes", "private vs public keys"],
   "module": "module-16-security-auditing",
   "level": "level-1-chmod-basics"
 }

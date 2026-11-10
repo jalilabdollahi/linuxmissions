@@ -1,1 +1,12 @@
-Example: `ln -s releases/command-substitution.conf current.conf`
+Type these at the prompt:
+
+snap="backups/config-$(date +%Y%m%d)-$(tr -d '\r' < VERSION)"
+cp -r config "$snap"
+ls backups | cat -v
+
+- $(date +%Y%m%d)            today's date, e.g. 20261110
+- $(tr -d '\r' < VERSION)    the version without the Windows carriage return; $(...) drops the newline
+- cp -r config "$snap"       copy the whole directory (hidden files too) to the new name
+- ls backups | cat -v        a leftover \r would show up as ^M here
+
+If backups/ already has a wrong snapshot, remove it first: rm -r backups/*

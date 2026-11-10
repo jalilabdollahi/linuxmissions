@@ -1,1 +1,10 @@
-Example: `chmod +x jobs/symbolic-links.sh && jobs/symbolic-links.sh`
+old=$(readlink app/current | sed 's#/releases/.*##')
+find app -type l | while IFS= read -r l; do t=$(readlink "$l"); case "$t" in "$old"/*) ln -sfn "$(realpath -sm --relative-to="$(dirname "$l")" "$PWD/app/${t#"$old"/}")" "$l";; esac; done
+find app -type l -exec ls -l {} +
+
+- old=...                       the old home, taken from the target of app/current
+- find app -type l | while read   visit every symlink, one per line (names with spaces are fine)
+- case "$t" in "$old"/*)        only links whose target is inside the old home (not a sibling that merely starts the same way)
+- ${t#"$old"/}                  the part of the target below the old home
+- realpath -sm --relative-to    the same place, written relative to the link's own directory, without following links
+- ln -sfn                       replace the link; -n so a link to a directory is replaced, not entered

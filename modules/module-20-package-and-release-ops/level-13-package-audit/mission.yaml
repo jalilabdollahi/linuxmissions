@@ -1,15 +1,11 @@
 {
-  "name": "Package Audit: Script Kickoff",
-  "description": "In the package and release operations lab, a task related to Package Audit needs cleanup before the handoff.",
-  "objective": "Make jobs/package-audit.sh executable, run it, and create the token file it writes",
+  "name": "Prod vs Staging Drift",
+  "description": "Staging passed QA but production behaves differently. Someone dumped the installed packages of both servers, with two different tools, into prod.txt and staging.txt, and nobody can say what is not the same.",
+  "objective": "Write drift.tsv: one tab-separated row per package that differs between the servers, in the form package<TAB>prod_version<TAB>staging_version, with a single dash (-) for the side where the package is missing. List only packages that are missing on one side or whose versions differ, sorted by package name, with plain package names (no architecture suffix).",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Package Audit",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "15m",
+  "concepts": ["sort", "join", "comm", "normalising data", "dpkg-query -W"],
   "module": "module-20-package-and-release-ops",
   "level": "level-13-package-audit"
 }

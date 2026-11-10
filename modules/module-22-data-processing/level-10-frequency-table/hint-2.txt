@@ -1,1 +1,9 @@
-Archive the directory contents without leaving anything out.
+  awk -F'"' '...'          split on double quotes: $1 = ip and time, $2 = the
+                           request, $3 = " 200 5120 " (status and bytes)
+  split($1, t, ":")        t[2] is the hour ("14"); t[2] + 0 makes it a number
+  split($3, s, " ")        s[1] is the status
+  substr(s[1], 1, 1)       its first digit: 2, 3, 4 or 5
+  count[hour, cls]++       a two-dimensional key (hour and class)
+  END { for (h = 0; h < 24; h++) printf "%02d,%d,...\n", h, count[h, 2], ... }
+                           every hour, even unseen ones (%d prints them as 0)
+More: man awk (Multidimensional arrays, split)

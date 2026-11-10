@@ -1,15 +1,11 @@
 {
-  "name": "Config Audit: Permission Fix",
-  "description": "In the configuration editing lab, a task related to Config Audit needs cleanup before the handoff.",
-  "objective": "Set the mode of config-audit.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Config Audit",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Migration Aftermath",
+  "description": "The app will not start after the config migration to the 4.x format. Its --check-config option stops at the first error it finds, and the configuration is spread over five files in five formats. MIGRATION.txt lists what the final values have to be.",
+  "objective": "Repair the five files in etc/app/ (app.ini, app.env, features.json, services.yml, hosts) until bin/app --check-config reports no error, with every value as listed in MIGRATION.txt (do not make errors disappear by deleting the setting). Then start the app with bin/app start: it must answer on its port, and curl on 127.0.0.1 must return the version string from MIGRATION.txt.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "45m",
+  "concepts": ["INI", ".env", "JSON duplicate keys", "YAML types", "hosts", "check-fix loop"],
   "module": "module-18-configuration-editing",
   "level": "level-24-config-audit"
 }

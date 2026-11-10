@@ -1,1 +1,7 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' paste-config.conf > fixed.conf`
+echo "BACKENDS=$(paste -d: hosts.txt <(grep . ports.txt) | paste -sd, -)" >> lb.env
+tail -n 3 lb.env
+
+- paste -d: hosts.txt <(...)  pairs the n-th host with the n-th port using ":" between them
+- grep . ports.txt            keeps only non-empty lines, so the blank last line gives no ":" entry
+- paste -sd, -                joins all pairs from the pipe into a single comma separated line
+- echo "BACKENDS=$(...)" >>   appends the finished setting without touching the existing lines

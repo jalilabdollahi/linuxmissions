@@ -1,1 +1,5 @@
-Count matching lines instead of copying them out by hand.
+`who` reads a login-records file, and by default that is this machine's own
+(empty) one. Is there a way to point it at the captured file instead?
+Then look at which column holds the address each person came from, and
+think about what "inside 10.0.0.0/8" means for the first part of the
+address, one dot-separated number at a time.

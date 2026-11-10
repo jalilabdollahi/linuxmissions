@@ -1,17 +1,13 @@
-# Awk Arena: Config Rewrite
+## What you did
 
-## What you practiced
-- This level focused on **Awk Arena** in a safe sandbox.
-- The shortest path usually combines `sed` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+You joined three differently shaped sources in one awk run: rates kept as per-currency history, the provider's fixed-width columns cut with `substr`, and each invoice converted to EUR cents at the rate that was valid on its date. Comparing in integer cents avoids floating point noise around the 0.01 threshold.
 
-## Commands to remember
-```bash
-sed 's/old/new/g' file.conf
-sed -n '1,20p' file.conf
-grep PATTERN file.conf
-```
+## Common mistakes
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: You need a stream editor or another text replacement tool.
+- Using the newest rate in the file for every invoice: it makes many invoices look wrong that are fine.
+- Mixing units: the provider is in cents, the invoices in units.
+- Reading the fixed-width file with a field separator: the amount sits in columns 18-29 with no delimiter.
+
+## Next
+
+`join` and `sort -k` handle simple lookups from the shell; in awk, `getline` and `split` cover more irregular inputs, and `printf "%'.2f"` formats thousands separators.

@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+batch                queue the commands on stdin in queue b (runs when the load is low)
+echo 'CMD' | batch   the same without the at> prompt (this mock cannot show it)
+at -c N              the job's script: saved variables, cd DIR, then your commands
+atq, atrm N          list jobs / remove a job that would fail
+at and batch save the EXPORTED variables and the current directory at the moment you
+queue the job. A plain VAR=value without export is not saved.
+More: man at (batch is described there), help export

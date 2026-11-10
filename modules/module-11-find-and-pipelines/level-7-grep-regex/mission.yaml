@@ -1,15 +1,11 @@
 {
-  "name": "Grep Regex: History Window",
-  "description": "In the search and pipelines lab, a task related to Grep Regex needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of grep-regex-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Grep Regex",
-    "head",
-    "tail"
-  ],
+  "name": "Root Over SSH",
+  "description": "An auditor asks which of our 12 servers let root log in over SSH with a password. Copies of their sshd configs are in hosts/<host>/sshd_config, edited by hand for years: commented-out lines, tabs, odd capitalisation, and settings that appear twice.",
+  "objective": "Write root-login-hosts.txt with the names of the hosts (the folder names under hosts/, one per line, any order) where sshd's effective PermitRootLogin setting is yes. Values like prohibit-password, without-password, forced-commands-only and no do not allow password logins, and a host without the setting uses the default, prohibit-password.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "12m",
+  "concepts": ["grep -E", "anchors ^ $", "[[:space:]]", "grep -i", "grep -m1", "first-match semantics"],
   "module": "module-11-find-and-pipelines",
   "level": "level-7-grep-regex"
 }

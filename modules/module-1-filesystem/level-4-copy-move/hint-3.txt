@@ -1,3 +1,8 @@
-Full solution:
-mv $SANDBOX/staging/*.conf $SANDBOX/production/
-mv $SANDBOX/staging/app.conf.bak $SANDBOX/production/app.conf
+  cp production/app.conf production/app.conf.old
+      keep the live 4.1 config as a rollback copy
+  mv staging/*.conf production/
+      move db, web, logging and cache .conf into production/ (db.conf is replaced)
+  mv staging/app.conf.new production/app.conf
+      move and rename in one step: this replaces the live app.conf with 4.2
+  ls staging production
+      check: only notes.txt is left in staging/

@@ -1,1 +1,5 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+zcat libxparse/changelog.Debian.gz     print the compressed changelog (newest entry first)
+dpkg-query -W -f='${Version}' libxparse1    the installed version (the sandbox's dpkg)
+Entry headers look like "libxparse (1.2.3-1) suite; urgency=medium"; the bullets below it start with "  * ".
+grep -n 'CVE-2026-1182'                use -w, or '[^0-9]', so CVE-2026-11820 does not match; awk can remember the last header it saw
+Work out the history oldest to newest: first fix, then whether it was reverted and when it came back.   More: man deb-changelog

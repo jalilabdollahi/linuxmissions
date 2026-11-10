@@ -1,1 +1,8 @@
-Example: `find cleanup/rev-text -name '*.tmp' -delete`
+  sed -E 's#^[A-Za-z]+://##; s#[/?].*##; s#:[0-9]+$##; s#\.$##' urls.txt | tr 'A-Z' 'a-z' > hosts.tmp
+  re=$(sed 's/\./\\./g' two-level-suffixes.txt | paste -sd'|')
+  { grep -E "\.($re)\$" hosts.tmp | rev | cut -d. -f1-3 | rev; grep -vE "\.($re)\$" hosts.tmp | rev | cut -d. -f1-2 | rev; } | sort | uniq -c | LC_ALL=C sort -k1,1nr -k2,2 | awk '{print $1, $2}' > domains.txt
+      first line: remove scheme, path/query, port and trailing dot, lowercase, keep the bare host
+      second line: the suffixes joined as co\.uk|com\.au|... for grep
+      hosts under a two-level suffix: reverse, keep 3 labels, reverse back; all others keep 2
+      sort | uniq -c, then sort by count descending and domain ascending, awk drops uniq's padding
+  head -5 domains.txt; rm hosts.tmp

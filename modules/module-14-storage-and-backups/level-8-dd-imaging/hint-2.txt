@@ -1,1 +1,6 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+  sfdisk -d disk.img                  start and size of each partition, in 512-byte sectors
+  dd if=IN of=OUT bs=B skip=N count=M   copy M blocks of B bytes, skipping the first N blocks of the input
+With bs=512, skip and count are exactly the sector numbers. With bs=1M, skip=2048 would skip 2048 MiB (not sectors), and the partition would not start on a megabyte anyway.
+Alternative: dd iflag=skip_bytes,count_bytes lets skip and count be given in bytes (multiply sectors by 512), so you can use a large bs.
+Verify with sha256sum -c vendor.sha256.
+More: man dd, man sfdisk

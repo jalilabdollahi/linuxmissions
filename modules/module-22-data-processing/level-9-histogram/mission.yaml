@@ -1,15 +1,11 @@
 {
-  "name": "Histogram: Link Repair",
-  "description": "In the data processing lab, a task related to Histogram needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/histogram.conf",
+  "name": "Load Test Histogram",
+  "description": "Last night's load test against the checkout service ended in an incident, and the review wants to see the shape of the response times, not just an average. The JMeter results are in results.jtl, a CSV file with a header; the elapsed column is each request's total response time in milliseconds.",
+  "objective": "Write histogram.txt with exactly 11 lines, one per bucket of elapsed time in this order: 0-99, 100-199, 200-299, ... 900-999, then 1000+. Each line is the bucket label, a space, the number of requests in it, a space, and a bar of one # per full 10 requests (37 requests: ###; under 10: no #). A value of exactly 100 belongs to 100-199, exactly 1000 to 1000+. Buckets with no requests are listed with 0. Use the elapsed column, not Latency.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Histogram",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "15m",
+  "concepts": ["int($2 / 100)", "awk arrays as counters", "a for loop in END over every bucket", "building a string in a loop", "boundary values"],
   "module": "module-22-data-processing",
   "level": "level-9-histogram"
 }

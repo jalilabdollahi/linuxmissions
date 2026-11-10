@@ -1,1 +1,1 @@
-Inspect the sandbox, then create the missing path for organized/broken-backup/broken-backup-notes.txt.
+The log has said "backup ok" for a week, so it tells you nothing. Look inside last night's archive instead of at the log: how big is it, and what is in it? Then read backup.sh slowly, one word at a time, and ask what each part does when the path contains a space, when cron starts it from another directory, and when tar fails halfway.

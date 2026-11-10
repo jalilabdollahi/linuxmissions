@@ -1,2 +1,3 @@
-cut can extract fields by delimiter:
-cut -d, -f1,3 $SANDBOX/users.csv
+Two jobs: keep only the rows whose 5th column is exactly "active", and from those
+keep columns 1 and 3. Careful: a plain text search for "active" also matches
+"inactive". And the header row's 5th column is "status", not "active".

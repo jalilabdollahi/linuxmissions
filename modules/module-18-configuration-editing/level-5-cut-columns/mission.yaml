@@ -1,15 +1,11 @@
 {
-  "name": "Cut Columns: Field Extract",
-  "description": "In the configuration editing lab, a task related to Cut Columns needs cleanup before the handoff.",
-  "objective": "Extract the second column from cut-columns-report.csv into owners.txt",
+  "name": "Names Without Secrets",
+  "description": "Security is auditing prod.env. They want the list of variable names (never the values) and proof that a teammate's script did not truncate the base64 signing key when it rewrote the file last week.",
+  "objective": "Write keys.txt with the name of every variable defined in prod.env, one per line, in file order, without values, comments, blank lines or the 'export ' prefix. Write signing_key.txt with the complete value of SIGNING_KEY, including any trailing '=' characters. Do not modify prod.env.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Cut Columns",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "10m",
+  "concepts": ["cut -d= -f1", "cut -f2-", "grep -v", "sed prefix stripping", "values containing ="],
   "module": "module-18-configuration-editing",
   "level": "level-5-cut-columns"
 }

@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Run the simulated boot and read the order in which things start. Then read
+both unit files and ask two separate questions about each pair of units:
+"does X need Y?" (a requirement) and "must X start after Y?" (an order).
+They are not the same thing in systemd. Also look at what db-proxy says about
+itself: does it make sense for a database proxy to wait for the application?

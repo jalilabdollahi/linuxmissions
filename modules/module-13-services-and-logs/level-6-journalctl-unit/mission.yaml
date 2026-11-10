@@ -1,15 +1,11 @@
 {
-  "name": "Journalctl Unit: Config Rewrite",
-  "description": "In the services and logs lab, a task related to Journalctl Unit needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in journalctl-unit.conf and save the fixed result to fixed.conf",
+  "name": "One Unit, One Window",
+  "description": "The payment API on pay-01 had an incident last night, and Finance's auditors need its log for exactly the incident window. Ticket: TICKET.txt. pay-01 also runs the EU instance of the same API and a ledger sync job, which log almost the same lines.",
+  "objective": "Write payment.txt with the message text of every journal entry that belongs to payment.service in the window given in TICKET.txt, oldest first, one per line, without timestamp, host or identifier. That includes everything systemd logged about the unit itself. `journalctl` is a mock that reads the journal export in var/log/journal; its clock is frozen at 2026-11-10 03:10 UTC.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Journalctl Unit",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["journalctl -u", "--since / --until", "-o cat", "_SYSTEMD_UNIT vs UNIT", "template instances (unit@instance)", "SYSLOG_IDENTIFIER"],
   "module": "module-13-services-and-logs",
   "level": "level-6-journalctl-unit"
 }

@@ -1,1 +1,21 @@
-Example: `tar -czf incident-summary-backup.tar.gz bundle/incident-summary`
+ts=$(journalctl --file=export/journal.json -p err -o short-unix -n all --no-pager | head -1 | cut -d. -f1)
+first=$(date -u -d @$ts +%Y-%m-%dT%H:%M:%SZ)
+dbg=$(ls -S var/log/*/debug.log | head -1)
+cause=$(basename "$(dirname "$dbg")")
+if journalctl --file=export/journal.json -g 'rendered /etc' -q --no-pager | grep -q .; then trigger=deploy; else trigger=config-change; fi
+n=$(awk '$9 == 502 { print $4, $5 }' var/log/nginx/access.log | tr -d '[]' | sed 's#/# #g; s#:# #' | while read -r d m y h z; do date -u -d "$d $m $y $h $z" +%s; done | awk -v t="$ts" '$1 >= t' | wc -l)
+printf 'first_error_utc=%s\nroot_cause_unit=%s.service\ntrigger=%s\nfailed_requests=%s\n' "$first" "$cause" "$trigger" "$n" > incident.txt
+cat incident.txt
+sed -i 's/^LOG_LEVEL=.*/LOG_LEVEL=info/' etc/$cause/env
+: > "$dbg"
+systemctl restart $cause.service
+systemctl reset-failed api.service
+systemctl start api.service
+
+- ts / first       the earliest err-or-worse entry of any unit, as epoch seconds, then in UTC
+- dbg / cause      the biggest debug.log tells which unit filled the disk
+- trigger          the deploy tool logs "rendered /etc/..."; otherwise a human edited the file
+- n                502 lines only (field 9), times converted to UTC, counted from the first error on
+- printf           writes the four fields into incident.txt
+- sed / : >        LOG_LEVEL back to info in the unit's env file; empty the debug log
+- restart / start  restart the cause so it reads the new setting, then bring api back

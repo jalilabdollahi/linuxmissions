@@ -1,1 +1,7 @@
-Example: `grep 'ALERT' tar-extract.log > alerts.txt`
+  tar -tzf etc-backup.tar.gz | grep nginx | head
+      the names are stored as ./etc/nginx/..., with a leading ./
+  tar -xzf etc-backup.tar.gz -C restore ./etc/nginx
+      extract only the member ./etc/nginx (the directory and everything in it)
+      into restore/, giving restore/etc/nginx/
+  ls -lR restore
+      check: only etc/nginx, sites-enabled still holds links

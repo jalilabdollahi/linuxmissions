@@ -1,1 +1,0 @@
-This task usually takes two steps: fix execute permission, then run the script.

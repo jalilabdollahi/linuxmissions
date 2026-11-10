@@ -1,16 +1,11 @@
 {
-  "name": "Namespaces Notes: Path Realignment",
-  "description": "In the system inspection lab, a task related to Namespaces Notes needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/namespaces-notes.txt to organized/namespaces-notes/namespaces-notes-notes.txt",
+  "name": "Own PID, Host Network",
+  "description": "A container that has its own PID namespace but shares the host's network namespace can reach every host service on localhost. Security captured `lsns -J` and `ps -eo pid,user,pidns,netns,comm` from docker-host-04 (see TICKET.md).",
+  "objective": "From capture/lsns.json and capture/ps.txt, write host_net.txt with one line `pid comm` (ascending by PID) for every process that is in its own PID namespace (not the host's) while running in the host's network namespace. The host's namespaces are the ones PID 1 lives in.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Namespaces Notes",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "30m",
+  "concepts": ["namespaces", "lsns", "/proc/PID/ns/*", "namespace inodes", "jq", "awk joins"],
   "module": "module-24-system-inspection",
   "level": "level-21-namespaces-notes"
 }

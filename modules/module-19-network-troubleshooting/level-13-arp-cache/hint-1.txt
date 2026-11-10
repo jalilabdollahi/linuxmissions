@@ -1,1 +1,5 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Put the three captures side by side and ask, for each VLAN 30 address (dev eth0.30): how many DIFFERENT MAC addresses did it have over the 10 minutes?
+
+Before you trust a difference, look closely at the 09:05 capture and at the lines without a MAC. Is "AA:BB" really a different address from "aa:bb"? What does a FAILED entry tell you about the MAC?
+
+Once you have the address, the inventory tells you which of its two MACs is ours, and the first three bytes of the other one name its maker.

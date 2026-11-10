@@ -1,15 +1,11 @@
 {
-  "name": "Env Secrets: Metric Sum",
-  "description": "In the security auditing lab, a task related to Env Secrets needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of env-secrets-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Env Secrets",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "The Password Everyone Can See",
+  "description": "Two worker processes run on this shared box, started by app/start-worker.sh and by a second script. Any local user can run ps. One of the workers exposes its database password that way.",
+  "objective": "Find out which worker leaks the database password and write its original PID to leak.txt. Then change app/start-worker.sh so the password is no longer in the script or on the command line: it must be read from secrets/db.pass (mode 600; the worker accepts a PASSWORD_FILE environment variable naming a file). Stop the leaking worker and start it again with the fixed script until logs/NAME.log shows it connected. The worker that was not leaking must keep running untouched, and no running process may show the password anywhere on its command line.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
+  "concepts": ["ps", "/proc/PID/environ", "command-line secrets", "file-based secrets", "process restart"],
   "module": "module-16-security-auditing",
   "level": "level-15-env-secrets"
 }

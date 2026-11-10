@@ -1,1 +1,5 @@
-`mkdir -p organized/service-user` followed by `mv inbox/service-user.txt organized/service-user/service-user-notes.txt` is enough.
+`useradd -r` makes a system account (low UID, and its own group), `-s /usr/sbin/nologin` removes the login shell,
+`-d DIR -M` sets a home without creating it. `chown -R user:group DIR` hands the state directory to the service,
+`chmod -R go-w DIR` takes write away from group and others for the code. In the unit's [Service] section the keys are
+`User=`, `NoNewPrivileges=`, `ProtectSystem=` (with `strict` everything is read-only unless listed in `ReadWritePaths=`), `PrivateTmp=`
+and `ProtectHome=`; see `man systemd.exec`. After `ProtectSystem=strict` the dry run will tell you what you forgot to list.

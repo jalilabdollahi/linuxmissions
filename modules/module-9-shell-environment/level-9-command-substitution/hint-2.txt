@@ -1,1 +1,8 @@
-Use `ln -s` so current.conf points at the release file.
+- $(command) is replaced by the command's output, with trailing NEWLINES removed. Other characters stay, including a carriage return (\r, shown as ^M by cat -v).
+- `date +%Y%m%d` prints the date as 20261110.
+- `tr -d '\r' < VERSION` prints the file without carriage returns.
+- Build the name in a variable first and look at it: name="..."; echo "$name" | cat -v
+- `cp -r SRC NEW` copies the directory SRC to the new name NEW. If NEW already exists, the copy lands INSIDE it as NEW/SRC.
+- If a wrong snapshot is already there: ls backups | cat -v, then rm -r the wrong one (Tab completion helps with odd names).
+
+Read more: `man bash` (Command Substitution), `man tr`.

@@ -1,1 +1,12 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' timedatectl.conf > fixed.conf`
+timedatectl
+zone=$(timedatectl show | sed -n 's/^Timezone=//p')
+utc=$(grep 'Killed process' kernel-oom.txt | cut -d' ' -f1)
+local_ts=$(TZ="$zone" date -d "$utc" '+%Y-%m-%d %H:%M:%S')
+echo "$utc -> $local_ts"
+grep "^$local_ts " var/log/imgproxy/app.log > match.txt
+cat match.txt
+
+- timedatectl show          Timezone=... is the server's zone (the mock reads it from etc/timezone)
+- grep 'Killed process'     the moment of the kill, in UTC (+00:00)
+- TZ="$zone" date -d ...    the same moment as local wall-clock time, minutes of the offset included
+- grep "^$local_ts "        the app.log line logged in that second

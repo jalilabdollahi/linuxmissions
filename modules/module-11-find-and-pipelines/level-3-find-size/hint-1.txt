@@ -1,1 +1,5 @@
-Count matching lines instead of copying them out by hand.
+Two questions about outbox/: which files are bigger than 10 MiB, and which are
+exactly 0 bytes? 10 MiB is 10485760 bytes, not 10,000,000: several files sit just
+around the limit, so a "10 MB" rule gives a different answer. Watch out for
+folders that are empty (they are not files) and for hidden files in the
+message folders.

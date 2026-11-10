@@ -1,2 +1,4 @@
-Start by listing the files:
-find files -type f
+This is two jobs: first get a list of the files that contain the key, then run mv on each of them.
+Look at the file names under files/. What happens to
+"meeting notes 12.txt" or "dana's export.txt" when a list of names is split on whitespace or quotes?
+Also check: is the match case-sensitive? Some files mention nebula_key or NEBULA-KEY.

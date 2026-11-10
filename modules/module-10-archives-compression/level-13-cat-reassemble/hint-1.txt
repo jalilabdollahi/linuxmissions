@@ -1,1 +1,5 @@
-This task usually takes two steps: fix execute permission, then run the script.
+The parts are plain slices of one file: glue them back together in the right
+order and you have the archive. Two questions before you glue: in what order
+does the shell list backup.part* (where does part10 land?), and which file in
+the folder is not one of the 14 real parts? Check the result against the
+.sha256 file before you extract anything.

@@ -1,1 +1,7 @@
-Save each result into its own file.
+  ls -l / stat -c %s FILE         apparent size in bytes
+  du -k FILE                      allocated size in KiB   (du --apparent-size -k shows the other)
+  cp --sparse=always SRC DST      write a hole wherever a block is all zeros (the default "auto" only trusts source holes)
+  fallocate -d FILE               punch holes into a file in place (use it on a copy, never the original)
+  tar -S -cf ARCHIVE FILE         --sparse: store holes as holes
+Use `tar -C vm` to archive vm1.img under its plain name. ls -ls shows blocks and length side by side.
+More: man cp, man tar, man fallocate, man du

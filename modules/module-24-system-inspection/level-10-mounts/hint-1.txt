@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+Which mount points are a parent directory of /var/lib/ci/work/build-42?
+Be careful: a name that merely starts with the same letters is not a parent.
+More than one mount may have the same mount point; think about which one
+the kernel shows you when you look at that directory.
+Then look at how a bind mount differs from a normal mount in the file.

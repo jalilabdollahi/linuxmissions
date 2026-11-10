@@ -1,2 +1,5 @@
-Source the variable file first:
-source ./vars.env
+Compare app.conf.example with vars.env: which parts of the example come from vars.env (look for the port in two places), and which part only looks like a variable but must be written literally?
+
+generate.sh has two jobs: get the values from vars.env into variables, then write a multi-line text with those values filled in.
+
+Game tip: `edit generate.sh` opens the script in an editor.

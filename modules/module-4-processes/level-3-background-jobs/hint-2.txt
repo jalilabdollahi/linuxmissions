@@ -1,5 +1,8 @@
-Check the shell's job table:
-jobs
-
-You can bring the job back with:
-fg %1
+Job control in bash:
+  CMD &         start CMD in the background, prompt returns at once
+  jobs          list this shell's jobs: [1]+ Running  ./process.sh &
+  jobs -l       the same with each job's PID
+  wait          block until all background jobs have finished
+  fg %1         bring job 1 to the foreground (also waits for it)
+You can put several commands on one line separated by ; or newlines.
+More: help jobs, help wait   (they are shell builtins, so help, not man)

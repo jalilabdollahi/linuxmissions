@@ -1,1 +1,1 @@
-Look for a filtering command that keeps only the alert lines in noisy-logs.log.
+Two questions. First: why is a process that should log at warn writing debug lines, and which of the files it reads wins when two of them set the same variable? The process itself can tell you where it looks (what is in its environment?). Second: freeing the space is not the same as making the log shrink for good; and a config that logrotate cannot even parse will never rotate anything. Check what the app still has open before you delete anything.

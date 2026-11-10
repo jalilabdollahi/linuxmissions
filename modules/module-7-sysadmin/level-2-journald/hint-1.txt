@@ -1,2 +1,4 @@
-Use the provided helper:
-./journalctl --since "1 hour ago"
+Three filters matter here: which unit, how serious, and since when.
+Run ./journalctl on its own and look closely: some lines say "error" but are harmless
+health checks, while some real failures never use the word "error".
+grep cannot see a message's priority, but the journal stores it with every entry.

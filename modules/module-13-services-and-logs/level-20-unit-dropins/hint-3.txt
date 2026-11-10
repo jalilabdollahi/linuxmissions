@@ -1,0 +1,18 @@
+mkdir -p etc/systemd/system/vendor-agent.service.d
+cat > etc/systemd/system/vendor-agent.service.d/override.conf <<EOF
+[Service]
+Environment=AGENT_CLUSTER=$(grep -o 'AGENT_CLUSTER=[a-z]*' TICKET.md | cut -d= -f2)
+ExecStart=
+ExecStart=/opt/vendor-agent/bin/agent $(grep -o -e '--interval [0-9]* --no-upload --label [a-z0-9-]*' TICKET.md)
+EOF
+systemctl daemon-reload
+systemctl restart vendor-agent
+systemctl cat vendor-agent
+
+- the $(grep ...) parts   copy the values from TICKET.md (you can type them yourself)
+- Environment=            adds one variable; the vendor's AGENT_LOG stays
+- ExecStart=              the empty line clears the vendor's command
+- ExecStart=/opt/...      the one effective command with the new flags
+- daemon-reload           make systemd read the new drop-in
+- restart                 the running process only changes when it is started again
+- cat                     shows the vendor file followed by your drop-in

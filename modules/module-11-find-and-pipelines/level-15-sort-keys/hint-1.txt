@@ -1,1 +1,5 @@
-This is a numeric aggregation task.
+Three sort keys, each with its own rule: field 2 as text, field 4 as a
+number (largest first), field 1 in "human" number order. Look closely at the
+load column: is 1.2e+01 bigger or smaller than 3.5? What does a plain numeric
+sort make of it? And the header line must not be sorted in with the hosts.
+Try a key on its own and check the result before adding the next one.

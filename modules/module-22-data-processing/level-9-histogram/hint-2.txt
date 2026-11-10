@@ -1,1 +1,10 @@
-Use `ln -s` so current.conf points at the release file.
+  awk -F, 'NR > 1 { ... } END { ... }' results.jtl
+  b = int($2 / 100)                 bucket number; int() drops the decimals
+  if (b > 10) b = 10                everything >= 1000 into bucket 10
+  count[b]++                        one counter per bucket
+  for (i = 0; i <= 10; i++)         in END: every bucket, also those never seen
+                                    (count[i] is empty there; %d prints it as 0)
+  bar = ""; for (j = 1; j <= int(count[i] / 10); j++) bar = bar "#"
+  printf "%s %d %s\n", label, count[i], bar
+Label: (i * 100) "-" (i * 100 + 99), or "1000+" for i == 10.
+More: man awk (Arithmetic Functions, Control Statements)

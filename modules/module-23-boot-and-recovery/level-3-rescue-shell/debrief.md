@@ -1,17 +1,18 @@
-# Rescue Shell: Event Counter
+# Sudo Cannot Resolve Host
 
-## What you practiced
-- This level focused on **Rescue Shell** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+In a rescue system the broken machine's disk is mounted under a directory (here
+`sysroot/`, normally `/mnt`), so the server's `/etc/hosts` is `sysroot/etc/hosts` while
+`/etc/hosts` is the rescue system's own file. `sudo` asks the resolver for the machine's
+hostname, which `/etc/hosts` answers through the `127.0.1.1 <hostname>` line that Ubuntu
+keeps. After the rename that line named the old host, so the lookup failed (and, with
+no DNS, waited before giving up).
 
-## Commands to remember
-```bash
-grep -c '^pattern$' file.txt
-grep PATTERN file.txt | wc -l
-wc -l file.txt
-```
+## Common mistakes
+- Editing `./etc/hosts`: it is the rescue system's file and changes nothing on the server.
+- Appending a second 127.0.1.1 line; the old name stays and the file gets confusing.
+- Changing `sysroot/etc/hostname` to match the old hosts file: the new name is the truth.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Count matching lines instead of copying them out by hand.
+## Next step
+`chroot sysroot` gives a shell where those paths work as on the real machine, and
+`hostnamectl set-hostname` renames a live host; it does not edit `/etc/hosts` for you.

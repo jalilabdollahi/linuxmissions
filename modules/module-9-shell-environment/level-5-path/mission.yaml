@@ -1,15 +1,11 @@
 {
-  "name": "Path: Field Extract",
-  "description": "In the shell environment lab, a task related to Path needs cleanup before the handoff.",
-  "objective": "Extract the second column from path-report.csv into owners.txt",
+  "name": "Stale Helper",
+  "description": "deploy-helper keeps behaving like last year's version. The team's env.sh, which login shells and CI source, puts legacy/bin on PATH, while the current tools live in tools/bin. legacy/bin still holds report-legacy, which nobody has ported yet.",
+  "objective": "Fix env.sh so that after `source env.sh`, from any directory and in a fresh shell, deploy-helper runs the copy in tools/bin, report-legacy still runs from legacy/bin, and system commands (ls, grep, sort) still work. Every PATH entry env.sh adds must be an absolute directory (no empty, `.` or relative entries). Keep env.sh's other settings.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Path",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "8m",
+  "concepts": ["PATH search order", "prepending to PATH", "absolute paths", "command -v", "hash -r"],
   "module": "module-9-shell-environment",
   "level": "level-5-path"
 }

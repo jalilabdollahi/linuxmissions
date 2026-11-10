@@ -1,1 +1,6 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' backup-boot.conf > fixed.conf`
+for t in $(ls -r backups/*.tar.gz); do gzip -t $t 2>/dev/null || { echo "skip $t (damaged)"; continue; }; rm -rf sysroot/boot/efi/EFI; tar -xzf $t -C sysroot ./boot/efi/EFI; (cd sysroot/boot/efi && sha256sum -c --quiet ../../../EFI.SHA256SUMS) && { echo "restored from $t"; break; }; done
+(cd sysroot/boot/efi && sha256sum -c ../../../EFI.SHA256SUMS); find sysroot/boot/efi -type f | head
+
+- ls -r lists the newest backup (ISO dates in the names) first; gzip -t skips the truncated one
+- tar -C sysroot with the member name ./boot/efi/EFI puts the tree exactly at sysroot/boot/efi/EFI and touches nothing else
+- sha256sum -c from inside boot/efi checks every file; the loop stops at the first backup that passes and removes the failed attempt before the next try

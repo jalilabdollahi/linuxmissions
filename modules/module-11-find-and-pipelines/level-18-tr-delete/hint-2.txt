@@ -1,1 +1,8 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  tr -d '\r\000\007'          delete CR, NUL (octal 000) and BEL (octal 007)
+  tr -cd '[:print:]\t\n'      -c = complement: delete everything that is NOT
+                              printable, tab or newline (without \n you lose the lines)
+  sed 's/\x1b\[[0-9;]*m//g'   remove colour codes: ESC, [, digits and ;, then m
+                              (\x1b works in GNU sed; in bash, $'\e' gives a real
+                              ESC byte that every sed understands)
+Remove the colour codes before the ESC byte is deleted, or match what is left.
+More: man tr, man ascii (for the octal codes)

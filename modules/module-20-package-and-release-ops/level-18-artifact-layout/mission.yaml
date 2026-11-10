@@ -1,15 +1,11 @@
 {
-  "name": "Artifact Layout: Alert Filter",
-  "description": "In the package and release operations lab, a task related to Artifact Layout needs cleanup before the handoff.",
-  "objective": "Write every alert line from artifact-layout.log into alerts.txt",
+  "name": "Reproducible Release Tarball",
+  "description": "Release 1.4.2 of the agent must ship as a tarball that follows ARTIFACT_SPEC.md, and building it twice must give byte-identical files, because the checksum is signed. The sources are in src/agent/ (checked out on a developer's laptop, so modes and junk are what you would expect).",
+  "objective": "Write build.sh (run from this directory) so that it creates dist/agent-1.4.2.tar.gz exactly as ARTIFACT_SPEC.md describes: layout, modes, owner, timestamps, file order, no build junk and no gzip timestamp. The validator runs build.sh twice, with a pause and changed source timestamps in between, and the two archives must be identical.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Artifact Layout",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "30m",
+  "concepts": ["tar --sort --owner --mtime", "gzip -n", "--exclude", "reproducible builds", "file modes"],
   "module": "module-20-package-and-release-ops",
   "level": "level-18-artifact-layout"
 }

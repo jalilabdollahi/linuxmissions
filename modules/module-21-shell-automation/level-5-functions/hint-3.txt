@@ -1,1 +1,29 @@
-Example: `cut -d, -f2 functions-report.csv > owners.txt`
+Type this at the prompt. It rewrites lib/units.sh with a to_bytes that prints its result:
+
+cat > lib/units.sh <<'EOF'
+# lib/units.sh - size helpers shared by the upload scripts. Source it.
+# to_bytes SIZE   prints SIZE in bytes (K, M, G, T = powers of 1024);
+#                 bad input: prints nothing, returns 1.
+to_bytes() {
+  local number=${1%[KMGT]}
+  local unit=${1#"$number"}
+  local mult
+  case $number in
+    ''|*[!0-9]*) return 1 ;;
+  esac
+  case $unit in
+    '') mult=1 ;;
+    K) mult=1024 ;;
+    M) mult=$((1024 ** 2)) ;;
+    G) mult=$((1024 ** 3)) ;;
+    T) mult=$((1024 ** 4)) ;;
+  esac
+  echo $((number * mult))
+}
+EOF
+
+- local number=${1%[KMGT]}      the digits (one unit letter cut off the end); local = invisible to the caller
+- ''|*[!0-9]*) return 1         empty or anything that is not only digits: status 1, no output
+- echo $((number * mult))       the result goes to stdout, where $(to_bytes ...) picks it up
+
+Check: source lib/units.sh; size=10; to_bytes 3M; echo "status $? size $size"; ./check_upload.sh 64K uploads/*

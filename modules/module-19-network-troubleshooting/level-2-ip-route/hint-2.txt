@@ -1,1 +1,10 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+How the kernel picks a route (main table): among all routes whose network contains the destination, the one with the LONGEST prefix wins (/32 beats /24 beats /16 beats default = /0). The order of the lines does not matter.
+
+In a route line:
+- `via X` is the next-hop gateway; `dev Y` is the outgoing interface.
+- No `via` and `scope link`: the network is directly connected, packets go straight to the destination (write `direct`).
+- No /prefix (`10.50.7.20 via ...`) means /32: exactly that host.
+- /20 = 4096 addresses: 10.99.0.0/20 is 10.99.0.0 - 10.99.15.255. /12: 172.16.0.0 - 172.31.255.255.
+
+On a real host `ip route get 10.50.7.20` answers the question directly. Here, check by hand, or with python3's ipaddress module: `ipaddress.ip_address(d) in ipaddress.ip_network(n)`.
+Read more: `man ip-route`.

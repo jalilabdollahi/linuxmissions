@@ -1,1 +1,7 @@
-Inspect the sandbox, then create the missing path for organized/timer-audit/timer-audit-notes.txt.
+Work through the timers one by one and ask the same four questions of each: is every section
+header spelled the way systemd knows it? Does OnCalendar describe a time that exists (or
+does the timer use another trigger)? Which service does it start (the timer's own name,
+unless a Unit= says otherwise), and does that file exist? Is there an [Install] section that
+lets `systemctl enable` hook it into timers.target? A loop over the files with grep does the first
+and last checks for all eleven at once, and ls shows the services. Not every unusual-looking
+timer is broken.

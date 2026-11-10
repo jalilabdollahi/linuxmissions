@@ -1,1 +1,12 @@
-Example: `chmod 640 tail-follow.sh`
+Start a name-following watcher in the background, then trigger the deploy:
+
+timeout 60 tail -n0 -F var/log/deploy/deploy.log | grep -m1 'one-time admin token' | grep -o 'adm_[A-Za-z0-9]*' > token.txt &
+./trigger-deploy.sh
+wait
+cat token.txt
+
+- tail -n0 -F        follow deploy.log by name from now on; reopens the new file after the rotation
+- grep -m1 '...'     the first "one-time admin token" line (not the housekeeping "revoked" lines)
+- grep -o 'adm_...'  only the token itself
+- &                  runs the watcher in the background while ./trigger-deploy.sh runs
+- wait               waits for the watcher to finish (it ends when the agent writes its next line)

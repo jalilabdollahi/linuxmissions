@@ -1,1 +1,7 @@
-This mission is about cron field order and exact syntax.
+`printenv` and `env` show the environment of YOUR shell. The worker is a
+different process: it received its environment when it was started, and
+nothing that happened to worker.env since then has reached it.
+
+So: find the worker's process ID (careful, two processes have "worker" in
+their command line), then look for the place where Linux exposes a process's
+environment under /proc/<pid>/. What separates the entries in that file?

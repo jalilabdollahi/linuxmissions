@@ -1,1 +1,8 @@
-Example: `find cleanup/dpkg-files -name '*.tmp' -delete`
+for p in $(cat suspects.txt); do real=$(readlink -f "rootfs$p" | sed "s|^$SANDBOX/rootfs||"); owner=$(dpkg -S "$real" 2>/dev/null | cut -d: -f1); printf '%s\t%s\n' "$p" "${owner:-none}"; done > owners.tsv
+cat owners.tsv
+
+- for p in $(cat suspects.txt)   each suspect path
+- readlink -f "rootfs$p"         resolve /bin -> usr/bin etc. on disk; sed drops the sandbox prefix again
+- dpkg -S "$real" | cut -d: -f1  the owning package (empty if dpkg finds none)
+- ${owner:-none}                 print none when there was no owner
+- printf '%s\t%s\n'              path, TAB, owner

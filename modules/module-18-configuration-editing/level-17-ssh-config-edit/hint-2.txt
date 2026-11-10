@@ -1,1 +1,7 @@
-Write the schedule into crontab.txt using the standard five time fields.
+Put the most specific blocks first and the catch-all `Host *` last, and keep
+`Host *` free of settings you do not want everywhere (a User, for example).
+Per host you need User, Port and IdentityFile; for the whole `db-*` group a
+HostName pattern (`%h` is the name you typed), ProxyJump and IdentitiesOnly.
+The tilde in IdentityFile means the HOME of whoever runs ssh. You can test
+without connecting: HOME=$SANDBOX/home ssh -G -F home/.ssh/config db-3
+(look for user, port, hostname, proxyjump, identityfile). More: man ssh_config

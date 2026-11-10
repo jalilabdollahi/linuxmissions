@@ -1,1 +1,12 @@
-This is a sorting task followed by deduplication.
+Read the header of rotate.sh: it lists the options, which ones take a value,
+and what must happen on wrong usage. A usage() function already exists.
+
+Two questions:
+- Which builtin walks through -n 3, -vn3, -dlogs and -- for you, so you do
+  not have to take $1 apart by hand?
+- After the options are read, they are still sitting in "$@". The code below
+  the TODO treats everything in "$@" as a pattern. How do you get rid of them?
+
+Try your work with: ./rotate.sh -vn3 -d logs ; echo "exit $?"
+
+Game tip: `edit rotate.sh` opens the script in an editor.

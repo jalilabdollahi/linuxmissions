@@ -1,22 +1,23 @@
 # Default Lockdown
 
-## What you practiced
-**umask** = the bits that get *removed* from default permissions:
-- Default file permissions: `666` (rw-rw-rw-)
-- Default dir permissions: `777` (rwxrwxrwx)
-- Applied: `actual = default & ~umask`
+## Why it works
+A program asks for mode 666 for new files (777 for directories) and the kernel
+removes the umask bits: `mode = requested & ~umask`. With `umask 027`:
 
-| umask | Files | Dirs |
-|-------|-------|------|
-| 022   | 644   | 755  |
-| 027   | 640   | 750  |
-| 077   | 600   | 700  |
+| | requested | minus umask 027 | result |
+|---|---|---|---|
+| file | rw-rw-rw- (666) | group w, others rwx | rw-r----- (640) |
+| dir  | rwxrwxrwx (777) | group w, others rwx | rwxr-x--- (750) |
 
-## Commands to remember
-```bash
-umask                        # show current umask
-umask 027                    # set for current shell session
-umask -S                     # show in symbolic form (u=rwx,g=rx,o=)
-# Persist in ~/.bashrc or ~/.profile:
-echo "umask 027" >> ~/.bashrc
-```
+Setting the umask inside the start script means the policy travels with the
+app, whatever the umask of the shell or service manager that starts it.
+
+## Common mistakes
+- Thinking the umask is subtracted as a number. It is a bit mask: `666 - 027`
+  would give 637, but the real result is 640 (there is no x to remove from files).
+- Fixing the umask and forgetting the files that already exist. umask only
+  applies at creation time; existing files need `chmod` (or recreating).
+
+## Learn next
+`umask -S` shows the umask symbolically (`u=rwx,g=rx,o=`), and you can set it
+that way too. For services, systemd has `UMask=0027` in the unit file.

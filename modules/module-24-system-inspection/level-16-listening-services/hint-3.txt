@@ -1,1 +1,8 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+{ echo "port,proto,unit"; for port in $(awk '{n=split($4,a,":"); print a[n]}' capture/ss.txt | sort -un); do line=$(awk -v p=":$port\$" '$4 ~ p' capture/ss.txt | head -1); pid=$(grep -o 'pid=[0-9]*' <<< "$line" | cut -d= -f2 | grep -vx 1 | head -1); if [ -n "$pid" ]; then unit=$(basename "$(cut -d: -f3 capture/proc/$pid/cgroup)"); else sock=$(grep -lE "^ListenStream=(.*[:.])?$port\$" capture/units/*.socket | head -1); unit=$(sed -n 's/^Service=//p' "$sock"); [ -n "$unit" ] || unit=$(basename "${sock%.socket}").service; fi; echo "$port,tcp,$unit"; done; } > inventory.csv
+cat inventory.csv
+
+- awk ... sort -un         the distinct port numbers (the text after the last colon), in numeric order
+- grep -o 'pid=[0-9]*' ... grep -vx 1    the owner PIDs of that port, ignoring PID 1 (systemd)
+- cut -d: -f3 ... basename  the cgroup path of the owner, reduced to its last component: the unit
+- grep -lE "^ListenStream=...$port"     for socket-held ports, the .socket file that mentions the port
+- Service= line, else name.socket -> name.service   which service that socket activates

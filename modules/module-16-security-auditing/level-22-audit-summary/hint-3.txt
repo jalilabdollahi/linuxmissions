@@ -1,1 +1,14 @@
-Example: `cut -d, -f2 audit-summary-report.csv > owners.txt`
+{
+  find host -type f -perm -0002 -printf 'world-writable\t%p\t%m\n'
+  find host -type f -perm /6000 -printf '%p\t%m\n' | awk -F'\t' 'NR == FNR { b[$0] = 1; next } !($1 in b) { printf "unexpected-suid\t%s\t%s\n", $1, $2 }' host/etc/suid-baseline.txt -
+  grep -rlE -- '-----BEGIN [A-Z ]*PRIVATE KEY' host | while read -r f; do m=$(stat -c %a "$f"); [ "$m" != 600 ] && printf 'weak-key-mode\t%s\t%s\n' "$f" "$m"; done
+  sshd -T -f host/etc/ssh/sshd_config | awk '($1 == "permitrootlogin" || $1 == "passwordauthentication" || $1 == "x11forwarding") && $2 != "no" || $1 == "maxauthtries" && $2 > 4 { printf "sshd-setting\thost/etc/ssh/sshd_config\t%s=%s\n", $1, $2 }'
+  grep -rniE '^[[:space:]]*(password|api_key|secret)[[:space:]]*=[[:space:]]*[^<$[:space:]]' host/etc host/home | awk -F: '{ printf "plaintext-secret\t%s\tline=%s\n", $1, $2 }'
+} | sort -u > audit.tsv
+
+- 1st find        regular files others can write (symlinks and directories are skipped by -type f)
+- 2nd find + awk  files with a setuid/setgid bit whose path is not a line of the baseline file
+- grep -rl + stat files with a private-key header, reported when the mode is not 600
+- sshd -T | awk   effective values (defaults included) of the four policed keywords
+- last grep + awk password, api_key or secret set to a real value; -n gives the line number
+- sort -u         one line per finding, no duplicates

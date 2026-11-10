@@ -1,4 +1,16 @@
-One valid solution is:
-for file in "$1"/*.txt; do
-  mv "$file" "${file%.txt}.bak"
+Type this at the prompt. It replaces rename.sh with a working script:
+
+cat > rename.sh <<'EOF'
+#!/bin/bash
+for f in "$1"/*.txt; do
+  [ -e "$f" ] || continue
+  mv -- "$f" "${f%.txt}.bak"
 done
+EOF
+
+- for f in "$1"/*.txt          every .txt file directly in the folder given as the first argument
+- [ -e "$f" ] || continue      no .txt files at all? then $f is the literal pattern: skip it
+- "${f%.txt}.bak"              the name without its .txt ending, plus .bak
+- mv -- "$f" ...               rename; quotes keep "q3 report.txt" in one piece, -- protects names starting with -
+
+Use it: bash rename.sh incoming && ls incoming

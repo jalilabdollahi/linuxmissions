@@ -1,1 +1,1 @@
-This is a delimiter-based column extraction task.
+First find out which of the archives you can trust: can each one be read to the end? Then decide which archives belong to Tuesday 18:00 (dates are in the names and in the file times) and in which order they must be applied. An incremental archive knows about deletions, but only if you extract it in a way that lets tar apply them.

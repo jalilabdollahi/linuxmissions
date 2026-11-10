@@ -1,2 +1,10 @@
-An awk solution works well here:
-awk '/^[0-9]+:/ {gsub(":", "", $2); iface=$2} /inet / {split($2,a,"/"); print iface, a[1]}' ip_addr.txt > interfaces.txt
+Type this at the prompt:
+
+awk '$1 == "inet" { split($2, a, "/"); print $NF, a[1] }' ip_addr.txt > interfaces.txt
+
+- $1 == "inet"          only IPv4 address lines (inet6 does not match the whole word)
+- split($2, a, "/")     "10.20.4.17/24" -> a[1] = "10.20.4.17"
+- print $NF, a[1]       the last field is the interface label (eno1, eno1.120, ...), then the address
+- > interfaces.txt      save the result
+
+Check it: cat interfaces.txt     (7 lines; eno1 appears twice)

@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in artifact-layout.log.
+Read ARTIFACT_SPEC.md line by line and compare it with what a plain `tar czf` would do: what does tar
+store by default for owner, timestamps and the order of files? Which of those change from one build
+to the next? Also look inside src/agent for junk (including in subdirectories) and for hidden files
+that are legitimate. List the archive with tar -tvzf and check each column against the spec.

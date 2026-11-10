@@ -1,1 +1,5 @@
-Measure directory sizes before deciding which one is largest.
+Semantic versioning has three levels of change: breaking, new feature, fix. Look in commits.txt for
+each kind and decide which level wins: the highest one present. Careful, "breaking" can be spelled
+two ways in Conventional Commits, one in the subject line and one in the body of a commit.
+For the tags, read what semver says about a prerelease (like rc.2) next to its final release, and
+about numbers inside a prerelease name. Not every tag is a release tag.

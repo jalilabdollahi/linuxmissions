@@ -1,15 +1,11 @@
 {
-  "name": "History Safety: Capacity Report",
-  "description": "In the security auditing lab, a task related to History Safety needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "History Safety",
-    "du",
-    "sort"
-  ],
+  "name": "Typed It in Plain Text",
+  "description": "Somebody typed a database password and an API token straight into the shell, and bash dutifully saved every command in home/.bash_history. That file gets backed up and shared with the support team.",
+  "objective": "Remove from home/.bash_history every line that exposes a secret: database commands with the password typed on the line (after -p, with or without a space before it, or as --password=) and exports of API_TOKEN or of a *_PASSWORD variable. Keep every other line, in the original order (commands that only mention the word password, or that make mysql ask for the password, are harmless), and keep the file's mode. Then configure home/.bashrc so that an interactive shell never saves a command whose first character is a space.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["bash history", "sed -i", "grep -v", "HISTCONTROL", "HISTIGNORE"],
   "module": "module-16-security-auditing",
   "level": "level-16-history-safety"
 }

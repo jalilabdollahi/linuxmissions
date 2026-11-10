@@ -1,1 +1,9 @@
-Example: `tar -czf release-rollback-backup.tar.gz bundle/release-rollback`
+best=$(for r in releases/*/; do r=${r%/}; n=$(awk '$4 >= 500' "$r/health.log" | wc -l); [ "$n" -eq 0 ] && basename "$r"; done | sort -V | tail -1)
+echo "rolling back to $best"
+ln -sfn "releases/$best" current
+./appctl reload
+
+- awk '$4 >= 500' | wc -l   failures per release: the status field, not any "500" in the line
+- sort -V | tail -1   the newest of the clean releases, in version order
+- ln -sfn   replace the `current` link itself (-n: do not descend into the directory it points to)
+- ./appctl reload   tell the server only after the link is switched

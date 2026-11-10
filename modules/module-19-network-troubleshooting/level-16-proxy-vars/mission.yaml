@@ -1,15 +1,11 @@
 {
-  "name": "Proxy Vars: Capacity Report",
-  "description": "In the network troubleshooting lab, a task related to Proxy Vars needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Proxy Vars",
-    "du",
-    "sort"
-  ],
+  "name": "Not Through the Proxy",
+  "description": "TICKET.txt: since the proxy rollout, every job loads proxy.env. Downloads from the vendor still work, but every call to an internal service now ends in \"403 Forbidden\" from the proxy. A local proxy and a local internal service run on this machine; ./check-access.sh shows what the jobs see.",
+  "objective": "Fix proxy.env so that, once it is loaded, http://updates.vendor.example/ goes through the proxy while localhost, 127.0.0.1 and every host under .internal are reached directly (check-access.sh all OK). Set both spellings of each variable (http_proxy/HTTP_PROXY, https_proxy/HTTPS_PROXY, no_proxy/NO_PROXY) with the same values.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["http_proxy / https_proxy", "no_proxy syntax", "upper- vs lower-case proxy variables", "curl -v", "curl --resolve"],
   "module": "module-19-network-troubleshooting",
   "level": "level-16-proxy-vars"
 }

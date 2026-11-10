@@ -1,1 +1,6 @@
-Example: `cut -d, -f2 yes-head-report.csv > owners.txt`
+  yes | ./install.sh
+  yes ping | head -n 1000 > load.txt
+      yes | ./install.sh   every "Continue?" gets a y, however many there are; when the installer exits, yes dies of a broken pipe
+      yes ping             an endless stream of the line "ping"
+      head -n 1000         keeps the first 1000 lines and ends the stream
+  wc -l load.txt

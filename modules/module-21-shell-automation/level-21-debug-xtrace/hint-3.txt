@@ -1,1 +1,23 @@
-Example: `mkdir -p organized/debug-xtrace && mv inbox/debug-xtrace.txt organized/debug-xtrace/debug-xtrace-notes.txt`
+Type this at the prompt. The first command puts a debug block right after
+the #! line, the second one fixes the comparison the trace points at:
+
+{ head -n 1 invoice_sync.sh; cat <<'DBG'
+if [ "${DEBUG:-}" = 1 ]; then
+  exec 9> trace.log
+  BASH_XTRACEFD=9
+  PS4='+${BASH_SOURCE}:${LINENO}: '
+  set -x
+fi
+DBG
+tail -n +2 invoice_sync.sh; } > invoice_sync.new && mv invoice_sync.new invoice_sync.sh && chmod +x invoice_sync.sh
+sed 's/\[\[ \$1 == \$2 \]\]/[[ $1 == "$2" ]]/' invoice_sync.sh > invoice_sync.new && mv invoice_sync.new invoice_sync.sh && chmod +x invoice_sync.sh
+
+- exec 9> trace.log            open file descriptor 9 on trace.log
+- BASH_XTRACEFD=9              the trace goes there, not to stderr (bash 4.1+)
+- PS4='+${BASH_SOURCE}:${LINENO}: '   every trace line says which file and line ran
+- set -x                       trace everything from here on, only when DEBUG=1
+- [[ $1 == "$2" ]]             quoted: an exact comparison instead of a glob pattern
+
+To see the bug before the sed line, run  DEBUG=1 ./invoice_sync.sh  and
+grep -F '[[' trace.log | grep -F 'E*Trade' | head
+[[ Eastside Trade Europe == E*Trade Europe ]] succeeds: E*... is a pattern.

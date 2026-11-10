@@ -1,15 +1,11 @@
 {
-  "name": "Grep Count: Link Repair",
-  "description": "In the search and pipelines lab, a task related to Grep Count needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/grep-count.conf",
+  "name": "The Noisiest Services",
+  "description": "Error budgets are reviewed tomorrow. logs/ holds today's log of each of our 30 services (logs/<service>.log, one line per event, the level in the second column). The SRE lead wants the services that logged more than 50 ERROR lines today.",
+  "objective": "Write noisy.txt with one line '<file> <count>' (for example 'billing.log 73') for every log in logs/ that has more than 50 lines with the level ERROR, sorted by count, highest first. Other levels never count, even when their message mentions something like NOERROR.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Grep Count",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "12m",
+  "concepts": ["grep -c", "grep -w", "counting lines vs occurrences", "sort -t -k -n -r"],
   "module": "module-11-find-and-pipelines",
   "level": "level-9-grep-count"
 }

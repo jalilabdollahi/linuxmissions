@@ -1,1 +1,6 @@
-A grep count or grep piped into wc can produce the number you need.
+  cat sysroot/etc/hostname        the name the server has now
+  cat sysroot/etc/hosts           what it can resolve (127.0.1.1 is where Debian/Ubuntu put it)
+  ./sudo-in-sysroot true          shows the sudo complaint for the server's files
+Change only the 127.0.1.1 line, in sysroot/etc/hosts. Do not touch ./etc/hosts: that
+belongs to the rescue system you are running from. An editor works (nano, edit), or
+sed -i 's/old/new/' FILE. See man 5 hosts.

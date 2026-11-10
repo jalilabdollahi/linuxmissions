@@ -1,15 +1,11 @@
 {
-  "name": "Checksum Verify: Config Rewrite",
-  "description": "In the storage and backups lab, a task related to Checksum Verify needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in checksum-verify.conf and save the fixed result to fixed.conf",
+  "name": "Trust, but Verify",
+  "description": "The shop was restored onto the new box, and last night's manifest is the only proof of what should be there.",
+  "objective": "Compare restored/ against MANIFEST.tsv (path, size, mode, sha256) and write verify-report.txt with three sections in this order, each header alone on a line followed by one ./-style path per line in byte order: == MISSING == (in the manifest, not on disk), == EXTRA == (regular files on disk the manifest does not list), == CORRUPTED == (present but with different content). Files that only changed mode or timestamp are not corrupted. Do not modify restored/.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Checksum Verify",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "30m",
+  "concepts": ["comm on sorted path lists", "sha256 comparison", "awk lookup in a TSV", "./ path prefixes", "renames as missing plus extra"],
   "module": "module-14-storage-and-backups",
   "level": "level-19-checksum-verify"
 }

@@ -1,1 +1,6 @@
-Use `ln -s` so current.conf points at the release file.
+  awk 'NR > 1 { print $1 }' FILE | sort > names     module names without the header line
+  comm -23 A B                                       lines only in A (both inputs sorted); -12 common, -13 only in B
+  grep -wFf missing.txt healthy.lsmod                the healthy lines of the missing modules
+"Used by" names the modules that depend ON this one. A module that loading pulls in as a
+dependency shows up in the Used by column of the module that needs it. Among the missing
+ones, which module is not named in any other missing module's Used by list?

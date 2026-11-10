@@ -1,1 +1,4 @@
-Use tar with create, gzip, and file flags.
+Look at the modes the script creates now (run it and `ls -lR shared`). New files start
+from a base mode and the umask takes bits away. Which bits does the group need to keep?
+The umask belongs to a process and is inherited by its children: when must the script set
+it, and in which process does that setting have to live?

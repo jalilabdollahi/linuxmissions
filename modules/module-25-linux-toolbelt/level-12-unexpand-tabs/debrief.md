@@ -1,17 +1,25 @@
-# Unexpand Tabs: Permission Fix
+# Missing Separator
 
-## What you practiced
-- This level focused on **Unexpand Tabs** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+make requires a tab at the start of every recipe line. `unexpand` can turn
+leading spaces into tabs, but it works on text, not on meaning: it cannot know
+that the 8 spaces under `SRCS = ... \` are a variable continuation and that
+the 8 spaces under `all:` are a recipe. A small awk program supplies
+the meaning: a line like `target: deps` switches a flag on, a blank line or any
+unindented line that is not a rule switches it off, and awk prints the numbers
+of the 8-space lines seen while the flag is on. Only those lines are then sent
+through `unexpand --first-only -t 8`, which does the actual conversion. (awk's
+`sub(/^        /, "\t")` on those lines is an alternative to `unexpand`.)
 
-## Commands to remember
-```bash
-chmod 750 script.sh
-ls -l script.sh
-stat -c '%a %n' script.sh
-```
+## Common mistakes
+- `unexpand --first-only -t 8 Makefile` on the whole file (the trap): converts the variable continuation
+  lines and the indented comments too. make still accepts some of that, but it
+  is a different file and `git diff` is full of noise.
+- Treating `VAR := x` or `CFLAGS = -DX=a:b` as a rule: a ':' is only a rule when
+  it comes before any '=' and is not part of ':='.
+- `> Makefile` while reading from Makefile: it empties the file.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the current mode first if you want to verify the change.
+## Learn next
+GNU make 3.82 and later can use another recipe prefix with `.RECIPEPREFIX = >`,
+and `make -n` prints what would run without running it, a safe way to test a
+repaired Makefile.

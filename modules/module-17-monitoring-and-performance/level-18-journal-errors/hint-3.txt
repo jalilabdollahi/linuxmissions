@@ -1,1 +1,10 @@
-Example: `grep 'ALERT' journal-errors.log > alerts.txt`
+jq -r 'select((.PRIORITY|tonumber)<=3) | "\(.__REALTIME_TIMESTAMP|tonumber/1000000|floor|strftime("%H:%M")) \(._SYSTEMD_UNIT // "-")"' journal.json > errs.txt
+m=$(cut -d' ' -f1 errs.txt | uniq -c | awk '$1>10 {print $2; exit}')
+u=$(grep "^$m " errs.txt | cut -d' ' -f2 | grep -v '^-$' | sort | uniq -c | sort -rn | awk 'NR==1 {print $2}')
+echo "$m $u" > spike.txt; cat spike.txt
+
+- jq select(... <=3)      only error-level entries (priority 3 and worse)
+- the string template     one line per error: minute (UTC) and unit ("-" for kernel)
+- uniq -c | awk '$1>10'   the first minute with more than 10 errors (m)
+- grep "^$m " | ...       only that minute's errors, count per unit, biggest first (u)
+- echo "$m $u"            the one-line answer

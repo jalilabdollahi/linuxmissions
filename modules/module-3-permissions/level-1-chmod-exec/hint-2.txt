@@ -1,2 +1,7 @@
-Add execute permission for the owner:
-chmod u+x $SANDBOX/deploy.sh
+chmod changes permission bits. The symbolic form is WHO + or - WHAT:
+  u = owner (user), g = group, o = others, a = all
+  r = read, w = write, x = execute
+So "u+x" means "give the owner execute". ls -l deploy.sh shows the result.
+After that, start the script with a path: ./deploy.sh (the shell does not look
+in the current folder for programs by itself).
+More: man chmod

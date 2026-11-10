@@ -1,15 +1,11 @@
 {
-  "name": "Restore Relay: Field Extract",
-  "description": "In the linux war games lab, a task related to Restore Relay needs cleanup before the handoff.",
-  "objective": "Extract the second column from restore-relay-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Restore Relay",
-    "cut",
-    "awk"
-  ],
+  "name": "Back to Tuesday",
+  "description": "Ransomware hit the file share on Wednesday morning. The backup folder has Sunday's full archive and the incrementals GNU tar made each evening, plus the one taken after the alarm. One of the archives on the share is damaged; the offsite folder holds copies under different names. RUNBOOK.txt has the schedule.",
+  "objective": "Rebuild the share as it was on Tuesday at 18:00 in restored/ (create it): every file with its Tuesday content, nothing that was deleted before Tuesday evening, nothing from Wednesday. Do not modify anything in backups/ or offsite/.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["GNU tar --listed-incremental", "restoring an incremental chain in order", "--listed-incremental=/dev/null", "detecting a corrupt archive", "identifying the right backup copy"],
   "module": "module-26-linux-wargames",
   "level": "level-22-restore-relay"
 }

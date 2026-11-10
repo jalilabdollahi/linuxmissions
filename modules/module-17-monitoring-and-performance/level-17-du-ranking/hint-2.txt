@@ -1,1 +1,8 @@
-Write the schedule into crontab.txt using the standard five time fields.
+- du -d2 DIR (--max-depth=2) reports every directory down to two levels, with
+  the parent totals mixed in; filter the lines you want with grep or awk on
+  the path shape.
+- Plain du counts disk blocks actually allocated (sparse holes cost nothing)
+  and counts a hard-linked file only once per run. --apparent-size and `ls -l`
+  do neither. Run one du over all of var/, not one per directory.
+- A shell glob like var/*/* skips names starting with a dot; du -d2 does not.
+- sort -rn needs numbers (-k, not -h); head -5 keeps the top.

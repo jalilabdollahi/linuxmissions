@@ -1,1 +1,13 @@
-Example: `sort traceroute-notes-raw.txt | uniq > unique-sorted.txt`
+Type these at the prompt:
+
+last=$(grep -v '\* \* \*' traceroute.txt | tail -n 1 | grep -o '([0-9.]*)' | head -n 1 | tr -d '()')
+jump=$(awk '$2 != "???" && $1 ~ /\|--/ { if (prev != "" && $6 - prev > 50) { print $1 + 0; exit } prev = $6 }' mtr-report.txt)
+printf 'LAST_HOP=%s\nJUMP_HOP=%s\n' "$last" "$jump" > path.env
+
+- grep -v '\* \* \*' | tail -n 1     the last hop line that has any answer
+- grep -o '([0-9.]*)' | tr -d '()'   the address in parentheses
+- $2 != "???" && $1 ~ /\|--/         mtr rows of hops that answered (skips the header and silent hops)
+- $6 - prev > 50                      Avg rose by more than 50 ms over the previous answering hop
+- print $1 + 0                        "9.|--" as a number: 9
+
+Check it: cat path.env

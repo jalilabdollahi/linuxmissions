@@ -1,16 +1,11 @@
 {
-  "name": "Free Memory: Event Counter",
-  "description": "In the monitoring and performance lab, a task related to Free Memory needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in free-memory-events.txt and write the number to ok-count.txt",
+  "name": "Out of Memory? Check Again",
+  "description": "A developer opened ticket MEM-7741: \"server out of memory, under 200 MB free!\" and pasted free -m twice, ten minutes apart, plus /proc/meminfo from the second moment. Before anyone buys RAM or restarts the service, someone has to read those numbers properly.",
+  "objective": "Following the rule in TICKET.md, fill memory.env from the later capture: available_mib (MiB the system can still hand out), swap_used_mib (swap in use) and verdict (ok or pressure).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Free Memory",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["free output columns", "MemFree vs MemAvailable", "buff/cache", "swap growth between samples"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-3-free-memory"
 }

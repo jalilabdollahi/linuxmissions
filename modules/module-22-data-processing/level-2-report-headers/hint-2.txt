@@ -1,1 +1,9 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  head -n 1 jan.csv            just the header
+  tail -n +2 FILE              everything from line 2 on (the header skipped);
+                               but tail copies a missing final newline as it is
+  awk 'FNR > 1' F1 F2 F3       FNR is the line number inside the current file
+                               (NR counts across all files), so this skips line 1
+                               of every file, and awk ends each line it prints
+                               with a newline
+  >>                           appends to a file instead of overwriting it
+More: man tail, man awk (look for FNR)

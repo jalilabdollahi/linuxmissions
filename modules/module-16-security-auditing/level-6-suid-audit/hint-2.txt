@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+find can match "any of these permission bits": `-perm /6000` (setuid 4000 or setgid 2000).
+Strip the leading `rootfs` so the paths look like the baseline, then keep only the lines
+that are NOT in the baseline: `grep -vxFf FILE` reads patterns from FILE, treats them as
+fixed strings (-F) and whole lines (-x), and inverts the match (-v).
+  find rootfs -type f -perm /6000 | sed 's|^rootfs||' | sort > found.txt
+Then `chmod u-s,g-s` removes exactly the two bits and nothing else.
+More: man find, man grep, man chmod

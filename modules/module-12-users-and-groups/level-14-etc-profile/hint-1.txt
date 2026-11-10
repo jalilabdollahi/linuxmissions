@@ -1,1 +1,5 @@
-A short for-loop is the cleanest option here.
+Read etc/profile to see how it picks up extra files and which ones. Look at how an existing
+snippet in etc/profile.d does its job: what does it do besides assigning the value?
+Then think about who runs it: login shells of every user, and not only bash. If the snippet
+prints something or contains a bash-only construct, which logins break?
+Test it the way the system would: in a clean environment, as a login shell.

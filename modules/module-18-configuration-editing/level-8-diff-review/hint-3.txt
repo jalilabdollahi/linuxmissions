@@ -1,1 +1,8 @@
-Example: `find cleanup/diff-review -name '*.tmp' -delete`
+diff -u -w -B haproxy.orig.cfg haproxy.cfg
+diff -w -B haproxy.orig.cfg haproxy.cfg | grep '^>' | awk '{ print $2 }' | sort -u > changed.txt
+cat changed.txt
+
+- diff -u -w -B ...   shows only real changes, in unified format, so you can read the hunks
+- grep '^>'           the new version of each changed line in the normal diff format
+- awk '{ print $2 }'  the directive name (after the ">")
+- sort -u > changed.txt   one name per line, no duplicates

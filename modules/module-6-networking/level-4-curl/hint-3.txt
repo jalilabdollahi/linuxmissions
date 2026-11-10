@@ -1,2 +1,10 @@
-One simple solution is:
-curl -s "file://$SANDBOX/api/response.json" | grep -o '"status": "[^"]*"' | cut -d'"' -f4 > status.txt
+Type this at the prompt:
+
+curl -s -H "X-API-Key: $(cat api.key)" "$(cat api_url.txt)/health" | jq -r '.service.status' > status.txt
+
+- curl -s                          fetch quietly
+- -H "X-API-Key: $(cat api.key)"   send the key as a request header (without it: 401 Unauthorized)
+- "$(cat api_url.txt)/health"      base URL from the file plus the endpoint
+- jq -r '.service.status'          the "status" inside "service", as plain text without quotes
+
+Check it: cat status.txt

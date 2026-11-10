@@ -1,15 +1,11 @@
 {
-  "name": "Semver Basics: Capacity Report",
-  "description": "In the package and release operations lab, a task related to Semver Basics needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Semver Basics",
-    "du",
-    "sort"
-  ],
+  "name": "Cut the Next Release",
+  "description": "The CLI's last release is v2.3.4. commits.txt has every commit since that tag (Conventional Commits), VERSION and package.json still say 2.3.4, and all-tags.txt lists every tag in the repository, including release candidates and a few tags that are not releases at all.",
+  "objective": "Decide the next version by semantic versioning and write it to VERSION (just the number, no v) and to the \"version\" field of package.json, changing nothing else in that file. Then write tags.txt: the ten highest release tags (vMAJOR.MINOR.PATCH with an optional -prerelease) in semver precedence order, lowest first, one per line, as spelled in all-tags.txt.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
+  "concepts": ["semver", "Conventional Commits", "BREAKING CHANGE", "prerelease precedence", "grep -E", "sort -V"],
   "module": "module-20-package-and-release-ops",
   "level": "level-16-semver-basics"
 }

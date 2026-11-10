@@ -1,1 +1,9 @@
-`mkdir -p organized/namespaces-notes` followed by `mv inbox/namespaces-notes.txt organized/namespaces-notes/namespaces-notes-notes.txt` is enough.
+In lsns.json each namespace appears once, with the lowest PID in it: pick
+the `pid` and `net` entries whose `pid` is 1 (`jq -r '.namespaces[] |
+select(.type=="net" and .pid==1) | .ns'`). ps.txt has one row per process
+with the two inode numbers in columns 3 (PIDNS) and 4 (NETNS), after a
+header line. awk can pass the host values in with `-v` and compare the
+columns: PIDNS different from the host's, NETNS equal to the host's. A
+process with the host's PID namespace but its own network (a debug
+container started with --pid=host) is the opposite case. `sort -n` orders
+by PID.

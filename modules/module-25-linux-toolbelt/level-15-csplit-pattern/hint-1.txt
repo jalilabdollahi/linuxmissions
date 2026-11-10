@@ -1,1 +1,4 @@
-This is a numeric aggregation task.
+The document boundaries are the lines that contain only ---. Cutting the stream
+there gives pieces, but pieces are named by number, not by content, and the
+first and last piece may not be real resources. Which line tells you what a
+piece is, and which `name:` line is the resource's own name?

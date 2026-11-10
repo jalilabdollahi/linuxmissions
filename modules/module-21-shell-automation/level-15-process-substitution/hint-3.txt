@@ -1,1 +1,21 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' process-substitution-metrics.csv > total.txt`
+Type this at the prompt. It replaces stale_accounts.sh:
+
+cat > stale_accounts.sh <<'SCRIPT'
+#!/bin/bash
+# stale_accounts.sh USERS_EXPORT HR_ROSTER
+count=0
+while read -r login; do
+  echo "$login"
+  count=$((count + 1))
+done < <(comm -23 \
+  <(awk -F: '$2 >= 1000 && $2 < 60000 { print $1 }' "$1" | sort) \
+  <(awk -F, 'NR > 1 && ($3 == "active" || $3 == "leave") { print tolower($2) }' "$2" | sort -u))
+echo "TOTAL $count"
+SCRIPT
+
+- <(awk ... | sort)        human accounts, sorted, given to comm as a /dev/fd path
+- <(awk ... tolower | sort -u)   logins HR still employs, in lower case
+- comm -23 A B             lines only in A: accounts nobody in HR still owns
+- done < <(...)            the loop reads comm's output without a pipe, so count survives
+
+Try it: bash stale_accounts.sh users.export hr_roster.csv

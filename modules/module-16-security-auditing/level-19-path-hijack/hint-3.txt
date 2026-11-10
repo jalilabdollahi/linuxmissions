@@ -1,1 +1,9 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' path-hijack.conf > fixed.conf`
+grep '^PATH' etc/cron.d/rotate-keys
+grep '^PATH=' etc/cron.d/rotate-keys | cut -d= -f2 | tr ':' '\n' | while read -r d; do [ -n "$d" ] && find "$d" -maxdepth 0 -type d -perm -0002; done > hijack.txt
+sed -i 's|^set -eu$|set -eu\nPATH=/usr/bin:/bin|' srv/rotate-keys.sh
+cat hijack.txt
+
+- grep PATH        read the PATH the cron job inherits
+- cut|tr|while     one element per line; skip the empty ones; print those directories that others can write to (find ... -type d -perm -0002; symlinks like /bin always show mode 777, -type d skips them) into hijack.txt
+- sed              right after "set -eu" the script sets its own PATH to two trusted directories, so tar and gzip are only looked up there
+- cat              check that hijack.txt holds the one writable directory

@@ -1,0 +1,6 @@
+Compare golden/etc with live/etc as a whole tree, not file by file. Sort what you
+find into kinds: content that differs, files only on one side, and differences that
+a content diff cannot see at all. Read allowed-overrides.txt next: some entries allow
+a whole file, one allows a single line. Which drifted file also contains an allowed
+line? Write the report before you repair anything, because afterwards the evidence
+is gone.

@@ -1,2 +1,6 @@
-The .bak file also needs to move and be renamed to app.conf:
-mv $SANDBOX/staging/app.conf.bak $SANDBOX/production/app.conf
+  cp SRC DEST          copy (the original stays where it is)
+  mv SRC DEST          move; if DEST is a new name, it also renames
+  mv a b c DIR/        move several files into a directory
+A glob such as staging/*.conf matches names that END in .conf, so it does not
+pick up app.conf.new; that one needs its own mv with the new name.
+More: man cp, man mv

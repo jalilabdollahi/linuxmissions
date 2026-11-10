@@ -1,1 +1,8 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  find DIR -mtime -1        modified less than 1 day (24 h) ago
+  find DIR -mtime 1         modified 1 to 2 days ago (find counts whole days and
+                            drops the fraction), NOT "within the last day"
+  find DIR -mtime +1        modified 2 or more days ago
+  find DIR -mmin -1440      the same window as -mtime -1, counted in minutes
+  -atime / -ctime           access time / status-change time (not what you want here)
+  -type f                   only regular files
+More: man find (look for -mtime and "fractional part")

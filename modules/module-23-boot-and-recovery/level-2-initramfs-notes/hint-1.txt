@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in initramfs-notes.log.
+An initramfs is a compressed archive that the kernel unpacks into RAM at boot. To see
+which drivers a kernel can load before the root disk is mounted, you have to look
+inside the image. First find out how each of the three images is compressed:
+they were not all built the same way. What does an empty listing mean?

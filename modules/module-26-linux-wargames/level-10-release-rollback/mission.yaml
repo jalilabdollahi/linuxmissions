@@ -1,14 +1,17 @@
 {
-  "name": "Release Rollback: Backup Bundle",
-  "description": "In the linux war games lab, a task related to Release Rollback needs cleanup before the handoff.",
-  "objective": "Create release-rollback-backup.tar.gz containing the files under bundle/release-rollback",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Release Rollback",
+  "description": "The newest release (current) throws 500s and the previous one is no better. INCIDENT.md describes the layout; the app server is the mock ./appctl.",
+  "objective": "Roll back: current must be a link to the newest release that has no failed health checks, every release and its shared link must stay intact (nothing stray inside a release), and the app server must have been reloaded (./appctl reload) after the switch.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
   "concepts": [
-    "Release Rollback",
-    "tar",
-    "compression"
+    "release symlinks",
+    "ln -sfn and mv -T",
+    "sort -V",
+    "awk on logs",
+    "health checks",
+    "rollback procedure"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-10-release-rollback"

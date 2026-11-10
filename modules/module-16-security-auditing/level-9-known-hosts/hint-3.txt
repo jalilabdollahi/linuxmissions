@@ -1,1 +1,11 @@
-Example: `ln -s releases/known-hosts.conf current.conf`
+ssh-keygen -F git.internal -f known_hosts
+ssh-keygen -R git.internal -f known_hosts
+ssh-keygen -R '[10.4.0.7]:2222' -f known_hosts
+cat keyscan.txt >> known_hosts
+ssh-keygen -F git.internal -f known_hosts
+
+- -F ... (first)     shows the old keys that ssh complained about
+- -R git.internal    removes every entry for that name, hashed or not; the old file is kept as known_hosts.old
+- -R '[10.4.0.7]:2222'   the same server under its address and port: the brackets are part of the name
+- cat keyscan.txt >> known_hosts   append the trusted new keys (comment lines are allowed in the file)
+- -F ... (last)      only the new keys remain

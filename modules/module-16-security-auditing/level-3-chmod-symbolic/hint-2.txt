@@ -1,1 +1,7 @@
-A grep count or grep piped into wc can produce the number you need.
+Symbolic modes work on "who", "operator" and "permissions": g-w, o=r, a+x ...
+  chmod -R go-w DIR      take write away from group and others
+  chmod -R o=rX DIR      set others to read, plus execute only if X applies
+The capital X in a symbolic mode means "execute, but only for directories and for
+files that already have execute permission for someone". Lower-case x would add it
+to every file. You can put several clauses in one mode, separated by commas.
+More: man chmod (section on the X permission)

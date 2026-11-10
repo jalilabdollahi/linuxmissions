@@ -1,1 +1,5 @@
-Archive the directory contents without leaving anything out.
+`grep Accepted var/log/auth.log` shows successful logins with the source address and, for key logins, the
+fingerprint. `ssh-keygen -lf FILE` prints the fingerprint of every key in an authorized_keys file, so you can match the
+log (comments can lie, fingerprints cannot). `bin/crontab -l` lists the jobs; a base64 blob can be read with `base64 -d`.
+`.bashrc` can have the bad line far down: `grep -n sudo home/deploy/.bashrc` finds it. `find home -perm -4000` finds setuid files.
+Remove lines with `grep -v ... | crontab -` or `sed -i '/pattern/d'`; `man ssh-keygen`, `man crontab`.

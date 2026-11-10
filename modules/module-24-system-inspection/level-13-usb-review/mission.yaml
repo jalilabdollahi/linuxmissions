@@ -1,15 +1,11 @@
 {
-  "name": "Usb Review: Script Kickoff",
-  "description": "In the system inspection lab, a task related to Usb Review needs cleanup before the handoff.",
-  "objective": "Make jobs/usb-review.sh executable, run it, and create the token file it writes",
+  "name": "Unlisted USB Storage",
+  "description": "Policy on the workstation fleet allows only listed USB mass-storage devices. Security saved the USB part of /sys from ws-114 as capture/sys, and the approved devices are in usb-allowlist.txt (see TICKET.md).",
+  "objective": "Find every USB mass-storage device in capture/sys that is not on the allowlist and write rogue_usb.txt with one line per device, formatted `port vid:pid product` (for example `1-4 0781:5581 Ultra`), using the lowercase ids and the product string from sysfs. A device with several storage interfaces is one line. Hubs, interfaces and devices that merely look similar to an allowlisted one are not to be mixed up.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Usb Review",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "25m",
+  "concepts": ["sysfs USB layout", "idVendor / idProduct", "bInterfaceClass 08", "device vs interface directories", "symlinks in /sys/bus"],
   "module": "module-24-system-inspection",
   "level": "level-13-usb-review"
 }

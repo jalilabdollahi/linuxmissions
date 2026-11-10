@@ -1,15 +1,11 @@
 {
-  "name": "Disk Hotspot: Capacity Report",
-  "description": "In the linux war games lab, a task related to Disk Hotspot needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
+  "name": "Twelve Workers",
+  "description": "The spool volume on the ingest box is filling at several MB per second. Twelve processes are all called `worker`, they have the same command line, and the on-call before you already tried `pkill worker` once; the shift lead says that took the whole ingest pipeline down for ten minutes.",
+  "objective": "Stop the one runaway writer without touching any of the other eleven workers, delete the junk files it has been producing in spool/ (the legitimate spool/w*.log files must stay), and write culprit.txt with one line: the culprit's PID, a space, and the absolute path of its executable.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Disk Hotspot",
-    "du",
-    "sort"
-  ],
+  "expected_time": "20m",
+  "concepts": ["/proc/PID/io", "/proc/PID/fd", "/proc/PID/exe", "attributing disk writes", "pgrep without pkill", "same name different process"],
   "module": "module-26-linux-wargames",
   "level": "level-16-disk-hotspot"
 }

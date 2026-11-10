@@ -1,1 +1,7 @@
-Example: `tar -xzf dmesg-errors-restore.tar.gz`
+grep -nE 'error|failed|exception' dmesg.txt | head
+grep -E 'ata3|2:0:0:0' dmesg.txt | head -12
+echo "sdb 14.201332" > failing_disk.txt
+
+- the first grep shows the earliest complaints: they are about ata3.00, not about a disk letter
+- the second grep, on the early lines, shows ata3 is scsi 2:0:0:0, attached as [sdb]
+- the first error line for that port is the "ata3.00: exception" at 14.201332, seven seconds before sdb itself is named in an I/O error

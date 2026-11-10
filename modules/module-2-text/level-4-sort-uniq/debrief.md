@@ -1,17 +1,19 @@
 # Top Talkers
 
-## What you practiced
-The `sort | uniq -c | sort -rn` pipeline is a classic — memorize it:
-1. `sort` — group duplicates together (uniq needs sorted input)
-2. `uniq -c` — count consecutive duplicates, prefix each line with count
-3. `sort -rn` — sort numerically in reverse (highest count first)
+## Why it works
+`sort | uniq -c | sort -rn` is the standard Unix frequency count. `uniq` only
+compares each line with the one before it, so the first `sort` must put identical
+IPs next to each other. `uniq -c` prefixes each group with its size, and
+`sort -rn` ranks by that number. The same pipeline answers "most common error",
+"busiest URL" or "most used command" if you change what goes in.
 
-## Commands to remember
-```bash
-sort file | uniq -c | sort -rn          # frequency count, ranked
-sort -u file                             # sort and deduplicate
-sort -k2 -t: file                        # sort by field 2, colon separator
-sort -rn numbers.txt                     # reverse numeric sort
-uniq -d file                             # show only duplicate lines
-uniq -u file                             # show only unique lines
-```
+## Common mistakes
+- `uniq -c` without sorting first: the same IP appears in many small groups.
+- `sort -r` without `-n`: text sorting puts `9` above `143`, because it compares
+  character by character.
+- Running the IP through `sort -u` first: that removes the duplicates you wanted to count.
+
+## Learn next
+`... | sort -rn | head -10` keeps the top ten, and
+`awk '{n[$1]++} END {for (ip in n) print n[ip], ip}' access.log | sort -rn`
+does the counting in awk alone. `sort -k2` sorts by the second column.

@@ -1,1 +1,4 @@
-You need a stream editor or another text replacement tool.
+atd starts a batch job hours later, without your terminal. What does the job know
+about the moment you queued it? Queue a test job and read it back with at -c: which
+directory does it cd into, and which variables does it set? Then think about where
+you must be, and what must be exported, at the moment you run batch.

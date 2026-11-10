@@ -1,0 +1,11 @@
+{
+  "name": "Restart Storm",
+  "description": "A 3-second broker blip took queue-consumer down for good: it was restarted so fast that systemd gave up with \"Start request repeated too quickly\". INC-4471 (TICKET.md) lists what the restart behaviour should be.",
+  "objective": "Change queue-consumer.service so it follows TICKET.md: restart after failures only (never after a clean exit 0), the RestartSec and start limit (StartLimitBurst / StartLimitIntervalSec) the ticket gives, still enabled. Then get it running again. Don't touch the program. `systemctl` and `journalctl` are mocks (the sandbox is /); the checker replays the broker blip.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["Restart=on-failure vs always", "RestartSec=", "StartLimitIntervalSec= / StartLimitBurst= in [Unit]", "start-limit-hit", "systemctl reset-failed", "systemctl show -P", "daemon-reload"],
+  "module": "module-13-services-and-logs",
+  "level": "level-18-restart-policy"
+}

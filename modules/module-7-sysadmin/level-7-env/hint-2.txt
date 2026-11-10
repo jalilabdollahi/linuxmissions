@@ -1,3 +1,8 @@
-The required values are:
-APP_MODE=production
-APP_PORT=8080
+Three shell rules apply here:
+  NAME=value            no spaces around "=", or the shell runs NAME as a command
+  NAME="two words"      a value with spaces needs quotes, or the second word runs as a command
+  export NAME=value     only exported variables are passed on to child processes like app.sh
+                        (alternative: `set -a` at the top of the file exports everything after it)
+Edit with `edit .env`, then test with ./start.sh.
+You can check what a child process sees with:  bash -c '. ./.env; printenv APP_NAME'
+Read more: man bash (sections PARAMETERS and "export"), help export

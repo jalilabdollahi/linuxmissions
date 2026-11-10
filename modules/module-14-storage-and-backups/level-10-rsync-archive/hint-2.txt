@@ -1,1 +1,7 @@
-Archive the directory contents without leaving anything out.
+rsync is the tool. Its "archive" option -a is a bundle: -rlptgoD (recursive, symlinks as symlinks, permissions, times, group, owner, devices), but not everything.
+  -H           preserve hard links
+  -n           dry run: change nothing
+  -i           itemized output, one line per difference
+The source's trailing slash matters: `rsync -a www new-server/www` and `rsync -a www/ new-server/www/` do different things (the first puts www inside the target, the second its contents).
+For the second run, combine -n and -i and redirect the output to second-run.txt.
+More: man rsync

@@ -1,15 +1,11 @@
 {
-  "name": "Group File: Alert Filter",
-  "description": "In the users and groups lab, a task related to Group File needs cleanup before the handoff.",
-  "objective": "Write every alert line from group-file.log into alerts.txt",
+  "name": "Docker Crew",
+  "description": "Membership of the docker group is root-equivalent, so the auditors want to know who on build-02 has it. You have copies of the server's etc/group and etc/passwd.",
+  "objective": "Write docker-members.txt with every user who is in the docker group on build-02, one login name per line, in any order. A user is in a group when it is listed as a member on that group's line, or when it is the user's primary group. Leave etc/group and etc/passwd unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Group File",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["/etc/group fields", "member list", "primary group (passwd field 4)", "awk -F:", "tr"],
   "module": "module-12-users-and-groups",
   "level": "level-2-group-file"
 }

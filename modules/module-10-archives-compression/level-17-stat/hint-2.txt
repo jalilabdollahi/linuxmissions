@@ -1,1 +1,9 @@
-Write the schedule into crontab.txt using the standard five time fields.
+  stat -c '%a %Y' PATH        mode in octal (755) and mtime in epoch seconds, of PATH itself
+  stat -L -c '%a %Y' PATH     the same for the target, if PATH is a symlink
+  chmod 640 PATH              set a mode; on a symlink it changes the TARGET (link modes are always 777)
+  touch -d @1790012345 PATH   set the mtime from epoch seconds; follows symlinks too
+  touch -h -d @N PATH         change the symlink itself
+  [ -L PATH ]                 true if PATH is a symlink
+  grep -v '^#' MANIFEST | while read -r mode epoch path; do ... done
+                              read handles the fields; the last variable gets the rest of the line, spaces included
+More: man stat (FORMAT SEQUENCES), man touch

@@ -1,17 +1,23 @@
-# Logrotate: Capacity Report
+# The Log That Won't Let Go
 
-## What you practiced
-- This level focused on **Logrotate** in a safe sandbox.
-- The shortest path usually combines `du` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A process writes to an open file, not to a name. Normal rotation renames `app.log` to
+`app.log.1` and creates a new `app.log`; the app, still holding the old file, keeps
+writing into `app.log.1` while the fresh `app.log` stays empty. `copytruncate` avoids that:
+logrotate copies the content to `app.log.1` and truncates the original in place, so the
+app's open file is still the one named `app.log`. (A few lines written between the copy and
+the truncate can be lost, which is the price when the app cannot be told to reopen its log.)
+`rotate 5` keeps five old logs, `compress` gzips them and `delaycompress` leaves the newest
+uncompressed, which also helps tools that still read it. `-s` points at a state file, where
+logrotate remembers the last rotation of each log; the system default is not writable
+without root.
 
-## Commands to remember
-```bash
-du -s datasets/*
-du -sh datasets/* | sort -h
-sort -n report.txt | tail -n 1
-```
+## Common mistakes
+- Forgetting `copytruncate`: the log looks rotated but `app.log` is empty and the disk keeps filling.
+- Using `-f` before `-d`: always look at the dry run first, a typo in the path rotates nothing silently.
+- Writing a relative path or an unwritable state file location and getting "error: ... failed to open".
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Measure directory sizes before deciding which one is largest.
+## Next step
+Apps that can reopen their log on a signal are better served by `create` plus
+`postrotate ... kill -USR1 ... endscript`: nothing is lost. `size 100M`, `daily`,
+`maxage 30` and `dateext` control when and how files are named.

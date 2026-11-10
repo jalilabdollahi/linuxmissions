@@ -1,1 +1,6 @@
-Use tar with create, gzip, and file flags.
+Look at a few lines with cat -A files.lst | head (tabs show as ^I). If awk
+splits on blanks, which field is the user on a line whose path has a space
+in it? Search the file for lines that are not files at all (grep -v '/nas/'
+or grep find:). Then: you need two running totals per user, one for
+everything and one for the old files. How can you tell whether 2024-07-15 is
+before 2025-01-01 without taking the date apart?

@@ -1,1 +1,0 @@
-Example: `grep 'ALERT' hostnamectl.log > alerts.txt`

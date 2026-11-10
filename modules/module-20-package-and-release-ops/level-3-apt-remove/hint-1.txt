@@ -1,1 +1,4 @@
-Count matching lines instead of copying them out by hand.
+Look at the package list the way dpkg sees it, not at what is running. The first
+two letters of each line are the package's wanted state and its current state.
+What state is oldmon in, and what does that state say is still on the disk?
+Be careful with anything whose name only starts like oldmon.

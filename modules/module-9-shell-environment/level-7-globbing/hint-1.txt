@@ -1,1 +1,3 @@
-Use one command for the beginning of the file and another for the end.
+Look at everything in logs/, hidden files included: `ls -A logs`. Which names start with app-2026-10-1 but are NOT a plain .log for the 10th to the 19th?
+
+A glob is expanded by the shell before the command runs, so you can preview it safely with echo: `echo logs/app-2026-10-1*` shows exactly what mv would get.

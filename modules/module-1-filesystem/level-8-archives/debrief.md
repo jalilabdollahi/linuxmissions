@@ -1,28 +1,19 @@
 # Pack and Unpack
 
-## What you practiced
-- `tar -xzf` — **x**tract, g**z**ip, **f**ile
-- `tar -czf` — **c**reate, g**z**ip, **f**ile
-- `-C dir` changes to that directory before acting
-- `-t` lists archive contents without extracting
+## Why it works
+`tar` bundles files and `-z` pipes the bundle through gzip. `-x` with `-C extracted`
+unpacks inside `extracted/`, keeping the paths stored in the archive (`site/...`),
+hidden files like `.htaccess` included. For the new archive the shell expanded
+`logs/*.log` into exactly four names, and `tar -c` packed only those.
 
-## tar flag cheatsheet
-| Flag | Meaning |
-|------|---------|
-| `-c` | Create archive |
-| `-x` | Extract archive |
-| `-t` | List contents |
-| `-z` | gzip compression |
-| `-j` | bzip2 compression |
-| `-J` | xz compression |
-| `-f` | Next arg is filename |
-| `-v` | Verbose output |
-| `-C` | Change to directory |
+## Common mistakes
+- Archiving the folder (`tar -czf archive.tar.gz logs`) takes everything in it,
+  including `app.log.1` and `README.txt`.
+- Forgetting `-z` when creating: you get a plain `.tar` with a misleading `.gz`
+  name. `file archive.tar.gz` tells you what a file really is.
+- Putting options after the archive name in the wrong order: `f` must be followed
+  by the file name (`-czf name.tar.gz`, not `-cfz`).
 
-## Commands to remember
-```bash
-tar -czf backup.tar.gz /path/to/dir    # create
-tar -xzf backup.tar.gz -C /dest        # extract to dest
-tar -tzf backup.tar.gz                 # list contents
-tar -xzf backup.tar.gz --strip=1       # strip top-level dir
-```
+## Learn next
+`tar -tvzf` lists with sizes and dates, `--strip-components=1` drops the top
+folder when extracting, and `-J` / `-j` use xz / bzip2 instead of gzip.

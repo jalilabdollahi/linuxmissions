@@ -1,15 +1,11 @@
 {
-  "name": "Timestamps: Restore Drill",
-  "description": "In the data processing lab, a task related to Timestamps needs cleanup before the handoff.",
-  "objective": "Extract timestamps-restore.tar.gz so the restored/timestamps directory appears in the sandbox",
+  "name": "One Timeline, Two Clocks",
+  "description": "A customer was charged but never got a receipt, and support needs to see what billing and notify did, in order. Both services log Unix epoch times in the first field: billing.log in seconds (1794319402), notify.log in milliseconds (1794319402518). Nobody can read either.",
+  "objective": "Write timeline.txt with every line of both logs, each as: the time in UTC as YYYY-MM-DDTHH:MM:SSZ (milliseconds dropped), a space, the service name (billing or notify), a space, and the rest of the original line unchanged. Order the lines by time; lines in the same second keep their order: billing's lines first, then notify's, each in the order of its own log.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Timestamps",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "20m",
+  "concepts": ["epoch seconds vs milliseconds", "date -u -d @N", "gawk strftime(fmt, t, 1)", "sort -s -k1,1", "ISO 8601 sorts as text"],
   "module": "module-22-data-processing",
   "level": "level-11-timestamps"
 }

@@ -1,1 +1,6 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' sed-print.conf > fixed.conf`
+  sed -n '/^\[database\]$/,/^\[/p' app.ini | sed '$d' > db-section.txt
+      from the exact line [database] to the next line starting with [,
+      then delete that last line (the next header)
+  sed -n '1200,1260p;1260q' trace.log > excerpt.txt
+      print lines 1200 to 1260 and stop reading at 1260
+  cat db-section.txt

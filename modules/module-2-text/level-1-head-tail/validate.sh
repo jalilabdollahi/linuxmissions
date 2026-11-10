@@ -1,24 +1,25 @@
 #!/bin/bash
+# $1 = sandbox path
 SANDBOX="$1"
-FAIL=0
-if [ ! -f "$SANDBOX/first5.txt" ]; then
-  echo "❌ FAIL: first5.txt not found"; FAIL=1
-else
-  COUNT=$(wc -l < "$SANDBOX/first5.txt")
-  if [ "$COUNT" -eq 5 ] && grep -q "Service started" "$SANDBOX/first5.txt"; then
-    echo "✅ first5.txt correct ($COUNT lines, starts with 'Service started')"
-  else
-    echo "❌ FAIL: first5.txt has $COUNT lines or wrong content"; FAIL=1
-  fi
+cd "$SANDBOX" || exit 1
+
+if [ ! -f app.log ] || [ "$(wc -l < app.log | tr -d ' ')" -ne 3000 ]; then
+  echo "❌ app.log was changed or removed; type 'reset' to restore it"
+  exit 1
 fi
-if [ ! -f "$SANDBOX/last5.txt" ]; then
-  echo "❌ FAIL: last5.txt not found"; FAIL=1
-else
-  COUNT=$(wc -l < "$SANDBOX/last5.txt")
-  if [ "$COUNT" -eq 5 ] && grep -q "Shutting down" "$SANDBOX/last5.txt"; then
-    echo "✅ last5.txt correct ($COUNT lines, ends with 'Shutting down')"
-  else
-    echo "❌ FAIL: last5.txt has $COUNT lines or wrong content"; FAIL=1
+
+check() {  # file which-part expected-output
+  if [ ! -f "$1" ]; then
+    echo "❌ $1 does not exist yet"
+    exit 1
   fi
-fi
-[ "$FAIL" -eq 0 ] && exit 0 || exit 1
+  if [ "$(tr -d '\r' < "$1")" != "$3" ]; then
+    n=$(wc -l < "$1" | tr -d ' ')
+    echo "❌ $1 ($n lines) is not exactly the $2 5 lines of app.log"
+    exit 1
+  fi
+}
+check first5.txt first "$(head -n 5 app.log)"
+check last5.txt last "$(tail -n 5 app.log)"
+echo "✅ first5.txt and last5.txt hold the first and last 5 lines of app.log"
+exit 0

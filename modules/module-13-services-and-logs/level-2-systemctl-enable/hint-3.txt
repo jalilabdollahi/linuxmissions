@@ -1,1 +1,13 @@
-Example: `grep 'ALERT' systemctl-enable.log > alerts.txt`
+Point [Install] at the server's boot target, then re-enable and start the agent:
+
+systemctl get-default
+sed -i 's/^WantedBy=graphical.target$/WantedBy=multi-user.target/' etc/systemd/system/metrics-agent.service
+systemctl reenable --now metrics-agent
+ls -l etc/systemd/system/*.wants/
+systemctl status metrics-agent
+
+- get-default                       prints multi-user.target: graphical.target is never reached on this box
+- sed ... WantedBy=multi-user.target  enable now links the unit where the boot actually looks
+                                      (or: edit etc/systemd/system/metrics-agent.service)
+- reenable --now                    removes the graphical.target.wants link, creates the
+                                    multi-user.target.wants link, and starts the agent now

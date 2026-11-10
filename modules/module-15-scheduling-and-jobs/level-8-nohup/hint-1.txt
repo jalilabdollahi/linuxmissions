@@ -1,1 +1,4 @@
-Use a targeted file search so you do not remove the wrong files.
+When a terminal closes, every process started from it gets the hangup signal (SIGHUP),
+and the default reaction to SIGHUP is to exit. One classic command starts a program with
+SIGHUP ignored. It also has an opinion about where output goes when you don't choose:
+check where it would write, and decide yourself.

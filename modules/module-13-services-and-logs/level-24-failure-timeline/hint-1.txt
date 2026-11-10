@@ -1,1 +1,8 @@
-Inspect the current mode first if you want to verify the change.
+Do one source at a time and check each part before you merge.
+For each one ask: in what zone is this time, and how precise is it? The
+server's zone is what timedatectl reports; the journal's number is UTC
+microseconds since 1970. syslog has neither a year nor a zone.
+Convert everything to UTC once, in the same text format: then plain string
+comparison works for the window and for sorting.
+Which syslog lines are copies of journal lines? Compare a few by eye first.
+And what does `sort` do with two lines that have the same time?

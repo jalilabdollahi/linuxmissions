@@ -1,1 +1,22 @@
-Example: `ln -s releases/sync-command.conf current.conf`
+cat > publish.sh <<'EOF'
+#!/bin/bash
+cd "$(dirname "$0")" || exit 1
+SRC=${SRC:-content}
+DEST=${DEST:-releases}
+
+tmp=$(mktemp -p "$DEST" .latest.XXXXXX) || exit 1
+trap 'rm -f "$tmp"' EXIT
+tar -czf "$tmp" -C "$SRC" . || exit 1
+chmod 644 "$tmp"
+sync "$tmp"
+mv -f "$tmp" "$DEST/latest.tar.gz"
+echo "published $DEST/latest.tar.gz"
+EOF
+./publish.sh; ls -l releases
+
+- mktemp -p "$DEST"      temporary file in the destination directory, so mv is a rename inside one file system
+- trap ... EXIT          remove the temp file if the job fails or is stopped
+- tar ... "$tmp" || exit  write the archive under the temporary name; stop on error
+- chmod 644              mktemp files are private (600); the web server must read the result
+- sync "$tmp"            data on disk before the name changes
+- mv -f                  atomic switch from the old archive to the new one

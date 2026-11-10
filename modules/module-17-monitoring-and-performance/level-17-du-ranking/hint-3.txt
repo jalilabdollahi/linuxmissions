@@ -1,1 +1,7 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+du -k -d2 var | awk '$2 ~ /^var\/[^\/]+\/[^\/]+$/' | sort -rn | head -5 > top5.txt
+cat top5.txt
+
+- du -k -d2 var            real disk usage in KiB, two levels deep, hard links counted once
+- awk '$2 ~ /^var\/x\/y$/' only paths of the form var/NAME/NAME (drops var itself and var/NAME)
+- sort -rn                 biggest number first
+- head -5 > top5.txt       the five biggest, saved

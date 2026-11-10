@@ -1,1 +1,13 @@
-Example: `sort report-jobs-raw.txt | uniq > unique-sorted.txt`
+cat > crontab.txt <<CRON
+MAILTO=ops@example.com
+PATH=$SANDBOX/opt/tools/bin:/usr/bin:/bin
+30 6 * * * $SANDBOX/report.sh >> $SANDBOX/logs/report-\$(date +\%F).log 2>&1 || echo "sales report failed, see $SANDBOX/logs/report-\$(date +\%F).log"
+CRON
+cron-run --root . --crontab crontab.txt:reports --from "2026-11-10 06:00" --days 3 --no-periodic --summary
+
+- MAILTO=ops@example.com   cron mails what the job prints to ops
+- PATH=...opt/tools/bin:/usr/bin:/bin   gives the job the directory with salesagg
+- >> logs/report-...log 2>&1   stdout to the log first, then stderr to the same place
+- \$(date +\%F) in the heredoc: \$ keeps the $, \% is the escaped percent sign cron needs
+- || echo "..."   runs only when report.sh fails; it is the one thing that gets mailed
+- cron-run   plays three mornings; look at logs/ and var/mail/ afterwards

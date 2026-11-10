@@ -1,1 +1,4 @@
-You need a stream editor or another text replacement tool.
+Two files hold group membership, and both must agree. Look at each line of etc/group
+and etc/gshadow: which field is the list of members, and what does an empty list look
+like? Then read changes.csv: is every row new information? Think about what should
+happen for a user who is already a member, or who is not one when removed.

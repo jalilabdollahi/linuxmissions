@@ -1,16 +1,11 @@
 {
-  "name": "Positional Params: Event Counter",
-  "description": "In the shell automation lab, a task related to Positional Params needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in positional-params-events.txt and write the number to ok-count.txt",
+  "name": "Lost in Transit",
+  "description": "The month-end job calls archive.sh to store finance reports in the object store. Files with spaces in their names arrive as several broken uploads or not at all (TICKET.txt), and a call without arguments silently succeeds.",
+  "objective": "Fix archive.sh so that `./archive.sh BUCKET FILE...` calls `./tools/upload --bucket BUCKET FILE...` once, passing BUCKET and every FILE as exactly the argument it received (spaces, empty strings and characters like * included), and keeps printing `archiving N file(s) to BUCKET` first. With fewer than 2 arguments it must print a usage line to stderr, exit 2 and upload nothing. upload.log shows how upload was called.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Positional Params",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["\"$@\" vs $*", "$#", "shift", "usage errors on stderr", "exit 2"],
   "module": "module-21-shell-automation",
   "level": "level-3-positional-params"
 }

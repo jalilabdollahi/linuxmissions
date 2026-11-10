@@ -1,1 +1,10 @@
-Save each result into its own file.
+  grep -E 'REGEX'            extended regular expressions
+  ^  $                       start / end of the line
+  [[:space:]]                one space or tab; [[:space:]]* = any number of them
+  grep -i                    ignore letter case
+  grep -m1                   stop after the first matching line (in each file)
+  grep -H                    print the file name before each match
+For example, '^[[:space:]]*PermitRootLogin[[:space:]]' matches the keyword at
+the start of a line but not a comment. cut -d/ -f2 takes the second /-separated
+part of a path like hosts/web-01/sshd_config:...
+More: man grep, man sshd_config (PermitRootLogin)

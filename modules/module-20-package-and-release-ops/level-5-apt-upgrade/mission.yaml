@@ -1,15 +1,11 @@
 {
-  "name": "Apt Upgrade: Field Extract",
-  "description": "In the package and release operations lab, a task related to Apt Upgrade needs cleanup before the handoff.",
-  "objective": "Extract the second column from apt-upgrade-report.csv into owners.txt",
+  "name": "What Upgrade Keeps Back",
+  "description": "Tonight is patch night. Before anyone runs the upgrade, the change ticket needs the list of packages that a plain apt upgrade will NOT touch, because those need a human decision.",
+  "objective": "Write the names of the packages that a plain upgrade (not full-upgrade) would keep back into kept-back.txt, one per line, and nothing else. Do not run the upgrade itself: only simulate it. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Apt Upgrade",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "10m",
+  "concepts": ["apt-get -s upgrade", "kept back packages", "apt-get -s full-upgrade", "simulation"],
   "module": "module-20-package-and-release-ops",
   "level": "level-5-apt-upgrade"
 }

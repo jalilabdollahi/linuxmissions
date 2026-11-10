@@ -1,15 +1,11 @@
 {
-  "name": "Symbolic Links: Script Kickoff",
-  "description": "In the storage and backups lab, a task related to Symbolic Links needs cleanup before the handoff.",
-  "objective": "Make jobs/symbolic-links.sh executable, run it, and create the token file it writes",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Symbolic Links",
-    "chmod",
-    "bash"
-  ],
+  "name": "Links that Can Move",
+  "description": "A shop's app/ tree was restored to a new path from the dead host, and its symbolic links still point at absolute paths of the old machine.",
+  "objective": "Make every symlink in app/ that points inside the old tree a relative link that reaches the same file or directory, so the tree still works when copied anywhere. Links that point at other places on the system must stay exactly as they are, and no files or extra links may be added.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
+  "concepts": ["readlink", "relative vs absolute symlinks", "realpath --relative-to", "ln -sfn", "find -type l"],
   "module": "module-14-storage-and-backups",
   "level": "level-13-symbolic-links"
 }

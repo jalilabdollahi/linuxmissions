@@ -1,1 +1,9 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' limits-conf.conf > fixed.conf`
+pid=$(pgrep -f 'indexer\.py')
+{ echo "soft=$(awk '/Max open files/ {print $4}' /proc/$pid/limits)"; echo "hard=$(awk '/Max open files/ {print $5}' /proc/$pid/limits)"; echo "open=$(ls /proc/$pid/fd | wc -l)"; } > limits.txt
+printf '[Service]\nLimitNOFILE=65536\n' > sysroot/etc/systemd/system/indexer.service.d/override.conf
+cat limits.txt
+
+- pgrep -f 'indexer\.py'     the PID of the running indexer
+- /proc/$pid/limits          columns: name, soft, hard, units; the fourth and fifth fields of "Max open files" are soft and hard
+- ls /proc/$pid/fd | wc -l   one entry per open descriptor
+- printf ... > override.conf  a drop-in with the [Service] section; "override.conf" sorts after the old 10-legacy.conf, so its value is the last one and wins

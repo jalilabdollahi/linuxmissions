@@ -1,16 +1,11 @@
 {
-  "name": "Tar Create: Path Realignment",
-  "description": "In the archives and compression lab, a task related to Tar Create needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/tar-create.txt to organized/tar-create/tar-create-notes.txt",
+  "name": "Ship the Site",
+  "description": "The build pipeline left the finished website in build/dist/site/. The release engineer wants it as release-2.3.tar.gz, and the deploy script unpacks it with a plain `tar -xzf release-2.3.tar.gz` on the web server, expecting one site/ directory to appear.",
+  "objective": "Create a gzip-compressed tar archive release-2.3.tar.gz in the sandbox root. Every member must be inside a top-level site/ directory (site/index.html, not build/dist/site/index.html, not index.html), and it must hold every file of build/dist/site/, hidden ones included, and nothing else. Leave build/ as it is.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Tar Create",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "6m",
+  "concepts": ["tar -czf", "tar -C", "tar -tzf", "hidden files and globs"],
   "module": "module-10-archives-compression",
   "level": "level-1-tar-create"
 }

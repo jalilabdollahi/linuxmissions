@@ -1,1 +1,4 @@
-`mkdir -p organized/broken-backup` followed by `mv inbox/broken-backup.txt organized/broken-backup/broken-backup-notes.txt` is enough.
+- `tar -tzf backups/<file>` lists an archive. Compare with `ls -la "office share/data"`.
+- Quote every variable that holds a path. A glob like `*` is expanded by the shell in the current directory (and never matches dotfiles); `tar -C DIR .` archives a whole directory instead.
+- A pipeline's exit status is the last command's, unless `set -o pipefail` is on. See `help set`.
+- Run the fixed script once so a fresh archive exists, and check it with `tar -tzf`.

@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+`pgrep -f PATTERN` matches against the whole command line; `pgrep -af`
+shows the command lines so you can pick the right process (worker.py, not
+worker-metrics.py). The environment of PID n is the file /proc/n/environ.
+It is one long line: the entries are separated by NUL bytes, not newlines,
+so convert them first with `tr '\0' '\n'`. Then keep only the two variables,
+and anchor the match: DB_HOST_FALLBACK and DB_HOSTNAME are different
+variables.

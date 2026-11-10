@@ -1,2 +1,8 @@
-Use an awk array keyed by category:
-totals[$1] += $2
+awk pieces you need:
+  -F,                    split fields on commas: $3 = category, $4 = amount
+  NR > 1 && $3 != ""     a condition before { } skips the header, the blank line and the TOTAL row
+  sum[$3] += $4          an associative array: one running total per category
+  END { for (c in sum) ... }   loop over the categories after the last line
+  printf "%s %.2f\n", c, sum[c]   plain print shows only 6 significant digits (19450.1)
+Then sort: -k2,2 = sort on field 2, -n = numerically, -r = largest first.
+Read more: man awk (or info gawk: Arrays, Printf), man sort

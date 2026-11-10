@@ -1,1 +1,4 @@
-This is a delimiter-based column extraction task.
+e2fsck checks and repairs ext2/3/4 filesystems, and it must run on an unmounted one
+(a disk image file is fine). Look before you repair: is there a mode that reports
+problems without changing anything? Then repair, and think about what the tool does
+when the filesystem is marked clean but you know it was not.

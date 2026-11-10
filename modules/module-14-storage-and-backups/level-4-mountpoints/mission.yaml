@@ -1,15 +1,11 @@
 {
-  "name": "Mountpoints: Noise Dedup",
-  "description": "In the storage and backups lab, a task related to Mountpoints needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from mountpoints-raw.txt with sorted unique values",
+  "name": "The Backup That Went Nowhere",
+  "description": "Backups succeeded all week, yet the USB disk is empty: it was never mounted, and backup.sh wrote into the bare directory on the system disk instead.",
+  "objective": "Make backup.sh refuse to run (exit non-zero, write nothing) unless its target is a mount point; the check has to call mountpoint through PATH, because the checker substitutes its own. Then move everything that was written into the bare mnt/backup directory, hidden entries included, into stray/, leaving mnt/backup empty. Do not change the files' contents.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Mountpoints",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "12m",
+  "concepts": ["mountpoint -q", "exit codes", "directory vs mount point", "hidden files and globbing"],
   "module": "module-14-storage-and-backups",
   "level": "level-4-mountpoints"
 }

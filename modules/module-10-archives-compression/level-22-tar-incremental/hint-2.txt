@@ -1,0 +1,11 @@
+  tar --listed-incremental=SNAR -czf OUT.tar.gz data     (-g SNAR for short)
+      SNAR doesn't exist yet -> full backup, and tar writes SNAR
+      SNAR exists            -> only the changes since that run, and tar updates SNAR
+  tar -tvvGzf OUT.tar.gz           list an incremental archive with its directory listings
+                                   (Y = file stored here, N = unchanged, D = directory)
+  tar --listed-incremental=/dev/null -xzf ARCHIVE -C DIR
+      extract as incremental: files missing from a stored directory listing are deleted
+Restore the full backup first, then each incremental in the order they were made.
+Copying the Sunday SNAR before every run gives "differential" backups (all changes since
+Sunday); that works too, but then each run must start from that copy.
+More: info tar "Incremental Dumps", man tar (-g)

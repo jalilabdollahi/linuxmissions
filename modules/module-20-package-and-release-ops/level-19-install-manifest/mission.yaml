@@ -1,15 +1,11 @@
 {
-  "name": "Install Manifest: Config Rewrite",
-  "description": "In the package and release operations lab, a task related to Install Manifest needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in install-manifest.conf and save the fixed result to fixed.conf",
+  "name": "What Did the Hotfix Change?",
+  "description": "After last night's hotfix nobody knows what changed on the app servers. release/ is the clean tree of release 1.4.2 and deployed/ is a copy of what is on a server right now.",
+  "objective": "Write MANIFEST for release/ (one line per regular file: octal mode, sha256, path relative to release/, separated by single spaces, sorted by path in byte order, e.g. '640 <sha256> conf/app.conf'). Then compare deployed/ against that manifest and write deploy-diff.txt with one line per difference: 'MODIFIED path' (content or mode differs), 'MISSING path' (in the manifest, not deployed) or 'EXTRA path' (deployed, not in the manifest). A file that only had its mode changed counts as MODIFIED.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Install Manifest",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "30m",
+  "concepts": ["sha256sum", "stat -c %a / find -printf", "manifests", "awk associative arrays", "filenames with spaces"],
   "module": "module-20-package-and-release-ops",
   "level": "level-19-install-manifest"
 }

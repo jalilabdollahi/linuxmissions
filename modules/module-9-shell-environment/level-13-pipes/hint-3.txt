@@ -1,1 +1,11 @@
-Example: `chmod +x jobs/pipes.sh && jobs/pipes.sh`
+Type this as ONE line:
+
+./build.sh 2>&1 | grep -c WARN > warn_count.txt; echo "${PIPESTATUS[0]}" > build_status.txt
+
+- 2>&1                        stderr joins stdout, so the compiler warnings enter the pipe too
+- | grep -c WARN              count the lines that contain WARN
+- > warn_count.txt            save that count
+- ; echo "${PIPESTATUS[0]}"   the exit status of the first command of that pipeline (build.sh)
+- > build_status.txt          save it
+
+Check: cat warn_count.txt build_status.txt

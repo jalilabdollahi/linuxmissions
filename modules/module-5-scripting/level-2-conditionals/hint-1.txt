@@ -1,4 +1,7 @@
-Use an if statement with a file test:
-if [ -e "$1" ]; then
-  ...
-fi
+The script has to answer three questions, in order: is this a regular file? If not, is it a directory? If neither, nothing is there.
+
+Bash has built-in tests for "is a regular file" and "is a directory", and an if / elif / else block to try them one after the other.
+
+Watch out for `my notes.txt`: it is one path. What happens to it if the variable holding it is not quoted?
+
+Game tip: `edit check_file.sh` opens the script in an editor.

@@ -1,1 +1,8 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+echo 'file,TYPE,UUID,LABEL' > inventory.csv
+probe() { blkid -p -o export ${3:+-O "$3"} "$2" 2>/dev/null | awk -F= -v n="$1" '$1=="TYPE"{t=$2} $1=="UUID"{u=$2} $1=="LABEL"{l=$2} END{print n "," t "," u "," l}'; }
+(cd images && for f in *.img; do if blkid -p -o export "$f" 2>/dev/null | grep -q '^PTTYPE='; then sfdisk -d "$f" | awk -v f="$f" '/start=/ {n++; gsub(",","",$4); print f "@p" n, $4*512}' | while read -r name off; do probe "$name" "$f" "$off"; done; else probe "$f" "$f"; fi; done) >> inventory.csv
+cat inventory.csv
+
+- probe(): runs blkid -p (-O OFFSET for a partition) and prints name,TYPE,UUID,LABEL; missing keys stay empty, and a blank image gives an empty row
+- a PTTYPE= line means a partition table: sfdisk -d gives each partition's start sector; times 512 is the byte offset
+- the for loop visits every image; blkid's exit code 2 (nothing found) does not matter because the pipeline ends in awk

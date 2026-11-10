@@ -1,15 +1,11 @@
 {
-  "name": "Systemctl Restart: Noise Dedup",
-  "description": "In the services and logs lab, a task related to Systemctl Restart needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from systemctl-restart-raw.txt with sorted unique values",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Systemctl Restart",
-    "sort",
-    "uniq"
-  ],
+  "name": "Reload, Don't Restart",
+  "description": "The deploy pipeline just pushed a new etc/api/api.conf (more workers, longer timeout). api.service is in the middle of long export jobs for a customer, and the ticket says: \"apply the new config without dropping in-flight jobs\".",
+  "objective": "The running api process (same Main PID as now) must use the new config revision from etc/api/api.conf, and `systemctl reload api` must work for future config changes. `systemctl` and `journalctl` are mocks that treat the sandbox as `/` and run the api as a real background process; the api writes var/log/api/api.log.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["systemctl reload vs restart", "ExecReload=", "$MAINPID", "SIGHUP", "daemon-reload vs reload", "Main PID"],
   "module": "module-13-services-and-logs",
   "level": "level-4-systemctl-restart"
 }

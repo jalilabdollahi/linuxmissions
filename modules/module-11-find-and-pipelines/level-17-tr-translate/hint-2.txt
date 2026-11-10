@@ -1,1 +1,8 @@
-Write the schedule into crontab.txt using the standard five time fields.
+tr reads standard input (tr ... < FILE) and works on single characters:
+  tr -d '\r'                delete every carriage return
+  tr 'A-Z' 'a-z'            map each uppercase letter to its lowercase one
+                            (or '[:upper:]' '[:lower:]')
+  tr ' \t.' '___'           space, tab and dot each become _
+  tr -s '_'                 squeeze runs of _ into one
+  tr -s ' \t.' '_'          map and squeeze in one go (SET2 is padded with its last character)
+Chain several tr with pipes. More: man tr

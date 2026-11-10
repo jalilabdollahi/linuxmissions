@@ -1,15 +1,11 @@
 {
-  "name": "Cpio: Restore Drill",
-  "description": "In the archives and compression lab, a task related to Cpio needs cleanup before the handoff.",
-  "objective": "Extract cpio-restore.tar.gz so the restored/cpio directory appears in the sandbox",
+  "name": "Inside the initrd",
+  "description": "A server boots into the initramfs shell instead of its root filesystem. Before rebuilding anything, the team wants to know which kernel modules the current initrd.img actually ships, and what configuration it carries in etc/. The file is a gzip-compressed cpio archive in the newc format, like most Linux initramfs images.",
+  "objective": "Write modules.txt with the file name of every kernel module (*.ko) inside initrd.img, one per line, file names only (e.g. nvme.ko, no directories). Then extract only the etc/ tree of the image into initrd-root/, so initrd-root/etc/ matches the image and nothing else from it is unpacked anywhere. Do not change initrd.img.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Cpio",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "12m",
+  "concepts": ["cpio -t", "cpio -idm", "zcat | cpio", "newc / initramfs"],
   "module": "module-10-archives-compression",
   "level": "level-11-cpio"
 }

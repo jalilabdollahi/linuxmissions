@@ -1,1 +1,9 @@
-Example: `tar -xzf repo-keys-restore.tar.gz`
+for k in keyrings/*.gpg; do gpgv --keyring "./$k" repos/acme/dists/noble/InRelease >/dev/null 2>&1 && good=$k; done; echo "verifies: $good"
+sed -i "s|^deb |deb [signed-by=$SANDBOX/$good] |" rootfs/etc/apt/sources.list.d/acme.list
+cat rootfs/etc/apt/sources.list.d/acme.list
+apt update
+
+- the for loop    tries every keyring against the signed InRelease; gpgv exits 0 only for the right one
+- sed -i          rewrites the line "deb URI ..." into "deb [signed-by=/full/path/keyring] URI ..."
+- cat             check the new line
+- apt update      now succeeds with no NO_PUBKEY

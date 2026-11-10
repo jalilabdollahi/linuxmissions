@@ -1,1 +1,8 @@
-`mkdir -p organized/cat-review` followed by `mv inbox/cat-review.txt organized/cat-review/cat-review-notes.txt` is enough.
+`cat -A` shows $ at each line end, ^I for a tab and ^M for a carriage return.
+Bytes outside ASCII appear as M-... sequences (the non-breaking space is the two
+bytes M-BM-). `od -c app.conf | head` shows the raw bytes if you want to be sure.
+
+sed -i edits the file in place, and one -e per rule lets you chain them:
+  sed -i -e 's/\r$//' -e 's/X/Y/' file
+`\r` is the carriage return, `\xHH` is a byte by its hex value (U+00A0 is UTF-8
+c2 a0), and [[:space:]]* matches blanks and tabs. More: man sed

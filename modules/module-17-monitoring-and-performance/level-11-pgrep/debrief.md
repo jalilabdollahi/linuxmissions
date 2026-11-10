@@ -1,17 +1,23 @@
-# Pgrep: Restore Drill
+# Twelve Workers, Two Supervisors
 
-## What you practiced
-- This level focused on **Pgrep** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`pgrep -f` matches a regular expression against the whole command line, which
+is where the queue name lives; `-P` restricts the search to the children of
+one parent, which is where the "belongs to B" information lives. The pattern
+`--queue=emails( |$)` demands that the name ends there, so `emails-archive`
+does not match, and putting `--queue=` in front keeps other arguments from
+matching by accident.
 
-## Commands to remember
-```bash
-tar -tf archive.tar.gz
-tar -xzf archive.tar.gz
-ls -R restored/
-```
+## Common mistakes
+- `pgrep -f emails`: catches `emails-archive` and the e-mail workers of
+  supervisor A, and nothing in the output tells them apart.
+- Matching the supervisor too: its command line has no queue name here, but in
+  many setups it does (`supervisor --queues=emails,sms`).
+- Writing the numbers by hand from `ps` output: with twelve similar lines
+  it is easy to misread a PPID.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: List the archive if you want to inspect it first, then extract it.
+## Next step
+`pgrep -a` / `pgrep -l` to see what you matched, `pgrep -u USER` and
+`pgrep -x` for exact name matching, and `pstree -ap` to see supervisors and
+their children as a tree. Always list before you signal: `pkill` takes the
+same patterns, which is the next level.

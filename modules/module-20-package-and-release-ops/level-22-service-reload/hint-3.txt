@@ -1,1 +1,11 @@
-Example: `cut -d, -f2 service-reload-report.csv > owners.txt`
+pricer --check release-1.5/pricer.conf
+sed -i -E 's/^(markup_pct *= *[0-9]+)%/\1/' release-1.5/pricer.conf
+pricer --check release-1.5/pricer.conf && cp release-1.5/pricer.conf etc/pricer/pricer.conf
+kill -HUP "$(cat run/pricer.pid)"
+curl -s "http://127.0.0.1:$(sed -n 's/^listen_port *= *//p' etc/pricer/pricer.conf)/version"
+
+- pricer --check      the first run names the problem: markup_pct has a "%" sign, but must be a plain integer
+- sed -i -E           removes the % sign only
+- && cp               installs the config only if the second check passes
+- kill -HUP "$(cat ...)"   sends SIGHUP to the running daemon: same PID, no dropped connections
+- curl /version       shows config 1.5 and the new markup

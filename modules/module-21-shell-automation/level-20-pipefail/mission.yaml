@@ -1,15 +1,11 @@
 {
-  "name": "Pipefail: Noise Dedup",
-  "description": "In the shell automation lab, a task related to Pipefail needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from pipefail-raw.txt with sorted unique values",
+  "name": "20-Byte Backups",
+  "description": "At Monday's restore drill, the last nine nightly backups turned out to be 20-byte empty archives, although every night backup_db.sh reported `backup ok`. The database host had been dropping connections and pg_dump died halfway (RESTORE_DRILL.txt; bin/pg_dump is a stand-in).",
+  "objective": "Fix backup_db.sh and turn on `set -o pipefail`. When pg_dump or gzip fails it must exit non-zero, leave no backups/db.sql.gz behind, and print a line starting with `backup FAILED:` on stderr that names the stage that failed (pg_dump or gzip, not both). A good dump must still exit 0 with the complete dump in backups/db.sql.gz and `backup ok: ... (N warnings)` on stdout, also on a night with 0 warnings.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Pipefail",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "15m",
+  "concepts": ["set -o pipefail", "PIPESTATUS", "grep exits 1 on no match", "removing partial output", "if ! pipeline"],
   "module": "module-21-shell-automation",
   "level": "level-20-pipefail"
 }

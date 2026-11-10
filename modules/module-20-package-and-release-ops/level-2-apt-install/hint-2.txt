@@ -1,1 +1,8 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+apt-cache madison fluxd      every available version and the repository it comes from
+apt-cache policy fluxd       installed vs candidate version
+apt-cache show fluxd=VERSION the record of one exact version, including Depends
+apt install NAME=VERSION     install an exact version; list several NAME=VERSION to pin
+                             a dependency in the same command
+
+If a dependency needs an older library than the installed one, name that library
+and its version on the command line too.   More: man apt-get (see "install")

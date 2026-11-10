@@ -1,11 +1,11 @@
 {
   "name": "Packet Sniff",
-  "description": "A packet capture summary was exported from tcpdump. Identify which protocol the captured traffic belongs to.",
-  "objective": "Inspect capture.txt and write the protocol name to protocol.txt",
-  "xp": 250,
-  "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["tcpdump", "capture analysis", "dns", "protocols"],
+  "description": "The IDS on web-03 (10.20.4.17) raised a 'possible port scan' alert, and someone left a 30-second packet capture of that moment in capture.pcap. Reading a saved capture with tcpdump needs no root.",
+  "objective": "Find the IP address that sent connection attempts (TCP SYN) to many different ports of web-03 and write it to scanner.txt. Then write the ports on web-03 that answered that address with SYN-ACK (meaning: open) to open_ports.txt, one per line, sorted from low to high.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "20m",
+  "concepts": ["tcpdump -r", "-nn", "TCP flags (S, S., R.)", "BPF filters tcp[tcpflags]", "awk", "uniq -c"],
   "module": "module-6-networking",
   "level": "level-8-tcpdump"
 }

@@ -1,1 +1,7 @@
-Example: `chmod 640 pkill.sh`
+for hb in $(find run/hb -type f -mmin +2); do pkill -f "worker.sh $(basename "$hb")\$"; done
+sleep 1; cat log/workers.log; pgrep -af worker.sh | wc -l
+
+- find run/hb -type f -mmin +2   the heartbeat files older than 2 minutes: the stuck workers' names
+- basename "$hb"                 the worker name (report-N) from the file name
+- pkill -f "worker.sh report-N$"  SIGTERM to the process whose command line ends exactly with that name
+- the last lines                 the log shows three clean shutdowns, nine workers remain

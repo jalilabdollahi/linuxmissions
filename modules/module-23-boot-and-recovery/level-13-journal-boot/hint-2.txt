@@ -1,1 +1,7 @@
-Use `chmod +x jobs/journal-boot.sh` and then execute it.
+  head -n1 journal.json | jq .        pretty-print one entry
+  jq -r '._BOOT_ID' journal.json | sort -u      the boot IDs
+  jq -c 'select(.SYSLOG_IDENTIFIER=="systemd-shutdown")' journal.json
+  jq -s 'sort_by(.__REALTIME_TIMESTAMP|tonumber)' ...     -s reads all lines as one array
+Journal JSON stores PRIORITY and the timestamps as strings ("3"), so a comparison such as
+.PRIORITY <= 3 compares text with a number and silently selects nothing; convert with tonumber.
+Lower PRIORITY means worse: 0 emerg, 1 alert, 2 crit, 3 err, 4 warning. See man jq, man systemd.journal-fields.

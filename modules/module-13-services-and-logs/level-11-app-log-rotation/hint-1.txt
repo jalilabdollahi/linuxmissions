@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+Find the app's PID and look at what it has open: ls -l /proc/PID/fd. Compare that with
+ls -li var/log/app. Renaming a file doesn't change its inode, and the app writes to the inode it
+opened, not to the name. After the rotation something has to make the app open the new files,
+and opt/app/README says what does that. The config covers two log files: how often should the
+app be told?

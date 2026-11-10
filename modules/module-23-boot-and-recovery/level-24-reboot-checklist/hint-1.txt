@@ -1,1 +1,6 @@
-Inspect the current mode first if you want to verify the change.
+Work on the sample roots first and write one small function per check, so you can try each on its own.
+The tricky parts are the default entry (which entry is it really: look at how the file nests entries in a
+submenu and how the number counts them) and the link (follow it as the booted machine would, not
+as the rescue system sees it). Compare UUIDs without caring about letter case. Remember the script must
+print only the four result lines and exit with the number of failures; test it on roots/healthy and
+roots/broken, then invent your own broken cases by editing a copy.

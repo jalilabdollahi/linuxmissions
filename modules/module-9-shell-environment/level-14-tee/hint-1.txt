@@ -1,1 +1,10 @@
-A short for-loop is the cleanest option here.
+Run ./gen-events twice and compare a few lines: the run= field and the events
+change every time. So three separate `./gen-events | ...` commands will never
+agree with each other.
+
+You need one stream that is written to a file AND passed on to the next
+command, like a T-junction in a water pipe. Then the same trick a second time
+for the filtered lines.
+
+Also look closely at the info events: some of them mention an error in their
+msg text. Only the level field counts.

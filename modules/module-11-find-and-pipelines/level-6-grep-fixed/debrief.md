@@ -1,17 +1,22 @@
-# Grep Fixed: Config Rewrite
+# Leaked Keys
 
-## What you practiced
-- This level focused on **Grep Fixed** in a safe sandbox.
-- The shortest path usually combines `sed` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`grep -f keys.txt` searches for all keys at once, and `-F` makes every key a
+fixed string: `.` is a dot, `*` a star and `$` a dollar sign. With `-r`, grep
+walks logs/ and, because it searches several files, prefixes each line with its
+file name.
 
-## Commands to remember
-```bash
-sed 's/old/new/g' file.conf
-sed -n '1,20p' file.conf
-grep PATTERN file.conf
-```
+## Common mistakes
+- Without `-F` the keys are regular expressions: `ak_ab.cd` also matches the
+  decoy `ak_abxcd`, `ab9*cd` matches `ab999cd` but not itself, and a key ending
+  in `$` only matches at the end of a line, and then not even itself.
+- An empty line in a pattern file is an empty pattern, and the empty string
+  matches every line. Pattern files from paste bins and spreadsheets often end
+  with one, or with Windows `\r` line ends, which make every key miss.
+- A shell loop that runs grep once per key is 40 times slower and prints the
+  same line twice when it contains two keys.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: You need a stream editor or another text replacement tool.
+## Learn next
+`grep -rlF -f keys.txt logs` lists only the affected files, `grep -c` counts
+per file, and `grep -oF -f keys.txt -rh logs | sort | uniq -c` shows how often
+each key was used, which tells you which ones to rotate first.

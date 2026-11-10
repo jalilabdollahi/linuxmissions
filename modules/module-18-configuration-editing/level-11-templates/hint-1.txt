@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+Two jobs: walk through the rows of envs.csv (without its header), and for each row
+fill four placeholders in a copy of the template. Which shell construct reads a
+file line by line and splits it into variables? Then think about the values:
+what do `/`, `&`, `|` and `\` mean to the tool you use for the replacement, and
+what happens if the value contains the character you chose as separator?

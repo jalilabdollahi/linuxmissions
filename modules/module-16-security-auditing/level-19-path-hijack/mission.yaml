@@ -1,15 +1,11 @@
 {
-  "name": "Path Hijack: Config Rewrite",
-  "description": "In the security auditing lab, a task related to Path Hijack needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in path-hijack.conf and save the fixed result to fixed.conf",
+  "name": "Whose tar Is It?",
+  "description": "The root cron job srv/rotate-keys.sh archives the service keys every night. It calls tar and gzip by plain name, and the cron file etc/cron.d/rotate-keys hands it a PATH that starts with a directory every user can write to.",
+  "objective": "Find the directory in the job's PATH that any local user can write to and write its path to hijack.txt. Then fix srv/rotate-keys.sh so that nobody can substitute their own tar or gzip, whatever directory the job is started from and whatever PATH it inherits. The script must keep printing the same two lines and keep producing the same archive. Do not rely on changing the cron file.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Path Hijack",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "20m",
+  "concepts": ["PATH", "command hijacking", "world-writable directories", "empty PATH element", "absolute paths"],
   "module": "module-16-security-auditing",
   "level": "level-19-path-hijack"
 }

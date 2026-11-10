@@ -1,17 +1,21 @@
-# Find Name: Path Realignment
+# Invoices for Legal
 
-## What you practiced
-- This level focused on **Find Name** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`-iname` compares the pattern with each file *name* and ignores letter case, so
+`'*invoice*.pdf'` matches `Invoice_2026-01.PDF`, `Proforma-Invoice-BG-118.Pdf` and
+the hidden `.invoice_0008.pdf` the scanner left behind. find walks every folder and
+hands names with spaces through untouched. The pattern must match the whole name,
+which is why `invoices.pdf.bak` and `invoice BG-118.pdf.zip` stay out.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- `find share -iname *invoice*.pdf` without quotes: the shell expands the pattern
+  first. Here it became `request-invoice-copies.pdf`, and find found nothing. With
+  two matching files in the current folder, find fails with "paths must precede
+  expression".
+- `-name '*invoice*'` misses `Invoice_...` and `INVOICES_...`; `'*.pdf'` misses `.PDF`.
+- `ls -R | grep -i invoice` loses the folder of each file and also lists the decoys.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/find-name/find-name-notes.txt.
+## Learn next
+`-ipath '*finance*invoice*'` matches against the whole path instead of the name,
+and `-not -path '*/archive/*'` excludes a subtree. On a large tree, `locate -i`
+searches a prebuilt index much faster than find.

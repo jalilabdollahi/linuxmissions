@@ -1,16 +1,11 @@
 {
-  "name": "Prompt Customize: Path Realignment",
-  "description": "In the configuration editing lab, a task related to Prompt Customize needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/prompt-customize.txt to organized/prompt-customize/prompt-customize-notes.txt",
+  "name": "A Prompt That Tells the Truth",
+  "description": "Ops wants a prompt that shows where you are and whether the last command failed. The current one in home/.bashrc was copied from a blog: it is colourful, but long commands wrap over their own prompt line.",
+  "objective": "Change the prompt in home/.bashrc so that it shows user@host:directory (with ~ for the home directory) and the prompt character, adds the exit code of the last command in red only when it is not zero, and wraps every colour escape sequence for readline (\\[ and \\]). Keep the aliases, EDITOR and history settings of the file.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Prompt Customize",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "20m",
+  "concepts": ["PS1 escapes", "\\[ \\] around non-printing sequences", "PROMPT_COMMAND", "exit status $?"],
   "module": "module-18-configuration-editing",
   "level": "level-21-prompt-customize"
 }

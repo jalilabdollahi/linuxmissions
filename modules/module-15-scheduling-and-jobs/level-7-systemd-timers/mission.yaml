@@ -1,15 +1,11 @@
 {
-  "name": "Systemd Timers: History Window",
-  "description": "In the scheduling and jobs lab, a task related to Systemd Timers needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of systemd-timers-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Systemd Timers",
-    "head",
-    "tail"
-  ],
+  "name": "From Cron to Timer",
+  "description": "The team is moving the app server's jobs from cron to systemd timers. Next on the list is the purge job in crontab.txt: `30 2 * * 1-5 /opt/app/purge.sh`. Unlike cron, the timer should also catch up on a run that was missed while the server was down.",
+  "objective": "Write etc/systemd/system/purge.service and etc/systemd/system/purge.timer. The service runs /opt/app/purge.sh. The timer starts purge.service at exactly the times the cron line did (02:30, Monday to Friday), runs a missed start after downtime, and is enabled through timers.target. bin/systemd-analyze is a mock that supports only the calendar verb.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "12m",
+  "concepts": ["systemd timers", "OnCalendar=", "Persistent=", "WantedBy=timers.target", "systemd-analyze calendar"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-7-systemd-timers"
 }

@@ -1,1 +1,6 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' grep-fixed.conf > fixed.conf`
+  grep -v '^$' leaked.txt > keys.txt
+      a copy of the key list without the empty line at the end
+  grep -rF -f keys.txt logs > hits.txt
+      -r every file in logs/, -F keys are plain text, -f read them from keys.txt
+  wc -l hits.txt
+      how many requests used a leaked key

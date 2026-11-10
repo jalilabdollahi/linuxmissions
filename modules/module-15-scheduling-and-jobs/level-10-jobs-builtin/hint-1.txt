@@ -1,1 +1,4 @@
-Use tar with create, gzip, and file flags.
+To run the shards at the same time, all three must be started in the background before
+you wait for any of them. Then you need each one's exit status separately. `$?` only
+holds the status of the last command, so you need a way to wait for ONE particular job
+and read its status right after. Which numbers does the shell give the three jobs?

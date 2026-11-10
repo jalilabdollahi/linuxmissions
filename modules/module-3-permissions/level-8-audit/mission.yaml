@@ -1,11 +1,11 @@
 {
   "name": "World Writable Files",
-  "description": "Security scan flagged world-writable files in the app directory. These are a security risk — any user can modify them.",
-  "objective": "Find all world-writable files and remove write permission from 'others' for each one",
-  "xp": 200,
+  "description": "A security scan flagged world-writable files in the app/ directory: any user on the server could change them. The team relies on the other permission bits (some files are group-writable or executable on purpose).",
+  "objective": "Remove write permission for 'others' from every world-writable file under app/, and change nothing else: owner and group bits must stay as they are, and no file may be deleted",
+  "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "10m",
-  "concepts": ["find -perm", "-o-w", "chmod o-w", "security hardening"],
+  "concepts": ["find -perm", "chmod o-w", "find -exec", "security hardening"],
   "module": "module-3-permissions",
   "level": "level-8-audit"
 }

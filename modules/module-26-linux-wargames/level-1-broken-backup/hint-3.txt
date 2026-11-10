@@ -1,1 +1,19 @@
-Example: `mkdir -p organized/broken-backup && mv inbox/broken-backup.txt organized/broken-backup/broken-backup-notes.txt`
+cat > backup.sh <<'SH'
+#!/bin/bash
+set -o pipefail
+BASE=$(cd "$(dirname "$0")" && pwd)
+SRC="$BASE/office share/data"
+LOG=$BASE/logs/backup.log
+OUT=$BASE/backups/data-$(date +%F-%H%M%S).tar.gz
+if ! tar -cf - -C "$SRC" . | gzip > "$OUT"; then
+  echo "$(date '+%F %T') backup FAILED" >> "$LOG"; rm -f "$OUT"; exit 1
+fi
+echo "$(date '+%F %T') backup ok: $(basename "$OUT")" >> "$LOG"
+SH
+./backup.sh
+
+- "$SRC" in quotes   the share path contains a space; unquoted it splits into two words
+- tar -C "$SRC" .    archive the directory itself, dotfiles included, whatever the current directory is
+- set -o pipefail    a failing tar now fails the whole pipeline
+- if ! ... then exit 1   cron and the log see the failure instead of "backup ok"
+- ./backup.sh        makes the fresh archive

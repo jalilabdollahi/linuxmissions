@@ -1,0 +1,7 @@
+A browser asks three questions about a server's certificate. Ask them for each service, one at a time:
+
+1. Is it valid today? (dates)
+2. Can I get from it to a root I trust, using only what the server sent me? (the chain: leaf -> intermediate -> root)
+3. Is it made out for the name I typed? Careful: browsers don't look at the subject's CN any more when the certificate has a list of alternative names. And a wildcard name covers exactly one label.
+
+Look at all fields of one certificate first; the first certificate in fullchain.pem is the server's own.

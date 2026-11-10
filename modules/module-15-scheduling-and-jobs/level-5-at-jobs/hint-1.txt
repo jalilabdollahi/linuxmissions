@@ -1,1 +1,4 @@
-This is a delimiter-based column extraction task.
+List the queue first. Two jobs are due at 15:00 today, and the list shows only job
+numbers, times, queue and owner, not what a job does. Which command prints the full
+script a queued job will run? The command itself is on the last lines of that script.
+change-ticket.txt says when each job should run.

@@ -1,15 +1,11 @@
 {
-  "name": "Split: Permission Fix",
-  "description": "In the archives and compression lab, a task related to Split needs cleanup before the handoff.",
-  "objective": "Set the mode of split.sh to 640",
+  "name": "Five Megabytes Max",
+  "description": "The vendor needs last night's db-backup.tar.gz (about 23 MB), but their file share rejects any upload larger than 5 MB, and their ticket says exactly what that means: 5,000,000 bytes. They will glue the pieces together with `cat db-backup.tar.gz.part-* > db-backup.tar.gz` and then check it with `sha256sum -c db-backup.sha256`.",
+  "objective": "Fill outgoing/ with the upload: the backup cut into pieces named db-backup.tar.gz.part-aa, db-backup.tar.gz.part-ab, ... (each at most 5,000,000 bytes, and joined in name order they give back the exact original), plus db-backup.sha256, a checksum file that passes `sha256sum -c` for the rebuilt db-backup.tar.gz in the vendor's folder. Nothing else in outgoing/. Keep db-backup.tar.gz unchanged in the sandbox root.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Split",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "10m",
+  "concepts": ["split -b", "split prefix", "MB vs MiB units", "sha256sum"],
   "module": "module-10-archives-compression",
   "level": "level-12-split"
 }

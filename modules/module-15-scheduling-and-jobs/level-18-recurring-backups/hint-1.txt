@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in recurring-backups.log.
+Three jobs, three lines. Read BACKUP-PLAN.txt for the exact days. The tricky one is the
+incremental: "Monday to Saturday except the 1st" can't be said with the five time fields
+alone. What happens in cron when you fill in both the day-of-month and the day-of-week
+field? Test your lines with the cron-run tool in bin/ instead of guessing.

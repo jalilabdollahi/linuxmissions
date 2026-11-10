@@ -1,1 +1,25 @@
-Example: `tar -czf backup-rotation-backup.tar.gz bundle/backup-rotation`
+Replace the draft (type it all; the heredoc ends at the EOF line):
+
+cat > rotate.sh <<'EOF'
+#!/bin/bash
+# rotate.sh - keep 5 generations of the site backup
+set -eu
+cd "$(dirname "$0")"
+mkdir -p backups
+rm -f backups/site.tar.gz.5
+for n in 4 3 2 1; do
+  if [ -e "backups/site.tar.gz.$n" ]; then
+    mv "backups/site.tar.gz.$n" "backups/site.tar.gz.$((n + 1))"
+  fi
+done
+tar -czf backups/site.tar.gz.1 site
+EOF
+
+- cd "$(dirname "$0")"   work next to the script, wherever cron starts it
+- rm -f ...5             the oldest drops off (no error if it is missing)
+- for n in 4 3 2 1       shift from the oldest down, so nothing newer gets overwritten
+- if [ -e ]; then mv     skip missing generations; the gap moves up with the rest
+- tar -czf ... .1        the fresh newest generation
+
+chmod +x rotate.sh
+./rotate.sh && ls backups

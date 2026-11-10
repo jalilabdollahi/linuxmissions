@@ -1,1 +1,5 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+`find host -type f -perm -0002 -printf '...\t%p\t%m\n'` prints tab-separated fields itself (`%p` path, `%m` octal mode);
+`-perm /6000` finds setuid or setgid files, which you compare with the baseline (`grep -vxFf` or an awk lookup).
+`grep -rlE 'PRIVATE KEY' host` finds the key files whatever they are called, then `stat -c %a`. `sshd -T -f FILE | awk` can
+test the four keywords. For secrets, anchor an `-i` regex at the line start and exclude values starting with `<` or `$`. Build the
+file as `{ ...; ...; } | sort -u > audit.tsv`; use `printf` with `\t`. See `man find` (-printf), `man sshd_config`.

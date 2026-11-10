@@ -1,1 +1,7 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+`chmod g+s` sets the setgid bit. To apply it to directories only, let find choose them:
+  find projects -type d -exec chmod g+s {} +
+`{} +` hands many names to one chmod call and copes with spaces in names. Hidden
+directories like projects/.archive are found too, unlike a shell glob such as projects/*/.
+Check with `find projects -type d ! -perm -2000` (should print nothing) and
+`find projects -type f -perm -2000` (also nothing).
+More: man chmod, man find

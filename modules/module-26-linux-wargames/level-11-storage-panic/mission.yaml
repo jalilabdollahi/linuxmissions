@@ -1,14 +1,16 @@
 {
-  "name": "Storage Panic: Restore Drill",
-  "description": "In the linux war games lab, a task related to Storage Panic needs cleanup before the handoff.",
-  "objective": "Extract storage-panic-restore.tar.gz so the restored/storage-panic directory appears in the sandbox",
+  "name": "Storage Panic",
+  "description": "Writes fail with 'No space left on device', but df -h shows plenty free (INCIDENT.md, df-h.txt and df-i.txt).",
+  "objective": "Clean the inode hog by the policy in INCIDENT.md (sessions older than one day are deleted, younger ones and everything else under var/ stay) and write the relative path of the directory that holds the most files into report.txt. vm.img must stay untouched.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
+  "expected_time": "20m",
   "concepts": [
-    "Storage Panic",
-    "tar",
-    "archive extraction"
+    "inodes vs blocks",
+    "df -i",
+    "counting files per directory",
+    "sparse files",
+    "find -mtime -delete"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-11-storage-panic"

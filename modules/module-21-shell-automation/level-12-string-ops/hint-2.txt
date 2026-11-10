@@ -1,1 +1,15 @@
-Use chmod with octal mode 640.
+Parameter expansion (no programs involved):
+- ${v##*/}  drop everything up to the last /  (basename)
+- ${v##*-}  the part after the last hyphen: amd64.tar.gz
+- ${v%-*}   everything before the last hyphen: log-shipper-2.4.1-linux
+- ${v%%.*}  before the first dot (amd64), ${v#*.} after it (tar.gz)
+
+Or check and split in one step with a regex:
+- [[ $file =~ $re ]] matches an extended regular expression; keep the regex
+  in a variable so bash does not misread its special characters.
+- Anchor it (^...$) so nothing extra is allowed, and put each part in ( ).
+  Afterwards ${BASH_REMATCH[1]} is the first group, [2] the second, ...
+- Pieces you need: [a-z0-9][a-z0-9-]* (name), [0-9]+\.[0-9]+\.[0-9]+
+  (version), [a-z0-9]+ (os, arch), (tar\.gz|tar\.xz|zip) (ext).
+
+Read more: man bash, "Parameter Expansion" and "Conditional Expressions" (=~).

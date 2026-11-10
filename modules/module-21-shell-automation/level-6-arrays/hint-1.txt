@@ -1,1 +1,13 @@
-You need a stream editor or another text replacement tool.
+Run it and read the log of what upload actually received:
+
+  rm -f upload.log; ./upload_batch.sh manifest.txt; cat upload.log
+
+Each <...> is one argument. The script glues every name into one string
+separated by spaces, and later splits that string at spaces again. Once
+"Q3 report.pdf" is inside such a string, nothing can tell the space between
+two names from the space inside a name.
+
+So keep the names apart from the start: a list in which each element is one
+whole line. Bash has exactly that.
+
+Game tip: `edit upload_batch.sh` opens the script in an editor.

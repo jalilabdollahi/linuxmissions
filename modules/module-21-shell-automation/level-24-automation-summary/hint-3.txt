@@ -1,1 +1,50 @@
-Example: `chmod 640 automation-summary.sh`
+Type this at the prompt. It replaces run_checks.sh:
+
+cat > run_checks.sh <<'SCRIPT'
+#!/bin/bash
+# run_checks.sh - nightly health checks (see SPEC.txt)
+cd "$(dirname "$0")" || exit 1
+CHECK_TIMEOUT="${CHECK_TIMEOUT:-10}"
+RETRY_DELAY="${RETRY_DELAY:-2}"
+exec 9> run_checks.lock
+if ! flock -n 9; then
+  echo "run_checks: another run holds run_checks.lock" >&2
+  exit 75
+fi
+tmp=$(mktemp summary.txt.XXXXXX)
+trap 'rm -f "$tmp"' EXIT
+mkdir -p logs
+failed=0
+total=0
+for check in checks.d/*; do
+  [ -f "$check" ] && [ -x "$check" ] || continue
+  name=${check##*/}
+  total=$((total + 1))
+  attempt=1
+  while :; do
+    timeout "$CHECK_TIMEOUT" "$check" >> "logs/$name.log" 2>&1
+    rc=$?
+    if [ "$rc" -eq 0 ]; then status=PASS; break
+    elif [ "$rc" -eq 124 ]; then status=TIMEOUT
+    else status=FAIL
+    fi
+    [ "$attempt" -ge 3 ] && break
+    sleep $(( RETRY_DELAY * attempt ))
+    attempt=$((attempt + 1))
+  done
+  [ "$status" = PASS ] || failed=$((failed + 1))
+  printf '%s %s %d\n' "$name" "$status" "$attempt" >> "$tmp"
+done
+printf 'failed %d of %d\n' "$failed" "$total" >> "$tmp"
+mv "$tmp" summary.txt
+exit "$failed"
+SCRIPT
+
+- exec 9> ...; flock -n 9 || exit 75   one run at a time; a second run leaves at once
+- [ -f ] && [ -x ] || continue         README, lib/ and non-executables are skipped and not counted
+- timeout "$CHECK_TIMEOUT" ...; 124    a hanging check is killed; 124 means TIMEOUT
+- sleep $(( RETRY_DELAY * attempt ))   backoff: 1x before the 2nd try, 2x before the 3rd
+- temp file + mv, trap removes it      summary.txt is never half-written
+- exit "$failed"                       cron and monitoring see how many checks failed
+
+Try it: CHECK_TIMEOUT=2 RETRY_DELAY=1 ./run_checks.sh; echo "exit $?"; cat summary.txt

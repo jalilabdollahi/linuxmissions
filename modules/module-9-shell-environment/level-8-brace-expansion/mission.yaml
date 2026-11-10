@@ -1,15 +1,11 @@
 {
-  "name": "Brace Expansion: Cleanup Sweep",
-  "description": "In the shell environment lab, a task related to Brace Expansion needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/brace-expansion and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Brace Expansion",
-    "find",
-    "rm"
-  ],
+  "name": "Scaffolding",
+  "description": "The new metrics service gets its storage today: one directory per month for 2026, and a conf/logs pair for each component and stage. Before anyone edits config.yaml, the platform checklist wants a backup copy next to it.",
+  "objective": "Create data/2026/01 through data/2026/12 (two-digit months) and svc/<component>/<stage>/{conf,logs} for the components api, web, worker and the stages dev, prod. data/ and svc/ must contain exactly these directories and nothing else. Also create config.yaml.bak, an identical copy of config.yaml.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "6m",
+  "concepts": ["brace expansion", "{01..12} sequences", "nested braces", "cp file{,.bak}", "mkdir -p"],
   "module": "module-9-shell-environment",
   "level": "level-8-brace-expansion"
 }

@@ -1,1 +1,0 @@
-Example: `cut -d, -f2 iostat-notes-report.csv > owners.txt`

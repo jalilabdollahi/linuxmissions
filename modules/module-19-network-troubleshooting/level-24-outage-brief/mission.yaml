@@ -1,15 +1,11 @@
 {
-  "name": "Outage Brief: Permission Fix",
-  "description": "In the network troubleshooting lab, a task related to Outage Brief needs cleanup before the handoff.",
-  "objective": "Set the mode of outage-brief.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Outage Brief",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Outage Brief",
+  "description": "Capstone. INC-4410: every payment in checkout fails since this morning. You're on app-31, the checkout host: its etc/hosts, checkout/client.env, logs/checkout.log and the change log are here, the payments backends, a proxy and the DNS server run on loopback, and ./smoke.sh runs the checks the checkout service does. More than one thing is wrong.",
+  "objective": "Fix app-31's configuration (checkout/client.env and etc/hosts only; don't touch the servers, take an unhealthy backend out of PAYMENTS_BACKENDS) until ./smoke.sh passes. Then fill in every field of brief.md: impact_start and impact_end (times of the first and last failed payments call in logs/checkout.log, as written there), failed_calls (how many failed payments calls were logged), new_port, removed_backend, root_cause (the change that started the outage) and fix (one line).",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "45m",
+  "concepts": ["incident triage", "no_proxy", "dig SRV", "getent vs DNS", "/etc/hosts pins", "HTTP 503 vs connection refused", "curl timeouts", "log evidence"],
   "module": "module-19-network-troubleshooting",
   "level": "level-24-outage-brief"
 }

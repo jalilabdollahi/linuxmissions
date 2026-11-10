@@ -1,1 +1,6 @@
-Inspect the sandbox, then create the missing path for organized/passwd-file/passwd-file-notes.txt.
+Every line of etc/passwd is one account with seven fields separated by colons:
+name, password placeholder, UID, primary GID, comment, home, shell.
+Two of them answer the ticket. Which UID range do accounts made for people get
+on Ubuntu, and which shells let someone in at all (compare with etc/shells)?
+Read the UID column carefully: is root the only account with UID 0? And is
+every line in the file really an account?

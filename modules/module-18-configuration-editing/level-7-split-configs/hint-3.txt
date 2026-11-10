@@ -1,1 +1,21 @@
-Example: `head -n 3 split-configs-history.log > first3.txt` and `tail -n 3 split-configs-history.log > last3.txt`
+mkdir -p sites-available
+awk '
+  /^server[[:space:]]*\{/ { inblk = 1; depth = 0; buf = ""; name = "" }
+  inblk {
+    buf = buf $0 "\n"
+    if (name == "" && $1 == "server_name") { name = $2; sub(/;$/, "", name) }
+    line = $0; sub(/#.*/, "", line)
+    depth += gsub(/\{/, "{", line) - gsub(/\}/, "}", line)
+    if (depth == 0) { f = "sites-available/" name ".conf"; printf "%s", buf > f; close(f); inblk = 0 }
+    next
+  }
+  /^#/ { print > "sites-available/00-header.conf" }
+' sites.conf
+ls sites-available
+
+- /^server.*\{/ starts collecting a block; buf holds its lines
+- $1 == "server_name"   the first name (name == "" makes sure only the first server_name counts)
+- sub(/#.*/, "", line)  ignores braces that sit in comments
+- depth += ...          opening braces add, closing braces subtract; 0 means the block is complete
+- printf "%s", buf > f  writes the block to sites-available/<name>.conf
+- /^#/ ...              comment lines outside blocks become 00-header.conf

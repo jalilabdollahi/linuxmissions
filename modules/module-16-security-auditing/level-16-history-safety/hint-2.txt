@@ -1,1 +1,4 @@
-A du pipeline sorted numerically is a strong fit here.
+`sed -i -E '/PATTERN/d' file` deletes matching lines in place (and keeps the file's mode, unlike
+`grep -v ... > new; mv new file`). Anchor the patterns with `^` so that `grep -i password ...` does not match, and
+remember `-p` alone makes mysql ask for the password. In .bashrc, `HISTCONTROL` takes `ignorespace`
+(also `ignoredups`, `ignoreboth`, which is both); `HISTIGNORE='[ ]*'` is the other way. Test it: `HOME=/tmp/x bash --rcfile home/.bashrc -i`, or help history / `man bash` (HISTCONTROL).

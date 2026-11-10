@@ -1,1 +1,11 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+- Give remote its own empty stdin: ./tools/remote "$host" uptime < /dev/null
+  (ssh -n does the same; here: ./tools/remote -n ...). Another way is to read
+  the file on a different descriptor: while read -r -u 3 host; ... done 3< "$1"
+- A CRLF line arrives as "web-01\r". ${host%$'\r'} removes one \r from the
+  end. Do it BEFORE the "skip empty lines" test: a blank CRLF line is "\r".
+- `read` returns non-zero for a last line without a newline, even though it
+  filled the variable. Keep going in that case:
+    while read -r host || [ -n "$host" ]; do
+- -r keeps backslashes; the default IFS still trims surrounding spaces.
+
+Read more: help read; man bash, section "REDIRECTION"; man ssh (-n).

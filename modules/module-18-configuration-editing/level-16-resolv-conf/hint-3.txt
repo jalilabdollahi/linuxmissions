@@ -1,1 +1,15 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+cat > etc/systemd/resolved.conf.d/20-corp.conf <<'CONF'
+[Resolve]
+DNS=
+DNS=10.20.0.53 10.20.0.54
+Domains=
+Domains=corp.example lab.example
+CONF
+systemctl restart systemd-resolved
+resolvectl status
+
+- [Resolve]                 the section systemd-resolved reads; keys outside it are ignored
+- DNS= / Domains= (empty)   clear what the vendor drop-in added, so the old server and domain do not stay
+- the two real assignments  the new servers and the search order, as the ticket asks
+- systemctl restart ...     makes systemd-resolved regenerate the resolv.conf files
+- resolvectl status         shows what the resolver uses now

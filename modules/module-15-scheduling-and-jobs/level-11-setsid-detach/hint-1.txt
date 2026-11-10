@@ -1,0 +1,4 @@
+A process belongs to a session, and a session can have a controlling terminal: hangups
+and Ctrl-C reach a process through it. Look at your own shell and a test job with
+`ps -o pid,sid,tty,cmd`: which session and terminal does a job started with & or with
+nohup end up in? You need a command that starts the program in a NEW session.

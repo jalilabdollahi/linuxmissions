@@ -1,15 +1,11 @@
 {
-  "name": "Sha256 Verify: Permission Fix",
-  "description": "In the security auditing lab, a task related to Sha256 Verify needs cleanup before the handoff.",
-  "objective": "Set the mode of sha256-verify.sh to 640",
+  "name": "Checksums That Won't Check",
+  "description": "You pulled part of a release from a mirror into release/, together with the vendor's SHA256SUMS. That list covers many more files than you downloaded and its lines are not all in the same shape, so a plain check does not cover every file. One of the files you downloaded is corrupted.",
+  "objective": "Verify every downloaded file that SHA256SUMS covers. Save sha256sum's own per-file OK/FAILED lines in verify.log (in the sandbox folder, not in release/), and move the corrupted file into quarantine/. Do not touch the files that verified correctly.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Sha256 Verify",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "15m",
+  "concepts": ["sha256sum -c", "--ignore-missing", "BSD vs GNU checksum lines", "improperly formatted lines", "sed", "CRLF line endings"],
   "module": "module-16-security-auditing",
   "level": "level-12-sha256-verify"
 }

@@ -1,1 +1,7 @@
-Example: `mkdir -p organized/tar-tunnel && mv inbox/tar-tunnel.txt organized/tar-tunnel/tar-tunnel-notes.txt`
+Pack, encode, cut, number and send; then reassemble on the bravo side:
+  tar -C alpha -cf - data | base64 > payload.b64
+  split -b 60000 -d -a 3 payload.b64 part.
+  for f in part.*; do { echo "SEQ ${f#part.}"; cat "$f"; } > "msg.${f#part.}"; ./relay send "msg.${f#part.}"; done
+  for f in bravo/inbox/*; do echo "$(head -1 "$f" | cut -d' ' -f2) $f"; done | sort | while read -r n f; do tail -n +2 "$f"; done | base64 -d | tar -xpf - -C bravo
+  rm -f payload.b64 part.* msg.*
+tar keeps links and times, base64 makes it text, split cuts 60000-byte pieces, each message gets a SEQ header, the last line sorts the inbox by that number, drops the header (tail -n +2), joins, decodes and extracts with -p to keep permissions.

@@ -1,1 +1,9 @@
-Use chmod with octal mode 640.
+Work with sections, not with the whole file. Two ways:
+  sed:   sed -i '/^\[mysqld\]/,/^\[/ s/^max_connections.*/max_connections = 500/' my.cnf
+         (a range from a header to the next header; but it also matches the second
+         [mysqld] block, so look at what else it touches)
+  awk:   keep a flag that is on inside the first [mysqld] block and print the new
+         lines when you reach the old setting; write to a new file and mv it back.
+Anchor patterns with ^ so comments are skipped. Compare your result with the
+original using `diff`: exactly one line should differ and one line should be new.
+More: man sed, man awk

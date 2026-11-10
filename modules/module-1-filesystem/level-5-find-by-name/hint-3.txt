@@ -1,3 +1,5 @@
-That's it! The full command:
-find $SANDBOX -name "*.py" > $SANDBOX/found.txt
-Then verify: cat $SANDBOX/found.txt
+  find . -type f -name '*.py' > found.txt
+      search from the sandbox root (.), keep regular files whose name ends in .py,
+      and write the list (one path per line) to found.txt
+  cat found.txt
+      check it: 19 paths, including ones under project-c/.venv

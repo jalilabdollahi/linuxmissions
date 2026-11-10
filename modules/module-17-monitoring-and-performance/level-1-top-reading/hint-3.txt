@@ -1,1 +1,12 @@
-Example: `mkdir -p organized/top-reading && mv inbox/top-reading.txt organized/top-reading/top-reading-notes.txt`
+cat > summary.env <<EOT
+LOAD1=$(grep -o 'load average:.*' top.txt | tr -d ',' | awk '{print $3}')
+LOAD15=$(grep -o 'load average:.*' top.txt | tr -d ',' | awk '{print $5}')
+IOWAIT=$(awk '/^%Cpu/ {for (i=1;i<=NF;i++) if ($i=="wa,") print $(i-1)}' top.txt)
+ZOMBIES=$(awk '/^Tasks:/ {for (i=1;i<=NF;i++) if ($i=="zombie") print $(i-1)}' top.txt)
+TOP_MEM_PID=$(awk 'NR>7 {v=$6; if (v ~ /g$/) {sub(/g/,"",v); v*=1048576} else if (v ~ /m$/) {sub(/m/,"",v); v*=1024} if (v>max) {max=v; pid=$1}} END {print pid}' top.txt)
+EOT
+cat summary.env
+
+- grep -o 'load average:.*'   keeps the end of the first line; tr removes the commas, awk takes the 1st and 3rd number
+- the wa/zombie awk lines     find the word and print the number just before it
+- the last awk                skips the 7 header lines (NR>7), turns "g"/"m" into KiB, remembers the PID with the largest value

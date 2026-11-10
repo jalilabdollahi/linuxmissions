@@ -1,1 +1,10 @@
-Use tar extraction flags and point at the archive file.
+  date -u -d @1794319402 +%Y-%m-%dT%H:%M:%SZ    one conversion (GNU date; macOS: date -u -r N)
+  In gawk (the awk on this system), for every line at once:
+    strftime("%Y-%m-%dT%H:%M:%SZ", t, 1)        the 1 means UTC
+    length($1) == 13                            a millisecond time; int($1 / 1000)
+    FILENAME                                    which log the line came from
+    $1 = NEW                                    replaces field 1, keeps the others
+  sort -k1,1      sort on the first field only
+  sort -s         stable: equal keys keep their input order (without it, sort
+                  breaks ties by comparing the whole lines)
+More: man date, man gawk (Time Functions), man sort

@@ -1,1 +1,4 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Two different questions to ask of every path in home/ (including the hidden ones): "can someone
+else write to this, and does it run as the owner?" and "can someone else read this, and is it a
+secret?". Think about which dotfiles and scripts get executed on login or by cron. Also check what
+the list looks like for symlinks: does their own mode tell you anything?

@@ -1,1 +1,15 @@
-Example: `tar -xzf templates-restore.tar.gz`
+mkdir -p out
+tmpl=$(cat app.conf.tmpl)
+tail -n +2 envs.csv | while IFS=, read -r env url pass reps; do
+  t=${tmpl//'{{ENV}}'/"$env"}
+  t=${t//'{{DB_URL}}'/"$url"}
+  t=${t//'{{DB_PASSWORD}}'/"$pass"}
+  t=${t//'{{REPLICAS}}'/"$reps"}
+  printf '%s\n' "$t" > "out/$env.conf"
+done
+cat out/dr.conf
+
+- tmpl=$(cat ...)       the template in a variable
+- tail -n +2 ... | while IFS=, read -r ...   one iteration per CSV row, fields split at commas, -r keeps backslashes
+- ${t//'{{X}}'/"$v"}    replaces every {{X}}; the quoted value is copied literally (& | / \ are harmless)
+- printf '%s\n' "$t" > out/$env.conf   writes one file per environment

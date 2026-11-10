@@ -1,15 +1,11 @@
 {
-  "name": "Ini Files: Permission Fix",
-  "description": "In the configuration editing lab, a task related to Ini Files needs cleanup before the handoff.",
-  "objective": "Set the mode of ini-files.sh to 640",
+  "name": "Tune the Database Section",
+  "description": "A DBA ticket for my.cnf: the database needs more connections and a bigger buffer pool. Several sections of the file have settings with similar names, and the [mysqld] section appears twice (that is legal; MySQL merges the blocks).",
+  "objective": "In my.cnf set max_connections to 500 and add innodb_buffer_pool_size = 2G, both in the first [mysqld] block. Change nothing else: [client] and [mysqldump] keep their own max_allowed_packet lines, and every comment, setting and the order of the file must stay as it is.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Ini Files",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "15m",
+  "concepts": ["INI sections", "section-aware sed/awk", "duplicate sections", "minimal diff"],
   "module": "module-18-configuration-editing",
   "level": "level-12-ini-files"
 }

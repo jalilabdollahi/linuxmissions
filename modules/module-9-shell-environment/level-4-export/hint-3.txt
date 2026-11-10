@@ -1,1 +1,12 @@
-Example: `sort export-raw.txt | uniq > unique-sorted.txt`
+Look up the region in TICKET.txt (`cat TICKET.txt`), then type, with that region instead of REGION:
+
+APP_MODE=prod APP_REGION=REGION ./launcher.sh
+
+- APP_MODE=prod APP_REGION=...   assignments in front of a command go into that command's environment
+- ./launcher.sh                  the worker now sees both values and signs the start in run.log
+
+Or export them for every command you start from now on:
+export APP_MODE=prod APP_REGION="$(sed -n 's/^ *APP_REGION: *//p' TICKET.txt)"
+./launcher.sh
+
+Check: cat run.log

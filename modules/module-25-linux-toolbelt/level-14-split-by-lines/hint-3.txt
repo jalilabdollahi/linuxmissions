@@ -1,1 +1,7 @@
-Example: `for n in 1 2 3; do printf 'split-by-lines item %s\n' "$n" > generated/split-by-lines-$n.txt; done`
+  mkdir -p chunks
+  head -n 1 customers.csv > header.txt
+      the header is saved once, so it can be added to each chunk
+  tail -n +2 customers.csv | split -l 5000 -d --additional-suffix=.csv --filter='{ cat header.txt; cat; } > chunks/$FILE' - part-
+      tail -n +2     only the data rows go into split
+      -l 5000 -d     5000 rows per piece, numbered part-00, part-01, ...
+      --filter       for every piece: first the header, then the piece itself (cat reads the piece from stdin), written to chunks/$FILE

@@ -1,1 +1,15 @@
-Inspect the sandbox, then create the missing path for organized/debug-xtrace/debug-xtrace-notes.txt.
+Two jobs, in this order: give the script a debug mode, then use it.
+
+- `bash -x ./invoice_sync.sh` prints every command as it runs, after
+  expansion, but on stderr, mixed with the warnings, without line numbers,
+  and for 120 lines of loops that is a lot. Can you choose what each trace
+  line starts with? Can you send the trace to its own file, so stdout and
+  stderr stay as they were?
+- Once trace.log exists, follow one customer through it:
+    grep -n 'E\*Trade' trace.log | head -40
+  Which invoices are added to E*Trade Europe's total? Which line compares
+  the names, and what does it compare? Why would "Eastside Trade Europe"
+  count as "E*Trade Europe"?
+
+The ticket (TICKET.txt) has the right total for E*Trade Europe: 1479.50.
+Game tip: `edit invoice_sync.sh` opens the script in an editor.

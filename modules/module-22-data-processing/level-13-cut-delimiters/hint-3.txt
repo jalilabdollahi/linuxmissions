@@ -1,1 +1,10 @@
-Example: `chmod +x jobs/cut-delimiters.sh && jobs/cut-delimiters.sh`
+grep '^D' payroll.dat | cut -c2-7,8-37,46-54 --output-delimiter='|' | awk -F'|' 'BEGIN { print "id,name,amount" } { sub(/ +$/, "", $2); if ($2 ~ /,/) $2 = "\"" $2 "\""; printf "%s,%s,%.2f\n", $1, $2, $3 / 100 }' > payroll.csv
+head -5 payroll.csv
+
+- grep '^D'                      keep the payment records, drop the H header and T trailer
+- cut -c2-7,8-37,46-54           id, name and amount by column, as LAYOUT.txt gives them
+- --output-delimiter='|'         a | between the three pieces
+- BEGIN { print ... }            the CSV header line first
+- sub(/ +$/, "", $2)             strip the padding after the name
+- if ($2 ~ /,/) ...              wrap "Last, First" names in double quotes
+- printf ... $3 / 100            9 digits with implied decimals -> 123.45

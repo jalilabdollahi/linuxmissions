@@ -1,1 +1,9 @@
-Example: `tar -xzf storage-panic-restore.tar.gz`
+dir=$(find var -type f -printf '%h\n' | sort | uniq -c | sort -rn | head -1 | awk '{print $2}')
+echo "$dir" > report.txt
+find "$dir" -type f -mtime +0 -delete
+find "$dir" -type f | wc -l
+
+- find -printf '%h\n' | sort | uniq -c | sort -rn   files per directory, the biggest first
+- awk '{print $2}'   keeps just the directory name; it goes into report.txt
+- -mtime +0 -delete   removes only sessions older than a day, nothing else
+- wc -l   how many sessions (the young ones) are left

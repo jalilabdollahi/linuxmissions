@@ -1,1 +1,9 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' env-print.conf > fixed.conf`
+pid=$(pgrep -f 'worker\.py')
+tr '\0' '\n' < /proc/$pid/environ | grep -E '^(APP_ENV|DB_HOST)=' > worker_env.txt
+cat worker_env.txt
+
+- pgrep -f 'worker\.py'   the PID of the process whose command line contains worker.py (not worker-metrics.py)
+- /proc/$pid/environ      that process's environment, NUL-separated
+- tr '\0' '\n'            turn the NULs into newlines so grep can work line by line
+- grep -E '^(APP_ENV|DB_HOST)='   only these exact variable names, at the start of the line
+- > worker_env.txt        save them (the order of the file is the order they were set: APP_ENV first)

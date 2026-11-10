@@ -1,15 +1,11 @@
 {
-  "name": "Hosts File: Metric Sum",
-  "description": "In the configuration editing lab, a task related to Hosts File needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of hosts-file-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Hosts File",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Hosts Before the DNS Move",
+  "description": "Before the DNS migration the shared etc/hosts must be cleaned up. Years of copy-paste left duplicates, hosts spread over several lines per address, and machines that no longer exist.",
+  "objective": "Clean etc/hosts: remove duplicate entries, put every IP address on exactly one line with all of its names, and comment out (do not delete) the decommissioned 10.9.* hosts. The localhost and IPv6 lines stay untouched and first, every comment stays, and every name must still resolve to the address it resolves to today (the resolver uses the first matching line).",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["hosts file format", "first match wins", "awk grouping", "commenting out instead of deleting"],
   "module": "module-18-configuration-editing",
   "level": "level-15-hosts-file"
 }

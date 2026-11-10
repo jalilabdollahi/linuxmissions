@@ -1,17 +1,23 @@
-# Process Substitution: Metric Sum
+# Stale Accounts
 
-## What you practiced
-- This level focused on **Process Substitution** in a safe sandbox.
-- The shortest path usually combines `awk` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Every part of a pipeline runs in its own subshell, so `comm ... | while`
+counted in a child process whose variables vanished when the loop ended:
+TOTAL was always the parent's 0. `done < <(cmd)` turns it around: `cmd` runs
+in the background and the loop reads from it in the main shell. The same
+`<( )` replaces the temp files: bash connects the command's output to a path
+like `/dev/fd/63`, and comm opens it like any file. Nothing is written to
+disk, so a read-only directory and an unwritable `$TMPDIR` do not matter.
 
-## Commands to remember
-```bash
-awk -F, 'NR>1 {sum += $2} END {print sum}' file.csv
-cut -d, -f2 file.csv
-paste -sd+ numbers.txt | bc
-```
+## Common mistakes
+- `done < <(cmd)` written as `done <<(cmd)`: that is a here-document.
+- Sorting the two inputs with different rules (`sort` vs `sort -f`): comm
+  then complains that its input is not in sorted order and misses lines.
+- `shopt -s lastpipe` also keeps the loop in the main shell, but only when
+  job control is off (scripts) and only in bash 4.2+.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a numeric aggregation task.
+## Learn next
+`diff <(ssh a cat /etc/hosts) <(ssh b cat /etc/hosts)` compares two remote
+files without copying them. `>(cmd)` is the output side:
+`tee >(gzip > log.gz) >(grep ERROR > errors.txt)`. `join -t,` merges two sorted
+files on a key field.

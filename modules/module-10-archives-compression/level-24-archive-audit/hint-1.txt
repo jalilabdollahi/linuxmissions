@@ -1,1 +1,7 @@
-Inspect the current mode first if you want to verify the change.
+Work through one archive at a time and never extract before you have looked:
+1. What is it really? The extension may lie; the first bytes don't.
+2. What's inside? List the members without extracting. Count them, and read
+   the paths: does any start with / or climb out with ../ ?
+3. Is it the file the vendor sent? Compare its sha256 with SHA256SUMS.
+Only an archive that passes 3 and is clean in 2 gets unpacked, each into its
+own accepted/<name>/ folder, with the tool that matches its real format.

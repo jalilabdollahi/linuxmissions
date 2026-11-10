@@ -1,0 +1,11 @@
+{
+  "name": "Hands Off the Vendor Unit",
+  "description": "The monitoring vendor's agent runs with the vendor's own flags. Change request CHG-2291 (TICKET.md) asks for different flags and one more environment variable, but the unit file belongs to the vendor package and every upgrade overwrites it.",
+  "objective": "Make vendor-agent run with the flags and the AGENT_CLUSTER variable that TICKET.md asks for, without editing or copying the vendor's unit file in usr/lib/systemd/system, and restart the agent so it runs that way. The vendor's other settings (such as AGENT_LOG=info) must stay. `systemctl` and `journalctl` are mocks (the sandbox is /).",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["drop-in files (unit.service.d/*.conf)", "resetting ExecStart= with an empty assignment", "Environment= in a drop-in", "systemctl cat", "daemon-reload", "unit file load order"],
+  "module": "module-13-services-and-logs",
+  "level": "level-20-unit-dropins"
+}

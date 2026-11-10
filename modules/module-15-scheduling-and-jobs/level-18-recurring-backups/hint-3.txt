@@ -1,1 +1,13 @@
-Example: `grep 'ALERT' recurring-backups.log > alerts.txt`
+cat > backup.cron <<CRON
+30 1 * * 1-6 [ "\$(date +\%d)" != 01 ] && $SANDBOX/backup.sh incremental
+30 1 * * 0 $SANDBOX/backup.sh full
+0 3 1 * * $SANDBOX/backup.sh archive
+CRON
+cron-expand --from "2026-11-01 00:00" --days 3 backup.cron
+
+- 30 1 * * 1-6 ...   01:30 Monday to Saturday; the guard skips it when the day of the month is 01
+- \$(date +\%d)   the heredoc turns \$ into $; \% stays so cron sees an escaped percent sign
+- 30 1 * * 0   01:30 on Sunday: the full backup
+- 0 3 1 * *   03:00 on the 1st of each month: the archive
+- $SANDBOX/...   the heredoc fills in the full path of backup.sh
+- cron-expand   shows when the lines fire in a window

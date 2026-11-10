@@ -1,1 +1,9 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  truncate -s 64M file.img       make a sparse file of exactly 64 MiB
+  mke2fs -t ext4 ... file.img    build ext4 in it (mkfs.ext4 is the same program)
+mke2fs options that matter here:
+  -L NAME       volume label
+  -m PERCENT    percentage of blocks reserved for root (default 5)
+  -i BYTES      one inode per BYTES of space (bytes-per-inode ratio)
+  -F            do not ask when the target is a regular file
+Check the result with dumpe2fs -h logs.img: look at Block count, Reserved block count, Inode count and Filesystem volume name.
+More: man mke2fs, man dumpe2fs

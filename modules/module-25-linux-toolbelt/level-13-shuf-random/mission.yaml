@@ -1,15 +1,11 @@
 {
-  "name": "Shuf Random: Script Kickoff",
-  "description": "In the linux toolbelt lab, a task related to Shuf Random needs cleanup before the handoff.",
-  "objective": "Make jobs/shuf-random.sh executable, run it, and create the token file it writes",
+  "name": "A Sample You Can Redraw",
+  "description": "The auditor wants 25 random transactions from this quarter's export. Next month she will ask for 'the same 25 again' to compare against corrected data, so the draw has to be repeatable.",
+  "objective": "Write sample.csv with 25 transactions drawn at random from tx.csv, header line excluded (the header must not be in the sample and must not be a candidate). The draw must be reproducible: use seed.bin as the source of randomness, so anyone who repeats the draw with the same file and the same command gets the same 25 lines in the same order.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Shuf Random",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "10m",
+  "concepts": ["shuf -n", "shuf --random-source", "tail -n +2", "reproducible sampling"],
   "module": "module-25-linux-toolbelt",
   "level": "level-13-shuf-random"
 }

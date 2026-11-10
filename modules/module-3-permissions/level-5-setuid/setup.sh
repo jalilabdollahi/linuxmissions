@@ -1,20 +1,31 @@
 #!/bin/bash
 SANDBOX="$1"
-mkdir -p "$SANDBOX/bin" "$SANDBOX/lib" "$SANDBOX/etc"
-# Normal files
-touch "$SANDBOX/bin/normalcmd"
-touch "$SANDBOX/lib/libfoo.so"
-touch "$SANDBOX/etc/config.conf"
-chmod 755 "$SANDBOX/bin/normalcmd"
+cd "$SANDBOX" || exit 1
+mkdir -p bin sbin lib etc share/doc "opt/backup" srv/team
 
-# SUID file
-touch "$SANDBOX/bin/special_tool"
-chmod 4755 "$SANDBOX/bin/special_tool"
+mk() {  # mk MODE PATH
+  printf '#!/bin/sh\necho %s\n' "$(basename "$2")" > "$2"
+  chmod "$1" "$2"
+}
 
-# SGID file
-touch "$SANDBOX/bin/group_tool"
-chmod 2755 "$SANDBOX/bin/group_tool"
+# ordinary files
+mk 755 bin/ls-wrapper
+mk 755 bin/ordinary
+mk 644 lib/libfoo.so
+mk 644 etc/config.conf
+mk 644 share/doc/suid_audit_notes.txt     # the name is not the bit
+mk 777 bin/world_writable_tool             # bad, but not SUID/SGID
+# a setgid DIRECTORY (normal for team folders; not a file)
+chmod 2775 srv/team
+mk 644 srv/team/report.txt
 
-# Normal binary
-touch "$SANDBOX/bin/ordinary"
-chmod 755 "$SANDBOX/bin/ordinary"
+# macOS gives files in /tmp the group 'wheel'; switch to your own group so
+# the SGID bits below are allowed (no-op on Linux)
+chgrp -R "$(id -g)" "$SANDBOX" 2>/dev/null
+
+# planted files
+mk 4755 bin/special_tool                  # SUID
+mk 2755 bin/group_tool                    # SGID
+mk 6755 sbin/.dbus-helper                 # SUID+SGID, hidden
+mk 4750 "opt/backup/run backup"           # SUID, space in the name
+mk 4644 lib/libcrypt.so.1                 # SUID without execute (shows as S)

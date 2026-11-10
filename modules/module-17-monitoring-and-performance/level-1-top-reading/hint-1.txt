@@ -1,1 +1,5 @@
-Inspect the sandbox, then create the missing path for organized/top-reading/top-reading-notes.txt.
+top.txt has two parts: a few summary lines at the top and a table of
+processes below. Four of the five answers are in the summary lines (look for
+the words "load average", "wa", and "zombie"); one needs the table.
+For the table: look closely at the RES column. Do all the numbers use the same
+unit? What would a plain numeric sort do with "1.4g" next to "950000"?

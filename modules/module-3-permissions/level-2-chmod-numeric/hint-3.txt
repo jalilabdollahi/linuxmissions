@@ -1,4 +1,8 @@
-Apply them:
-chmod 644 $SANDBOX/index.html
-chmod 755 $SANDBOX/app.py
-chmod 600 $SANDBOX/secrets.conf
+  chmod 644 index.html
+      rw-r--r--  you read+write, group and others read only
+  chmod 755 app.py
+      rwxr-xr-x  you read+write+run, everyone else read+run
+  chmod 600 secrets.conf
+      rw-------  you read+write, nobody else anything
+  ls -l
+      confirm the three modes

@@ -1,1 +1,6 @@
-Use `chmod +x jobs/package-audit.sh` and then execute it.
+head prod.txt staging.txt         compare the two formats
+awk '{print $1, $2}'              awk splits on any run of blanks, tab or spaces alike
+sub(/:[a-z0-9]+$/, "", $1)        awk's sub() can strip a ":arch" suffix from a field
+sort / join                       join needs both inputs sorted by the key (use the same locale for both: export LC_ALL=C)
+join -a1 -a2 -e - -o 0,1.2,2.2    keep unpaired lines from both files, fill the gaps with "-"
+Normalise both files first, join them, then keep only the lines where the two versions differ.   More: man join

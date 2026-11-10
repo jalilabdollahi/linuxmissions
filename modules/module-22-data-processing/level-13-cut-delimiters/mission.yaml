@@ -1,15 +1,11 @@
 {
-  "name": "Cut Delimiters: Script Kickoff",
-  "description": "In the data processing lab, a task related to Cut Delimiters needs cleanup before the handoff.",
-  "objective": "Make jobs/cut-delimiters.sh executable, run it, and create the token file it writes",
+  "name": "Bank Payroll File",
+  "description": "The bank sent back this month's payroll transfer file payroll.dat for reconciliation. It is a fixed-width file with no delimiters at all: every field sits at fixed columns, described in the bank's LAYOUT.txt. Finance's spreadsheet can only import CSV.",
+  "objective": "Write payroll.csv: the header line id,name,amount, then one line per payment (detail) record of payroll.dat, in file order. id is the employee id as written in the file (6 digits, leading zeros kept), name is the beneficiary name without the padding spaces (a name that contains a comma must be in double quotes, as CSV requires), and amount is the amount with a decimal point and two decimals, no zero padding (000012345 becomes 123.45, 000000075 becomes 0.75). Leave payroll.dat unchanged.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Cut Delimiters",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "15m",
+  "concepts": ["fixed-width records", "cut -c with column ranges", "cut --output-delimiter", "trimming padding", "implied decimals", "CSV quoting"],
   "module": "module-22-data-processing",
   "level": "level-13-cut-delimiters"
 }

@@ -1,1 +1,6 @@
-Example: `grep -c '^ok$' rescue-shell-events.txt > ok-count.txt`
+sed -i "s/^127\.0\.1\.1.*/127.0.1.1 $(cat sysroot/etc/hostname)/" sysroot/etc/hosts
+./sudo-in-sysroot true
+
+- $(cat sysroot/etc/hostname) is the server's current name, read from the server's own file
+- sed -i rewrites the line starting with 127.0.1.1 in the server's hosts file, in place
+- the helper then runs without the "unable to resolve host" message

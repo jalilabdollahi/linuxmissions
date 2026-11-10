@@ -1,1 +1,15 @@
-Use tar with create, gzip, and file flags.
+Work in a scratch folder so the inbox stays intact (type `reset` if it is
+already damaged):
+
+  mkdir -p try && cd try
+  ../unpack.sh ../inbox/report-tool-3.1.tar.gz; echo "exit $?"; ls; ls ../inbox
+
+A `case` tries its patterns from top to bottom and runs the FIRST one that
+matches. Which pattern does "report-tool-3.1.tar.gz" hit first?
+
+Then go through the header line by line: what NAME does each branch compute
+for fonts.TGZ or "Invoices Oct.ZIP"? Where does gunzip put its output, and
+what does it do with the original? Where does the "unsupported" message go,
+and with which exit status?
+
+Game tip: `edit unpack.sh` opens the script in an editor.

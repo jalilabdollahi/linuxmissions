@@ -1,1 +1,10 @@
-Use `ln -s` so current.conf points at the release file.
+Line shapes (after "Nov 10 01:02:03 bastion-1 sshd[1234]: "):
+  Failed password for root from IP port P ssh2
+  Failed password for invalid user admin from IP port P ssh2       two more words
+  message repeated 3 times: [ Failed password for root from IP port P ssh2]   = 3 attempts
+  Accepted password for USER from IP port P ssh2   (or Accepted publickey ...)
+Don't count fields from the left; cut around the word "from" instead:
+  ip = $0; sub(/.* from /, "", ip); sub(/ .*/, "", ip)
+A single awk program reads the file in order, so fails[ip] += n on failures and
+"if (fails[ip] >= 5) print ip, user" on Accepted lines gives exactly "before".
+Read more: man awk (sub, arrays), man sshd (LogLevel), man rsyslog.conf (RepeatedMsgReduction)

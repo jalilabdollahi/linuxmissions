@@ -1,1 +1,3 @@
-Inspect the sandbox, then create the missing path for organized/ip-addr/ip-addr-notes.txt.
+First work out which addresses belong to 10.20.0.0/22. A /22 is not a /24: how many different values can the third octet take inside it, and which ones? An address that starts with 10.20. is not automatically inside.
+
+Then find which interface carries that address. Is it the first address listed for that interface? And the state: is it the state of that interface, or of a different one listed nearby?

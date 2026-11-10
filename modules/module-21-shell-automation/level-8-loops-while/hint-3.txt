@@ -1,1 +1,25 @@
-Example: `find cleanup/loops-while -name '*.tmp' -delete`
+Type this at the prompt. It rewrites check_hosts.sh:
+
+cat > check_hosts.sh <<'EOF'
+#!/bin/bash
+# check_hosts.sh INVENTORY - run `uptime` on every host, results in status.txt
+: > status.txt
+while read -r host || [ -n "$host" ]; do
+  host=${host%$'\r'}
+  case $host in
+    '#'*|'') continue ;;
+  esac
+  if out=$(./tools/remote "$host" uptime < /dev/null); then
+    echo "$host: $out" >> status.txt
+  else
+    echo "$host: UNREACHABLE" >> status.txt
+  fi
+done < "$1"
+echo "checked $(wc -l < status.txt) host(s), see status.txt"
+EOF
+
+- || [ -n "$host" ]      also process a last line that has no newline
+- ${host%$'\r'}          drop the carriage return of a Windows line ending
+- < /dev/null            remote gets an empty stdin and cannot eat the inventory
+
+Check: ./check_hosts.sh inventory.txt; cat -A status.txt

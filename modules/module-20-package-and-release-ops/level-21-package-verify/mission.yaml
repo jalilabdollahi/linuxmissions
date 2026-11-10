@@ -1,16 +1,11 @@
 {
-  "name": "Package Verify: Path Realignment",
-  "description": "In the package and release operations lab, a task related to Package Verify needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/package-verify.txt to organized/package-verify/package-verify-notes.txt",
+  "name": "Intruder in the Packages",
+  "description": "An intruder may have altered files on this system (rootfs/). The packages came from the local repository in repos/main, and the dpkg database still has the checksums of the original files. Admins are allowed to edit configuration files, so those need to be told apart from tampered program files.",
+  "objective": "Write tampered.txt: the absolute paths (as seen inside the system, like /usr/bin/x) of the files that differ from their package's recorded checksums and are not configuration files, one per line. Restore each of them from its original .deb so that it matches the package again. Write conffiles-changed.txt with the configuration files that differ, in the same form, and leave those files exactly as they are. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Package Verify",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "30m",
+  "concepts": ["dpkg -V", "conffiles", "dpkg-deb --fsys-tarfile", "dpkg -S", "md5sums"],
   "module": "module-20-package-and-release-ops",
   "level": "level-21-package-verify"
 }

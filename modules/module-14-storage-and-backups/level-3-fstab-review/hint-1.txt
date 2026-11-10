@@ -1,1 +1,3 @@
-Count matching lines instead of copying them out by hand.
+Each fstab line has six fields: what to mount, where, what type, options, dump flag, fsck order. The disks were swapped, so the first field is stale in every line.
+Which device is which? The ticket names the new devices, and blkid.txt tells you what each of them holds. Look at all the columns of blkid.txt: more than one of them looks like an ID.
+Then ask what should happen at boot if the USB disk is not plugged in, and which file system must be checked first.

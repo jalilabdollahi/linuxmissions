@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+If you restrict both day fields, cron runs the job when EITHER matches, so "not the 1st" has
+to be a test inside the command: let the shell decide.
+  [ "$(date +\%d)" != 01 ] && /full/path/backup.sh incremental
+In a crontab a bare % ends the command (the rest becomes stdin), so write \% inside date's format.
+Use full paths: cron does not start in this directory (echo $SANDBOX shows yours).
+Dry-run:  cron-run --root . --crontab backup.cron:backup --from "2026-11-01 00:00" --days 14 --no-periodic
+          then cat backup-runs.log

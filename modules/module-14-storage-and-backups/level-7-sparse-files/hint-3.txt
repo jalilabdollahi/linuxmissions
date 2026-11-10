@@ -1,1 +1,11 @@
-Example: `head -n 3 sparse-files-history.log > first3.txt` and `tail -n 3 sparse-files-history.log > last3.txt`
+du -k vm/vm1.img vm/vm2.img
+for f in vm1.img vm2.img; do echo "$f $(stat -c %s vm/$f) $(du -k vm/$f | cut -f1)"; done > sizes.txt
+cp --sparse=always vm/vm2.img vm2-copy.img
+tar -S -C vm -cf vm-backup.tar vm1.img
+ls -ls vm2-copy.img vm-backup.tar
+
+- du -k             blocks really allocated, in KiB
+- stat -c %s        the file's length in bytes (apparent size)
+- cp --sparse=always  turns blocks full of zeros into holes (vm2.img has no real holes, so plain cp copies every block)
+- tar -S -C vm      sparse-aware archive of vm1.img, member name vm1.img
+- ls -ls            compare blocks (first column) with the length

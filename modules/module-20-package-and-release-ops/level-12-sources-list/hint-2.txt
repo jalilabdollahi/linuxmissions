@@ -1,1 +1,8 @@
-Use chmod with octal mode 640.
+rootfs/etc/apt/sources.list            one-line entries: deb [options] URI SUITE COMPONENT...
+rootfs/etc/apt/sources.list.d/*.list   the same format, one file per repository
+rootfs/etc/apt/sources.list.d/*.sources  deb822: stanzas with Types: URIs: Suites: Components: Signed-By:
+ls repos/ubuntu/dists/                 the suites that really exist on the mirror
+A suite listed in two files is "configured multiple times": keep it in exactly one place.
+To convert: copy URI, suite, component and the signed-by path from the one-line entry into the
+deb822 fields (Signed-By: takes the same path), then delete the old .list file.
+Check with apt update until no W: or E: remains.   More: man sources.list

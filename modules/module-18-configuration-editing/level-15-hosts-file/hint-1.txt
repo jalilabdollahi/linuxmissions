@@ -1,1 +1,6 @@
-This is a numeric aggregation task.
+Read etc/hosts like the resolver does: top to bottom, and for a name the first
+matching line wins. Which addresses are spread over several lines? Which names
+show up twice, and do they always point at the same address? One name points at
+two addresses: which one is the live one today, and what happens to the other
+line's remaining names? Also decide what "decommissioned" should look like in the
+file: gone, or still readable?

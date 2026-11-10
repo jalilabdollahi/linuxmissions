@@ -1,1 +1,7 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+  awk -F: '$6 ~ /^\/home\// { print $6 }' etc/passwd     the promised homes (field 6)
+  ls -A home / find home -mindepth 1 -maxdepth 1 -type d   the real ones, hidden included
+  sort, comm -23 A B / comm -13 A B     lines only in A / only in B (both lists sorted)
+  [ -d .$path ]                          test one directory: /home/x becomes ./home/x
+  stat -c '%a %n' home/*                 the octal modes
+  chmod 750 DIR                          fix one directory; careful with -R, it also changes what is inside
+More: man comm, man stat

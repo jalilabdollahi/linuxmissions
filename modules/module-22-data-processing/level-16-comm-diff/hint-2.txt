@@ -1,1 +1,12 @@
-A du pipeline sorted numerically is a strong fit here.
+  comm A B          three columns: only in A, only in B, in both (A and B sorted!)
+  comm -12 A B      only the lines in both          (intersection)
+  comm -23 A B      only the lines in A             (A minus B)
+  comm -13 A B      only the lines in B             (B minus A)
+Building the lists:
+  tr 'A-Z' 'a-z'                lowercase;   tr -d ' \r'   delete spaces and CRs
+  grep -v '^#' | grep .         drop the comment and the empty lines
+  grep -o 'user=[^ ]*'          the user= field wherever it is on the line
+  awk -F, 'NR > 1 && $4 == "yes" { print $1 }' directory.csv
+  sort -u                       sorted and unique, what comm needs
+Use LC_ALL=C for sort and comm alike, or comm may say "not in sorted order".
+More: man comm

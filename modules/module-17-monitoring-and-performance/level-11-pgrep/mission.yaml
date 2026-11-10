@@ -1,15 +1,11 @@
 {
-  "name": "Pgrep: Restore Drill",
-  "description": "In the monitoring and performance lab, a task related to Pgrep needs cleanup before the handoff.",
-  "objective": "Extract pgrep-restore.tar.gz so the restored/pgrep directory appears in the sandbox",
+  "name": "Twelve Workers, Two Supervisors",
+  "description": "Twelve queue workers run under two supervisors, A and B. Ops has to restart exactly the e-mail workers of supervisor B (a config change for B only), and wants the list of their PIDs first.",
+  "objective": "Write the PIDs of the workers that consume the queue named exactly emails and are children of supervisor B (supervisor.sh B) to emails_b.txt, one per line. Workers of other queues (including emails-archive) and e-mail workers of supervisor A must not be in it.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Pgrep",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "15m",
+  "concepts": ["pgrep -f patterns", "pgrep -P (parent PID)", "pgrep -a", "regex anchors in process matching", "ps -eo pid,ppid,cmd"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-11-pgrep"
 }

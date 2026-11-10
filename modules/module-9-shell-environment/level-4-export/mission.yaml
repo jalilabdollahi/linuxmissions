@@ -1,15 +1,11 @@
 {
-  "name": "Export: Noise Dedup",
-  "description": "In the shell environment lab, a task related to Export needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from export-raw.txt with sorted unique values",
+  "name": "Set But Not Seen",
+  "description": "Change ticket CHG-2207 (TICKET.txt) says to start the billing worker in production mode for a new region. Kim \"set\" APP_MODE and APP_REGION on the line before ./launcher.sh, yet the worker keeps starting in dev mode (shell-notes.txt shows what was typed).",
+  "objective": "Start the worker with ./launcher.sh so that it runs with the APP_MODE and APP_REGION from TICKET.txt. run.log, which launcher.sh writes and signs on every start, must show that production start. Do not change launcher.sh.",
   "xp": 100,
   "difficulty": "beginner",
   "expected_time": "5m",
-  "concepts": [
-    "Export",
-    "sort",
-    "uniq"
-  ],
+  "concepts": ["shell vs environment variables", "export", "VAR=value command", "declare -p"],
   "module": "module-9-shell-environment",
   "level": "level-4-export"
 }

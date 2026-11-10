@@ -1,1 +1,22 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' nslookup.conf > fixed.conf`
+Type this at the prompt (two commands; the second one runs until "done < names.txt > results.tsv"):
+
+P=$(cat dns.port)
+while read -r name; do
+  out=$(nslookup -port="$P" -timeout=2 -retry=1 "$name" 127.0.0.1 2>&1)
+  case "$out" in
+    *NXDOMAIN*)                      s=NXDOMAIN ;;
+    *SERVFAIL*)                      s=SERVFAIL ;;
+    *"no servers could be reached"*) s=TIMEOUT ;;
+    *Name:*)                         s=OK ;;
+    *)                               s=UNKNOWN ;;
+  esac
+  printf '%s\t%s\n' "$name" "$s"
+done < names.txt > results.tsv
+
+- -timeout=2 -retry=1         give up after one 2-second try (the default is 3 x 5 s)
+- 2>&1                         keep every message, whichever stream it is printed on
+- case ... *NXDOMAIN*          sort the result by nslookup's message, not by its exit code
+- *Name:*                      an answer section with a name means it resolved
+- printf '%s\t%s\n'            NAME, a TAB, STATUS
+
+Check it: cat results.tsv

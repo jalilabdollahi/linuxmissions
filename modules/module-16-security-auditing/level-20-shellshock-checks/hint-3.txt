@@ -1,1 +1,0 @@
-Example: `sort shellshock-checks-raw.txt | uniq > unique-sorted.txt`

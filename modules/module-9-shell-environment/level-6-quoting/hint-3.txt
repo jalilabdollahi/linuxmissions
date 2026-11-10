@@ -1,1 +1,10 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' quoting.conf > fixed.conf`
+Type this at the prompt (one line):
+
+mv 'uploads/Q3 report (final).pdf' 'uploads/price$list.csv' "uploads/it's done.txt" archive/
+
+- 'uploads/Q3 report (final).pdf'   single quotes: the spaces and parentheses are part of the name
+- 'uploads/price$list.csv'          single quotes: $list stays literal text (in double quotes it would expand)
+- "uploads/it's done.txt"           double quotes, because a single quote can't appear inside single quotes
+- archive/                          the target directory
+
+Check: ls archive; ls uploads

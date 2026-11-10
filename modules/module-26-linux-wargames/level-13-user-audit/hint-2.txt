@@ -1,1 +1,4 @@
-Use `chmod +x jobs/user-audit.sh` and then execute it.
+- `awk -F: '$3 == 0' sysroot/etc/passwd` lists accounts with UID 0. `sysroot/bin/usermod -L LOGIN` locks (puts a `!` in front of the hash); `sysroot/bin/userdel LOGIN` removes an account from passwd, shadow and group lists. Both edit the sandbox tree.
+- A public key line is `[options] type body [comment]`: the second field here. `awk '{print $2}' departed/NAME.pub` gets it.
+- `grep -rlF BODY sysroot` finds files containing a key; `grep -vF BODY file` prints the file without those lines (write to a new file and move it back).
+- Compare a key body in full: a similar-looking comment does not make the key the same.

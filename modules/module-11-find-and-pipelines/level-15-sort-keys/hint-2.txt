@@ -1,1 +1,8 @@
-An awk one-liner can skip the header and add the second field.
+  sort -k2,2              key = field 2 only (-k2 alone runs to the end of the line)
+  sort -k4,4gr            options per key: g = general numeric (understands
+                          1e-02 and 1.2e+01; -n stops reading at the "e"),
+                          r = reverse
+  sort -k1,1V             V = version / natural order: web9 before web10
+  sort -k2,2 -k4,4gr ...  later keys only decide when earlier keys are equal
+  head -1 FILE / tail -n +2 FILE    the header / everything after it
+More: man sort (on Linux, info sort explains keys in detail)

@@ -1,1 +1,8 @@
-Use `ln -s` so current.conf points at the release file.
+zip updates an existing archive when you name it again:
+  zip -r ZIP DIR        add/replace everything under DIR (recursive)
+  -u                    only add new files and replace changed ones; never removes anything
+  -FS                   filesync: like -u, and also delete members whose file is gone
+  -y                    store symbolic links as links instead of the file they point to
+  unzip -l ZIP          list members; unzip -z ZIP shows the archive comment
+  zipinfo ZIP           long listing; links show up with an l in the mode column
+More: man zip  (look for --filesync and --symlinks)

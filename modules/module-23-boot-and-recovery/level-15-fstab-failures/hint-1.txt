@@ -1,1 +1,6 @@
-This is a numeric aggregation task.
+Run ./fstab-lint first and read what it complains about, line by line. The UUIDs in the
+file belong to disks that no longer exist, so you cannot look them up: use what the
+comment above each entry tells you about the old volume (label and size) and find the
+same volume in lsblk.txt, then look up its UUID in blkid.txt. Some volumes look alike, so
+check the label as well as the size. Lint messages can hide a second problem on the same
+line, so run it again after every change.

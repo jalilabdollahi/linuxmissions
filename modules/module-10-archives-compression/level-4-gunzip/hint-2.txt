@@ -1,1 +1,6 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  gunzip -k FILE.gz          unpack to FILE and keep FILE.gz
+  gunzip -c FILE.gz > OUT    unpack to standard output and redirect it (zcat FILE.gz is the same)
+  basename inbox/x.csv.gz .gz      prints x.csv (strips the directory and the suffix)
+One output file per input means one command per file: either -k and then move
+the CSVs, or a for loop over inbox/*.csv.gz with -c and a redirect.
+More: man gzip  (gunzip is gzip -d)

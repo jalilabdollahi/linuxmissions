@@ -1,1 +1,4 @@
-Write the schedule into crontab.txt using the standard five time fields.
+Let the system choose an unpredictable name and create the file itself with owner-only permissions:
+`mktemp` (see `man mktemp`; it honours $TMPDIR and takes a template ending in XXXXXX). To run cleanup however the script
+ends, register it with `trap 'COMMAND' EXIT` (see `help trap`), near the top. Then the `rm` on the last line is no longer needed.
+Try: `mkdir t; ln -s /etc/hostname t/report.tmp; TMPDIR=t ./nightly-report.sh data/sales.csv o.txt` before and after.

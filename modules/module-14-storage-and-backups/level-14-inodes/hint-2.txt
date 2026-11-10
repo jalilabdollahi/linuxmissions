@@ -1,1 +1,6 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+  df -i                           inode usage (what captures/df-i.txt shows)
+  find DIR -type f                one line per file; cut the filename off with sed 's#/[^/]*$##' (or cut -d/ -f1-N), then
+  sort | uniq -c | sort -rn       count identical lines and show the biggest first
+  find DIR -name 'PATTERN' -mmin +M -delete    delete matches older than M minutes (24 h = 1440 min); -delete needs no argument list
+Write the winner's path into hog.txt, then run the find with -delete. Test the selection with -print or `| wc -l` before deleting.
+More: man find (-mmin, -mtime, -delete), man uniq

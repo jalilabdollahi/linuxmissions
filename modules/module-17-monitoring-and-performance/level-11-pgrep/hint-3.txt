@@ -1,1 +1,9 @@
-Example: `tar -xzf pgrep-restore.tar.gz`
+sup=$(pgrep -f 'supervisor.sh B$')
+pgrep -f -P "$sup" -- '--queue=emails( |$)' > emails_b.txt
+cat emails_b.txt
+ps -eo pid,ppid,cmd | grep 'worker.sh' | grep -v grep
+
+- pgrep -f 'supervisor.sh B$'   PID of supervisor B (the $ keeps it from matching other things)
+- pgrep -f -P "$sup"            only children of that supervisor, matched on the full command line
+- '--queue=emails( |$)'         exactly "emails": followed by a space or the end, so emails-archive is out
+- the last ps                   a check: PPID column and queue name side by side

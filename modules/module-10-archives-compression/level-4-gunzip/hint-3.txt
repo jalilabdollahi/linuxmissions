@@ -1,1 +1,9 @@
-Example: `sort gunzip-raw.txt | uniq > unique-sorted.txt`
+for f in inbox/*.csv.gz; do
+  gunzip -c "$f" > "import/$(basename "$f" .gz)"
+done
+
+- for f in inbox/*.csv.gz     run the body once per .gz file, $f = inbox/NAME.csv.gz
+- gunzip -c "$f"             write the uncompressed data to stdout; the .gz is not touched
+- > "import/$(basename ...)"  save it as import/NAME.csv (basename drops inbox/ and .gz)
+
+Alternative: gunzip -k inbox/*.csv.gz && mv inbox/*.csv import/

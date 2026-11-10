@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+Only *.sh files are sourced, so the drop-in must be named tool.sh. Use only POSIX
+syntax (no `[[ ]]`, no `+=` on PATH): `[ -d dir ]` tests the directory, and
+  case ":$PATH:" in *":$dir:"*) ... ;; *) ... ;; esac
+asks whether `dir` is already a whole element of PATH (the surrounding colons
+make "bin2" a non-match for "bin"). Do not rely on a "done" flag variable: a
+subshell or a fresh login may not have it. Try your file with
+`sh -c '. etc/profile.d/tool.sh; . etc/profile.d/tool.sh; echo $PATH'`.

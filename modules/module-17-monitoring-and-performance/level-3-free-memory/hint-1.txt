@@ -1,1 +1,4 @@
-Count matching lines instead of copying them out by hand.
+Start with TICKET.md: it says which capture to use and how to decide. Then
+look at the column headers in free2.txt. One column is what the developer
+quoted; another one answers the question "how much can programs still get?".
+For the verdict you need numbers from both captures, not only the second.

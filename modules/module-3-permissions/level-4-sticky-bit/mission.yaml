@@ -1,11 +1,11 @@
 {
   "name": "Shared Space",
-  "description": "A shared uploads directory lets any user write files — but users are deleting each other's work!",
-  "objective": "Set the sticky bit on the shared/ directory so only file owners can delete their own files",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": ["sticky bit", "chmod +t", "chmod 1777", "shared directories"],
+  "description": "The team's shared/ upload folder is writable by everyone, which is intended. The problem: anyone can also delete or rename everyone else's uploads, and files keep disappearing.",
+  "objective": "Keep shared/ readable, writable and enterable by everyone (rwx for all), but make it so users can only delete or rename their own files in it. Don't remove any of the uploads",
+  "xp": 100,
+  "difficulty": "beginner",
+  "expected_time": "6m",
+  "concepts": ["sticky bit", "chmod +t", "chmod 1777", "shared directories", "/tmp"],
   "module": "module-3-permissions",
   "level": "level-4-sticky-bit"
 }

@@ -1,1 +1,31 @@
-Example: `grep 'ALERT' exit-codes.log > alerts.txt`
+Type this at the prompt. It rewrites check_queue.sh with an exit in every branch:
+
+cat > check_queue.sh <<'EOF'
+#!/bin/bash
+# check_queue.sh STATS_FILE - Nagios check for the mail queue.
+file=$1
+deferred=$(sed -n 's/^deferred=//p' "$file" 2>/dev/null)
+
+case $deferred in
+  ''|*[!0-9]*)
+    echo "UNKNOWN - no queue data in $file"
+    exit 3 ;;
+esac
+
+if [ "$deferred" -ge 500 ]; then
+  echo "CRITICAL - $deferred deferred"
+  exit 2
+elif [ "$deferred" -ge 100 ]; then
+  echo "WARNING - $deferred deferred"
+  exit 1
+fi
+echo "OK - $deferred deferred"
+exit 0
+EOF
+
+- 2>/dev/null                    sed's own "No such file" message is not part of the check's output
+- ''|*[!0-9]*) ... exit 3        no file, no deferred= line or not a number: UNKNOWN
+- exit 2 / exit 1 / exit 0       each branch ends the script with its own status
+- (no "check done")              one line of output, and no echo after the decision
+
+Check: ./check_queue.sh spool/mx4.stats; echo "exit $?"

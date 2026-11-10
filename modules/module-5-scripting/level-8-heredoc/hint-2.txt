@@ -1,4 +1,10 @@
-Use cat with a heredoc to write app.conf:
-cat > app.conf <<EOF
-...
-EOF
+- `source ./vars.env` runs the KEY=value lines, so $APP_NAME, $APP_PORT and $APP_ENV are set.
+- A heredoc feeds several lines to a command:
+    cat > app.conf <<EOF
+    name = $APP_NAME
+    EOF
+  With an unquoted end word (<<EOF), $variables inside are expanded. With a quoted one (<<'EOF'), nothing is expanded.
+- Inside an unquoted heredoc, write \$ for a dollar sign that must stay literal: `\$status`.
+- The script contains a heredoc itself. If you write it from the prompt with another heredoc, give the outer one a different end word and quote it: cat > generate.sh <<'SCRIPT' ... SCRIPT
+
+Read more: `man bash`, section "Here Documents".

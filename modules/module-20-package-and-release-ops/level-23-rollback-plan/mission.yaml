@@ -1,15 +1,11 @@
 {
-  "name": "Rollback Plan: Backup Bundle",
-  "description": "In the package and release operations lab, a task related to Rollback Plan needs cleanup before the handoff.",
-  "objective": "Create rollback-plan-backup.tar.gz containing the files under bundle/rollback-plan",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Rollback Plan",
-    "tar",
-    "compression"
-  ],
+  "name": "Roll Back v1.6.0",
+  "description": "v1.6.0 went out ten minutes ago and /health returns 500. The app serves whatever releases/current points at (it picks that up again when it receives SIGHUP), every deploy and rollback is written to deploy.log, and the app's port is in app.port and its PID in run/app.pid.",
+  "objective": "Roll back to the last good release in releases/: the most recent release that was deployed ok and was never rolled back (deploy.log tells you). Switch the current symlink so that it is never missing and never a directory, keep releases/1.6.0 untouched for forensics, make the running app pick up the change, and append one line to deploy.log: '<UTC timestamp like 2026-11-10T09:15:00Z> ROLLBACK 1.6.0 -> <version> <reason>'. /health must answer 200 and report that version.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["symlink releases", "ln -sfn", "mv -T", "atomic switch", "SIGHUP", "deploy.log", "curl /health"],
   "module": "module-20-package-and-release-ops",
   "level": "level-23-rollback-plan"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Vim Modes: Field Extract",
-  "description": "In the configuration editing lab, a task related to Vim Modes needs cleanup before the handoff.",
-  "objective": "Extract the second column from vim-modes-report.csv into owners.txt",
+  "name": "Rescue Box Editing",
+  "description": "On a rescue box only vi is installed, and squid.conf (400 lines) needs five precise changes before the proxy can come back. The list is in CHANGES.txt.",
+  "objective": "Make the five changes listed in CHANGES.txt to squid.conf, and nothing else. The line numbers in the list refer to the file as it is now. Any editor is accepted (edit, nano, sed or vi); the result must match the expected file exactly.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Vim Modes",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "30m",
+  "concepts": ["vi modes", "ex ranges", ":g with a range", ":r file", "J joins lines", "precise edits"],
   "module": "module-18-configuration-editing",
   "level": "level-22-vim-modes"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Aliases File: Config Rewrite",
-  "description": "In the configuration editing lab, a task related to Aliases File needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in aliases-file.conf and save the fixed result to fixed.conf",
+  "name": "Mail That Goes Nowhere",
+  "description": "Cron mail for root vanishes because root is aliased to a mailbox of an engineer who left in September. Ticket MAIL-77 asks for a proper routing, and the departed engineer's address has to go from every list.",
+  "objective": "Update etc/aliases: root goes to the on-call list (etc/oncall.list, as an :include: of its full path), add the alias security delivering to secops@corp.example and soc-oncall@corp.example, and remove mkhan@corp.example (any capitalisation) everywhere, in etc/aliases and in etc/oncall.list. An alias that would be left without any recipient is removed; colleagues whose names merely start with mkhan stay. Then rebuild the database with newaliases without any warning. All other aliases and comments stay.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Aliases File",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "25m",
+  "concepts": ["/etc/aliases format", ":include: lists", "continuation lines", "newaliases"],
   "module": "module-18-configuration-editing",
   "level": "level-19-aliases-file"
 }

@@ -1,0 +1,28 @@
+cat > etc/systemd/system/queue-consumer.service <<EOF
+[Unit]
+Description=Queue consumer (jobs from the broker)
+After=network.target
+$(grep -o 'StartLimitIntervalSec=[0-9]*' TICKET.md)
+$(grep -o 'StartLimitBurst=[0-9]*' TICKET.md)
+
+[Service]
+Type=simple
+ExecStart=/opt/queue/bin/queue-consumer
+Restart=on-failure
+$(grep -o 'Wait [0-9]*s' TICKET.md | sed 's/Wait /RestartSec=/')
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+systemctl reset-failed queue-consumer
+systemctl start queue-consumer
+systemctl show -p Restart -p RestartUSec -p StartLimitBurst -p StartLimitIntervalUSec queue-consumer
+
+- the $(grep ...) lines   copy the numbers from TICKET.md into the unit (you can type them yourself)
+- Restart=on-failure      restart after crashes, not after the drain's clean exit 0
+- RestartSec=             pause between attempts, so the broker has time to return
+- StartLimit*             how many starts systemd allows in how many seconds ([Unit] section)
+- daemon-reload           make systemd re-read the edited unit
+- reset-failed            clear the start-limit-hit state, then start it again
+- show -p ...             confirm the values systemd really uses

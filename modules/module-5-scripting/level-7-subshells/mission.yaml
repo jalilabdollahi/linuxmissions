@@ -1,11 +1,11 @@
 {
   "name": "Parallel Launch",
-  "description": "Three independent tasks take too long one after another. Launch them in parallel and wait for all of them to finish.",
-  "objective": "Write run_all.sh so it runs task-a.sh, task-b.sh, and task-c.sh in parallel and waits until all three finish",
-  "xp": 230,
+  "description": "The nightly maintenance runs three independent jobs one after another and takes three times longer than it needs to. Worse, when one job fails, nobody notices: the wrapper always reports success.",
+  "objective": "Write run_all.sh so that, run from its own folder, it starts ./task-a.sh, ./task-b.sh and ./task-c.sh at the same time, returns only after all three have finished, and exits with status 1 if any of them failed (0 if all succeeded). Right now one of the tasks fails, so try it and check `echo $?`.",
+  "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["subshells", "&", "wait", "parallel jobs"],
+  "expected_time": "12m",
+  "concepts": ["background jobs &", "$!", "wait PID", "exit status", "arrays"],
   "module": "module-5-scripting",
   "level": "level-7-subshells"
 }

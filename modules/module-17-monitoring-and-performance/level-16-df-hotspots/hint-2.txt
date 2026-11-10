@@ -1,1 +1,6 @@
-A du pipeline sorted numerically is a strong fit here.
+- df -h reports blocks (bytes), df -i reports inodes (one per file). Look at
+  the IUse% column of captured/df-i.txt.
+- find spool -type f -printf '%h\n' prints, for every file, the directory it
+  is in (%h). Count identical lines with sort | uniq -c, then sort -rn to put
+  the biggest on top. Piping through xargs would break on names with spaces.
+- du -sh would rank directories by bytes, which is a different question.

@@ -1,1 +1,7 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+- ss -ltn lists listening TCP sockets in numeric form. On a LISTEN socket
+  Recv-Q is the number of connections currently waiting in the accept queue
+  and Send-Q is the backlog, the queue's maximum size. man ss, section on
+  Recv-Q/Send-Q.
+- A queue is full when it holds more than the backlog allows. A busy queue
+  and a small backlog are both normal on their own.
+- ss -ltnp shows which process owns each listener (only your own).

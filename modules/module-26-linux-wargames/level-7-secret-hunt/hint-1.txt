@@ -1,1 +1,1 @@
-Use one command for the beginning of the file and another for the end.
+The key will not always look like the text on the ticket. Think about every form a string can take on a disk: plain text in a file you have not opened, in a hidden file, compressed, inside an archive, encoded so grep cannot match it, or split across two lines. Search per form. And read each hit before you edit: keys that look alike but are not ours must stay.

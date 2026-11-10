@@ -1,0 +1,11 @@
+{
+  "name": "Why Does Boot Take 2.5 Minutes?",
+  "description": "A server takes two and a half minutes to boot. The previous admin saved the output of systemd-analyze blame (blame.txt), systemd-analyze critical-chain (critical-chain.txt) and the summary line (startup.txt). The server's disk is mounted at sysroot/.",
+  "objective": "Write the name of the unit that really delays the boot (not just one that takes long) to slow_unit.txt. Then fix it without editing the vendor unit under sysroot/usr/lib: add a drop-in in sysroot/etc/systemd/system/ so that the unit's ExecStart is replaced by a command that no longer waits up to two minutes.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
+  "concepts": ["systemd-analyze", "critical-chain", "drop-in units", "ExecStart reset", "wait-online"],
+  "module": "module-23-boot-and-recovery",
+  "level": "level-17-slow-boot"
+}

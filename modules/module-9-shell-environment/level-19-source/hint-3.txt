@@ -1,1 +1,30 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' source.conf > fixed.conf`
+Replace workon.sh (type it at the prompt):
+
+cat > workon.sh <<'EOF'
+#!/bin/bash
+# workon.sh - switch to a project. Usage: source workon.sh NAME
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  echo "workon.sh must be sourced: source $0 NAME" >&2
+  exit 1
+fi
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+proj="$here/projects/$1"
+if [ -z "$1" ] || [ ! -d "$proj" ]; then
+  echo "workon: no such project: '$1'" >&2
+  return 1
+fi
+cd "$proj" || return 1
+set -a
+. ./.project.env
+set +a
+export PROJECT="$1"
+echo "now working on $PROJECT (port $PROJECT_PORT)"
+EOF
+
+- [ "${BASH_SOURCE[0]}" = "$0" ]   true only when run as a program: refuse and explain (exit is fine there)
+- here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)   the script's own directory, absolute, even when sourced
+- return 1                          leave the sourced file with an error, the caller's shell stays open
+- set -a ... set +a                 export everything .project.env assigns
+
+Check in a throwaway shell:
+bash -c "cd / && source $SANDBOX/workon.sh api; pwd; source $SANDBOX/workon.sh apo; echo alive \$?"

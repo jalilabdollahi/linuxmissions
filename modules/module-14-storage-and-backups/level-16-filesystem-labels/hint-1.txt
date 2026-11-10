@@ -1,1 +1,3 @@
-Measure directory sizes before deciding which one is largest.
+Which of the two images really holds the shop's database, and which holds tarballs? The file names and the labels are exactly what went wrong, so look at what is inside. You can do that without mounting anything (mounting needs root anyway).
+Once you know, each file system needs a name that stays with it, wherever the kernel puts it. Where does that name live: in the image file's name, or inside the file system?
+fstab then has to ask for that name instead of the device, on two lines only.

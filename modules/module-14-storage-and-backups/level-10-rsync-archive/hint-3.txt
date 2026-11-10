@@ -1,1 +1,11 @@
-Example: `tar -czf rsync-archive-backup.tar.gz bundle/rsync-archive`
+mkdir -p new-server/www
+rsync -aH www/ new-server/www/
+rsync -aHni www/ new-server/www/ > second-run.txt
+cat second-run.txt
+
+- mkdir -p        the target directory
+- -a              archive: recursive, symlinks as links, permissions, times, owner and group
+- -H              keep hard links between files
+- www/            trailing slash: copy the contents of www, not the directory itself
+- -n -i           the same copy as a dry run with itemized output: it lists what would change, and nothing does
+- > second-run.txt  keep the (empty) list as proof

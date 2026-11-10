@@ -1,1 +1,4 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- `head perms.acl` shows the format: owner lines, `user::`, `user:NAME:` entries, `mask::`, `# flags:` for setuid/setgid/sticky. `man setfacl` has `--restore`.
+- `find app -newer perms.acl` lists what was created after the dump. `-type d` / `-type f` and `-path '*/bin/*'` narrow it down; `chmod 2750` sets setgid too.
+- Check the result with `getfacl -R app | less` and `find app -perm -o+w`.
+- Order matters: restore the dump first, then apply the policy to the new paths only.

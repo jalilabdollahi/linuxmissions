@@ -1,1 +1,8 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  find . -type f -print0 | while IFS= read -r -d '' f; do ...; done     one regular file at a time, NUL-separated names
+  find . -type l ...                                                      symlinks only (-type f never lists them)
+  stat -c %s FILE   size in bytes        stat -c %a FILE   octal mode
+  sha256sum < FILE | cut -d' ' -f1       just the hash (reading stdin avoids the file name in the output)
+  readlink LINK                          the link's own target
+  printf '%s\t%s\n' ...                  build tab-separated rows;  LC_ALL=C sort  puts them in byte order
+Run it from inside backup/ so the paths start with ./, write the result to ../MANIFEST.tsv.
+More: man find, man stat, man sort

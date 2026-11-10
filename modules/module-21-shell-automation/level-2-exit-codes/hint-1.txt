@@ -1,1 +1,11 @@
-Look for a filtering command that keeps only the alert lines in exit-codes.log.
+Run the check on every snapshot and look at the status, not just the text:
+
+  for f in spool/mx1.stats spool/mx2.stats spool/mx3.stats spool/mx4.stats; do ./check_queue.sh "$f"; echo "exit $?"; done
+
+A script's exit status is the status of the LAST command it ran, unless it
+calls `exit` itself. What is the last command here, and when does it fail?
+
+Then mx4: its file does not exist. Which branch does the script end up in,
+and why is "OK" the worst possible answer for "I could not look"?
+
+Game tip: `edit check_queue.sh` opens the script in an editor.

@@ -1,1 +1,9 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+`ps -ef --forest` or `pstree -p` draw the tree, and `ps -o ppid= -p PID`
+(or the `PPid:` line in /proc/PID/status) gives one parent at a time.
+`pgrep -f` matches against the full command line with a regex, so anchor it
+with `$` to separate `--job 7` from `--job 70`.
+To stop a self-healing tree, stop the top first, so nothing is left to
+restart the others, or send one signal to everyone at once: the runner
+was started in its own session, so its process group ID equals the
+supervisor's PID, and `kill -- -PGID` signals the whole group. Check with
+`ps` afterwards and again after a few seconds.

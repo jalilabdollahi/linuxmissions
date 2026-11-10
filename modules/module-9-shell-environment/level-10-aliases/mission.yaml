@@ -1,15 +1,11 @@
 {
-  "name": "Aliases: Backup Bundle",
-  "description": "In the shell environment lab, a task related to Aliases needs cleanup before the handoff.",
-  "objective": "Create aliases-backup.tar.gz containing the files under bundle/aliases",
+  "name": "Team Aliases",
+  "description": "Everyone on the team sources team/aliases.sh from their ~/.bashrc, and each host sets LOGDIR later in its own startup file. Three complaints came in: `logs` tails /app.log instead of the host's log, `mkcd projects/x` creates nothing and leaves you where you were, and the promised safety alias for rm was never added.",
+  "objective": "Fix team/aliases.sh so that, after it is sourced: `logs` shows the last 20 lines of $LOGDIR/app.log using the LOGDIR that is set at the time you run it (even if LOGDIR is set or changed after sourcing); `mkcd DIR` creates DIR (with parents, spaces allowed) and changes into it, as a shell function; `rm` is an alias for `rm -i`. Keep ll, gs and .. as they are, and sourcing the file must print no errors.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Aliases",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "12m",
+  "concepts": ["alias", "single vs double quotes", "shell functions", "type", "unalias"],
   "module": "module-9-shell-environment",
   "level": "level-10-aliases"
 }

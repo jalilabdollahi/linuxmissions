@@ -1,1 +1,12 @@
-A du pipeline sorted numerically is a strong fit here.
+Build a clean list of names first, one per line, then count:
+  grep 'query\[' FILE        only lookups ([ must be escaped in a regex)
+  awk '{ print $6 }'         the 6th blank-separated field: the name
+  tr 'A-Z' 'a-z'             lowercase
+  sed 's/\.$//'              drop one dot at the end of the line
+  sort                       identical names next to each other
+Then:
+  uniq -c                    count each run of identical lines
+  uniq -u                    print only lines that occur once
+  awk '$1 >= 3'              keep lines whose first field is at least 3
+  sort -rn                   highest number first
+More: man uniq

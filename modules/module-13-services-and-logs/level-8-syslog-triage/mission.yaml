@@ -1,15 +1,11 @@
 {
-  "name": "Syslog Triage: Cleanup Sweep",
-  "description": "In the services and logs lab, a task related to Syslog Triage needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/syslog-triage and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Syslog Triage",
-    "find",
-    "rm"
-  ],
+  "name": "Who Filled the Disk",
+  "description": "Disk alert on app-02: var/log/syslog grew by gigabytes in the hour from 02:00 to 03:00 and the root filesystem hit 95%. Before anyone turns log levels down, you need to know which programs were that noisy in that hour.",
+  "objective": "Write top-programs.txt with the three programs that logged the most messages in var/log/syslog between 02:00:00 and 02:59:59 on Nov 10, one per line as 'count program' (e.g. '1234 sshd'), highest count first. A program is the name before [pid] or the colon; count messages, not lines: rsyslog's 'message repeated N times' line stands for N messages. Don't change the log.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["syslog line format", "awk fields and string comparison", "awk associative arrays", "rsyslog repeated-message reduction", "sort -rn | head"],
   "module": "module-13-services-and-logs",
   "level": "level-8-syslog-triage"
 }

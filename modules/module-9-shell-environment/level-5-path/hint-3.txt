@@ -1,1 +1,10 @@
-Example: `cut -d, -f2 path-report.csv > owners.txt`
+Type these at the prompt:
+
+echo "export PATH=\"$SANDBOX/tools/bin:\$PATH\"" >> env.sh
+tail -2 env.sh
+bash -c 'cd / && source "$1" && command -v deploy-helper' _ "$SANDBOX/env.sh"
+
+- echo "..." >> env.sh   append one line; it runs after the legacy line, so tools/bin ends up first
+- $SANDBOX               expanded now, so the file gets the real absolute path
+- \$PATH                 the backslash keeps $PATH as text, expanded later when env.sh is sourced
+- bash -c 'cd / && ...'  test in a fresh shell from another directory, like CI would

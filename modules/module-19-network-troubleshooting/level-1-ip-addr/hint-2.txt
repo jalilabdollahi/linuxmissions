@@ -1,1 +1,8 @@
-`mkdir -p organized/ip-addr` followed by `mv inbox/ip-addr.txt organized/ip-addr/ip-addr-notes.txt` is enough.
+How to read `ip addr`:
+- A header line starts each interface: `7: name@parent: <FLAGS> mtu ... state UP ...`. The part after @ is the parent link (a VLAN sits on a bond or NIC), not part of the name.
+- Each `inet ADDR/PREFIX ... scope global [secondary] LABEL` line is one IPv4 address, and an interface can have several. The last word is the interface it is on. `secondary` marks an extra address in a subnet the interface already has a primary address in.
+- `state` can be UP, DOWN, UNKNOWN (loopback, tunnels) or LOWERLAYERDOWN (the interface is up but the link below it is down).
+- /22 means 22 network bits: 10.20.0.0/22 runs from 10.20.0.0 to 10.20.3.255.
+
+`grep -n 'inet ' ip-addr.txt` lists every IPv4 address with its line number. On a real host: `ip -br addr` (one line per interface) and `ip addr show dev NAME`.
+Read more: `man ip-address`.

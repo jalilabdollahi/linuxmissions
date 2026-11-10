@@ -1,1 +1,1 @@
-A du pipeline sorted numerically is a strong fit here.
+Under /proc/PID/ look at io (the wchar and write_bytes lines) and at fd/ (where the open file descriptors point). `pgrep -x worker` lists the PIDs. Sample the counter twice with `sleep` between and compare the deltas. /proc/PID/exe shows which binary a process was started from. Junk files are hidden by their dot-prefixed names: use `ls -A`.

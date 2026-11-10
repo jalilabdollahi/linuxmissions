@@ -1,1 +1,6 @@
-A grep count or grep piped into wc can produce the number you need.
+sed accepts an address before the command, and an address can be a range:
+  sed '/start-regex/,/end-regex/ s/old/new/' file
+The range ends at the next line that matches the end regex (checked after the
+first line of the range). Anchor the pattern with ^ and $ so it only matches a
+whole line. `sed -i.bak` edits the file in place and saves the original as
+file.bak. Compare with `diff services.conf.bak services.conf`. More: man sed

@@ -1,1 +1,5 @@
-`mkdir -p organized/tee-append` followed by `mv inbox/tee-append.txt organized/tee-append/tee-append-notes.txt` is enough.
+  cmd | tee FILE      copies stdin to the screen and to FILE
+  tee -a FILE         append to FILE instead of truncating it
+  cmd 2>&1            send stderr to the same place as stdout
+Think about which one makes the pipe see the WARN lines. Check with
+`tail audit.log` afterwards; `man tee` lists the options.

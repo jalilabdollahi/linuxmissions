@@ -1,11 +1,11 @@
 {
   "name": "Template Engine",
-  "description": "A config file should be generated from environment values, but the template logic was never written.",
-  "objective": "Write generate.sh so it reads vars.env and writes app.conf using a heredoc with the configured values",
-  "xp": 250,
+  "description": "Every environment needs its own app.conf, and people keep editing copies by hand and forgetting a port. The values live in vars.env; the config should be generated from them.",
+  "objective": "Write generate.sh so that, run in a folder containing vars.env, it creates app.conf there that looks exactly like app.conf.example but is filled in from whatever values vars.env holds. Build the file with a heredoc. Note the [logging] line: its `$` signs must stay as they are.",
+  "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": ["heredoc", "<<EOF", "source", "variables"],
+  "expected_time": "15m",
+  "concepts": ["heredoc", "<<EOF vs <<'EOF'", "escaping \\$", "source"],
   "module": "module-5-scripting",
   "level": "level-8-heredoc"
 }

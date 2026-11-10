@@ -1,1 +1,5 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' stable-sort.conf > fixed.conf`
+  sort -s -k2,2 queue.txt > queue_sorted.txt
+      -k2,2    sort by the priority column only
+      -s       stable: tickets with the same priority stay in arrival order
+  grep ' P1 ' queue.txt; grep ' P1 ' queue_sorted.txt
+      check: the P1 tickets in the same order in both

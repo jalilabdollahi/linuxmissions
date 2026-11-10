@@ -1,15 +1,11 @@
 {
-  "name": "Tempdirs: Field Extract",
-  "description": "In the system inspection lab, a task related to Tempdirs needs cleanup before the handoff.",
-  "objective": "Extract the second column from tempdirs-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Tempdirs",
-    "cut",
-    "awk"
-  ],
+  "name": "The Space That du Cannot See",
+  "description": "The tmp/ usage alarm says it grew by about 50 MB, but `du` finds only a few MB. A process still holds a deleted debug log open (see TICKET.md).",
+  "objective": "Recover the lost debug log into recovered/app-debug.log (byte for byte), stop the process that holds it, and clean tmp/ by policy: delete regular files older than 7 days that no process has open. Newer files, and files or sockets a live process is using, must stay.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "45m",
+  "concepts": ["deleted but open files", "/proc/PID/fd", "lsof +L1", "fuser", "find -mtime", "recovering data through a descriptor"],
   "module": "module-24-system-inspection",
   "level": "level-22-tempdirs"
 }

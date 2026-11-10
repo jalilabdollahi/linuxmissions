@@ -1,4 +1,8 @@
-Kill by PID (from pgrep) or by name:
-kill <PID>
-# or:
-pkill -f sleep_loop.sh
+Finding it:
+  ps aux | grep debug_logger      full process lines (2nd column = PID)
+  pgrep -f debug_logger.sh        only the PIDs; -f matches the whole command line
+Stopping it:
+  kill PID                        sends SIGTERM, a polite "please exit"
+  kill -9 PID                     SIGKILL, only if SIGTERM is ignored
+  pkill -f PATTERN                find and signal in one step; be specific!
+More: man kill, man pgrep

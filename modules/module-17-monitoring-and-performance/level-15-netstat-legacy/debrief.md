@@ -1,17 +1,19 @@
-# Netstat Legacy: Metric Sum
+# Retiring netstat
 
-## What you practiced
-- This level focused on **Netstat Legacy** in a safe sandbox.
-- The shortest path usually combines `awk` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`ss -tan` reports the same sockets as `netstat -tan`, but spells the states
+its own way (`ESTAB`, `TIME-WAIT`, `FIN-WAIT-2`) and prints a single header
+line, not two. The rewrite skips the header, translates each name back to the
+netstat spelling in awk, counts per state and keeps the old `sort`, so the
+output is byte-identical and nothing downstream has to change.
 
-## Commands to remember
-```bash
-awk -F, 'NR>1 {sum += $2} END {print sum}' file.csv
-cut -d, -f2 file.csv
-paste -sd+ numbers.txt | bc
-```
+## Common mistakes
+- Forgetting `NR>1`: the header is counted as a state called `State`.
+- Translating only ESTAB and TIME-WAIT: FIN-WAIT-2 and CLOSE-WAIT then differ
+  and the dashboards silently lose a series.
+- Replacing every hyphen but not netstat's odd `FIN_WAIT2` (no underscore before the 2).
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a numeric aggregation task.
+## Next step
+`ss -s` gives a summary by state directly, `ss -tan state established`
+filters in the kernel, and `ss -o` shows timers. For machine parsing,
+`ss -H` suppresses the header altogether.

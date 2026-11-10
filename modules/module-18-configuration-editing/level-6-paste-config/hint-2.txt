@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+paste merges files side by side:
+  paste -d: a b        line N of a, ":" and line N of b
+  paste -sd, file      all lines of one input joined into a single line with commas
+paste -s with "-" reads standard input, so the two can be piped together.
+grep . file prints only non-empty lines. A <(command) can be used where a file
+name is expected. To add a line without erasing the file use >> instead of >.
+Build the value with $(...) inside an echo "BACKENDS=...". More: man paste

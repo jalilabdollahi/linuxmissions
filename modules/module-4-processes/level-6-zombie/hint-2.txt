@@ -1,5 +1,8 @@
-Show PID, parent PID, state, and command:
-ps -o pid,ppid,stat,comm | awk '$3 ~ /^Z/ {print}'
-
-Save what you find to:
-$SANDBOX/zombies.txt
+ps can print exactly the columns you choose:
+  ps -eo pid,ppid,stat,comm      every process: PID, parent PID, state, name
+STAT starting with Z = zombie. Keep only those lines with awk:
+  ... | awk '$3 ~ /^Z/'          (column 3 starts with Z)
+Then look at the parent before you kill it:
+  ps -o pid,args -p PPID         is it job_runner.py or something else?
+  kill PPID                      SIGTERM to the parent
+More: man ps (look for "PROCESS STATE CODES" and "-o")

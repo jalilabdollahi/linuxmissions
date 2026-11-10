@@ -1,1 +1,20 @@
-Example: `grep -c '^ok$' positional-params-events.txt > ok-count.txt`
+Type this at the prompt. It rewrites archive.sh with every argument quoted:
+
+cat > archive.sh <<'EOF'
+#!/bin/bash
+# archive.sh BUCKET FILE...  - store FILEs in the archive bucket BUCKET
+if [ "$#" -lt 2 ]; then
+  echo "usage: $0 BUCKET FILE..." >&2
+  exit 2
+fi
+bucket=$1
+shift
+echo "archiving $# file(s) to $bucket"
+./tools/upload --bucket "$bucket" "$@"
+EOF
+
+- [ "$#" -lt 2 ] ... >&2; exit 2    too few arguments: usage on stderr, status 2, no upload
+- shift                             drop BUCKET, so "$@" holds only the files
+- "$bucket" "$@"                    each argument passed on as one word, exactly as received
+
+Try it: rm -f upload.log; ./archive.sh "finance archive" "reports/2026 Q3/summary final.pdf"; cat upload.log

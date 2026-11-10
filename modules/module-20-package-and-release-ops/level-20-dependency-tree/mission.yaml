@@ -1,15 +1,11 @@
 {
-  "name": "Dependency Tree: Noise Dedup",
-  "description": "In the package and release operations lab, a task related to Dependency Tree needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from dependency-tree-raw.txt with sorted unique values",
+  "name": "Drop libold1: Who Goes With It?",
+  "description": "libold1 is deprecated and the platform team wants it gone, but nobody knows what depends on it, directly or through other packages. The system in rootfs/ has dozens of packages installed.",
+  "objective": "Write impact.txt: the names of the installed packages that would be removed together with libold1 (one per line, without libold1 itself, without versions). Do not remove anything for real. Only packages that really have to go count; the package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Dependency Tree",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "25m",
+  "concepts": ["apt-cache rdepends", "apt-get -s remove", "reverse dependencies", "alternative dependencies", "Provides"],
   "module": "module-20-package-and-release-ops",
   "level": "level-20-dependency-tree"
 }

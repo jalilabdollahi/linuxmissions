@@ -1,11 +1,11 @@
 {
   "name": "Open Sesame",
-  "description": "A firewall ruleset was exported from a host. Read it and figure out which application port is being denied.",
-  "objective": "Find the blocked destination port in firewall.rules and write it to blocked_port.txt",
-  "xp": 230,
+  "description": "TICKET.txt: the office can't reach the new admin UI on app-07 (tcp/8443), although someone already added a rule that allows it. The firewall is loaded at boot from firewall.rules, the output of `iptables-save`. (No root here, so you fix the file; iptables-restore would load it.)",
+  "objective": "Fix firewall.rules so that new connections from the office network 10.20.4.0/24 to tcp/8443 are accepted, while every other packet (8443 from anywhere else, the rest of 8000-8999, SSH, MySQL ...) is handled exactly as before. Keep the file loadable by iptables-restore (*filter ... COMMIT).",
+  "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["iptables", "firewall rules", "analysis", "ports"],
+  "expected_time": "15m",
+  "concepts": ["iptables-save format", "rule order (first match wins)", "chain policy", "multiport"],
   "module": "module-6-networking",
   "level": "level-7-firewall"
 }

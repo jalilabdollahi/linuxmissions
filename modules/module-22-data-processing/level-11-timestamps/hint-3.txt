@@ -1,1 +1,7 @@
-Example: `tar -xzf timestamps-restore.tar.gz`
+  awk '{ t = (length($1) == 13) ? int($1 / 1000) : $1; svc = (FILENAME == "billing.log") ? "billing" : "notify"; $1 = strftime("%Y-%m-%dT%H:%M:%SZ", t, 1) " " svc; print }' billing.log notify.log | sort -s -k1,1 > timeline.txt
+      length($1) == 13   milliseconds -> int($1 / 1000) seconds
+      FILENAME           billing.log or notify.log -> the service name
+      strftime(..., 1)   epoch -> ISO date in UTC (gawk; macOS awk has no strftime)
+      billing.log first  so it comes first among lines of the same second
+      sort -s -k1,1      by the timestamp only, stable: ties keep file order
+  head -5 timeline.txt

@@ -1,1 +1,9 @@
-Archive the directory contents without leaving anything out.
+- /proc/PID/stat: utime is field 14 and stime field 15 (man proc), counted
+  from the PID. The name in field 2 is in parentheses and may contain spaces
+  and even parentheses itself, so split after the LAST ") ": with
+  sed 's/.*) //' the remaining fields start at the state (field 3), and utime
+  and stime become the 12th and 13th words.
+- RSS: awk '/^VmRSS/ {print $2}' /proc/PID/status (KiB).
+- date +%s is the epoch; sleep 1 between samples (not after the last one).
+- If a read fails because the process is gone, `|| exit 0` ends the script
+  quietly; send errors of the reads to /dev/null.

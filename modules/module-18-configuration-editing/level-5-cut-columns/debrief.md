@@ -1,17 +1,18 @@
-# Cut Columns: Field Extract
+# Names Without Secrets
 
-## What you practiced
-- This level focused on **Cut Columns** in a safe sandbox.
-- The shortest path usually combines `cut` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`cut` splits at every delimiter. `-f1` takes the part before the first `=`, which
+is the variable name, and `-f2-` takes everything after it, so a base64 value that
+ends in `==` (or a URL with `?a=1&b=2`) arrives whole. `-f2` alone would stop at
+the second `=` and silently truncate the key, which is how the teammate's script
+broke it. Before cutting, remove what is not a setting: comments (including
+commented-out settings) and blank lines, and strip the optional `export ` prefix.
 
-## Commands to remember
-```bash
-cut -d, -f2 file.csv
-awk -F, '{print $2}' file.csv
-column -s, -t file.csv
-```
+## Common mistakes
+- `cut -d= -f2`: truncates any value that contains `=`.
+- Forgetting `export `: the name becomes `export APP_PORT`.
+- Matching `grep SIGNING_KEY` without `^`, which also finds `OLD_SIGNING_KEY`.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a delimiter-based column extraction task.
+## Next step
+`cut -c1-8` cuts by character position, and `awk -F= '{ sub(/^[^=]*=/, ""); print }'`
+removes only the first field when you need more control.

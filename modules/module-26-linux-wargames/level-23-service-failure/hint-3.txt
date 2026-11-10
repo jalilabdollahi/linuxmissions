@@ -1,1 +1,7 @@
-Example: `tar -czf service-failure-backup.tar.gz bundle/service-failure`
+Remove the drop-in that overrides the port, fix the unit, create the data directory and restart:
+  systemctl cat webapp
+  rm etc/systemd/system/webapp.service.d/*.conf
+  sed -i -e 's|^ExecStart=.*|ExecStart=/usr/bin/python3 /opt/webapp/app.py|' -e 's|^WorkingDirectory=.*|WorkingDirectory=/opt/webapp|' etc/systemd/system/webapp.service
+  mkdir -p var/lib/webapp
+  systemctl daemon-reload && systemctl restart webapp && sleep 1 && systemctl is-active webapp
+`systemctl cat` shows every layer; the rm removes the drop-in whose cutover.env sets legacy's port and an old data path (webapp.env already has the ticket's port); sed gives ExecStart an absolute path and WorkingDirectory the new location; mkdir creates the state directory the app insists on; daemon-reload and restart apply it.

@@ -1,1 +1,5 @@
-Use a targeted file search so you do not remove the wrong files.
+It is easier to describe the lines you want to throw away than the ones you
+want to keep. Look at the invisible characters too: comments that start in the
+first column, comments indented with spaces or tabs, empty lines, and lines
+that only hold spaces or tabs. A setting like `work_mem = 128MB  # reporting
+box` contains a # but must stay.

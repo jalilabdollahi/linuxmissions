@@ -1,2 +1,9 @@
-Then add the user to docker:
-./usermod -aG docker devuser
+useradd options (mock behaves like Ubuntu's):
+  -m           create the home directory, copied from /etc/skel (not done by default!)
+  -s SHELL     login shell (the default is /bin/sh)
+  -c "TEXT"    comment / full name (GECOS field)
+  -G g1,g2     supplementary groups, comma-separated, no spaces
+usermod -G LIST replaces ALL of a user's supplementary groups with LIST;
+add -a (append) to keep the ones he already has.
+Check your work with ./id USER or ./groups USER. If dana goes wrong, ./userdel -r dana and retry.
+Read more: man useradd, man usermod, man 5 passwd, man 5 group

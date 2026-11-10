@@ -1,16 +1,11 @@
 {
-  "name": "Json Notes: Loop Builder",
-  "description": "In the configuration editing lab, a task related to Json Notes needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named json-notes-1.txt through json-notes-3.txt with matching numbered content",
+  "name": "Flag Day",
+  "description": "The checkout team is rolling out the new checkout in Europe, and the flags file in the repo has to follow before the deploy.",
+  "objective": "Edit flags.json: enable new_checkout for the eu region only, add \"beta-12\" to the testers array, and delete the expired xmas_banner flag. Everything else, including the key order, must stay as it is, and the file must remain valid JSON.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Json Notes",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "15m",
+  "concepts": ["jq filters", "in-place JSON edits", "temp file then mv", "preserving key order"],
   "module": "module-18-configuration-editing",
   "level": "level-14-json-notes"
 }

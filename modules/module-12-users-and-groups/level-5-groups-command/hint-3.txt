@@ -1,1 +1,9 @@
-Example: `cut -d, -f2 groups-command-report.csv > owners.txt`
+for f in sessions/*.status; do u=$(basename $f .status); want=$(bin/id -G $u | tr ' ' '\n' | sort); have=$(awk '/^Groups:/ { for (i = 2; i <= NF; i++) print $i }' $f | sort); [ -n "$(comm -23 <(echo "$want") <(echo "$have"))" ] && echo $u; done > relogin.txt
+cat relogin.txt
+
+- for f in sessions/*.status    one session capture per user
+- bin/id -G $u                  the GIDs the database gives that user now
+- awk '/^Groups:/ ...'          the GIDs the running session actually holds
+- sort                          comm needs both lists sorted the same way
+- comm -23 A B                  GIDs in the database but not in the session
+- [ -n ... ] && echo $u         if there is any, this user must log in again

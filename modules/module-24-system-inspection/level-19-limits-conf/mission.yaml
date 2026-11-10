@@ -1,15 +1,11 @@
 {
-  "name": "Limits Conf: Config Rewrite",
-  "description": "In the system inspection lab, a task related to Limits Conf needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in limits-conf.conf and save the fixed result to fixed.conf",
+  "name": "Too Many Open Files",
+  "description": "The `indexer` process crashes under load with \"Too many open files\". It runs as a systemd service, and sysroot/ is a copy of the host's /etc (see TICKET.md). The running process is the evidence.",
+  "objective": "Write limits.txt with three lines, `soft=`, `hard=` (the soft and hard \"open files\" limits of the running indexer) and `open=` (how many file descriptors it has open right now). Then make the fix that works for a systemd service inside sysroot/: a drop-in for indexer.service that gives it LimitNOFILE=65536 effectively. Do not restart or kill the indexer.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Limits Conf",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "30m",
+  "concepts": ["/proc/PID/limits", "/proc/PID/fd", "prlimit", "systemd LimitNOFILE", "unit drop-ins", "limits.conf only applies to PAM sessions"],
   "module": "module-24-system-inspection",
   "level": "level-19-limits-conf"
 }

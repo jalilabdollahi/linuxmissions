@@ -1,1 +1,7 @@
-Example: `sort apt-update-raw.txt | uniq > unique-sorted.txt`
+apt-cache policy agentd
+apt update
+apt-cache policy agentd | awk '/Candidate:/ {print $2}' > candidate.txt
+
+- policy (before)   Candidate is still the old version: the local index is stale
+- apt update        re-reads the vendor repository's index; it does not install or upgrade anything
+- policy | awk      prints only the Candidate version; > candidate.txt saves it

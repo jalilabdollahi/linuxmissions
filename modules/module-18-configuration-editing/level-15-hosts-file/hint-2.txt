@@ -1,1 +1,8 @@
-An awk one-liner can skip the header and add the second field.
+Plan the result first: for every name keep only its first address, then group
+names by address. awk can do that with two arrays (`seen[name]`, `names[ip]`).
+Read the file twice (`awk '...' file file`, and test `NR == FNR` for the first
+pass) so you know all names of an address before you print its line.
+Handle three kinds of lines differently: comments/blank lines (print as they are),
+10.9.* lines (print with a leading "# "), real entries (print once per address).
+Write to a new file and mv it back. Compare with `diff` against a copy.
+More: man awk

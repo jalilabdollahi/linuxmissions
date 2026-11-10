@@ -1,17 +1,21 @@
-# Sparse Files: History Window
+# The 20 GB Backup
 
-## What you practiced
-- This level focused on **Sparse Files** in a safe sandbox.
-- The shortest path usually combines `head` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A sparse file has holes: ranges that were never written, which read as zeros but have no disk blocks.
+`ls -l` (and `du --apparent-size`) report the length; `du` reports the blocks actually allocated.
+A VM image that is "100 GB" can use 3 GB.
 
-## Commands to remember
-```bash
-head -n 3 file.log
-tail -n 3 file.log
-tail -f file.log
-```
+Tools only keep holes if they are asked to. `cp` has `--sparse=auto` by default, which copies a sparse
+source sparsely but a fully-allocated source in full, even if it is all zeros. `--sparse=always` turns every
+zero block into a hole. `tar` does the same in the other direction: `-S` makes it look for holes and store
+them as a list instead of as zeros. (GNU tar only scans a file for holes when it looks sparse, which is why a
+file made with `dd if=/dev/zero` is archived in full.)
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use one command for the beginning of the file and another for the end.
+## Common mistakes
+- Believing `ls -l` for how much space a file takes.
+- Using `gzip` instead of `-S`: zeros compress, but extracting still writes them all out.
+- Running `fallocate -d` on the original: it changes the file you wanted to back up as it was.
+
+## Next step
+`rsync --sparse` does the same for transfers, and `qemu-img convert` can compact VM disk images.
+`filefrag -v FILE` lists the extents of a file, so you can see where its holes are.

@@ -1,11 +1,21 @@
 # What's My IP?
 
-## What you practiced
-`ip addr` output combines interface metadata with assigned addresses. Text tools help turn that raw output into a compact inventory.
+## Why it works
+In `ip addr` output every interface is a block, and each IPv4 address is an
+`inet ADDRESS/PREFIX ... LABEL` line inside it. The label at the end of the
+line names the interface that owns the address, so a single awk rule can print
+`$NF` and the address without tracking which header line came last. Matching
+`$1 == "inet"` (the whole first field) skips `inet6` lines, and the
+`secondary` flag shows that one interface can carry several IPv4 addresses.
 
-## Commands to remember
-```bash
-ip addr
-awk '/^[0-9]+:/ {iface=$2} /inet / {print iface, $2}'
-grep -A1 'inet '
-```
+## Common mistakes
+- `grep inet` also matches every `inet6` line.
+- Taking the name from the header line (`eno1.120@eno1:`) and forgetting to
+  strip the `@parent` part and the colon. VLAN and veth interfaces always show
+  their parent that way.
+
+## Learn next
+On a live machine: `ip -br -4 addr` prints one line per interface with its
+addresses, and `ip -o -4 addr show dev eno1` prints one line per address,
+which is easy to feed into awk. `ip route` shows which interface traffic to
+each network leaves through.

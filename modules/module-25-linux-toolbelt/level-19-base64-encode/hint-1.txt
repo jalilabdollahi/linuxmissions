@@ -1,1 +1,4 @@
-You need a stream editor or another text replacement tool.
+Kubernetes decodes each value and uses the bytes as they are. So two things
+matter: what exactly goes into the encoder (is a line ending part of the
+password?) and what comes out (does it fit on one line of YAML?). Look at the
+default output of the encoder for a 3 KB file.

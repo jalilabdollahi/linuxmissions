@@ -1,1 +1,5 @@
-You need a stream editor or another text replacement tool.
+You need to glue two files together line by line (host 1 with port 1, host 2
+with port 2), and then glue the resulting lines together into one. Check the
+input files first with `cat -A`: are they really clean? What would a "pair"
+look like if one list were longer than the other?
+Remember that the new line goes at the end of lb.env, so do not overwrite it.

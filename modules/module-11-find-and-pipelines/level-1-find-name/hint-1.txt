@@ -1,1 +1,5 @@
-Inspect the sandbox, then create the missing path for organized/find-name/find-name-notes.txt.
+Look at how inconsistent the names are: Invoice_2026-01.PDF, 'invoice - april.pdf',
+Proforma-Invoice-BG-118.Pdf. Your search must ignore letter case in both the word
+and the extension, and must look inside every folder, including folders with
+spaces and hidden files. Then compare with the near misses: invoice-template.docx
+and invoices.pdf.bak do not end in .pdf.

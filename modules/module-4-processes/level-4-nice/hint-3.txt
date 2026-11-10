@@ -1,4 +1,6 @@
-Check the niceness with ps:
-ps -o pid,ni,cmd -p $(cat $SANDBOX/pid.txt)
-
-If the NI column is 15 or another value >= 10, validation should pass.
+  pgrep -f heavy.sh
+      prints the PID of the running job
+  renice 15 -p $(pgrep -f heavy.sh)
+      set its niceness to 15; $(...) fills in the PID
+  ps -o pid,ni,args -p $(pgrep -f heavy.sh)
+      the NI column now shows 15

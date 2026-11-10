@@ -1,1 +1,4 @@
-Put shell assignments in `.env`.
+Run ./start.sh and read every error message carefully. Each line number points
+to a line in .env. Why would the shell think "APP_MODE" or "Shop" is a command?
+Then ask: start.sh *sources* .env, but the variables are read by app.sh, a separate
+child process. Which variables does a child process inherit from its parent?

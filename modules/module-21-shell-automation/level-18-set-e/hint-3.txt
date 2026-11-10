@@ -1,1 +1,31 @@
-Example: `grep 'ALERT' set-e.log > alerts.txt`
+Type this at the prompt. It replaces deploy.sh:
+
+cat > deploy.sh <<'SCRIPT'
+#!/bin/bash
+# deploy.sh - fetch, build, migrate, schema-version, verify, deploy.
+set -e
+log() { echo "[deploy] $*"; }
+run_migrations() {
+  ./bin/step migrate || return 1
+  ./bin/step schema-version || return 1
+}
+./bin/step fetch
+log "release fetched"
+./bin/step build
+if run_migrations; then
+  log "migrations applied"
+else
+  log "migrations FAILED, stopping" >&2
+  exit 1
+fi
+smoke=$(./bin/step verify)
+log "smoke test: $smoke"
+./bin/step deploy
+log "release is live"
+SCRIPT
+
+- ./bin/step fetch on its own line      no longer the left side of &&, so set -e sees it
+- ./bin/step migrate || return 1        set -e is off inside a function used as an if condition; return by hand
+- smoke=$(./bin/step verify)            an assignment carries the step's status; set -e stops there
+
+Try it: for s in fetch migrate verify ""; do rm -f steps.log; FAIL_STEP=$s ./deploy.sh >/dev/null 2>&1; echo "$s -> exit $? : $(tr '\n' ' ' < steps.log)"; done

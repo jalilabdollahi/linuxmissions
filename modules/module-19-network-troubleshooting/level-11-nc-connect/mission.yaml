@@ -1,15 +1,11 @@
 {
-  "name": "Nc Connect: Restore Drill",
-  "description": "In the network troubleshooting lab, a task related to Nc Connect needs cleanup before the handoff.",
-  "objective": "Extract nc-connect-restore.tar.gz so the restored/nc-connect directory appears in the sandbox",
+  "name": "Knock, Knock",
+  "description": "The gateway on this host is configured with five backends (backends.txt) and half of them seem to be down. They all run on 127.0.0.1; one of them, the status backend, speaks a simple line protocol. TICKET.txt has the details.",
+  "objective": "Write open.txt with the port numbers from backends.txt that accept a TCP connection (one per line), and token.txt with just the token the status backend returns when you send it the line STATUS.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Nc Connect",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "12m",
+  "concepts": ["nc -z", "nc -w timeout", "connection refused vs timed out", "printf | nc -q", "line protocols"],
   "module": "module-19-network-troubleshooting",
   "level": "level-11-nc-connect"
 }

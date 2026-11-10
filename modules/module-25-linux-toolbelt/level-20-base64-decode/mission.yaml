@@ -1,15 +1,11 @@
 {
-  "name": "Base64 Decode: Noise Dedup",
-  "description": "In the linux toolbelt lab, a task related to Base64 Decode needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from base64-decode-raw.txt with sorted unique values",
+  "name": "Read It, Never Run It",
+  "description": "During a review someone found an odd line in suspicious.cron: it echoes a long blob, decodes it with base64 -d and pipes the result into sh. Incident response needs to know what it does, without running it.",
+  "objective": "Decode the blob in suspicious.cron safely (never pipe it to a shell) and write ioc.txt with exactly two lines: c2=<host the payload contacts> and dropped=<path of the file it writes>. The payload is a harmless training stub, but treat it as hostile.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Base64 Decode",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "25m",
+  "concepts": ["base64 -d", "base64url", "tr", "padding", "gunzip", "basenc --base64url"],
   "module": "module-25-linux-toolbelt",
   "level": "level-20-base64-decode"
 }

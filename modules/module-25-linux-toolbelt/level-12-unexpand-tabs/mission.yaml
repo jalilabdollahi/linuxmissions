@@ -1,15 +1,11 @@
 {
-  "name": "Unexpand Tabs: Permission Fix",
-  "description": "In the linux toolbelt lab, a task related to Unexpand Tabs needs cleanup before the handoff.",
-  "objective": "Set the mode of unexpand-tabs.sh to 640",
+  "name": "Missing Separator",
+  "description": "Someone opened the Makefile in an editor that replaces tabs with spaces, and make now stops with 'Makefile:14: *** missing separator'. Recipe lines must start with a tab. But the file also has lines indented with 8 spaces that are not recipes: the continuation of a variable and some indented comments. They must stay as they are.",
+  "objective": "Fix Makefile in place: every recipe line (an 8-space-indented line that follows a 'target:' line, including its continuation lines) must start with one tab instead of the 8 spaces. Variable continuation lines and indented comments keep their 8 spaces, and nothing else changes. The untouched original is kept as Makefile.orig.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Unexpand Tabs",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "20m",
+  "concepts": ["unexpand --first-only", "unexpand -t 8", "awk state across lines", "make recipes need tabs"],
   "module": "module-25-linux-toolbelt",
   "level": "level-12-unexpand-tabs"
 }

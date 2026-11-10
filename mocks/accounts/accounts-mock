@@ -1,0 +1,1773 @@
+#!/usr/bin/env python3
+"""LinuxMissions mock account tools (python3 stdlib only, Python >= 3.8).
+
+One multi-call program; the name it runs under picks the tool:
+
+    useradd usermod userdel groupadd groupmod groupdel gpasswd passwd chage
+    id groups getent
+
+(`accounts-mock TOOL ARGS...` works too.) They edit the account databases of a
+fake root instead of the real system: $ROOT/etc/passwd, group, shadow, gshadow,
+login.defs, default/useradd, subuid, subgid, skel/ and the homes under $ROOT.
+$ROOT is $LM_ROOT, or else the directory that holds the tool (a trailing bin/,
+sbin/, usr/ or local/ is skipped when that directory has no etc/). shadow and
+gshadow, subuid and subgid are only written when the file already exists, the
+way shadow-utils behaves on a system without them.
+
+Behaviour, messages and exit codes follow shadow-utils 4.13 (passwd package)
+and coreutils/glibc on Ubuntu 24.04. Lines the tools do not touch stay
+byte-identical. "Today" (shadow's last-change day) comes from $LM_NOW or
+$ROOT/.lm/now when set. See mocks/README.md.
+"""
+import getopt
+import os
+import pwd
+import re
+import shutil
+import stat
+import sys
+import time
+from datetime import datetime, timedelta, timezone
+
+ROOT = ""
+PROG = ""
+
+
+class Exit(Exception):
+    def __init__(self, code, msg=None):
+        Exception.__init__(self, msg or "")
+        self.code = code
+        self.msg = msg
+
+
+def err(msg):
+    sys.stderr.write(msg + "\n")
+
+
+def die(code, msg):
+    raise Exit(code, msg)
+
+
+def unsupported(opt):
+    die(2, "mock: option %s not supported" % opt)
+
+
+# ------------------------------------------------------------------- paths
+
+def find_root():
+    env = os.environ.get("LM_ROOT")
+    if env:
+        return os.path.abspath(env)
+    cur = os.path.dirname(os.path.abspath(sys.argv[0]))
+    while os.path.basename(cur) in ("bin", "sbin", "usr", "local") and not os.path.isdir(os.path.join(cur, "etc")):
+        parent = os.path.dirname(cur)
+        if parent == cur:
+            break
+        cur = parent
+    return cur
+
+
+def rp(path):
+    return os.path.join(ROOT, path.lstrip("/"))
+
+
+def read_text(path, default=None):
+    try:
+        with open(path, encoding="utf-8", errors="surrogateescape") as fh:
+            return fh.read()
+    except OSError:
+        return default
+
+
+# ------------------------------------------------------------------- clock
+
+def tz_from_name(name):
+    if name in ("UTC", "Etc/UTC", "GMT", "Etc/GMT", "Z"):
+        return timezone.utc
+    m = re.match(r"^(?:UTC|GMT)?([+-])(\d{1,2}):?(\d{2})?$", name)
+    if m:
+        mins = int(m.group(2)) * 60 + int(m.group(3) or 0)
+        return timezone(timedelta(minutes=-mins if m.group(1) == "-" else mins))
+    try:
+        from zoneinfo import ZoneInfo
+        return ZoneInfo(name)
+    except Exception:
+        return None
+
+
+def local_tz():
+    name = os.environ.get("LM_TZ", "").strip()
+    if not name:
+        txt = read_text(rp("etc/timezone"), "") or ""
+        name = txt.strip().split("\n")[0].strip()
+    return tz_from_name(name or "UTC") or timezone.utc
+
+
+def now():
+    spec = os.environ.get("LM_NOW", "").strip() or (read_text(rp(".lm/now"), "") or "").strip()
+    if spec:
+        if spec.startswith("@"):
+            try:
+                return float(spec[1:])
+            except ValueError:
+                pass
+        m = re.match(r"^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?\s*(Z|UTC|[+-]\d\d:?\d\d)?$",
+                     spec)
+        if m:
+            tz = local_tz()
+            if m.group(7):
+                tz = tz_from_name("UTC" if m.group(7) in ("Z", "UTC") else m.group(7)) or tz
+            dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), int(m.group(4) or 0),
+                          int(m.group(5) or 0), int(m.group(6) or 0), tzinfo=tz)
+            return dt.timestamp()
+    return time.time()
+
+
+def today():
+    return int(now() // 86400)
+
+
+def day_to_date(day):
+    return datetime(1970, 1, 1) + timedelta(days=day)
+
+
+def strtoday(s):
+    """shadow's strtoday(): '-1'/'' -> -1, 'N' -> N, 'YYYY-MM-DD' -> days since epoch, else None."""
+    s = s.strip()
+    if s in ("", "-1"):
+        return -1
+    if re.match(r"^-?\d+$", s):
+        return int(s)
+    m = re.match(r"^(\d{4})-(\d{1,2})-(\d{1,2})$", s)
+    if m:
+        try:
+            return (datetime(int(m.group(1)), int(m.group(2)), int(m.group(3))) - datetime(1970, 1, 1)).days
+        except ValueError:
+            return None
+    for fmt in ("%m/%d/%Y", "%m/%d/%y", "%b %d, %Y", "%d %b %Y", "%B %d, %Y"):
+        try:
+            return (datetime.strptime(s, fmt) - datetime(1970, 1, 1)).days
+        except ValueError:
+            continue
+    return None
+
+
+# --------------------------------------------------------------- databases
+
+class Table(object):
+    """A colon-separated database file. Untouched lines stay byte-identical."""
+
+    def __init__(self, rel, nfields):
+        self.rel = rel
+        self.path = rp(rel)
+        self.nfields = nfields
+        txt = read_text(self.path)
+        self.exists = txt is not None
+        txt = txt or ""
+        self.trailing = txt.endswith("\n") or txt == ""
+        self.lines = txt.split("\n")
+        if self.lines and self.lines[-1] == "":
+            self.lines.pop()
+        self.dirty = False
+
+    def rows(self):
+        for i, line in enumerate(self.lines):
+            if not line or line.startswith("#") or line[0] in "+-":
+                continue
+            f = line.split(":")
+            yield i, f
+
+    def find(self, name):
+        for i, f in self.rows():
+            if f[0] == name:
+                return i
+        return None
+
+    def get(self, name):
+        i = self.find(name)
+        return None if i is None else self.fields(i)
+
+    def fields(self, i):
+        f = self.lines[i].split(":")
+        while len(f) < self.nfields:
+            f.append("")
+        return f
+
+    def set(self, i, fields):
+        new = ":".join(fields)
+        if new != self.lines[i]:
+            self.lines[i] = new
+            self.dirty = True
+
+    def append(self, fields):
+        self.lines.append(":".join(fields))
+        self.dirty = True
+
+    def remove(self, i):
+        del self.lines[i]
+        self.dirty = True
+
+    def names(self):
+        return [f[0] for _i, f in self.rows()]
+
+    def save(self):
+        if not self.dirty:
+            return
+        text = "\n".join(self.lines) + ("\n" if self.lines else "")
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        with open(self.path, "w", encoding="utf-8", errors="surrogateescape") as fh:
+            fh.write(text)
+        self.dirty = False
+
+
+class DB(object):
+    def __init__(self):
+        self.passwd = Table("etc/passwd", 7)
+        self.group = Table("etc/group", 4)
+        self.shadow = Table("etc/shadow", 9)
+        self.gshadow = Table("etc/gshadow", 4)
+        self.subuid = Table("etc/subuid", 3)
+        self.subgid = Table("etc/subgid", 3)
+        self.defs = login_defs()
+
+    def save(self):
+        for t in (self.passwd, self.shadow, self.group, self.gshadow, self.subuid, self.subgid):
+            if t.exists or t is self.passwd or t is self.group:
+                t.save()
+
+    def user(self, name):
+        return self.passwd.get(name)
+
+    def user_by_uid(self, uid):
+        for _i, f in self.passwd.rows():
+            if len(f) > 2 and f[2] == str(uid):
+                return f
+        return None
+
+    def group_entry(self, name_or_gid):
+        g = self.group.get(name_or_gid)
+        if g is not None:
+            return g
+        if re.match(r"^\d+$", name_or_gid):
+            for i, f in self.group.rows():
+                if len(f) > 2 and f[2] == name_or_gid:
+                    return self.group.fields(i)
+        return None
+
+    def group_by_gid(self, gid):
+        for i, f in self.group.rows():
+            if len(f) > 2 and f[2] == str(gid):
+                return self.group.fields(i)
+        return None
+
+    def used_uids(self):
+        out = set()
+        for _i, f in self.passwd.rows():
+            if len(f) > 2 and f[2].isdigit():
+                out.add(int(f[2]))
+        return out
+
+    def used_gids(self):
+        out = set()
+        for _i, f in self.group.rows():
+            if len(f) > 2 and f[2].isdigit():
+                out.add(int(f[2]))
+        return out
+
+
+LOGIN_DEFS = {"UID_MIN": "1000", "UID_MAX": "60000", "SYS_UID_MIN": "100", "SYS_UID_MAX": "999",
+              "GID_MIN": "1000", "GID_MAX": "60000", "SYS_GID_MIN": "100", "SYS_GID_MAX": "999",
+              "PASS_MAX_DAYS": "99999", "PASS_MIN_DAYS": "0", "PASS_WARN_AGE": "7", "USERGROUPS_ENAB": "yes",
+              "HOME_MODE": "0750", "UMASK": "022", "SUB_UID_MIN": "100000", "SUB_UID_MAX": "600100000",
+              "SUB_UID_COUNT": "65536", "SUB_GID_MIN": "100000", "SUB_GID_MAX": "600100000",
+              "SUB_GID_COUNT": "65536", "ENCRYPT_METHOD": "YESCRYPT"}
+
+
+def login_defs():
+    """login.defs values; Ubuntu 24.04's defaults when the fake root has no file."""
+    txt = read_text(rp("etc/login.defs"))
+    if txt is None:
+        return dict(LOGIN_DEFS)
+    vals = {}
+    for line in txt.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        parts = s.split(None, 1)
+        vals[parts[0]] = parts[1].strip().strip('"') if len(parts) > 1 else ""
+    out = {}
+    for k, v in LOGIN_DEFS.items():
+        if k in ("HOME_MODE", "PASS_MAX_DAYS", "PASS_MIN_DAYS", "PASS_WARN_AGE") and k not in vals:
+            continue
+        out[k] = v
+    out.update(vals)
+    return out
+
+
+def defnum(defs, key, default):
+    v = defs.get(key)
+    if v is None:
+        return default
+    try:
+        return int(v, 0) if v.startswith("0") and len(v) > 1 else int(v)
+    except ValueError:
+        return default
+
+
+def defbool(defs, key, default=False):
+    v = defs.get(key)
+    if v is None:
+        return default
+    return v.lower() == "yes"
+
+
+USERADD_DEFAULTS = {"GROUP": "100", "HOME": "/home", "INACTIVE": "-1", "EXPIRE": "", "SHELL": "/bin/sh",
+                    "SKEL": "/etc/skel", "CREATE_MAIL_SPOOL": "no", "LOG_INIT": "yes"}
+
+
+def useradd_defaults():
+    d = dict(USERADD_DEFAULTS)
+    txt = read_text(rp("etc/default/useradd"), "") or ""
+    for line in txt.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#") or "=" not in s:
+            continue
+        k, v = s.split("=", 1)
+        d[k.strip()] = v.strip().strip('"')
+    return d
+
+
+# --------------------------------------------------------------- helpers
+
+NAME_RX = re.compile(r"^[a-z_][a-z0-9_-]*[$]?$")
+
+
+def valid_name(name, badname=False):
+    if not name or len(name) > 32 or name in (".", "..") or name.isdigit():
+        return False
+    if badname:
+        return not any(c in name for c in ":,\n \t/") and not name.startswith("-")
+    return bool(NAME_RX.match(name))
+
+
+def valid_field(v):
+    return ":" not in v and "\n" not in v
+
+
+def members(s):
+    return [m for m in s.split(",") if m]
+
+
+def set_members(lst):
+    return ",".join(lst)
+
+
+def find_new_id(used, lo, hi, system, preferred=None):
+    """shadow-utils 4.13 find_new_uid()/find_new_gid()."""
+    if preferred is not None and lo <= preferred <= hi and preferred not in used:
+        return preferred
+    in_range = [u for u in used if lo <= u <= hi]
+    if system:
+        cand = (min(in_range) - 1) if in_range else hi
+        if cand >= lo and cand not in used:
+            return cand
+        for c in range(hi, lo - 1, -1):
+            if c not in used:
+                return c
+    else:
+        cand = (max(in_range) + 1) if in_range else lo
+        if cand <= hi and cand not in used:
+            return cand
+        for c in range(lo, hi + 1):
+            if c not in used:
+                return c
+    return None
+
+
+def find_free_range(table, lo, hi, count):
+    """shadow's find_free_range(): lowest start >= lo that overlaps no existing range."""
+    ranges = []
+    for _i, f in table.rows():
+        try:
+            ranges.append((int(f[1]), int(f[2])))
+        except (IndexError, ValueError):
+            continue
+    ranges.sort()
+    cand = lo
+    for start, cnt in ranges:
+        end = start + cnt
+        if cand + count <= start:
+            break
+        if end > cand:
+            cand = end
+    if cand + count - 1 > hi:
+        return None
+    return cand
+
+
+def shell_warning(shell):
+    if not shell or shell.startswith("*"):
+        return
+    # Only judge when the fake root holds a captured system tree (it has a shell binary).
+    has_bins = any(os.path.exists(rp(d)) for d in ("bin/sh", "usr/bin/sh", "bin/bash", "usr/bin/bash"))
+    if not has_bins or shell in ("/sbin/nologin", "/usr/sbin/nologin"):
+        return
+    real = rp(shell)
+    if not os.path.exists(real) or os.path.isdir(real) or not os.access(real, os.X_OK):
+        err("%s: Warning: missing or non-executable shell '%s'" % (PROG, shell))
+
+
+def copy_skel(src, dst):
+    for entry in sorted(os.listdir(src)):
+        s = os.path.join(src, entry)
+        d = os.path.join(dst, entry)
+        if os.path.islink(s):
+            os.symlink(os.readlink(s), d)
+        elif os.path.isdir(s):
+            os.mkdir(d)
+            copy_skel(s, d)
+            os.chmod(d, stat.S_IMODE(os.lstat(s).st_mode))
+        else:
+            shutil.copy2(s, d)
+
+
+def inside_root(path):
+    real = os.path.realpath(rp(path))
+    root = os.path.realpath(ROOT)
+    return real != root and real.startswith(root + os.sep)
+
+
+def parse_opts(argv, short, long_opts, unsupported_opts=()):
+    try:
+        opts, args = getopt.gnu_getopt(argv, short, long_opts)
+    except getopt.GetoptError as e:
+        opt = e.opt or ""
+        if "requires argument" in e.msg:
+            if len(opt) == 1:
+                err("%s: option requires an argument -- '%s'" % (PROG, opt))
+            else:
+                err("%s: option '--%s' requires an argument" % (PROG, opt))
+        elif len(opt) == 1:
+            err("%s: invalid option -- '%s'" % (PROG, opt))
+        else:
+            err("%s: unrecognized option '--%s'" % (PROG, opt))
+        raise Exit(2, usage_text())
+    for o, _v in opts:
+        if o in unsupported_opts:
+            unsupported(o)
+    return opts, args
+
+
+USAGES = {
+    "useradd": """Usage: useradd [options] LOGIN
+       useradd -D
+       useradd -D [options]
+
+Options:
+      --badname                 do not check for bad names
+  -c, --comment COMMENT         GECOS field of the new account
+  -d, --home-dir HOME_DIR       home directory of the new account
+  -D, --defaults                print or change default useradd configuration
+  -e, --expiredate EXPIRE_DATE  expiration date of the new account
+  -f, --inactive INACTIVE       password inactivity period of the new account
+  -g, --gid GROUP               name or ID of the primary group of the new
+                                account
+  -G, --groups GROUPS           list of supplementary groups of the new
+                                account
+  -h, --help                    display this help message and exit
+  -k, --skel SKEL_DIR           use this alternative skeleton directory
+  -K, --key KEY=VALUE           override /etc/login.defs defaults
+  -l, --no-log-init             do not add the user to the lastlog and
+                                faillog databases
+  -m, --create-home             create the user's home directory
+  -M, --no-create-home          do not create the user's home directory
+  -N, --no-user-group           do not create a group with the same name as
+                                the user
+  -o, --non-unique              allow to create users with duplicate
+                                (non-unique) UID
+  -p, --password PASSWORD       encrypted password of the new account
+  -r, --system                  create a system account
+  -s, --shell SHELL             login shell of the new account
+  -u, --uid UID                 user ID of the new account
+  -U, --user-group              create a group with the same name as the user
+""",
+    "usermod": """Usage: usermod [options] LOGIN
+
+Options:
+  -a, --append                  append the user to the supplemental GROUPS
+                                mentioned by the -G option without removing
+                                the user from other groups
+  -b, --badname                 allow bad names
+  -c, --comment COMMENT         new value of the GECOS field
+  -d, --home HOME_DIR           new home directory for the user account
+  -e, --expiredate EXPIRE_DATE  set account expiration date to EXPIRE_DATE
+  -f, --inactive INACTIVE       set password inactive after expiration
+                                to INACTIVE
+  -g, --gid GROUP               force use GROUP as new primary group
+  -G, --groups GROUPS           new list of supplementary GROUPS
+  -h, --help                    display this help message and exit
+  -l, --login NEW_LOGIN         new value of the login name
+  -L, --lock                    lock the user account
+  -m, --move-home               move contents of the home directory to the
+                                new location (use only with -d)
+  -o, --non-unique              allow using duplicate (non-unique) UID
+  -p, --password PASSWORD       use encrypted password for the new password
+  -r, --remove                  remove the user from only the supplemental GROUPS
+                                mentioned by the -G option without removing
+                                the user from other groups
+  -s, --shell SHELL             new login shell for the user account
+  -u, --uid UID                 new UID for the user account
+  -U, --unlock                  unlock the user account
+  -v, --add-subuids FIRST-LAST  add range of subordinate uids
+  -V, --del-subuids FIRST-LAST  remove range of subordinate uids
+  -w, --add-subgids FIRST-LAST  add range of subordinate gids
+  -W, --del-subgids FIRST-LAST  remove range of subordinate gids
+""",
+    "userdel": """Usage: userdel [options] LOGIN
+
+Options:
+  -f, --force                   force some actions that would fail otherwise
+                                e.g. removal of user still logged in
+                                or files, even if not owned by the user
+  -h, --help                    display this help message and exit
+  -r, --remove                  remove home directory and mail spool
+""",
+    "groupadd": """Usage: groupadd [options] GROUP
+
+Options:
+  -f, --force                   exit successfully if the group already exists,
+                                and cancel -g if the GID is already used
+  -g, --gid GID                 use GID for the new group
+  -h, --help                    display this help message and exit
+  -K, --key KEY=VALUE           override /etc/login.defs defaults
+  -o, --non-unique              allow to create groups with duplicate
+                                (non-unique) GID
+  -p, --password PASSWORD       use this encrypted password for the new group
+  -r, --system                  create a system account
+  -U, --users USERS             list of user members of this group
+""",
+    "groupmod": """Usage: groupmod [options] GROUP
+
+Options:
+  -a, --append                  append the users mentioned by -U option to the group
+                                without removing existing user members
+  -g, --gid GID                 change the group ID to GID
+  -h, --help                    display this help message and exit
+  -n, --new-name NEW_GROUP      change the name to NEW_GROUP
+  -o, --non-unique              allow to use a duplicate (non-unique) GID
+  -p, --password PASSWORD       change the password to this (encrypted)
+                                PASSWORD
+  -U, --users USERS             list of user members of this group
+""",
+    "groupdel": """Usage: groupdel [options] GROUP
+
+Options:
+  -h, --help                    display this help message and exit
+  -f, --force                   delete group even if it is the primary group of a user
+""",
+    "gpasswd": """Usage: gpasswd [option] GROUP
+
+Options:
+  -a, --add USER                add USER to GROUP
+  -d, --delete USER             remove USER from GROUP
+  -h, --help                    display this help message and exit
+  -Q, --root CHROOT_DIR         directory to chroot into
+  -r, --remove-password         remove the GROUP's password
+  -R, --restrict                restrict access to GROUP to its members
+  -M, --members USER,...        set the list of members of GROUP
+  -A, --administrators ADMIN,...
+                                set the list of administrators for GROUP
+Except for the -A and -M options, the options cannot be combined.
+""",
+    "passwd": """Usage: passwd [options] [LOGIN]
+
+Options:
+  -a, --all                     report password status on all accounts
+  -d, --delete                  delete the password for the named account
+  -e, --expire                  force expire the password for the named account
+  -h, --help                    display this help message and exit
+  -k, --keep-tokens             change password only if expired
+  -i, --inactive INACTIVE       set password inactive after expiration
+                                to INACTIVE
+  -l, --lock                    lock the password of the named account
+  -n, --mindays MIN_DAYS        set minimum number of days before password
+                                change to MIN_DAYS
+  -q, --quiet                   quiet mode
+  -r, --repository REPOSITORY   change password in REPOSITORY repository
+  -R, --root CHROOT_DIR         directory to chroot into
+  -S, --status                  report password status on the named account
+  -u, --unlock                  unlock the password of the named account
+  -w, --warndays WARN_DAYS      set expiration warning days to WARN_DAYS
+  -x, --maxdays MAX_DAYS        set maximum number of days before password
+                                change to MAX_DAYS
+""",
+    "chage": """Usage: chage [options] LOGIN
+
+Options:
+  -d, --lastday LAST_DAY        set date of last password change to LAST_DAY
+  -E, --expiredate EXPIRE_DATE  set account expiration date to EXPIRE_DATE
+  -h, --help                    display this help message and exit
+  -i, --iso8601                 use YYYY-MM-DD when printing dates
+  -I, --inactive INACTIVE       set password inactive after expiration
+                                to INACTIVE
+  -l, --list                    show account aging information
+  -m, --mindays MIN_DAYS        set minimum number of days before password
+                                change to MIN_DAYS
+  -M, --maxdays MAX_DAYS        set maximum number of days before password
+                                change to MAX_DAYS
+  -R, --root CHROOT_DIR         directory to chroot into
+  -W, --warndays WARN_DAYS      set expiration warning days to WARN_DAYS
+""",
+}
+
+
+def usage_text():
+    return USAGES.get(PROG, "Usage: %s (mock; see mocks/README.md)" % PROG).rstrip("\n")
+
+
+def usage(code=2):
+    raise Exit(code, usage_text())
+
+
+def help_exit():
+    sys.stdout.write(USAGES.get(PROG, "") + "\n")
+    raise Exit(0)
+
+
+def numeric_arg(v, lo=None):
+    if not re.match(r"^-?\d+$", v):
+        die(3, "%s: invalid numeric argument '%s'" % (PROG, v))
+    n = int(v)
+    if lo is not None and n < lo:
+        die(3, "%s: invalid numeric argument '%s'" % (PROG, v))
+    return n
+
+
+def age_field(n):
+    return "" if n is None or n < 0 else str(n)
+
+
+def update_member_lists(db, user, wanted, append, remove):
+    """Supplementary groups: wanted is a list of group names, or None."""
+    wanted_set = set(wanted or [])
+    for t in (db.group, db.gshadow):
+        if not t.exists:
+            continue
+        for i, f in list(t.rows()):
+            row = t.fields(i)
+            mem = members(row[3])
+            is_member = user in mem
+            want = row[0] in wanted_set
+            if remove:
+                if want and is_member:
+                    mem = [m for m in mem if m != user]
+            elif append:
+                if want and not is_member:
+                    mem.append(user)
+            else:
+                if want and not is_member:
+                    mem.append(user)
+                elif not want and is_member:
+                    mem = [m for m in mem if m != user]
+            row[3] = set_members(mem)
+            t.set(i, row)
+
+
+def check_groups(db, spec):
+    out = []
+    for g in [x for x in spec.split(",") if x]:
+        e = db.group_entry(g)
+        if e is None:
+            die(6, "%s: group '%s' does not exist" % (PROG, g))
+        if e[0] not in out:
+            out.append(e[0])
+    return out
+
+
+# ---------------------------------------------------------------- useradd
+
+def cmd_useradd(argv):
+    opts, args = parse_opts(argv, "b:c:d:De:f:g:G:hk:K:lmMNop:rR:P:s:u:UZ:F",
+                            ["base-dir=", "comment=", "home-dir=", "defaults", "expiredate=", "inactive=",
+                             "gid=", "groups=", "help", "skel=", "key=", "no-log-init", "create-home",
+                             "no-create-home", "no-user-group", "non-unique", "password=", "system", "root=",
+                             "prefix=", "shell=", "uid=", "user-group", "selinux-user=", "badname", "badnames",
+                             "add-subids-for-system", "btrfs-subvolume-home", "selinux-range="],
+                            ("-R", "--root", "-P", "--prefix", "-Z", "--selinux-user", "--selinux-range",
+                             "--btrfs-subvolume-home"))
+    db = DB()
+    defaults = useradd_defaults()
+    o = {}
+    keys = {}
+    for k, v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        elif k in ("-b", "--base-dir"):
+            o["base"] = v
+        elif k in ("-c", "--comment"):
+            if not valid_field(v):
+                die(3, "%s: invalid comment '%s'" % (PROG, v))
+            o["comment"] = v
+        elif k in ("-d", "--home-dir"):
+            if not v.startswith("/") or not valid_field(v):
+                die(3, "%s: invalid home directory '%s'" % (PROG, v))
+            o["home"] = v
+        elif k in ("-D", "--defaults"):
+            o["D"] = True
+        elif k in ("-e", "--expiredate"):
+            d = strtoday(v)
+            if d is None:
+                die(3, "%s: invalid date '%s'" % (PROG, v))
+            o["expire"] = d
+        elif k in ("-f", "--inactive"):
+            o["inactive"] = numeric_arg(v, -1)
+        elif k in ("-g", "--gid"):
+            o["gid"] = v
+        elif k in ("-G", "--groups"):
+            o["groups"] = v
+        elif k in ("-k", "--skel"):
+            o["skel"] = v
+        elif k in ("-K", "--key"):
+            if "=" not in v:
+                die(3, "%s: -K requires KEY=VALUE" % PROG)
+            kk, vv = v.split("=", 1)
+            keys[kk] = vv
+        elif k in ("-m", "--create-home"):
+            o["mkhome"] = True
+        elif k in ("-M", "--no-create-home"):
+            o["mkhome"] = False
+        elif k in ("-N", "--no-user-group"):
+            o["usergroup"] = False
+        elif k in ("-U", "--user-group"):
+            o["usergroup"] = True
+        elif k in ("-o", "--non-unique"):
+            o["nonunique"] = True
+        elif k in ("-p", "--password"):
+            if not valid_field(v):
+                die(3, "%s: invalid field '%s'" % (PROG, v))
+            o["password"] = v
+        elif k in ("-r", "--system"):
+            o["system"] = True
+        elif k in ("-s", "--shell"):
+            if not valid_field(v) or (v and not v.startswith("/") and not v.startswith("*")):
+                die(3, "%s: invalid shell '%s'" % (PROG, v))
+            o["shell"] = v
+        elif k in ("-u", "--uid"):
+            if not re.match(r"^\d+$", v):
+                die(3, "%s: invalid user ID '%s'" % (PROG, v))
+            o["uid"] = int(v)
+        elif k in ("--badname", "--badnames"):
+            o["badname"] = True
+        elif k in ("-l", "--no-log-init", "-F", "--add-subids-for-system"):
+            o[k] = True
+    db.defs.update(keys)
+    if o.get("D"):
+        if args or len(opts) > 1:
+            die(2, "mock: changing useradd defaults with -D is not supported")
+        for k in ("GROUP", "HOME", "INACTIVE", "EXPIRE", "SHELL", "SKEL", "CREATE_MAIL_SPOOL", "LOG_INIT"):
+            print("%s=%s" % (k, defaults.get(k, "")))
+        return 0
+    if len(args) != 1:
+        usage()
+    user = args[0]
+    if not valid_name(user, o.get("badname")):
+        die(3, "%s: invalid user name '%s': use --badname to ignore" % (PROG, user))
+    if "shell" in o:
+        shell_warning(o["shell"])
+    if db.user(user) is not None:
+        die(9, "%s: user '%s' already exists" % (PROG, user))
+    pgroup = None
+    if "gid" in o:
+        pgroup = db.group_entry(o["gid"])
+        if pgroup is None:
+            die(6, "%s: group '%s' does not exist" % (PROG, o["gid"]))
+    groups = check_groups(db, o["groups"]) if o.get("groups") else []
+    system = bool(o.get("system"))
+    usergroup = o.get("usergroup", defbool(db.defs, "USERGROUPS_ENAB", True))
+    if pgroup is not None and "usergroup" not in o:
+        usergroup = False
+    if pgroup is not None and o.get("usergroup"):
+        die(2, "%s: options -g and -U conflict" % PROG)
+    if usergroup and db.group.find(user) is not None:
+        die(9, "%s: group %s exists - if you want to add this user to that group, use -g." % (PROG, user))
+    if "uid" in o:
+        uid = o["uid"]
+        if uid in db.used_uids() and not o.get("nonunique"):
+            die(4, "%s: UID %d is not unique" % (PROG, uid))
+    else:
+        if system:
+            lo, hi = defnum(db.defs, "SYS_UID_MIN", 100), defnum(db.defs, "SYS_UID_MAX", 999)
+        else:
+            lo, hi = defnum(db.defs, "UID_MIN", 1000), defnum(db.defs, "UID_MAX", 60000)
+        uid = find_new_id(db.used_uids(), lo, hi, system)
+        if uid is None:
+            die(4, "%s: Can't get unique UID (no more available UIDs)" % PROG)
+    if pgroup is not None:
+        gid = int(pgroup[2])
+    elif usergroup:
+        if system:
+            lo, hi = defnum(db.defs, "SYS_GID_MIN", 100), defnum(db.defs, "SYS_GID_MAX", 999)
+        else:
+            lo, hi = defnum(db.defs, "GID_MIN", 1000), defnum(db.defs, "GID_MAX", 60000)
+        gid = find_new_id(db.used_gids(), lo, hi, system, preferred=uid)
+        if gid is None:
+            die(4, "%s: Can't get unique GID (no more available GIDs)" % PROG)
+    else:
+        g = db.group_entry(defaults.get("GROUP", "100"))
+        gid = int(g[2]) if g else int(defaults.get("GROUP", "100") or 100)
+    home = o.get("home") or "%s/%s" % ((o.get("base") or defaults.get("HOME") or "/home").rstrip("/"), user)
+    shell = o["shell"] if "shell" in o else defaults.get("SHELL", "/bin/sh")
+    comment = o.get("comment", "")
+    db.passwd.append([user, "x", str(uid), str(gid), comment, home, shell])
+    if db.shadow.exists:
+        day = today()
+        if system:
+            row = [user, o.get("password", "!"), str(day), "", "", "", age_field(o.get("inactive")),
+                   age_field(o.get("expire")), ""]
+        else:
+            inact = o.get("inactive", int(defaults.get("INACTIVE", "-1") or -1))
+            exp = o.get("expire", strtoday(defaults.get("EXPIRE", "")) if defaults.get("EXPIRE") else -1)
+            row = [user, o.get("password", "!"), str(day), age_field(defnum(db.defs, "PASS_MIN_DAYS", -1)),
+                   age_field(defnum(db.defs, "PASS_MAX_DAYS", -1)), age_field(defnum(db.defs, "PASS_WARN_AGE", -1)),
+                   age_field(inact), age_field(exp), ""]
+        db.shadow.append(row)
+    if usergroup and pgroup is None:
+        db.group.append([user, "x", str(gid), ""])
+        if db.gshadow.exists:
+            db.gshadow.append([user, "!", "", ""])
+    if groups:
+        update_member_lists(db, user, groups, append=True, remove=False)
+    if not system or o.get("-F") or o.get("--add-subids-for-system"):
+        for table, key in ((db.subuid, "UID"), (db.subgid, "GID")):
+            if not table.exists or table.find(user) is not None:
+                continue
+            count = defnum(db.defs, "SUB_%s_COUNT" % key, 65536)
+            if count <= 0:
+                continue
+            start = find_free_range(table, defnum(db.defs, "SUB_%s_MIN" % key, 100000),
+                                    defnum(db.defs, "SUB_%s_MAX" % key, 600100000), count)
+            if start is None:
+                err("%s: can't create subordinate %s IDs" % (PROG, "user" if key == "UID" else "group"))
+                continue
+            table.append([user, str(start), str(count)])
+    db.save()
+    mkhome = o.get("mkhome", defbool(db.defs, "CREATE_HOME", False))
+    if mkhome:
+        real = rp(home)
+        if os.path.exists(real):
+            err("%s: warning: the home directory %s already exists." % (PROG, home))
+            err("%s: Not copying any file from skel directory into it." % PROG)
+        else:
+            try:
+                os.makedirs(real)
+            except OSError:
+                die(12, "%s: cannot create directory %s" % (PROG, home))
+            skel = rp(o.get("skel") or defaults.get("SKEL") or "/etc/skel")
+            if os.path.isdir(skel):
+                copy_skel(skel, real)
+            mode = db.defs.get("HOME_MODE")
+            if mode:
+                m = int(mode, 8)
+            else:
+                m = 0o777 & ~int(db.defs.get("UMASK", "022"), 8)
+            os.chmod(real, m)
+    return 0
+
+
+# ---------------------------------------------------------------- usermod
+
+def parse_range(v):
+    m = re.match(r"^(\d+)-(\d+)$", v)
+    if not m or int(m.group(2)) < int(m.group(1)):
+        die(3, "%s: invalid subordinate uid range '%s'" % (PROG, v))
+    return int(m.group(1)), int(m.group(2)) - int(m.group(1)) + 1
+
+
+def cmd_usermod(argv):
+    opts, args = parse_opts(argv, "abc:d:e:f:g:G:hl:Lmop:rR:P:s:u:Uv:V:w:W:Z:",
+                            ["append", "badname", "badnames", "comment=", "home=", "expiredate=", "inactive=",
+                             "gid=", "groups=", "help", "login=", "lock", "move-home", "non-unique", "password=",
+                             "remove", "root=", "prefix=", "shell=", "uid=", "unlock", "add-subuids=",
+                             "del-subuids=", "add-subgids=", "del-subgids=", "selinux-user=", "selinux-range="],
+                            ("-R", "--root", "-P", "--prefix", "-Z", "--selinux-user", "--selinux-range"))
+    o = {}
+    sub = []
+    for k, v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        elif k in ("-a", "--append"):
+            o["append"] = True
+        elif k in ("-b", "--badname", "--badnames"):
+            o["badname"] = True
+        elif k in ("-c", "--comment"):
+            if not valid_field(v):
+                die(3, "%s: invalid field '%s'" % (PROG, v))
+            o["comment"] = v
+        elif k in ("-d", "--home"):
+            if not v.startswith("/") or not valid_field(v):
+                die(3, "%s: invalid field '%s'" % (PROG, v))
+            o["home"] = v
+        elif k in ("-e", "--expiredate"):
+            d = strtoday(v)
+            if d is None:
+                die(3, "%s: invalid date '%s'" % (PROG, v))
+            o["expire"] = d
+        elif k in ("-f", "--inactive"):
+            o["inactive"] = numeric_arg(v, -1)
+        elif k in ("-g", "--gid"):
+            o["gid"] = v
+        elif k in ("-G", "--groups"):
+            o["groups"] = v
+        elif k in ("-l", "--login"):
+            o["login"] = v
+        elif k in ("-L", "--lock"):
+            o["lock"] = True
+        elif k in ("-m", "--move-home"):
+            o["move"] = True
+        elif k in ("-o", "--non-unique"):
+            o["nonunique"] = True
+        elif k in ("-p", "--password"):
+            if not valid_field(v):
+                die(3, "%s: invalid field '%s'" % (PROG, v))
+            o["password"] = v
+        elif k in ("-r", "--remove"):
+            o["remove"] = True
+        elif k in ("-s", "--shell"):
+            if not valid_field(v) or (v and not v.startswith("/") and not v.startswith("*")):
+                die(3, "%s: invalid shell '%s'" % (PROG, v))
+            o["shell"] = v
+        elif k in ("-u", "--uid"):
+            if not re.match(r"^\d+$", v):
+                die(3, "%s: invalid user ID '%s'" % (PROG, v))
+            o["uid"] = int(v)
+        elif k in ("-U", "--unlock"):
+            o["unlock"] = True
+        elif k in ("-v", "--add-subuids"):
+            sub.append(("uid", "add", parse_range(v)))
+        elif k in ("-V", "--del-subuids"):
+            sub.append(("uid", "del", parse_range(v)))
+        elif k in ("-w", "--add-subgids"):
+            sub.append(("gid", "add", parse_range(v)))
+        elif k in ("-W", "--del-subgids"):
+            sub.append(("gid", "del", parse_range(v)))
+    if not opts:
+        usage()
+    if len(args) != 1:
+        usage()
+    if o.get("append") and "groups" not in o:
+        err("%s: -a flag is ONLY allowed with the -G flag" % PROG)
+        usage()
+    if o.get("remove") and "groups" not in o:
+        err("%s: -r flag is ONLY allowed with the -G flag" % PROG)
+        usage()
+    if o.get("append") and o.get("remove"):
+        err("%s: -a and -r are mutually exclusive" % PROG)
+        usage()
+    if sum(1 for k in ("lock", "unlock", "password") if k in o) > 1:
+        err("%s: the -L, -p, and -U flags are exclusive" % PROG)
+        usage()
+    if o.get("move") and "home" not in o:
+        err("%s: -m flag is only allowed with the -d flag" % PROG)
+        usage()
+    if o.get("nonunique") and "uid" not in o:
+        err("%s: -o flag is only allowed with the -u flag" % PROG)
+        usage()
+    db = DB()
+    user = args[0]
+    pi = db.passwd.find(user)
+    if pi is None:
+        die(6, "%s: user '%s' does not exist" % (PROG, user))
+    pw = db.passwd.fields(pi)
+    if "login" in o:
+        if not valid_name(o["login"], o.get("badname")):
+            die(3, "%s: invalid user name '%s': use --badname to ignore" % (PROG, o["login"]))
+        if o["login"] != user and db.user(o["login"]) is not None:
+            die(9, "%s: user '%s' already exists" % (PROG, o["login"]))
+    if "uid" in o and o["uid"] != int(pw[2] or -1) and o["uid"] in db.used_uids() and not o.get("nonunique"):
+        die(4, "%s: UID '%d' already exists" % (PROG, o["uid"]))
+    newgid = None
+    if "gid" in o:
+        g = db.group_entry(o["gid"])
+        if g is None:
+            die(6, "%s: group '%s' does not exist" % (PROG, o["gid"]))
+        newgid = g[2]
+    groups = check_groups(db, o["groups"]) if "groups" in o else None
+    if "shell" in o:
+        shell_warning(o["shell"])
+    # flags that are dropped when the new value equals the old one (shadow's "no changes")
+    changing = set(k for k in o if k not in ("append", "remove", "badname", "nonunique", "move"))
+    if "comment" in o and o["comment"] == pw[4]:
+        changing.discard("comment")
+    if "home" in o and o["home"] == pw[5]:
+        changing.discard("home")
+    if "shell" in o and o["shell"] == pw[6]:
+        changing.discard("shell")
+    if "uid" in o and str(o["uid"]) == pw[2]:
+        changing.discard("uid")
+    if newgid is not None and newgid == pw[3]:
+        changing.discard("gid")
+    if "login" in o and o["login"] == user:
+        changing.discard("login")
+    si = db.shadow.find(user) if db.shadow.exists else None
+    sp = db.shadow.fields(si) if si is not None else None
+    if "expire" in o and sp is not None and age_field(o["expire"]) == sp[7]:
+        changing.discard("expire")
+    if "inactive" in o and sp is not None and age_field(o["inactive"]) == sp[6]:
+        changing.discard("inactive")
+    if not changing and not sub:
+        print("%s: no changes" % PROG)
+        return 0
+    old_home = pw[5]
+    if "comment" in o:
+        pw[4] = o["comment"]
+    if "home" in o:
+        pw[5] = o["home"]
+    if "shell" in o:
+        pw[6] = o["shell"]
+    if "uid" in o:
+        pw[2] = str(o["uid"])
+    if newgid is not None:
+        pw[3] = newgid
+    # password field: shadow if the user has a shadow entry, else passwd
+    if sp is not None:
+        target, ti, row, col = db.shadow, si, sp, 1
+    else:
+        target, ti, row, col = db.passwd, pi, pw, 1
+    if "password" in o:
+        row[col] = o["password"]
+    if o.get("lock") and not row[col].startswith("!"):
+        row[col] = "!" + row[col]
+    if o.get("unlock") and row[col].startswith("!"):
+        if row[col] == "!":
+            err("%s: unlocking the user's password would result in a passwordless account.\n"
+                "You should set a password with usermod -p to unlock this user's password." % PROG)
+        else:
+            row[col] = row[col][1:]
+    if sp is not None:
+        if "expire" in o:
+            sp[7] = age_field(o["expire"])
+        if "inactive" in o:
+            sp[6] = age_field(o["inactive"])
+    elif ("expire" in o or "inactive" in o) and db.shadow.exists:
+        pass
+    newname = o.get("login", user)
+    if newname != user:
+        pw[0] = newname
+        if sp is not None:
+            sp[0] = newname
+        for t in (db.group, db.gshadow):
+            if not t.exists:
+                continue
+            for i, _f in list(t.rows()):
+                r = t.fields(i)
+                r[3] = set_members([newname if m == user else m for m in members(r[3])])
+                if t is db.gshadow:
+                    r[2] = set_members([newname if m == user else m for m in members(r[2])])
+                t.set(i, r)
+    db.passwd.set(pi, pw)
+    if sp is not None:
+        db.shadow.set(si, sp)
+    if target is db.passwd:
+        db.passwd.set(pi, row)
+    if groups is not None:
+        update_member_lists(db, newname, groups, append=o.get("append", False), remove=o.get("remove", False))
+    for kind, action, (start, count) in sub:
+        t = db.subuid if kind == "uid" else db.subgid
+        if action == "add":
+            t.exists = True
+            t.append([newname, str(start), str(count)])
+        else:
+            for i, f in reversed(list(t.rows())):
+                if f[0] == newname and len(f) > 2 and f[1] == str(start) and f[2] == str(count):
+                    t.remove(i)
+    if o.get("move") and "home" in o and o["home"] != old_home:
+        src, dst = rp(old_home), rp(o["home"])
+        if os.path.exists(dst):
+            die(12, "%s: directory %s exists" % (PROG, o["home"]))
+        if os.path.isdir(src) and inside_root(old_home):
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            os.rename(src, dst)
+    db.save()
+    return 0
+
+
+# ---------------------------------------------------------------- userdel
+
+def cmd_userdel(argv):
+    opts, args = parse_opts(argv, "fhrR:P:Z", ["force", "help", "remove", "root=", "prefix=", "selinux-user"],
+                            ("-R", "--root", "-P", "--prefix", "-Z", "--selinux-user"))
+    remove = False
+    for k, _v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        if k in ("-r", "--remove"):
+            remove = True
+    if len(args) != 1:
+        usage()
+    user = args[0]
+    db = DB()
+    pi = db.passwd.find(user)
+    if pi is None:
+        die(6, "%s: user '%s' does not exist" % (PROG, user))
+    pw = db.passwd.fields(pi)
+    home, gid = pw[5], pw[3]
+    db.passwd.remove(pi)
+    if db.shadow.exists:
+        si = db.shadow.find(user)
+        if si is not None:
+            db.shadow.remove(si)
+    for t in (db.group, db.gshadow):
+        if not t.exists:
+            continue
+        for i, _f in list(t.rows()):
+            r = t.fields(i)
+            r[3] = set_members([m for m in members(r[3]) if m != user])
+            if t is db.gshadow:
+                r[2] = set_members([m for m in members(r[2]) if m != user])
+            t.set(i, r)
+    if defbool(db.defs, "USERGROUPS_ENAB", True):
+        gi = db.group.find(user)
+        if gi is not None:
+            g = db.group.fields(gi)
+            if g[2] == gid:
+                others = [f[0] for _i, f in db.passwd.rows() if len(f) > 3 and f[3] == gid]
+                if others:
+                    err("%s: group %s is the primary group of another user and is not removed." % (PROG, user))
+                elif not members(g[3]):
+                    db.group.remove(gi)
+                    if db.gshadow.exists:
+                        gsi = db.gshadow.find(user)
+                        if gsi is not None:
+                            db.gshadow.remove(gsi)
+    for t in (db.subuid, db.subgid):
+        if t.exists:
+            for i, f in reversed(list(t.rows())):
+                if f[0] == user:
+                    t.remove(i)
+    db.save()
+    if remove:
+        spool = "/var/mail/" + user
+        if os.path.exists(rp(spool)):
+            os.unlink(rp(spool))
+        else:
+            err("%s: %s mail spool (%s) not found" % (PROG, user, spool))
+        if home and home != "/" and inside_root(home) and os.path.isdir(rp(home)):
+            shutil.rmtree(rp(home))
+        else:
+            err("%s: %s home directory (%s) not found" % (PROG, user, home))
+    return 0
+
+
+# --------------------------------------------------------- group commands
+
+def cmd_groupadd(argv):
+    opts, args = parse_opts(argv, "fg:hK:op:rR:P:U:",
+                            ["force", "gid=", "help", "key=", "non-unique", "password=", "system", "root=",
+                             "prefix=", "users="], ("-R", "--root", "-P", "--prefix"))
+    o = {}
+    keys = {}
+    for k, v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        elif k in ("-f", "--force"):
+            o["force"] = True
+        elif k in ("-g", "--gid"):
+            if not re.match(r"^\d+$", v):
+                die(3, "%s: invalid group ID '%s'" % (PROG, v))
+            o["gid"] = int(v)
+        elif k in ("-K", "--key"):
+            kk, _s, vv = v.partition("=")
+            keys[kk] = vv
+        elif k in ("-o", "--non-unique"):
+            o["nonunique"] = True
+        elif k in ("-p", "--password"):
+            o["password"] = v
+        elif k in ("-r", "--system"):
+            o["system"] = True
+        elif k in ("-U", "--users"):
+            o["users"] = [u for u in v.split(",") if u]
+    if len(args) != 1:
+        usage()
+    name = args[0]
+    db = DB()
+    db.defs.update(keys)
+    if not valid_name(name):
+        die(3, "%s: '%s' is not a valid group name" % (PROG, name))
+    if db.group.find(name) is not None:
+        if o.get("force"):
+            return 0
+        die(9, "%s: group '%s' already exists" % (PROG, name))
+    for u in o.get("users", []):
+        if db.user(u) is None:
+            die(6, "%s: Invalid member username %s" % (PROG, u))
+    gid = o.get("gid")
+    if gid is not None and gid in db.used_gids() and not o.get("nonunique"):
+        if o.get("force"):
+            gid = None
+        else:
+            die(4, "%s: GID '%d' already exists" % (PROG, gid))
+    if gid is None:
+        system = bool(o.get("system"))
+        if system:
+            lo, hi = defnum(db.defs, "SYS_GID_MIN", 100), defnum(db.defs, "SYS_GID_MAX", 999)
+        else:
+            lo, hi = defnum(db.defs, "GID_MIN", 1000), defnum(db.defs, "GID_MAX", 60000)
+        gid = find_new_id(db.used_gids(), lo, hi, system)
+        if gid is None:
+            die(4, "%s: Can't get unique GID (no more available GIDs)" % PROG)
+    mem = set_members(o.get("users", []))
+    db.group.append([name, "x", str(gid), mem])
+    if db.gshadow.exists:
+        db.gshadow.append([name, o.get("password", "!"), "", mem])
+    db.save()
+    return 0
+
+
+def cmd_groupmod(argv):
+    opts, args = parse_opts(argv, "ag:hn:op:R:P:U:",
+                            ["append", "gid=", "help", "new-name=", "non-unique", "password=", "root=", "prefix=",
+                             "users="], ("-R", "--root", "-P", "--prefix"))
+    o = {}
+    for k, v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        elif k in ("-a", "--append"):
+            o["append"] = True
+        elif k in ("-g", "--gid"):
+            if not re.match(r"^\d+$", v):
+                die(3, "%s: invalid group ID '%s'" % (PROG, v))
+            o["gid"] = int(v)
+        elif k in ("-n", "--new-name"):
+            o["name"] = v
+        elif k in ("-o", "--non-unique"):
+            o["nonunique"] = True
+        elif k in ("-p", "--password"):
+            o["password"] = v
+        elif k in ("-U", "--users"):
+            o["users"] = [u for u in v.split(",") if u]
+    if len(args) != 1:
+        usage()
+    name = args[0]
+    db = DB()
+    gi = db.group.find(name)
+    if gi is None:
+        die(6, "%s: group '%s' does not exist" % (PROG, name))
+    g = db.group.fields(gi)
+    if "name" in o and o["name"] != name:
+        if not valid_name(o["name"]):
+            die(3, "%s: invalid group name '%s'" % (PROG, o["name"]))
+        if db.group.find(o["name"]) is not None:
+            die(9, "%s: group '%s' already exists" % (PROG, o["name"]))
+    if "gid" in o and str(o["gid"]) != g[2] and o["gid"] in db.used_gids() and not o.get("nonunique"):
+        die(4, "%s: GID '%d' already exists" % (PROG, o["gid"]))
+    for u in o.get("users", []):
+        if db.user(u) is None:
+            die(6, "%s: Invalid member username %s" % (PROG, u))
+    oldgid = g[2]
+    if "gid" in o:
+        g[2] = str(o["gid"])
+        for i, f in list(db.passwd.rows()):
+            r = db.passwd.fields(i)
+            if r[3] == oldgid:
+                r[3] = g[2]
+                db.passwd.set(i, r)
+    if "users" in o:
+        cur = members(g[3]) if o.get("append") else []
+        g[3] = set_members(cur + [u for u in o["users"] if u not in cur])
+    if "name" in o:
+        g[0] = o["name"]
+    db.group.set(gi, g)
+    if db.gshadow.exists:
+        gsi = db.gshadow.find(name)
+        if gsi is not None:
+            gs = db.gshadow.fields(gsi)
+            if "name" in o:
+                gs[0] = o["name"]
+            if "password" in o:
+                gs[1] = o["password"]
+            if "users" in o:
+                gs[3] = g[3]
+            db.gshadow.set(gsi, gs)
+    elif "password" in o:
+        g[1] = o["password"]
+        db.group.set(gi, g)
+    db.save()
+    return 0
+
+
+def cmd_groupdel(argv):
+    opts, args = parse_opts(argv, "fhR:P:", ["force", "help", "root=", "prefix="], ("-R", "--root", "-P", "--prefix"))
+    force = False
+    for k, _v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        if k in ("-f", "--force"):
+            force = True
+    if len(args) != 1:
+        usage()
+    name = args[0]
+    db = DB()
+    gi = db.group.find(name)
+    if gi is None:
+        die(6, "%s: group '%s' does not exist" % (PROG, name))
+    gid = db.group.fields(gi)[2]
+    if not force:
+        for _i, f in db.passwd.rows():
+            if len(f) > 3 and f[3] == gid:
+                die(8, "%s: cannot remove the primary group of user '%s'" % (PROG, f[0]))
+    db.group.remove(gi)
+    if db.gshadow.exists:
+        gsi = db.gshadow.find(name)
+        if gsi is not None:
+            db.gshadow.remove(gsi)
+    db.save()
+    return 0
+
+
+def cmd_gpasswd(argv):
+    opts, args = parse_opts(argv, "a:d:hQ:rRM:A:",
+                            ["add=", "delete=", "help", "root=", "remove-password", "restrict", "members=",
+                             "administrators="], ("-Q", "--root"))
+    o = {}
+    for k, v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        o[k.lstrip("-")[:1] if len(k) == 2 else {"--add": "a", "--delete": "d", "--remove-password": "r",
+                                                  "--restrict": "R", "--members": "M",
+                                                  "--administrators": "A"}[k]] = v
+    if len(args) != 1:
+        usage()
+    exclusive = [k for k in o if k in ("a", "d", "r", "R")]
+    if len(exclusive) > 1 or (exclusive and ("M" in o or "A" in o)):
+        usage()
+    if not o:
+        die(2, "mock: setting a group password interactively is not supported (use -a, -d, -M, -A, -r or -R)")
+    name = args[0]
+    db = DB()
+    gi = db.group.find(name)
+    if gi is None:
+        die(3, "%s: group '%s' does not exist in /etc/group" % (PROG, name))
+    g = db.group.fields(gi)
+    gsi = db.gshadow.find(name) if db.gshadow.exists else None
+    if db.gshadow.exists and gsi is None:
+        die(3, "%s: group '%s' does not exist in /etc/gshadow" % (PROG, name))
+    gs = db.gshadow.fields(gsi) if gsi is not None else None
+
+    def need_user(u):
+        if db.user(u) is None:
+            die(3, "%s: user '%s' does not exist" % (PROG, u))
+    if "a" in o:
+        u = o["a"]
+        need_user(u)
+        print("Adding user %s to group %s" % (u, name))
+        mem = members(g[3])
+        if u not in mem:
+            g[3] = set_members(mem + [u])
+        if gs is not None:
+            mem = members(gs[3])
+            if u not in mem:
+                gs[3] = set_members(mem + [u])
+    elif "d" in o:
+        u = o["d"]
+        print("Removing user %s from group %s" % (u, name))
+        in_g = u in members(g[3])
+        in_gs = gs is not None and u in members(gs[3])
+        if not in_g and not in_gs:
+            die(3, "%s: user '%s' is not a member of '%s'" % (PROG, u, name))
+        g[3] = set_members([m for m in members(g[3]) if m != u])
+        if gs is not None:
+            gs[3] = set_members([m for m in members(gs[3]) if m != u])
+    elif "r" in o:
+        if gs is not None:
+            gs[1] = ""
+        else:
+            g[1] = ""
+    elif "R" in o:
+        if gs is not None:
+            gs[1] = "!"
+        else:
+            g[1] = "!"
+    if "A" in o:
+        admins = [a for a in o["A"].split(",") if a]
+        for a in admins:
+            need_user(a)
+        if gs is None:
+            die(3, "%s: the gshadow file is not present (mock: -A needs etc/gshadow)" % PROG)
+        gs[2] = set_members(admins)
+    if "M" in o:
+        mem = [m for m in o["M"].split(",") if m]
+        for m in mem:
+            need_user(m)
+        g[3] = set_members(mem)
+        if gs is not None:
+            gs[3] = set_members(mem)
+    db.group.set(gi, g)
+    if gs is not None:
+        db.gshadow.set(gsi, gs)
+    db.save()
+    return 0
+
+
+# -------------------------------------------------------- passwd / chage
+
+def pw_status(p):
+    if p.startswith("!") or p.startswith("*"):
+        return "L"
+    if p == "":
+        return "NP"
+    return "P"
+
+
+def date_to_str(day):
+    try:
+        d = int(day)
+    except (TypeError, ValueError):
+        d = -1
+    if d < 0:
+        return "never"
+    return day_to_date(d).strftime("%Y-%m-%d")
+
+
+def num_or(s, default=-1):
+    try:
+        return int(s)
+    except (TypeError, ValueError):
+        return default
+
+
+def current_user():
+    try:
+        return pwd.getpwuid(os.getuid()).pw_name
+    except KeyError:
+        return os.environ.get("USER", "")
+
+
+def cmd_passwd(argv):
+    opts, args = parse_opts(argv, "adehi:kln:qr:R:P:Suw:x:",
+                            ["all", "delete", "expire", "help", "inactive=", "keep-tokens", "lock", "mindays=",
+                             "quiet", "repository=", "root=", "prefix=", "status", "unlock", "warndays=",
+                             "maxdays=", "stdin"],
+                            ("-r", "--repository", "-R", "--root", "-P", "--prefix", "--stdin"))
+    o = {}
+    for k, v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        key = {"--all": "-a", "--delete": "-d", "--expire": "-e", "--inactive": "-i", "--keep-tokens": "-k",
+               "--lock": "-l", "--mindays": "-n", "--quiet": "-q", "--status": "-S", "--unlock": "-u",
+               "--warndays": "-w", "--maxdays": "-x"}.get(k, k)
+        o[key] = v
+    db = DB()
+    if "-a" in o and "-S" not in o:
+        usage()
+    if "-S" in o:
+        if "-a" in o:
+            if args:
+                usage()
+            names = db.passwd.names()
+        else:
+            if len(args) > 1:
+                usage()
+            names = args or [current_user()]
+        for n in names:
+            pw = db.user(n)
+            if pw is None:
+                die(1, "%s: user '%s' does not exist" % (PROG, n))
+            sp = db.shadow.get(n) if db.shadow.exists else None
+            if sp is None:
+                print("%s %s" % (n, pw_status(pw[1])))
+                continue
+            print("%s %s %s %d %d %d %d" % (n, pw_status(sp[1]), date_to_str(sp[2]), num_or(sp[3]), num_or(sp[4]),
+                                           num_or(sp[5]), num_or(sp[6])))
+        return 0
+    actions = [k for k in ("-d", "-e", "-i", "-l", "-n", "-u", "-w", "-x") if k in o]
+    if not actions:
+        die(2, "mock: changing a password interactively is not supported (use -l, -u, -d, -e, -S, -n, -x, -w, -i)")
+    if "-l" in o and "-u" in o or ("-d" in o and ("-l" in o or "-u" in o)):
+        usage()
+    if len(args) != 1:
+        usage()
+    user = args[0]
+    pi = db.passwd.find(user)
+    if pi is None:
+        die(1, "%s: user '%s' does not exist" % (PROG, user))
+    si = db.shadow.find(user) if db.shadow.exists else None
+    if si is not None:
+        t, i = db.shadow, si
+    else:
+        t, i = db.passwd, pi
+    row = t.fields(i)
+    if "-l" in o and not row[1].startswith("!"):
+        row[1] = "!" + row[1]
+    if "-u" in o and row[1].startswith("!"):
+        if len(row[1]) == 1:
+            die(3, "%s: unlocking the password would result in a passwordless account.\n"
+                   "You should set a password with usermod -p to unlock the password of this account." % PROG)
+        row[1] = row[1][1:]
+    if "-d" in o:
+        row[1] = ""
+    if t is db.shadow:
+        if "-e" in o:
+            row[2] = "0"
+        for opt, col in (("-n", 3), ("-x", 4), ("-w", 5), ("-i", 6)):
+            if opt in o:
+                row[col] = age_field(numeric_arg(o[opt], -1)) if o[opt] != "-1" else ""
+    t.set(i, row)
+    db.save()
+    if "-q" not in o:
+        print("%s: password expiry information changed." % PROG)
+    return 0
+
+
+def chage_date(day, iso):
+    if iso:
+        return day_to_date(day).strftime("%Y-%m-%d")
+    return day_to_date(day).strftime("%b %d, %Y")
+
+
+def cmd_chage(argv):
+    opts, args = parse_opts(argv, "d:E:hiI:lm:M:R:P:W:",
+                            ["lastday=", "expiredate=", "help", "iso8601", "inactive=", "list", "mindays=",
+                             "maxdays=", "root=", "prefix=", "warndays="], ("-R", "--root", "-P", "--prefix"))
+    o = {}
+    for k, v in opts:
+        if k in ("-h", "--help"):
+            help_exit()
+        key = {"--lastday": "-d", "--expiredate": "-E", "--iso8601": "-i", "--inactive": "-I", "--list": "-l",
+               "--mindays": "-m", "--maxdays": "-M", "--warndays": "-W"}.get(k, k)
+        o[key] = v
+    for key in ("-d", "-E"):
+        if key in o and strtoday(o[key]) is None:
+            err("%s: invalid date '%s'" % (PROG, o[key]))
+            usage()
+    for key in ("-I", "-m", "-M", "-W"):
+        if key in o and not re.match(r"^-?\d+$", o[key]):
+            err("%s: invalid numeric argument '%s'" % (PROG, o[key]))
+            usage()
+    if "-l" in o and any(k in o for k in ("-d", "-E", "-I", "-m", "-M", "-W")):
+        err('%s: do not include "l" with other flags' % PROG)
+        usage()
+    if len(args) != 1:
+        usage()
+    user = args[0]
+    db = DB()
+    if db.user(user) is None:
+        die(1, "%s: user '%s' does not exist in /etc/passwd" % (PROG, user))
+    if not db.shadow.exists:
+        die(1, "%s: the shadow password file is not present" % PROG)
+    si = db.shadow.find(user)
+    if si is None:
+        die(1, "%s: user '%s' does not exist in /etc/shadow" % (PROG, user))
+    sp = db.shadow.fields(si)
+    if "-l" in o:
+        iso = "-i" in o
+        last = num_or(sp[2])
+        mn, mx, warn, inact, exp = num_or(sp[3]), num_or(sp[4]), num_or(sp[5]), num_or(sp[6]), num_or(sp[7])
+        out = []
+        if last < 0:
+            v = "never"
+        elif last == 0:
+            v = "password must be changed"
+        else:
+            v = chage_date(last, iso)
+        out.append("Last password change\t\t\t\t\t: " + v)
+        if last == 0:
+            v = "password must be changed"
+        elif last < 0 or mx >= 10000 or mx < 0:
+            v = "never"
+        else:
+            v = chage_date(last + mx, iso)
+        out.append("Password expires\t\t\t\t\t: " + v)
+        if last == 0:
+            v = "password must be changed"
+        elif last < 0 or inact < 0 or mx >= 10000 or mx < 0:
+            v = "never"
+        else:
+            v = chage_date(last + mx + inact, iso)
+        out.append("Password inactive\t\t\t\t\t: " + v)
+        out.append("Account expires\t\t\t\t\t\t: " + ("never" if exp < 0 else chage_date(exp, iso)))
+        out.append("Minimum number of days between password change\t\t: %d" % mn)
+        out.append("Maximum number of days between password change\t\t: %d" % mx)
+        out.append("Number of days of warning before password expires\t: %d" % warn)
+        print("\n".join(out))
+        return 0
+    if not any(k in o for k in ("-d", "-E", "-I", "-m", "-M", "-W")):
+        die(2, "mock: interactive chage is not supported (use -l, -d, -E, -I, -m, -M or -W)")
+    if "-d" in o:
+        sp[2] = age_field(strtoday(o["-d"]))
+    if "-E" in o:
+        sp[7] = age_field(strtoday(o["-E"]))
+    for opt, col in (("-m", 3), ("-M", 4), ("-W", 5), ("-I", 6)):
+        if opt in o:
+            sp[col] = age_field(int(o[opt]))
+    db.shadow.set(si, sp)
+    db.save()
+    return 0
+
+
+# ------------------------------------------------------- id / groups / getent
+
+def real_tool(name, argv):
+    for d in ("/usr/bin", "/bin"):
+        p = os.path.join(d, name)
+        if os.path.exists(p) and os.path.realpath(p) != os.path.realpath(sys.argv[0]):
+            os.execv(p, [name] + argv)
+    die(1, "%s: cannot find the current user in the mock database" % PROG)
+
+
+def user_groups(db, pw):
+    """[(gid, name)] primary first, then supplementary groups in etc/group order."""
+    gid = pw[3]
+    prim = db.group_by_gid(gid)
+    out = [(gid, prim[0] if prim else None)]
+    for _i, f in db.group.rows():
+        if len(f) > 3 and pw[0] in members(f[3]) and f[2] != gid:
+            if (f[2], f[0]) not in out:
+                out.append((f[2], f[0]))
+    return out
+
+
+def cmd_id(argv):
+    opts, args = parse_opts(argv, "aZgGnruz", ["context", "group", "groups", "name", "real", "user", "zero",
+                                               "help", "version"], ("-Z", "--context"))
+    flags = set()
+    for k, _v in opts:
+        if k == "--help":
+            print("Usage: id [OPTION]... [USER]...\n(mock: reads the fake root's etc/passwd and etc/group)")
+            return 0
+        flags.add({"--group": "g", "--groups": "G", "--name": "n", "--real": "r", "--user": "u",
+                   "--zero": "z"}.get(k, k.lstrip("-")))
+    flags.discard("a")
+    db = DB()
+    if not args:
+        me = current_user()
+        if db.user(me) is None:
+            real_tool("id", argv)
+        args = [me]
+    which = [f for f in ("u", "g", "G") if f in flags]
+    if len(which) > 1:
+        die(1, "id: cannot print \"only\" of more than one choice")
+    if ("n" in flags or "r" in flags) and not which:
+        die(1, "id: cannot print only names or real IDs in default format")
+    rc = 0
+    for a in args:
+        pw = db.user(a)
+        if pw is None and a.isdigit():
+            pw = db.user_by_uid(a)
+        if pw is None:
+            err("id: '%s': no such user" % a)
+            rc = 1
+            continue
+        groups = user_groups(db, pw)
+        if "u" in flags:
+            print(pw[0] if "n" in flags else pw[2])
+        elif "g" in flags:
+            print((groups[0][1] or groups[0][0]) if "n" in flags else groups[0][0])
+        elif "G" in flags:
+            sep = "\0" if "z" in flags else " "
+            items = [(n or g) if "n" in flags else g for g, n in groups]
+            sys.stdout.write(sep.join(items) + ("\0" if "z" in flags else "\n"))
+        else:
+            def fmt(g, n):
+                return "%s(%s)" % (g, n) if n else g
+            print("uid=%s(%s) gid=%s groups=%s" % (pw[2], pw[0], fmt(*groups[0]),
+                                                    ",".join(fmt(g, n) for g, n in groups)))
+    return rc
+
+
+def cmd_groups(argv):
+    opts, args = parse_opts(argv, "", ["help", "version"])
+    for k, _v in opts:
+        if k == "--help":
+            print("Usage: groups [OPTION]... [USERNAME]...\n(mock: reads the fake root's etc/passwd and etc/group)")
+            return 0
+    db = DB()
+    if not args:
+        me = current_user()
+        pw = db.user(me)
+        if pw is None:
+            real_tool("groups", argv)
+        print(" ".join(n or g for g, n in user_groups(db, pw)))
+        return 0
+    rc = 0
+    for a in args:
+        pw = db.user(a)
+        if pw is None:
+            err("groups: '%s': no such user" % a)
+            rc = 1
+            continue
+        print("%s : %s" % (a, " ".join(n or g for g, n in user_groups(db, pw))))
+    return rc
+
+
+GETENT_DBS = {"passwd": ("etc/passwd", 7), "group": ("etc/group", 4), "shadow": ("etc/shadow", 9),
+              "gshadow": ("etc/gshadow", 4)}
+GETENT_OTHER = ("ahosts", "ahostsv4", "ahostsv6", "aliases", "ethers", "hosts", "initgroups", "netgroup",
+                "networks", "protocols", "rpc", "services")
+
+
+def cmd_getent(argv):
+    opts, args = parse_opts(argv, "s:i", ["service=", "no-idn", "help", "version"])
+    for k, _v in opts:
+        if k == "--help":
+            print("Usage: getent [OPTION...] database [key ...]\n(mock: passwd, group, shadow, gshadow)")
+            return 0
+    if not args:
+        err("getent: wrong number of arguments")
+        err("Try `getent --help' or `getent --usage' for more information.")
+        return 1
+    dbname, keys = args[0], args[1:]
+    if dbname in GETENT_OTHER:
+        die(1, "mock: getent database '%s' not supported" % dbname)
+    if dbname not in GETENT_DBS:
+        err("Unknown database: %s" % dbname)
+        err("Try `getent --help' or `getent --usage' for more information.")
+        return 1
+    rel, n = GETENT_DBS[dbname]
+    t = Table(rel, n)
+    if not keys:
+        for _i, f in t.rows():
+            print(":".join(f))
+        return 0
+    rc = 0
+    for key in keys:
+        line = None
+        for _i, f in t.rows():
+            if f[0] == key or (dbname in ("passwd", "group") and key.isdigit() and len(f) > 2 and f[2] == key):
+                line = ":".join(f)
+                break
+        if line is None:
+            rc = 2
+        else:
+            print(line)
+    return rc
+
+
+# -------------------------------------------------------------------- main
+
+TOOLS = {"useradd": cmd_useradd, "usermod": cmd_usermod, "userdel": cmd_userdel, "groupadd": cmd_groupadd,
+         "groupmod": cmd_groupmod, "groupdel": cmd_groupdel, "gpasswd": cmd_gpasswd, "passwd": cmd_passwd,
+         "chage": cmd_chage, "id": cmd_id, "groups": cmd_groups, "getent": cmd_getent}
+
+
+def main():
+    global ROOT, PROG
+    argv = sys.argv[1:]
+    PROG = os.path.basename(sys.argv[0])
+    if PROG in ("accounts-mock", "accounts-mock.py") and argv:
+        PROG, argv = argv[0], argv[1:]
+    if PROG not in TOOLS:
+        err("accounts-mock: run as one of: %s" % ", ".join(sorted(TOOLS)))
+        return 1
+    ROOT = find_root()
+    try:
+        return TOOLS[PROG](argv) or 0
+    except Exit as e:
+        if e.msg:
+            sys.stderr.write(e.msg + "\n")
+        return e.code
+    except BrokenPipeError:
+        return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

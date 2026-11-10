@@ -1,1 +1,14 @@
-Look for a filtering command that keeps only the alert lines in set-e.log.
+Replay each failure and read steps.log (POSTMORTEM.txt shows how):
+  rm -f steps.log; FAIL_STEP=fetch ./deploy.sh; echo "exit $?"; cat steps.log
+Do the same with FAIL_STEP=migrate and FAIL_STEP=verify. With build, it
+stops as it should. What is different about the other three lines?
+
+- `./bin/step fetch && log ...`: if a command in an && list fails, does
+  set -e treat that as "the script failed", or as "the condition was false"?
+- run_migrations is called as the condition of an `if`. Is set -e active
+  inside a function while it runs as a condition? What does the function
+  return if migrate fails but schema-version succeeds?
+- In `log "smoke test: $(./bin/step verify)"`, whose exit status does set -e
+  look at: the step's, or log's?
+
+Game tip: `edit deploy.sh` opens the script in an editor.

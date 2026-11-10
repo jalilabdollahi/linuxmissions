@@ -1,15 +1,11 @@
 {
-  "name": "Tac Reverse: History Window",
-  "description": "In the linux toolbelt lab, a task related to Tac Reverse needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of tac-reverse-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Tac Reverse",
-    "head",
-    "tail"
-  ],
+  "name": "Newest Release First",
+  "description": "The changelog CHANGES was appended to for years, oldest release at the top. The website wants it newest first. Each release is a block of several lines introduced by a ---- line, and the lines inside a block are in a deliberate order.",
+  "objective": "Write CHANGES.newest-first: the same release blocks as CHANGES in reverse order (the last block first), with every block's own lines in their original order, and each block still introduced by its ---- line, exactly as in the original. Keep CHANGES unchanged.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["tac", "tac -s separator", "tac -b separator before", "record vs line"],
   "module": "module-25-linux-toolbelt",
   "level": "level-7-tac-reverse"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Fstab Failures: Metric Sum",
-  "description": "In the boot and recovery lab, a task related to Fstab Failures needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of fstab-failures-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Fstab Failures",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Timed Out Waiting for Device",
+  "description": "The server was cloned onto new disks and now stops in emergency mode with \"Timed out waiting for device\". The clone changed every filesystem UUID, but /etc/fstab still holds the old ones. The disk is mounted at sysroot/; blkid.txt and lsblk.txt are captures of the new disks, and ./fstab-lint checks sysroot/etc/fstab against them.",
+  "objective": "Fix sysroot/etc/fstab so every entry is valid: each source must name the volume that belongs to that mount point (the comment above each entry says what it was: match by label and size), the type must match what blkid.txt reports, every option must exist, and every mount point must exist in sysroot/. The removable backup disk at /mnt/backup must never be able to block boot again. Keep all five entries; ./fstab-lint must report no problems.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
+  "concepts": ["fstab", "UUID", "LABEL", "nofail", "blkid", "emergency mode"],
   "module": "module-23-boot-and-recovery",
   "level": "level-15-fstab-failures"
 }

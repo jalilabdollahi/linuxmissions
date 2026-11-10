@@ -1,2 +1,7 @@
-After starting the tasks, use:
-wait
+- `command &` runs a command in the background; the script goes on immediately.
+- `$!` is the process ID of the background job you just started. Save each one, e.g. in an array: `pids+=("$!")`.
+- `wait` with no arguments waits for all jobs but always returns 0.
+- `wait PID` waits for one job and returns THAT job's exit status, so `wait "$pid" || failed=1` notices a failure.
+- Wait for every PID (a for loop over "${pids[@]}"), then `exit "$failed"`.
+
+Read more: `help wait`, and `man bash`, section "JOB CONTROL".

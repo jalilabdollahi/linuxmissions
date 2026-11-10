@@ -1,1 +1,6 @@
-Example: `grep -c '^ok$' gzip-events.txt > ok-count.txt`
+  echo logs/app.log.{2..12}
+      preview: the shell expands the braces to exactly app.log.2 ... app.log.12
+  gzip -9 logs/app.log.{2..12}
+      compress those eleven files with the best ratio; each becomes app.log.N.gz
+  gzip -l logs/*.gz
+      sizes before and after, to report how much space you freed

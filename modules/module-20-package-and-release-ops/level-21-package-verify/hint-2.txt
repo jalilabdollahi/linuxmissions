@@ -1,1 +1,6 @@
-`mkdir -p organized/package-verify` followed by `mv inbox/package-verify.txt organized/package-verify/package-verify-notes.txt` is enough.
+dpkg -V                          verify every package; each line is 9 flag characters (a '5' means the md5sum differs), an optional 'c' for a conffile, and the path
+awk 'NF == 3 && $2 == "c"'        conffile lines have three fields; the others have two (the path is the last field)
+dpkg -S /path                    which package owns the file
+ls repos/main/pool/main/*/PKG/   the original .deb files are kept here
+dpkg-deb --fsys-tarfile X.deb    writes the package's files as a tar stream; tar -xOf - ./path prints one file to stdout
+Redirect that into rootfs/path (keeping the existing file's mode), then run dpkg -V again: only the conffiles should remain.   More: man dpkg, man dpkg-deb

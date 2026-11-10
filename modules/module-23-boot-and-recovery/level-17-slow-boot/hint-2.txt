@@ -1,0 +1,8 @@
+  cat critical-chain.txt startup.txt
+  head blame.txt                      the long ones here are not necessarily the culprit
+  cat sysroot/usr/lib/systemd/system/<unit>
+  man systemd.unit                   drop-ins: /etc/systemd/system/<unit>.d/*.conf
+The drop-in is a file ending in .conf with a [Service] section. ExecStart= can be given
+several times for a oneshot unit and the values add up, so to replace the command you
+first assign it an empty value (ExecStart=) and then the new command on the next line.
+Wait-online helpers have an option that limits the wait (see their man page: --any or --timeout=).

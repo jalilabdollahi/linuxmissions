@@ -1,15 +1,11 @@
 {
-  "name": "Stat: Schedule Entry",
-  "description": "In the archives and compression lab, a task related to Stat needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Time and Permission",
+  "description": "The acme-agent installer refuses the extracted bundle: the vendor's MANIFEST pins the mode and mtime of every path, and some entries drifted during extraction (INSTALLER-ERROR.txt). Several names contain spaces, and lib/ holds a symlink.",
+  "objective": "First write drift.txt in the sandbox root: one line per MANIFEST path whose mode or mtime differs, written exactly as in MANIFEST. Then fix the bundle so every entry (the symlink itself included) has exactly the mode and mtime MANIFEST gives, without changing anything else.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Stat",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "20m",
+  "concepts": ["stat -c '%a %Y'", "stat vs stat -L", "chmod", "touch -d @epoch", "touch -h", "while read -r"],
   "module": "module-10-archives-compression",
   "level": "level-17-stat"
 }

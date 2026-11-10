@@ -1,1 +1,4 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+- `find var -name '*.log' -mtime +7` selects by modification time (`man find`: how are the days counted?). Use `-print0` with `while IFS= read -r -d ''` or `xargs -0` for odd names.
+- `lsof -p PID` or `ls -l /proc/PID/fd` shows files a process has open; `pgrep -f batch.py` finds it. `fuser -v FILE` asks the opposite question.
+- `gzip -- FILE` replaces FILE by FILE.gz and keeps its mtime. Do the deletions first so you do not compress something that should have been deleted.
+- Check the dry run before the real thing: replace `rm` by `echo` first.

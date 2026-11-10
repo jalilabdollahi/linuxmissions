@@ -1,1 +1,12 @@
-Use `chmod +x jobs/pipes.sh` and then execute it.
+- `cmd 2>&1 | grep ...` sends stderr to wherever stdout goes (the pipe) before
+  the pipe hands it on. In bash 4+ `cmd |& grep ...` is short for the same thing.
+- `grep -c WARN` prints the number of matching lines; `> file` saves it.
+- $? after a pipeline is the status of the LAST command. Bash keeps every
+  status of the most recent pipeline in the array PIPESTATUS:
+  ${PIPESTATUS[0]} is the first command, ${PIPESTATUS[1]} the second, ...
+- PIPESTATUS is overwritten by the next command, so read it on the same input
+  line, right after the pipeline:  pipeline; echo "${PIPESTATUS[0]}" > file
+  (In this game, each line you enter is followed by a hidden command, so a
+  separate line would be too late.)
+
+Read more: man bash, sections "Pipelines" and "Shell Variables" (PIPESTATUS).

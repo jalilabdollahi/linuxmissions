@@ -1,1 +1,8 @@
-`mkdir -p organized/top-reading` followed by `mv inbox/top-reading.txt organized/top-reading/top-reading-notes.txt` is enough.
+- The first summary line ends with three load averages: 1, 5 and 15 minutes.
+- %Cpu(s) lists us, sy, ni, id, wa ...; wa is time waiting for I/O.
+- The Tasks line counts running, sleeping, stopped and zombie tasks.
+- RES is in KiB when it is plain digits, MiB with an "m" and GiB with a "g".
+  Convert everything to one unit (awk can strip the suffix and multiply)
+  before comparing; the PID is column 1.
+- grep -o 'pattern.*' prints from the match to the end of the line, and
+  awk '{print $N}' picks column N. man awk, man top (the "Memory Usage" section).

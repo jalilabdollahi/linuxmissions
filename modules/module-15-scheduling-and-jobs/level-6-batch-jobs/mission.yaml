@@ -1,15 +1,11 @@
 {
-  "name": "Batch Jobs: Config Rewrite",
-  "description": "In the scheduling and jobs lab, a task related to Batch Jobs needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in batch-jobs.conf and save the fixed result to fixed.conf",
+  "name": "When the Box Is Idle",
+  "description": "Rebuilding the search index with app/reindex.sh pins the CPU for an hour, so RUNBOOK.txt says it must never be started by hand: it goes through batch, which starts it once the load is low. The last person who tried got a job that died at 2 a.m.",
+  "objective": "Queue exactly one batch job (queue b) that runs app/reindex.sh in such a way that, when atd starts it later, reindex.sh runs with app/ as its working directory and DATA_DIR set to the sandbox's data directory (the full path), and completes. batch, at, atq and atrm are mocks here (in bin/, first on your PATH); they keep jobs in var/spool/cron/atjobs exactly like atd and never run them on their own.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Batch Jobs",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["batch", "at -c", "export", "working directory of an at job", "queue b"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-6-batch-jobs"
 }

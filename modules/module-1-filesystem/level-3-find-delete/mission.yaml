@@ -1,11 +1,11 @@
 {
   "name": "Spring Cleaning",
-  "description": "The disk is filling up with leftover .tmp files scattered across the sandbox.",
-  "objective": "Delete all files ending in .tmp from the sandbox (leave everything else intact)",
-  "xp": 120,
+  "description": "A crashed batch job left temporary .tmp files all over the build server. Some sit in hidden folders, some have spaces in their names, and the templates folder holds .tmpl files that are still in use.",
+  "objective": "Delete every file whose name ends in .tmp anywhere in the sandbox, and nothing else",
+  "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": ["find", "-delete", "rm", "glob", "xargs"],
+  "expected_time": "6m",
+  "concepts": ["find", "-name", "-type f", "-delete", "quoting"],
   "module": "module-1-filesystem",
   "level": "level-3-find-delete"
 }

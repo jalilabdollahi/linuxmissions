@@ -1,0 +1,11 @@
+{
+  "name": "Renewed, Not Fixed",
+  "description": "TICKET.txt: last week the certificates of five internal web services were renewed, and browsers still show warnings for some of them. You have exactly what each server sends (certs/<service>/fullchain.pem), the company's root CA and the hostname clients use for each service.",
+  "objective": "Write tls-report.tsv with one line per service from services.txt: the service name, a tab, and its status: OK, EXPIRED (no longer valid), NAME (not valid for the hostname clients use) or CHAIN (no chain to certs/internal-root-ca.pem from what the server sends).",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["openssl x509", "notAfter", "subjectAltName vs CN", "wildcard certificates", "openssl verify -CAfile -untrusted", "intermediate certificates"],
+  "module": "module-19-network-troubleshooting",
+  "level": "level-18-tls-cert-check"
+}

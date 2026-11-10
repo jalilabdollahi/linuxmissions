@@ -1,11 +1,11 @@
 {
   "name": "Zombie Apocalypse",
-  "description": "A buggy parent process left behind zombie children. Identify them, document what you found, and stop the parent so the zombies can be reaped.",
-  "objective": "Find the zombie processes, save their PIDs and names to zombies.txt, then kill the parent process",
+  "description": "Monitoring reports defunct (zombie) processes piling up. A buggy program in this sandbox starts workers and never collects their exit status. Another sandbox program, metrics_agent.py, is healthy and must keep running.",
+  "objective": "Save the PIDs of the zombie processes to zombies.txt (one per line; extra columns like PPID or name are fine). Then stop the parent process that is failing to reap them, and only that one",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["ps", "zombie", "Z state", "PPID", "kill parent", "wait"],
+  "expected_time": "12m",
+  "concepts": ["zombie", "STAT Z", "PPID", "ps -o", "kill parent", "wait()"],
   "module": "module-4-processes",
   "level": "level-6-zombie"
 }

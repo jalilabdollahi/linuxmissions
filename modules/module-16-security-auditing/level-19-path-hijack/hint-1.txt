@@ -1,1 +1,3 @@
-You need a stream editor or another text replacement tool.
+When a script runs `tar`, the shell looks through the directories in PATH, in order, and runs the
+first match. Read the PATH that the cron file gives the job, and for each element ask: who can create a
+file there? Look closely at the punctuation of the PATH value: not every element is a directory name.

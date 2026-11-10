@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+The script is a loop: ask ./probe, stop as soon as it succeeds, otherwise pause and ask
+again. Two more things decide whether it is a good loop: how long it pauses between
+tries, and how it knows that the time is up. bash keeps a counter of the seconds since
+it was reset, so you don't need to do arithmetic with dates.
+Look at deploy-hook.sh too: how does it call wait_ready.sh?

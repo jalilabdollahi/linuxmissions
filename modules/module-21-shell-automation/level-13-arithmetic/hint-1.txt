@@ -1,1 +1,12 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Run it and read the errors: bash quota_report.sh usage.tsv
+
+Then ask, line by line:
+- What does the first line of usage.tsv contain, and what does bash do with a
+  word like `used_kib` inside $(( ))?
+- Try   echo $(( 08 ))   and   echo $(( 0755 ))   at the prompt. What does a
+  leading zero mean to bash? Which of the two is worse: the error, or the
+  number that is silently different?
+- With whole numbers only, what is 943 / 1048 ? And then times 100?
+- Is "divide every user by 1024, then add" the same as "add, then divide"?
+
+Game tip: `edit quota_report.sh` opens the script in an editor.

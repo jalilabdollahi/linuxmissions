@@ -1,1 +1,5 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Look at the first lines of prod.txt and staging.txt side by side. They were made by
+different commands: what separates name and version in each, and are the names written
+the same way? Until both files say the same thing in the same format, no comparison tool
+can line them up. Then ask what "different" means here: missing on one side, or present on
+both with another version.

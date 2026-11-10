@@ -1,1 +1,3 @@
-This is a numeric aggregation task.
+Read captures/repquota-a.txt (or run repquota -a) column by column. Each user has block limits and file limits, and a grace column for each. Which of them mean "over the soft limit", which mean "can't write any more"?
+The two characters after the user name are not decoration: the first is about blocks, the second about files. A `+` means a limit is exceeded. Compare with the grace column, which shows the time left or the word `none`.
+For the change request, check which unit setquota counts block limits in, and what each of its four numbers means. What happens to the inode limits of a user you only meant to change the blocks for?

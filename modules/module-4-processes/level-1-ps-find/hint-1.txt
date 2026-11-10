@@ -1,2 +1,4 @@
-ps aux shows all processes with CPU% and MEM%:
-ps aux
+Every running process has a PID and a CPU-usage figure. You need a listing of
+all processes, ordered so the biggest CPU users come first, cut down to the top
+five. Look at the command column of the top entries: which one was started
+from this sandbox?

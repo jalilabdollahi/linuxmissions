@@ -1,1 +1,14 @@
-Inspect the current mode first if you want to verify the change.
+Run the draft on the practice home and read what it wrote:
+  HOME=$SANDBOX/home TEAM=payments OWNER="Ana Lima" ./bootstrap.sh
+  cat home/.config/team.env; tail -5 home/.bashrc; cat home/.bash_profile
+Run it once more and look again.
+
+For every $ in the draft, decide WHEN it should be replaced by its value:
+  - now, while bootstrap runs (TEAM, OWNER, where the tools live), or
+  - later, each time the newcomer opens a shell ($PATH, $USER, $HOME).
+A heredoc either expands everything or nothing, depending on how its
+delimiter is written, and a single $ can be protected inside an expanding one.
+
+Then: which files must be appended to, and which can simply be rewritten?
+How can the script tell that its block is already in .bashrc?
+(Start over with: rm -rf home && cp -R skel home)

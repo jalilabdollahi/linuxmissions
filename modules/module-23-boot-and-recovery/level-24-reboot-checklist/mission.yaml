@@ -1,15 +1,11 @@
 {
-  "name": "Reboot Checklist: Permission Fix",
-  "description": "In the boot and recovery lab, a task related to Reboot Checklist needs cleanup before the handoff.",
-  "objective": "Set the mode of reboot-checklist.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Reboot Checklist",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Pre-Reboot Checklist",
+  "description": "Before tonight's reboot window the team wants a script that tells, from a mounted root filesystem and without rebooting, whether the machine will come back. roots/healthy and roots/broken are two captured roots to test with: each has boot/grub/grub.cfg, boot/, etc/fstab, blkid.txt (captured blkid), df.txt (captured df -BM /boot) and etc/systemd/system/default.target.",
+  "objective": "Write prereboot.sh ROOT. It prints exactly four lines, in this order: PASS or FAIL followed by grub-default, fstab-uuids, default-target and boot-free. grub-default passes when the kernel and the initrd of GRUB's default entry exist under ROOT (the default is the set default= value: a number counting top-level entries from 0, where the submenu counts as one, or a path like 1>2 into a submenu). fstab-uuids passes when every UUID=, LABEL= and /dev/ source in ROOT/etc/fstab is found in ROOT/blkid.txt (UUIDs compare regardless of letter case; other sources are ignored). default-target passes when ROOT/etc/systemd/system/default.target resolves to a file inside ROOT (absolute link targets are relative to ROOT). boot-free passes when /boot has at least 100 MB available in ROOT/df.txt. The exit status is the number of FAIL lines. It is tested on five hidden roots.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "45m",
+  "concepts": ["shell script", "grub.cfg parsing", "fstab and blkid", "symlinks in a chroot", "exit status"],
   "module": "module-23-boot-and-recovery",
   "level": "level-24-reboot-checklist"
 }

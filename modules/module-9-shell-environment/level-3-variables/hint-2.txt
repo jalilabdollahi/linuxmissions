@@ -1,1 +1,6 @@
-A grep count or grep piped into wc can produce the number you need.
+- `${NAME}` marks exactly where a variable name ends: "${ENV}_x" is ENV followed by _x, while "$ENV_x" is a variable called ENV_x (empty here).
+- `${DAY:-WORD}` gives WORD when DAY is unset OR empty. `${DAY:-$(date +%F)}` uses today's date (`date +%F` prints YYYY-MM-DD).
+- To keep the default for the rest of the script, assign it once near the top: DAY="${DAY:-...}"
+- Edit the script with `edit name-report.sh`.
+
+Read more: `man bash`, section Parameter Expansion.

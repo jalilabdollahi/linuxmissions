@@ -1,1 +1,7 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+awk splits each line on spaces: $3 is the time, $5 the tag, $6 onwards the message.
+  $3 >= "02:00:00" && $3 <= "02:59:59"        times compare correctly as strings here
+  prog = $5; sub(/\[[0-9]+\]/, "", prog); sub(/:$/, "", prog)    tag -> program name
+  "message repeated 412 times: [ ... ]"       is $6 $7 $8 ...: add $8 instead of 1
+  count[prog] += n  ...  END { for (p in count) print count[p], p }
+Then sort -rn | head -3 for the top 3.
+Read more: man awk (sub, arrays), man rsyslog.conf ($RepeatedMsgReduction)

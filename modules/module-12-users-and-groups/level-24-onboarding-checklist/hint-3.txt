@@ -1,1 +1,19 @@
-Example: `chmod 640 onboarding-checklist.sh`
+H=$(grep '^INITIAL_HASH=' TICKET.md | cut -d= -f2-)
+bin/useradd -m -u 1600 -c 'Ana Ribeiro' -s /bin/bash -G engineers,docker -p "$H" ana
+bin/useradd -m -u 1601 -c 'Cara Lindholm' -s /bin/bash -G engineers,docker -p "$H" cara
+bin/usermod -U -e '' -s /bin/bash -aG engineers,docker ben
+for kind in subuid subgid; do
+  next=$(awk -F: '$2 + $3 > m { m = $2 + $3 } END { print m }' etc/$kind)
+  if [ $kind = subuid ]; then bin/usermod -v $next-$((next + 65535)) ben; else bin/usermod -w $next-$((next + 65535)) ben; fi
+done
+for u in ana ben cara; do bin/chage -d 0 $u; done
+echo '%engineers ALL=(ALL:ALL) ALL' > etc/sudoers.d/engineers
+chmod 0440 etc/sudoers.d/engineers
+bin/visudo -c
+
+- H=...                reads the initial password hash from the ticket
+- useradd -m -u 1600 ...   new account with explicit UID (1500-1599 is reserved), home from skel, shell, groups, hash; it also assigns the subuid/subgid ranges
+- usermod -U -e '' ...   ben: unlock, clear the expiry, shell, add the two groups (-a keeps his others)
+- the for loops         ben has no ranges: use the first free ID after the highest existing range, 65536 IDs
+- chage -d 0            last-change day 0 forces a new password at first login
+- sudoers.d/engineers   the rule, mode 0440, and a name without a dot; visudo -c checks it

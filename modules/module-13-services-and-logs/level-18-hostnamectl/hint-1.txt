@@ -1,1 +1,0 @@
-Look for a filtering command that keeps only the alert lines in hostnamectl.log.

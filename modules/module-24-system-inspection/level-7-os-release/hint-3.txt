@@ -1,1 +1,9 @@
-Example: `head -n 3 os-release-history.log > first3.txt` and `tail -n 3 os-release-history.log > last3.txt`
+for d in fleet/*/; do h=$(basename $d); ( . fleet/$h/etc/os-release; m=$VERSION_ID; [ "$ID" != ubuntu ] && m=${VERSION_ID%%.*}; echo "$h $ID $VERSION_ID $m" ); done | while read -r h id v m; do e=$(awk -F, -v k="$id,$m" '$1 "," $2 == k { print $3 }' eol.csv); [ -n "$e" ] && [ "$e" \< "2026-11-11" ] && echo "$h $id $v"; done | sort > eol_hosts.txt
+cat eol_hosts.txt
+
+- for d in fleet/*/        every host directory
+- ( . .../os-release; ... )  read the variables ID and VERSION_ID in a subshell (follows symlinks, strips quotes)
+- m=${VERSION_ID%%.*}      the major version (9.3 becomes 9); Ubuntu keeps 22.04
+- awk -v k="$id,$m" ...    look up that release's end-of-life date in eol.csv
+- [ "$e" \< "2026-11-11" ] dates in YYYY-MM-DD order sort like text: true if EOL is on or before 2026-11-10
+- sort                     order by host name

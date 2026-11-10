@@ -1,15 +1,11 @@
 {
-  "name": "Backup Rotation: Backup Bundle",
-  "description": "In the archives and compression lab, a task related to Backup Rotation needs cleanup before the handoff.",
-  "objective": "Create backup-rotation-backup.tar.gz containing the files under bundle/backup-rotation",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Backup Rotation",
-    "tar",
-    "compression"
-  ],
+  "name": "Five Generations",
+  "description": "Capstone. Cron should run ./rotate.sh every night to keep five generations of the bakery's site backup (ROTATION.txt). Kim's draft of rotate.sh was never tested, and someone already deleted backups/site.tar.gz.3 by hand.",
+  "objective": "Make rotate.sh (executable, run from the sandbox root) keep backups/site.tar.gz.1 (newest) ... .5 (oldest): each run drops .5, moves every existing generation up by one (a missing one leaves its gap moving up too) and creates a fresh .1, a gzip tar of site/. It must exit 0, also when generations are missing, and leave nothing else in backups/. The check runs a copy of your script many times in a scratch folder.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "25m",
+  "concepts": ["shell script", "set -eu", "mv in descending order", "[ -e ] tests", "for loop", "tar -czf"],
   "module": "module-10-archives-compression",
   "level": "level-23-backup-rotation"
 }

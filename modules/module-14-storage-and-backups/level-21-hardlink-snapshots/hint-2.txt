@@ -1,0 +1,6 @@
+  rsync -a SRC/ DEST/                   copy a tree keeping modes, times and links (trailing slash on SRC: copy the contents)
+  rsync -a --link-dest=DIR SRC/ DEST/   files identical to the ones under DIR become hard links to them
+  ls -li / stat -c %i FILE              the inode number: equal numbers mean one file
+Careful: a relative --link-dest path is resolved from the destination directory, not from where you stand. If rsync cannot find it, it just makes a full copy and does not complain.
+Order: day1, then ./change-day.sh, then day2.
+More: man rsync (search "link-dest")

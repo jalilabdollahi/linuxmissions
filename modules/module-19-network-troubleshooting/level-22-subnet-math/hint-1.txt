@@ -1,1 +1,7 @@
-This is a delimiter-based column extraction task.
+Text tools can't answer "is 10.7.189.161/30 inside 10.0.0.0/8?": you need the numbers behind the dots. Before you write anything, look at what kinds of entries allow.cidr really contains:
+- entries whose address part isn't the network address (10.1.2.77/24 still means the whole 10.1.2.0/24),
+- bare addresses without a /prefix,
+- the same network written twice in different ways,
+- IPv6 networks.
+
+In blocked.log, only SRC= is the sender. And look at how the kernel writes IPv6 addresses there compared with allow.cidr.

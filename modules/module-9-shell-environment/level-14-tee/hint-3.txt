@@ -1,1 +1,9 @@
-Example: `for n in 1 2 3; do printf 'tee item %s\n' "$n" > generated/tee-$n.txt; done`
+./gen-events | tee events.raw | grep 'level=error' | tee errors.log | wc -l > error_count.txt
+
+- ./gen-events               one capture of the bus
+- | tee events.raw           save every line, and pass every line on
+- | grep 'level=error'       keep the error events only
+- | tee errors.log           save those, and pass them on
+- | wc -l > error_count.txt  count them and save the number
+
+Check: head -3 errors.log; cat error_count.txt

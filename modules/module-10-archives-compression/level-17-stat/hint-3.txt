@@ -1,1 +1,21 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+Two loops over MANIFEST without the # comment lines. First list the drift:
+
+grep -v '^#' MANIFEST | while read -r mode epoch path; do
+  [ "$(stat -c '%a %Y' "$path")" = "$mode $epoch" ] || echo "$path"
+done > drift.txt
+
+- read -r mode epoch path   the path gets the rest of the line, spaces included
+- stat -c '%a %Y'          mode and mtime of the entry itself (no -L: the link, not its target)
+- || echo "$path"          print the path only when the two strings differ
+
+cat drift.txt     (9 paths)
+
+Then fix every entry:
+
+grep -v '^#' MANIFEST | while read -r mode epoch path; do
+  [ -L "$path" ] || chmod "$mode" "$path"
+  touch -h -d "@$epoch" "$path"
+done
+
+- [ -L ] || chmod     skip chmod for the symlink, or it would set its target to 777
+- touch -h -d @epoch  set the mtime of the entry itself, symlink included

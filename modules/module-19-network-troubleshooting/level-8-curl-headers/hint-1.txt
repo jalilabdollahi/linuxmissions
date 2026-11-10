@@ -1,1 +1,3 @@
-Use a targeted file search so you do not remove the wrong files.
+Follow the link and look at the headers of every response on the way, not just the last one. How many hops are there, and which of them carry a Cache-Control header?
+
+The uptime check uses `curl -I`. What kind of request is that, and is it what a browser sends? Ask the final page both ways and compare.

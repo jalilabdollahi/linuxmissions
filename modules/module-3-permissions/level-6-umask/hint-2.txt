@@ -1,6 +1,11 @@
-Work backwards:
-Files:  666 - ? = 640  → umask = 026? No: 666 - 026 = 640 ✓
-Dirs:   777 - 027 = 750 ✓
-
-Try umask 027 and create test files to see:
-(umask 027 && touch /tmp/test_file && ls -la /tmp/test_file)
+umask lists the bits to REMOVE, per digit owner/group/others (4=r, 2=w, 1=x):
+  owner  keeps everything          -> 0
+  group  loses write (2)           -> 2
+  others lose read+write+exec (7)  -> 7
+Try it in a subshell before you edit:
+  ( umask 0XX; mkdir t; touch t/f; ls -ld t t/f ); rm -r t
+Edit the script with: edit start_app.sh   (or sed)
+umask only affects files created AFTER it is set. For data/ either fix the modes
+by hand (find data -type d ... / -type f ..., with chmod) or remove data/ and run
+the fixed script again.
+More: help umask, man chmod

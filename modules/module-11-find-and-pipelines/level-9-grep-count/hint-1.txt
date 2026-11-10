@@ -1,1 +1,5 @@
-This task wants a symbolic link, not a copy.
+For each of the 30 files you need one number: how many of its lines have the
+level ERROR. Then keep the files above 50 and sort. Before counting, look at
+everything a plain search for ERROR finds besides ERROR events: words that
+merely contain ERROR (NOERROR, ERRORS_RESET). And when an ERROR line says
+ERROR twice, is that two errors or one line?

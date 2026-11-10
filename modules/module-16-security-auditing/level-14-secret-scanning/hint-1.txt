@@ -1,1 +1,4 @@
-A short for-loop is the cleanest option here.
+Each kind of credential has a shape you can describe: a fixed prefix and length, a marker line, or a
+setting name followed by a value. Search for the shapes one at a time and look at what each search
+returns before you trust it. Remember what plain `grep -r` does not look inside, and decide for every
+match whether it is a real value or just documentation.

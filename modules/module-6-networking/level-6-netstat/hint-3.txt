@@ -1,2 +1,11 @@
-One valid solution is:
-awk '$1=="ESTAB" {split($5,a,":"); print a[1]}' connections.txt | sort -u | wc -l > unique_ips.txt
+Type this at the prompt:
+
+awk '$1 == "ESTAB" && $4 ~ /:443$/ { sub(/:[0-9]+$/, "", $5); print $5 }' connections.txt | sort | uniq -c | sort -nr | head -1 | awk '{ print $2, $1 }' > top_talker.txt
+
+- $1 == "ESTAB" && $4 ~ /:443$/     open connections whose local side is port 443
+- sub(/:[0-9]+$/, "", $5); print $5 the peer address without its port (works for IPv6 too)
+- sort | uniq -c                    count identical addresses: "COUNT ADDRESS"
+- sort -nr | head -1                biggest count first, keep that line
+- awk '{ print $2, $1 }'            swap to "ADDRESS COUNT"
+
+Check it: cat top_talker.txt   (remove the last two steps to see the whole ranking)

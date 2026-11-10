@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Every process has one entry per open descriptor under /proc/PID/ and its
+limits are listed there too. "Close to the limit" is a ratio, so you need
+both numbers for every service. The process with the most descriptors is
+not necessarily the one running out; and a limit has a soft and a hard
+value, only one of which stops the process.

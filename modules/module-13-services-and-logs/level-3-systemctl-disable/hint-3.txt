@@ -1,1 +1,12 @@
-Example: `grep -c '^ok$' systemctl-disable-events.txt > ok-count.txt`
+Find who pulls it in, then stop, disable and mask it:
+
+systemctl list-dependencies --reverse legacy-sync
+systemctl disable --now legacy-sync
+systemctl mask legacy-sync
+ls -l etc/systemd/system/ etc/systemd/system/multi-user.target.wants/
+systemctl status legacy-sync
+
+- list-dependencies --reverse   shows report.service: its Wants= would start legacy-sync again
+- disable --now                 removes the multi-user.target.wants link and stops the process
+- mask                          creates etc/systemd/system/legacy-sync.service -> /dev/null, which
+                                hides the packaged unit in usr/lib/systemd/system completely

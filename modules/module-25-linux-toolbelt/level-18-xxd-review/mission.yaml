@@ -1,15 +1,11 @@
 {
-  "name": "Xxd Review: Alert Filter",
-  "description": "In the linux toolbelt lab, a task related to Xxd Review needs cleanup before the handoff.",
-  "objective": "Write every alert line from xxd-review.log into alerts.txt",
+  "name": "Flip One Byte, Fix One Sum",
+  "description": "Before flashing the controller, the engineer needs debug mode on in its 128-byte configuration blob. The bootloader refuses any blob whose checksum is wrong. The original is saved as config.bin.orig.",
+  "objective": "Patch config.bin so that the byte at offset 0x2A is 01 (it is 00 now). The last byte of the file is a checksum: the sum of all the bytes before it, modulo 256. Update it for the patched content. Exactly those two bytes may differ from config.bin.orig, and the size must stay 128 bytes.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Xxd Review",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "25m",
+  "concepts": ["xxd", "xxd -p -c1", "xxd -r", "binary patching", "checksum", "dd conv=notrunc"],
   "module": "module-25-linux-toolbelt",
   "level": "level-18-xxd-review"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Sudo Review: Alert Filter",
-  "description": "In the security auditing lab, a task related to Sudo Review needs cleanup before the handoff.",
-  "objective": "Write every alert line from sudo-review.log into alerts.txt",
+  "name": "Six Teams, Six Doors to Root",
+  "description": "Six teams have rules in etc/sudoers.d/. The security review found that some of them look narrow but let the user become root anyway: shell escapes, wildcards that accept extra arguments, scripts the user can edit. ownership.txt is the output of stat for the scripts the rules mention.",
+  "objective": "Find the rules in etc/sudoers.d/ that give a user a way to become root (only files sudo actually reads count, and etc/sudoers is out of scope). Write each one as `etc/sudoers.d/FILE:LINE` (its line number before you change anything) to escalations.txt, one per line. Then rewrite those rules into safe forms that still let the team do its task: reading logs, editing a config file, restarting its service, running the backup, deploying. The platform team provides root-owned wrappers /usr/local/sbin/backup-home and /usr/local/sbin/deploy-release. No rule may grant a shell, editor, pager, find, tar, a wildcard argument or an unprotected script; every file must still pass `visudo -cf`, and the rules that were already safe must remain.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Sudo Review",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "35m",
+  "concepts": ["sudoers", "privilege escalation", "GTFOBins", "sudoedit", "visudo -cf", "wildcards in sudo"],
   "module": "module-16-security-auditing",
   "level": "level-18-sudo-review"
 }

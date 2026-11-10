@@ -1,1 +1,10 @@
-Example: `head -n 3 systemd-timers-history.log > first3.txt` and `tail -n 3 systemd-timers-history.log > last3.txt`
+printf '[Unit]\nDescription=Purge expired app data\n\n[Service]\nType=oneshot\nExecStart=/opt/app/purge.sh\n' > etc/systemd/system/purge.service
+printf '[Unit]\nDescription=Weekday purge\n\n[Timer]\nOnCalendar=Mon..Fri *-*-* 02:30:00\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n' > etc/systemd/system/purge.timer
+systemd-analyze calendar --iterations=3 'Mon..Fri *-*-* 02:30:00'
+
+- purge.service      Type=oneshot: the job runs once and exits; ExecStart= is the command
+- OnCalendar=Mon..Fri *-*-* 02:30:00   cron's "30 2 * * 1-5" in systemd's calendar syntax
+- Persistent=true    a start missed while the server was down runs right after boot
+- WantedBy=timers.target   what `systemctl enable purge.timer` hooks the timer into
+- systemd-analyze calendar   shows the next three elapses: Mon-Fri at 02:30
+(You can also write the files with: edit etc/systemd/system/purge.timer)

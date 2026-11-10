@@ -1,1 +1,10 @@
-Example: `tar -xzf chage-review-restore.tar.gz`
+today=$(( $(date -u -d 2026-11-10 +%s) / 86400 ))
+awk -F: -v t=$today '$3 != "" && $5 != "" && $5 < 99999 { e = ($3 == 0) ? t : $3 + $5; if (e <= t + 14) print e, $1 }' etc/shadow | sort -n | while read d u; do echo "$u $(date -u -d "1970-01-01 +$d days" +%F)"; done > expiring.txt
+cat expiring.txt
+
+- today=...         today as a day number: seconds since 1970 / 86400
+- $3 != "" && $5 != "" && $5 < 99999   skip accounts with ageing off or "never"
+- e = ($3 == 0) ? t : $3 + $5          expiry day = last change + max age; last change 0 means expired now
+- e <= t + 14       expired already or within 14 days
+- sort -n           earliest day first, while it is still a number
+- date -u -d "1970-01-01 +N days" +%F   turn the day number into YYYY-MM-DD

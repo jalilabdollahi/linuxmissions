@@ -1,0 +1,4 @@
+Every process leaves a trace of what it has open in /proc/PID/. Think about
+all the ways a process can "use" a directory: not only by having a file in it
+open. A shell that has cd'd into it is enough to keep it busy.
+Also decide how you will tell data/ from look-alikes such as data-old/.

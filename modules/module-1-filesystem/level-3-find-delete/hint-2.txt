@@ -1,2 +1,7 @@
-Add -delete to remove them in one pass:
-find $SANDBOX -name "*.tmp" -delete
+find can list and delete in one tool:
+  find . -type f -name '*.tmp'           list regular files whose name ENDS in .tmp
+  find . -type f -name '*.tmp' -delete   same list, but delete them
+Quote the pattern so the shell does not expand * itself. find also looks inside
+hidden folders, and it handles spaces in names safely (rm *.tmp only covers the
+current folder; find ... | xargs rm breaks on spaces).
+More: man find

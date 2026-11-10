@@ -1,15 +1,11 @@
 {
-  "name": "Arithmetic: Script Kickoff",
-  "description": "In the shell automation lab, a task related to Arithmetic needs cleanup before the handoff.",
-  "objective": "Make jobs/arithmetic.sh executable, run it, and create the token file it writes",
+  "name": "Quota Report",
+  "description": "The weekly disk quota mail comes from quota_report.sh. This week it printed `division by 0` and `value too great for base` errors and warned nobody. The storage export (usage.tsv) pads every size with zeros to 8 digits; NOTE.txt describes the format.",
+  "objective": "Fix quota_report.sh so that `bash quota_report.sh FILE` prints, in file order, `<user> <percent>%` for every user using at least 90 % of their quota (percent = used * 100 / quota, rounded down; a quota of 0 means unlimited and is never listed), then `TOTAL <n> MiB`, where n is all used KiB added up and divided by 1024, rounded down. Nothing else on stdout, no errors on stderr. It is also run on an export you have not seen.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Arithmetic",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "12m",
+  "concepts": ["$(( ))", "(( ))", "10#$n and octal", "integer division order", "skipping a header line"],
   "module": "module-21-shell-automation",
   "level": "level-13-arithmetic"
 }

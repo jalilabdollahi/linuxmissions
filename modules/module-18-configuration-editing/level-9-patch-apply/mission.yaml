@@ -1,15 +1,11 @@
 {
-  "name": "Patch Apply: Link Repair",
-  "description": "In the configuration editing lab, a task related to Patch Apply needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/patch-apply.conf",
+  "name": "Half a Vendor Patch",
+  "description": "The proxy vendor shipped fix-timeouts.patch against their stock proxy.conf. Our copy has local tuning, so the patch does not go in cleanly: one change is rejected.",
+  "objective": "Apply fix-timeouts.patch to proxy.conf so that all three of the vendor's timeout changes are in the file and all of our local edits are still there. Finish the rejected change by hand. When you are done there must be no .rej or .orig files left in the directory.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Patch Apply",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "15m",
+  "concepts": ["patch -p1", "--dry-run", ".rej files", "manual merge", "unified diff"],
   "module": "module-18-configuration-editing",
   "level": "level-9-patch-apply"
 }

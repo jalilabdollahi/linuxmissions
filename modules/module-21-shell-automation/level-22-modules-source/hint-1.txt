@@ -1,1 +1,17 @@
-This is a delimiter-based column extraction task.
+Start by comparing the three copies: grep -n -A4 '^log\|^die\|^require_cmd' scripts/*.sh
+STYLE.txt says which behaviour wins.
+
+Then the two hard questions:
+- From inside scripts/rotate_logs.sh, how do you name ../lib/common.sh so it
+  works no matter where the caller stands? Try the bin/ link from another
+  directory:   cd demo && ../bin/rotate-logs logs
+  What do $0 and "${BASH_SOURCE[0]}" contain then? Do they point at the
+  script, or at the link?
+- What happens to the shell that sources the library if the library says
+  `set -e`, `cd`, or `exit`? Try it in a throwaway shell:
+    bash -c 'source lib/common.sh; echo still here; set -o | grep errexit'
+- If two scripts (or a script and a library it sources) both source
+  common.sh, it is read twice. How can the file notice that it was already
+  loaded and stop early?
+
+Game tip: `edit lib/common.sh` creates and opens the file in an editor.

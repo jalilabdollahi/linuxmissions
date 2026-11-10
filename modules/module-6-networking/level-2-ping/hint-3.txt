@@ -1,6 +1,16 @@
-One valid pattern is:
+Type this at the prompt:
+
 while read -r host; do
-  if ./mock_ping.sh "$host"; then
-    echo "$host" >> reachable.txt
+  case "$host" in ''|'#'*) continue ;; esac
+  if ./ping -c 1 -W 1 "$host" >/dev/null 2>&1; then
+    echo "$host"
   fi
-done < hosts.txt
+done < hosts.txt > reachable.txt
+
+- while read -r host ... done < hosts.txt   one line of hosts.txt per loop
+- case ... continue                         skip blank lines and # comments
+- ./ping -c 1 -W 1 "$host"                  one packet, wait at most 1 second
+- if ...; then echo "$host"                 exit status 0 = the host answered, so print its name
+- > reachable.txt                           everything the loop prints goes into the file
+
+Check it: cat reachable.txt

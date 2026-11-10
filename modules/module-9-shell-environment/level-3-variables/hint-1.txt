@@ -1,1 +1,5 @@
-Count matching lines instead of copying them out by hand.
+Run it yourself and look at the name it prints: `ENV=staging DAY=2026-11-09 ./name-report.sh`, then once without DAY.
+
+A variable name is letters, digits and underscores. In "report-$ENV_$DAY.txt", where does bash think the first name ends? The double quotes are already there, so quoting is not the problem.
+
+Second question: what should DAY be when cron doesn't set it?

@@ -1,1 +1,8 @@
-Example: `grep 'ALERT' initramfs-notes.log > alerts.txt`
+file sysroot/boot/initrd.img-*
+for f in sysroot/boot/initrd.img-*; do echo "== $f"; (zstdcat "$f" 2>/dev/null || zcat "$f") | cpio -t 2>/dev/null | grep '/nvme'; done
+echo initrd.img-6.8.0-31-generic > bad_initrd.txt
+
+- file: shows gzip vs Zstandard for each image
+- the loop lists the nvme files of each image: zstdcat fails on gzip data, so zcat takes over (and the other way round)
+- cpio -t only lists the archive; grep '/nvme' shows nvme.ko and nvme-core.ko
+- the image whose list lacks nvme.ko (only nvme-core.ko and nvme-fabrics.ko) is the bad one

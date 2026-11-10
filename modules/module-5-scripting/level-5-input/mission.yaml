@@ -1,11 +1,11 @@
 {
   "name": "Config Parser",
-  "description": "Your app stores environment variables in a `key=value` file. You need a loader script that turns those lines into exported shell variables.",
-  "objective": "Write load_env.sh so sourcing it with app.env exports APP_NAME, APP_ENV, and APP_PORT",
-  "xp": 210,
-  "difficulty": "intermediate",
-  "expected_time": "10m",
-  "concepts": ["while read", "IFS", "export", "source"],
+  "description": "The deploy pipeline keeps its settings in app.env, a KEY=value file filled in from a web form. Running `source app.env` broke on the first value with a space, and it would also run any $(command) somebody typed into the form.",
+  "objective": "Write load_env.sh so that `source load_env.sh FILE` exports every KEY=value line of FILE as an environment variable, with the value taken literally (spaces, `=` and `$(...)` kept as text, never run). Skip blank lines and lines starting with `#`, include the last line even if it has no newline, and print no errors. Try it with app.env.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["while read", "IFS", "read -r", "export", "source"],
   "module": "module-5-scripting",
   "level": "level-5-input"
 }

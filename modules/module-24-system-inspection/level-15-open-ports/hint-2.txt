@@ -1,1 +1,7 @@
-An awk one-liner can skip the header and add the second field.
+`ss -ltnp` = listening, TCP, numeric, with processes (`man ss`; add `-H` to
+drop the header). Your own processes show up as `users:(("name",pid=N,fd=M))`;
+the port is the text after the last colon of the local address
+(`127.0.0.1:8123`, `[::1]:8123`, `*:8123`).
+The name in that field and the one in /proc/PID/cmdline are chosen by the
+process, but `/proc/PID/exe` is a symlink to the file that is really being
+executed: `readlink /proc/PID/exe`.

@@ -1,17 +1,22 @@
-# Namespaces Notes: Path Realignment
+# Own PID, Host Network
 
-## What you practiced
-- This level focused on **Namespaces Notes** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Namespaces are kernel objects identified by inode number, visible as
+`/proc/PID/ns/net`, `/proc/PID/ns/pid` and so on (`ps` and `lsns` print the
+numbers). Two processes share a namespace when the numbers match, so "the
+host's" namespace is simply whatever PID 1 is in. A container started with
+`--network=host` keeps the host's network namespace but still gets its own
+PID namespace, which is the combination to look for; `--pid=host` is the
+mirror image (host PIDs, private network) and a plain `unshare -n` job is not
+a container at all.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- Assuming the host has the lowest (or highest) inode number.
+- Comparing only the network column and listing every host daemon.
+- Mixing up the two opposite cases: `--pid=host` containers have the host's
+  PID namespace.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/namespaces-notes/namespaces-notes-notes.txt.
+## Next step
+`lsns -t net` lists the network namespaces of a live host, `ls -l
+/proc/PID/ns/` shows one process's, and `nsenter -t PID -n ss -ltn` runs a
+command inside another process's network namespace (root needed).

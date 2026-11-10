@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+Look at the boot entries with their device paths: firmware boots the first entry in
+BootOrder that works, and there are two entries called "ubuntu". An entry points at a
+partition by its PARTUUID. Which of those partitions still exists on this server? The
+captured blkid output shows the partitions it has. The other entries must keep their
+order relative to each other.

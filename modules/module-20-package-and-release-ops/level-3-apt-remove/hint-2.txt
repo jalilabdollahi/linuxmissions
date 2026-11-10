@@ -1,1 +1,7 @@
-A grep count or grep piped into wc can produce the number you need.
+dpkg -l                 first column: ii installed, rc removed but config files kept, un not installed
+apt remove NAME         removes the program, keeps the configuration files
+apt purge NAME          removes the program AND its configuration files
+dpkg -P NAME            the same purge with the low-level tool
+
+A package in state rc can still be purged. Name exactly one package: a wildcard
+such as oldmon* also matches the neighbours.   More: man apt-get, man dpkg

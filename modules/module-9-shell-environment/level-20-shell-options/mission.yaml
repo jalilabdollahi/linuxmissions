@@ -1,15 +1,11 @@
 {
-  "name": "Shell Options: Noise Dedup",
-  "description": "In the shell environment lab, a task related to Shell Options needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from shell-options-raw.txt with sorted unique values",
+  "name": "Glob Patrol",
+  "description": "ingest.sh loads the CSV uploads from incoming/. On quiet nights it crashes on a file literally called `incoming/*.csv`, it never sees the uploads in the dated subdirectories or the ones ending in .CSV, and last week it overwrote the summary.txt the auditors had signed off. (Needs bash 4 or newer: Linux, or ./play.sh --docker.)",
+  "objective": "Fix ingest.sh (it is tested with fresh upload directories you have not seen) so that it ingests every non-hidden file under incoming/, at any depth, whose name ends in .csv in any letter case; with no such files it ingests nothing and writes summary.txt with files=0 rows=0; and when summary.txt already exists it leaves it unchanged and exits with a non-zero status. Keep its output format.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Shell Options",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "15m",
+  "concepts": ["shopt -s nullglob", "shopt -s globstar (**)", "shopt -s nocaseglob", "set -o noclobber", "shopt -p"],
   "module": "module-9-shell-environment",
   "level": "level-20-shell-options"
 }

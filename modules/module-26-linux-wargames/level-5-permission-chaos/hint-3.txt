@@ -1,1 +1,9 @@
-Example: `cut -d, -f2 permission-chaos-report.csv > owners.txt`
+setfacl --restore=perms.acl
+find app -newer perms.acl -type d -exec chmod 2750 {} +
+find app -newer perms.acl -type f -exec chmod 640 {} +
+find app -newer perms.acl -type f -path '*/bin/*' -exec chmod 750 {} +
+find app -newer perms.acl -type f -path '*/secrets/*' -exec chmod 600 {} +
+
+- setfacl --restore=perms.acl   puts every dumped path back: mode, special bits and named-user entries, spaces in names included
+- find -newer perms.acl -type d   only paths created after the dump (the old ones keep their old mtime); directories get 2750
+- the next three lines   files get 640, then bin/ files 750 and secrets/ files 600, most specific last

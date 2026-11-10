@@ -1,15 +1,11 @@
 {
-  "name": "Service Dependencies: Field Extract",
-  "description": "In the services and logs lab, a task related to Service Dependencies needs cleanup before the handoff.",
-  "objective": "Extract the second column from service-dependencies-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Service Dependencies",
-    "cut",
-    "awk"
-  ],
+  "name": "Start Order",
+  "description": "After every reboot of web-07, app.service fails because the database proxy is not up yet, and the two should also stop together. OPS-3340 (TICKET.md) lists what the unit files must guarantee.",
+  "objective": "Fix the unit files in etc/systemd/system so that at boot db-proxy.service starts before app.service, stopping db-proxy.service also stops app.service (but stopping app leaves db-proxy running), and systemd reports no ordering cycle. Keep all three services enabled. `systemctl mock-boot` simulates a boot; `systemctl` and `journalctl` are mocks (the sandbox is /).",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "25m",
+  "concepts": ["Requires= / Wants= / BindsTo= / PartOf=", "After= / Before= ordering", "requirement vs ordering", "ordering cycles", "systemctl list-dependencies", "systemctl mock-boot", "daemon-reload"],
   "module": "module-13-services-and-logs",
   "level": "level-22-service-dependencies"
 }

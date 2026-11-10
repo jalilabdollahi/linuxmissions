@@ -1,1 +1,3 @@
-This is a sorting task followed by deduplication.
+Try a small size and a big one first, and read the first line vpnping prints: "1372(1400) bytes of data" shows two numbers. Which one is the packet size the MTU talks about?
+
+Then think about how to find the boundary without trying hundreds of sizes at a second or two each: you know one size that passes and one that doesn't. Which size would you try next so that, whatever the answer, half of the remaining range is gone?

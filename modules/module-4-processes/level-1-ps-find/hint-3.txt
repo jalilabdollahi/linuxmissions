@@ -1,2 +1,7 @@
-Save to top_procs.txt:
-ps aux --sort=-%cpu | head -6 > $SANDBOX/top_procs.txt
+  ps aux --sort=-%cpu | head -6 > top_procs.txt
+      all processes, highest %CPU first; 6 lines = header + top 5
+      (macOS: ps aux -r | head -6 > top_procs.txt)
+  cat top_procs.txt
+      the top one runs .../report_builder.sh: that's the runaway
+  pgrep -f report_builder.sh > culprit.txt
+      its PID (or copy it from column 2: echo 12345 > culprit.txt)

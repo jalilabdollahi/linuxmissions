@@ -1,1 +1,6 @@
-Example: `grep -c '^ok$' find-size-events.txt > ok-count.txt`
+  find outbox -type f -size +10M > oversize.txt
+      regular files above 10 MiB (same as -size +10485760c)
+  find outbox -type f -empty > empty.txt
+      regular files of 0 bytes; -type f leaves out the empty folders
+  cat oversize.txt empty.txt
+      check both lists

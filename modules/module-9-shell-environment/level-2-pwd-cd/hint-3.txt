@@ -1,1 +1,13 @@
-Example: `grep 'ALERT' pwd-cd.log > alerts.txt`
+Type these at the prompt:
+
+cd deploy/current
+pwd -L > "$SANDBOX/logical.txt"
+pwd -P > "$SANDBOX/physical.txt"
+cd -
+
+- cd deploy/current            enter the directory through the symlink
+- pwd -L > ...logical.txt      the path as you reached it (.../deploy/current)
+- pwd -P > ...physical.txt     the real directory, both links (current, live) resolved
+- cd -                         go back to the previous directory (the sandbox root)
+
+Compare: cat logical.txt physical.txt

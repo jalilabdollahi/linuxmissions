@@ -1,1 +1,11 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' join-keys-metrics.csv > total.txt`
+export LC_ALL=C
+tail -n +2 orders.csv | awk -F, '{ n[$4]++; s[$4] += $3 } END { for (c in n) printf "%s,%d,%.2f\n", c, n[c], s[c] }' | sort -t, -k1,1 > orders.agg
+tail -n +2 customers.csv | sort -t, -k1,1 > customers.sorted
+{ echo customer_id,name,orders,total; join -t, -a1 -e NONE -o 1.1,1.2,2.2,2.3 customers.sorted orders.agg | sed 's/,NONE,NONE$/,0,0.00/' | sort -t, -k1,1n; } > customer_totals.csv
+
+- export LC_ALL=C              sort and join compare the same way (byte order)
+- awk ... END { ... }          per customer id: number of orders, sum with 2 decimals
+- sort -t, -k1,1               both inputs sorted on the id as text, as join expects
+- join -a1 -e NONE -o ...      every customer; NONE where there is no summary line
+- sed 's/,NONE,NONE$/,0,0.00/' customers without orders get 0 and 0.00
+- sort -t, -k1,1n              the final report ordered by id as a number

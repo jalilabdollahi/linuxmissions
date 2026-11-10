@@ -1,1 +1,6 @@
-You need a stream editor or another text replacement tool.
+Look at the eight lines of uptime.txt side by side. The part before "load
+average:" changes from host to host ("3 days", "14 min", "21:08" ...), so you
+cannot count on a column number to find the load numbers. What text is always
+right in front of them?
+Then think about which of the three numbers the ticket cares about, and where
+the CPU count of each host lives.

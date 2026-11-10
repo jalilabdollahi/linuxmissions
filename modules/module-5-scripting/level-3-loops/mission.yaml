@@ -1,11 +1,11 @@
 {
   "name": "Bulk Renamer",
-  "description": "A batch of text files needs to be archived with a new extension, and doing them one by one is not an option.",
-  "objective": "Write rename.sh so it renames every `.txt` file in the target directory to `.bak`",
-  "xp": 180,
+  "description": "Every evening the reports in a drop folder must be marked as processed by renaming them from .txt to .bak. Somebody has been doing it by hand, one file at a time.",
+  "objective": "Make `bash rename.sh DIR` rename every file ending in `.txt` directly inside DIR to the same name ending in `.bak` (`q3 report.txt` becomes `q3 report.bak`). Other files and subdirectories stay as they are, and running it on a folder with no .txt files must change nothing and print no errors. incoming/ is there to try it on.",
+  "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": ["for", "glob", "mv", "basename"],
+  "expected_time": "10m",
+  "concepts": ["for loop", "glob", "${var%suffix}", "mv", "quoting"],
   "module": "module-5-scripting",
   "level": "level-3-loops"
 }

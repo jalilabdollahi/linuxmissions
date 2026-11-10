@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+"""reportd-check: a stand-in for `systemd-analyze verify` plus a dry run of the service.
+
+Level-local helper of module 16 level 21. It reads etc/systemd/system/reportd.service,
+etc/passwd, etc/group and the ownership records of the chown stand-in (.lm/owners) in the
+fake root, and answers what systemd would do: can the unit's User= start /opt/reportd/run.sh,
+read /opt/reportd/config.ini and write /var/lib/reportd/state.json and report.csv under the
+unit's ProtectSystem= / ReadWritePaths= sandbox?
+
+  reportd-check [--root DIR] [UNIT]      exit 0 if the service would work, 1 otherwise
+"""
+import os
+import stat
+import sys
+
+TRUE = ("yes", "true", "1", "on")
+
+
+def find_root(argv):
+    if "--root" in argv:
+        i = argv.index("--root")
+        root = argv[i + 1]
+        del argv[i:i + 2]
+        return os.path.abspath(root)
+    if os.environ.get("LM_ROOT"):
+        return os.path.abspath(os.environ["LM_ROOT"])
+    here = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(here) if os.path.basename(here) == "bin" else here
+
+
+def read_colon_file(path):
+    rows = []
+    try:
+        for line in open(path):
+            line = line.rstrip("\n")
+            if line and not line.startswith("#"):
+                rows.append(line.split(":"))
+    except OSError:
+        pass
+    return rows
+
+
+class World:
+    def __init__(self, root):
+        self.root = root
+        self.users = {}
+        for r in read_colon_file(os.path.join(root, "etc/passwd")):
+            if len(r) >= 7:
+                self.users[r[0]] = (int(r[2]), int(r[3]), r[5], r[6])
+        self.groups = {}
+        for r in read_colon_file(os.path.join(root, "etc/group")):
+            if len(r) >= 4:
+                self.groups[r[0]] = (int(r[2]), [m for m in r[3].split(",") if m])
+        self.owners = {}
+        try:
+            for line in open(os.path.join(root, ".lm/owners")):
+                p, u, g = line.rstrip("\n").split("\t")
+                self.owners[p] = (int(u), int(g))
+        except OSError:
+            pass
+
+    def gids_of(self, name):
+        uid, gid, _, _ = self.users[name]
+        s = {gid}
+        for g, (n, members) in self.groups.items():
+            if name in members:
+                s.add(n)
+        return s
+
+    def owner(self, rel):
+        if rel in self.owners:
+            return self.owners[rel]
+        st = os.lstat(os.path.join(self.root, rel))
+        return st.st_uid, st.st_gid
+
+    def can(self, name, rel, bit):
+        """bit: 4 read, 2 write, 1 execute, for a path relative to the root (not following links)."""
+        uid, _, _, _ = self.users[name]
+        if uid == 0:
+            return True
+        full = os.path.join(self.root, rel)
+        mode = os.stat(full).st_mode
+        ouid, ogid = self.owner(rel)
+        if uid == ouid:
+            have = (mode >> 6) & 7
+        elif ogid in self.gids_of(name):
+            have = (mode >> 3) & 7
+        else:
+            have = mode & 7
+        return bool(have & bit)
+
+    def reaches(self, name, rel):
+        """execute permission on every directory above rel"""
+        parts = rel.split("/")[:-1]
+        for i in range(1, len(parts) + 1):
+            d = "/".join(parts[:i])
+            if not self.can(name, d, 1):
+                return d
+        return None
+
+
+def parse_unit(path):
+    sec, vals = None, {}
+    for raw in open(path):
+        line = raw.strip()
+        if not line or line[0] in "#;":
+            continue
+        if line.startswith("["):
+            sec = line.strip("[]")
+            continue
+        if "=" in line:
+            k, v = line.split("=", 1)
+            k, v = k.strip(), v.strip()
+            if k in ("ReadWritePaths", "ReadOnlyPaths", "InaccessiblePaths"):
+                vals.setdefault((sec, k), [])
+                vals[(sec, k)] = [] if v == "" else vals[(sec, k)] + v.split()
+            else:
+                vals[(sec, k)] = v
+    return vals
+
+
+def under(path, base):
+    return path == base or path.startswith(base.rstrip("/") + "/")
+
+
+def main(argv):
+    root = find_root(argv)
+    unit = argv[1] if len(argv) > 1 else "reportd.service"
+    w = World(root)
+    out, bad = [], []
+
+    def ok(msg): out.append("OK    " + msg)
+    def fail(msg): out.append("FAIL  " + msg); bad.append(msg)
+
+    upath = None
+    for d in ("etc/systemd/system", "usr/lib/systemd/system", "lib/systemd/system"):
+        if os.path.isfile(os.path.join(root, d, unit)):
+            upath = os.path.join(root, d, unit)
+            break
+    if not upath:
+        print("Unit %s not found." % unit)
+        return 1
+    u = parse_unit(upath)
+    svc = lambda k, d=None: u.get(("Service", k), d)
+
+    user = svc("User", "root")
+    if user not in w.users:
+        fail("User=%s: no such user in etc/passwd (status=217/USER)" % user)
+        print("\n".join(out)); return 1
+    ok("User=%s (uid %d, shell %s)" % ((user,) + (w.users[user][0], w.users[user][3])))
+
+    exe = (svc("ExecStart") or "").lstrip("-@+!:").split(" ")[0]
+    prot = (svc("ProtectSystem", "no") or "no").lower()
+    rw = [p.lstrip("-") for p in u.get(("Service", "ReadWritePaths"), [])]
+    rw_opt = {p.lstrip("-"): p.startswith("-") for p in u.get(("Service", "ReadWritePaths"), [])}
+
+    # mount namespace: ReadWritePaths= must exist
+    for p in rw:
+        if not os.path.exists(os.path.join(root, p.lstrip("/"))) and not rw_opt[p]:
+            fail("ReadWritePaths=%s does not exist (status=226/NAMESPACE)" % p)
+
+    def readonly(path):
+        if any(under(path, p) for p in rw):
+            return False
+        if prot == "strict":
+            return not any(under(path, p) for p in ("/dev", "/proc", "/sys", "/tmp", "/run"))
+        if prot == "full":
+            return any(under(path, p) for p in ("/usr", "/boot", "/efi", "/etc"))
+        if prot in TRUE:
+            return any(under(path, p) for p in ("/usr", "/boot", "/efi"))
+        return False
+
+    rel = exe.lstrip("/")
+    if not os.path.isfile(os.path.join(root, rel)):
+        fail("ExecStart=%s: No such file (status=203/EXEC)" % exe)
+    else:
+        blocked = w.reaches(user, rel)
+        if blocked:
+            fail("ExecStart=%s: Permission denied, %s is not searchable by %s (status=203/EXEC)" % (exe, "/" + blocked, user))
+        elif not w.can(user, rel, 1):
+            fail("ExecStart=%s: Permission denied, not executable by %s (status=203/EXEC)" % (exe, user))
+        else:
+            ok("ExecStart=%s can be executed by %s" % (exe, user))
+
+    cfg = "opt/reportd/config.ini"
+    blocked = w.reaches(user, cfg)
+    if blocked or not w.can(user, cfg, 4):
+        fail("read /%s: Permission denied for %s" % (cfg, user))
+    else:
+        ok("read /%s" % cfg)
+
+    for name in ("state.json", "report.csv"):
+        rel = "var/lib/reportd/" + name
+        path = "/" + rel
+        if readonly(path):
+            fail("write %s: Read-only file system (ProtectSystem=%s, path not in ReadWritePaths=)" % (path, prot))
+            continue
+        d = "var/lib/reportd"
+        blocked = w.reaches(user, rel)
+        if not os.path.isdir(os.path.join(root, d)):
+            fail("write %s: No such directory" % path)
+        elif blocked:
+            fail("write %s: Permission denied, %s is not searchable by %s" % (path, "/" + blocked, user))
+        elif os.path.exists(os.path.join(root, rel)):
+            if w.can(user, rel, 2):
+                ok("write %s" % path)
+            else:
+                fail("write %s: Permission denied for %s (the file itself is not writable)" % (path, user))
+        elif w.can(user, d, 2):
+            ok("write %s (create)" % path)
+        else:
+            fail("write /%s: Permission denied for %s (directory not writable)" % (d, user))
+
+    print("\n".join(out))
+    if bad:
+        print("reportd.service would FAIL: %d problem(s)" % len(bad))
+        return 1
+    print("reportd.service would start and do its work")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

@@ -1,15 +1,11 @@
 {
-  "name": "Sudoers Audit: History Window",
-  "description": "In the users and groups lab, a task related to Sudoers Audit needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of sudoers-audit-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Sudoers Audit",
-    "head",
-    "tail"
-  ],
+  "name": "Who Is Root on db-01?",
+  "description": "Audit finding: nobody can say who gets full root on db-01. You have a copy of its etc/sudoers, the drop-in files in etc/sudoers.d/ and etc/group. Everyone with a username, an alias or a group in a rule counts, but only if sudo would really read that rule.",
+  "objective": "Write root-capable.txt with the usernames (one per line, any order, root itself left out) of everyone who can run any command as root on db-01, with or without a password: through their own name, a User_Alias, or membership of a %group in etc/group. Rules limited to certain commands or to another runas user are not full root, and neither are rules for other hosts, commented-out lines or files sudo does not read. Leave the copied files unchanged.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "20m",
+  "concepts": ["sudoers rules", "User_Alias and %group", "#includedir and file-name rules", "full root vs limited rules"],
   "module": "module-12-users-and-groups",
   "level": "level-7-sudoers-audit"
 }

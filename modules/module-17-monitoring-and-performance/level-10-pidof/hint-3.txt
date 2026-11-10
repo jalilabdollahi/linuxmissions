@@ -1,1 +1,7 @@
-Example: `tar -czf pidof-backup.tar.gz bundle/pidof`
+sed -i 's/pidof queue-worker.sh/pidof -x queue-worker.sh/' healthcheck.sh
+cat healthcheck.sh
+bash healthcheck.sh; echo "exit code: $?"
+
+- sed -i 's/.../.../' healthcheck.sh   changes the one line in place
+- pidof -x       also finds shell scripts by script name (the process itself is called bash)
+- the last line  runs the check; it should print OK and exit 0 now

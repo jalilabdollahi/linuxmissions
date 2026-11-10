@@ -1,15 +1,11 @@
 {
-  "name": "Comm Diff: Capacity Report",
-  "description": "In the data processing lab, a task related to Comm Diff needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Comm Diff",
-    "du",
-    "sort"
-  ],
+  "name": "License Reconciliation",
+  "description": "The design tool's seats renew next week and procurement wants to know how many to buy. licenses.txt lists the seats bought (typed by hand), directory.csv is the export of all accounts with an enabled column, and active_30d.log has every SSO login event of the last 30 days. The three systems write usernames differently.",
+  "objective": "A user is active when their account is enabled (enabled=yes) in directory.csv and active_30d.log has at least one successful login (result=success) for them. Write unused_seats.txt with every licensed user who is not active, and unlicensed_active.txt with every active user who has no seat. Usernames in lowercase without spaces, one per line, each once, sorted. Leave the three input files unchanged.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["comm -23 / -13 / -12", "sort -u", "normalising keys (case, spaces)", "grep -o key=value", "set operations on files", "LC_ALL=C"],
   "module": "module-22-data-processing",
   "level": "level-16-comm-diff"
 }

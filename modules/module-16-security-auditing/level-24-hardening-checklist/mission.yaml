@@ -1,15 +1,11 @@
 {
-  "name": "Hardening Checklist: Permission Fix",
-  "description": "In the security auditing lab, a task related to Hardening Checklist needs cleanup before the handoff.",
-  "objective": "Set the mode of hardening-checklist.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Hardening Checklist",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Twelve Points Before Go-Live",
+  "description": "The new bastion image in image/ must pass the 12-point checklist in CHECKLIST.md before it goes live. Some points are already fine, most are not, and the auditor will check all twelve every time. The sshd stand-in in bin/ reports the effective configuration (`sshd -T -f image/etc/ssh/sshd_config`, also with `-C user=deploy,host=ci,addr=192.0.2.10`) and visudo checks sudoers files.",
+  "objective": "Make image/ satisfy every point of CHECKLIST.md without breaking any of the others: points that are already compliant must stay compliant, files must not be deleted to make a point pass (the checklist says what has to stay), and sshd must stay valid with all its other settings unchanged. The check reports only the number of the first point that fails.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "60m",
+  "concepts": ["system hardening", "sshd_config", "file permissions", "sudoers", "profile.d", "setuid audit", "secrets"],
   "module": "module-16-security-auditing",
   "level": "level-24-hardening-checklist"
 }

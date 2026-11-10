@@ -1,1 +1,7 @@
-This is a sorting task followed by deduplication.
+Look at a few templates first (grep -rn 'old-cdn' templates | head). Count
+how many URLs and dates some lines have. Then think about the pattern
+itself: the URL is full of / (the usual separator of s///) and of dots, and
+in a regex a dot matches any character, including the - in
+old-cdn-example.com. For the dates, the parts must come out in a different
+order: how can a replacement reuse pieces of what it matched?
+Test on one file without -i first (sed ... templates/index.html | grep ...).

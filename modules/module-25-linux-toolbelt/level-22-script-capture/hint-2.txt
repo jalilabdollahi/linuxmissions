@@ -1,1 +1,6 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  script -q -c 'COMMAND' FILE     run COMMAND in a pseudo-terminal and record its output in FILE
+                                  (add </dev/null here: otherwise script also reads the shell's keyboard input and the game shell hangs)
+  cat -A FILE                     show hidden characters (^[ is ESC, ^M is carriage return)
+  sed 's/\x1b\[[0-9;?]*[A-Za-z]//g'    delete ANSI escape sequences
+  \r moves the cursor back to the start of the line: on screen, only the text after the last \r survives
+  grep -avE '^(Script |$)' removes the recorder's own lines (they start with 'Script ').   More: man script

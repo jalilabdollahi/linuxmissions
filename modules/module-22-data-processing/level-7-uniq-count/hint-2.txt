@@ -1,1 +1,11 @@
-Save each result into its own file.
+  awk '{ print $2 }' probe.log | uniq -c
+        one line per run: how many in a row, and UP or DOWN
+  ... | grep DOWN | sort -rn       the DOWN runs, longest first
+For the start time, let awk walk the log and remember things between lines:
+  $2 == "DOWN" { ... }            on a DOWN line
+  if (run == 0) start = $1        the first DOWN after an UP: a new outage starts
+  run++                           one more minute in the current outage
+  if (run > best) { ... }         remember the best length and its start
+  { run = 0 }                     on any other line the outage is over
+  END { print beststart, best }
+More: man uniq, man awk

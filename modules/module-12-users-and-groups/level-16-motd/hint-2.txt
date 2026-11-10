@@ -1,1 +1,8 @@
-A du pipeline sorted numerically is a strong fit here.
+run-parts runs executable files only, and with --lsbsysinit only names made of
+letters, digits, underscores and hyphens; anything with a dot is skipped. The order
+is plain name order, so the number prefix places a script.
+  ls -l etc/update-motd.d      who is executable?
+  chmod -x FILE                stops a script running without removing it
+  df -P /                      the usage as a table; awk can pick one column
+Write the new script as its own small program (#! line first), make it executable,
+and run bin/render-motd again.

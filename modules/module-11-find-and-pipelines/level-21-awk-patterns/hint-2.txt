@@ -1,1 +1,9 @@
-`mkdir -p organized/awk-patterns` followed by `mv inbox/awk-patterns.txt organized/awk-patterns/awk-patterns-notes.txt` is enough.
+awk runs { action } only for lines where the pattern before it is true:
+  NR > 1                        skip line 1, the header
+  $1 == "www-data"              the whole field equals the text (no partial matches)
+  $4 > 5                        numeric comparison of %MEM
+  $8 ~ /^[DZ]/                  field 8 starts with D or Z (Ds, D<, Z+ ...)
+  A && B   A || B               combine conditions
+The command starts at field 11 and may contain blanks, so collect fields 11
+to NF:  out = $2; for (i = 11; i <= NF; i++) out = out " " $i; print out
+More: man awk (on Linux: info gawk, "Patterns, Actions, and Variables")

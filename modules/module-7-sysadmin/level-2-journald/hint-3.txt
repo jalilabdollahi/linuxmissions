@@ -1,2 +1,7 @@
-Save the result to:
-./journalctl --since "1 hour ago" | grep error > errors.txt
+./journalctl -u myapp.service -p err --since "14:00" > errors.txt
+
+- -u myapp.service   only entries from that unit (nginx and sshd errors are left out)
+- -p err             priority 3 and more serious: catches the crit "Out of memory" line,
+                     skips info lines like "error_rate=0.02"
+- --since "14:00"    today from 14:00 on (yesterday's 14:10 entry is left out)
+- > errors.txt       save the result; check it with: cat errors.txt

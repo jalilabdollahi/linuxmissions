@@ -1,1 +1,5 @@
-Use chmod with octal mode 640.
+sshd: the first value wins and Include lines are expanded in place, `Match` blocks can override: `grep -rn` over
+image/etc/ssh finds every line, `sshd -T -f ... -C user=deploy,host=ci,addr=192.0.2.10` shows the effect.
+Modes: `stat -c '%a %n'`, `find -perm`, `chmod 1777`. Setuid: `find image -type f -perm /6000` against etc/suid-baseline.txt.
+profile.d only loads files ending in `.sh`; sudo: `visudo -cf FILE`; shells: `HISTCONTROL=ignoreboth`; secrets: `grep -rIiE` for
+the setting names, then replace the value by a placeholder with `sed -i`. `find image -type f -perm -0002` lists world-writable files.

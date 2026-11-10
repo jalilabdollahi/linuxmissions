@@ -1,11 +1,11 @@
 {
   "name": "Config Injector",
-  "description": "A config file is missing one include line in exactly the right place. Insert it after the marker block.",
-  "objective": "Insert `include /etc/myapp/extra.conf` after the line `# EXTRA CONFIG` in app.conf",
-  "xp": 230,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": ["sed", "append", "multiline edits", "config files"],
+  "description": "The HTTPS site needs extra settings from /etc/myapp/extra.conf. app.conf has three server blocks, and each has a `# EXTRA CONFIG` placeholder, but only the HTTPS one (port 8443) may get the include.",
+  "objective": "In app.conf, add the line `include /etc/myapp/extra.conf;` directly after the `# EXTRA CONFIG` line of the `listen 8443` server block, and nowhere else. Every other line must stay as it is. Indent the new line however you like.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": ["sed address ranges", "sed a (append)", "regex anchors", "editing files with sed safely"],
   "module": "module-8-advanced-text",
   "level": "level-3-sed-multiline"
 }

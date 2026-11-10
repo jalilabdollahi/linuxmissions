@@ -1,15 +1,11 @@
 {
-  "name": "Date Format: Permission Fix",
-  "description": "In the data processing lab, a task related to Date Format needs cleanup before the handoff.",
-  "objective": "Set the mode of date-format.sh to 640",
+  "name": "Whose Third Of November",
+  "description": "The hotel's booking export bookings.csv has a checkin column typed by front-desk staff in three styles: 03/11/2026, 2026-11-03 and 3 Nov 2026, sometimes without leading zeros. The new channel manager accepts only ISO dates, and README.vendor explains how the numeric dates were entered.",
+  "objective": "Write bookings_iso.csv: bookings.csv with every checkin value rewritten as YYYY-MM-DD (two-digit month and day), read the way README.vendor describes. The header and every other column stay exactly as they are, and the rows keep their order. Leave bookings.csv unchanged.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Date Format",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "20m",
+  "concepts": ["DD/MM vs MM/DD", "awk split()", "month-name lookup array", "printf %04d-%02d-%02d", "awk -v OFS=, field rewrite"],
   "module": "module-22-data-processing",
   "level": "level-12-date-format"
 }

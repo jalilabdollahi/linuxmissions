@@ -1,1 +1,4 @@
-Archive the directory contents without leaving anything out.
+- For each release, count lines whose status field (field 4) is 500 or more: `awk '$4 >= 500' releases/X/health.log | wc -l`. A plain `grep -c 500` also matches latencies like `500ms`.
+- `sort -V` sorts version numbers the way people expect.
+- `ln -sfn TARGET current` (or `ln -sfT`, or build a new link and `mv -T new current`): without `-n`, ln follows an existing link to a directory and creates the new link inside it. `ls -l releases/*` shows if that happened.
+- `./appctl status` shows what the server serves; `./appctl reload` must come after the switch.

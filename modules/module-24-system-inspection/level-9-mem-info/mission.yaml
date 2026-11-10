@@ -1,15 +1,11 @@
 {
-  "name": "Mem Info: Link Repair",
-  "description": "In the system inspection lab, a task related to Mem Info needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/mem-info.conf",
+  "name": "Where Did the Memory Go?",
+  "description": "Four app servers raised a 'low memory' alert, but the on-call engineer thinks some of them are fine. Their /proc/meminfo files were saved under capture/ before anyone restarted anything.",
+  "objective": "Write memory.csv with the header `host,available_mib,consumer` and one row per host (sorted by host). available_mib is MemAvailable in whole MiB (rounded down). consumer is the largest of three non-application consumers, written as HugePages (HugePages_Total x Hugepagesize), Shmem or SUnreclaim.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Mem Info",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "20m",
+  "concepts": ["/proc/meminfo", "MemAvailable vs MemFree", "HugePages_Total * Hugepagesize", "Shmem", "SUnreclaim", "kB to MiB"],
   "module": "module-24-system-inspection",
   "level": "level-9-mem-info"
 }

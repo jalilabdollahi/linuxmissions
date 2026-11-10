@@ -1,2 +1,6 @@
-Use -E for extended regex and | for alternation:
-grep -E "ERROR|FATAL" $SANDBOX/app.log
+  grep PATTERN FILE           print lines that contain PATTERN (case-sensitive)
+  grep -E 'A|B' FILE          extended regex: lines containing A or B
+  grep -e A -e B FILE         same thing with two separate patterns
+  -i                          ignore case (here you do NOT want that)
+  -c                          count matching lines instead of printing them
+More: man grep

@@ -1,2 +1,10 @@
-chown changes the owner:
-chown $(whoami) $SANDBOX/config/database.conf
+Useful tools:
+  id, whoami                  who you are and which groups you belong to
+  ls -ld PATH                 owner and group in columns 3 and 4 (-d: the
+                              directory itself, not its contents)
+  stat -c '%n %U %G' PATH     path, owner name, group name  (GNU/Linux)
+  stat -f '%N %Su %Sg' PATH   the same on macOS
+  find PATH -maxdepth 0 -user NAME
+                              prints PATH only if NAME owns it
+xargs CMD < paths.txt runs CMD with every line of paths.txt as arguments.
+More: man stat, man find (-user, -group), man xargs

@@ -1,4 +1,7 @@
-Loop over matching files:
-for file in "$1"/*.txt; do
-  ...
-done
+Look at incoming/: which names end in .txt, and which only look similar (export.txt.old, the archive/ folder)?
+
+A script needs three things here: a pattern that lists only the .txt files in the folder given as the first argument, a loop that handles them one by one, and a way to build "same name, but .bak" from each name.
+
+Then ask: what does that pattern turn into when the folder has no .txt files at all?
+
+Game tip: `edit rename.sh` opens the script in an editor.

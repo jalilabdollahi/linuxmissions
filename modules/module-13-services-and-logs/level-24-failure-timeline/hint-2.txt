@@ -1,1 +1,14 @@
-Use chmod with octal mode 640.
+Window in UTC: 03:00:00 +03:30 is 23:30:00 on Nov 9 -> 2026-11-09T23:30:00Z .. 23:44:59Z.
+Tools per source:
+  journal  jq -r '"\(.__REALTIME_TIMESTAMP|tonumber/1e6|floor|todate) journal \(.SYSLOG_IDENTIFIER)[\(._PID)]: \(.MESSAGE)"'
+           (or: journalctl --file export/journal.json --utc -o short-iso --no-hostname)
+  syslog   GNU date reads "Nov 10 2026 03:04:05 +0330" but not the year at the end;
+           awk '{ print $1, $2, 2026, $3, "+0330" }' reorders it.
+  nginx    awk '$9 >= 500': field 4 is [10/Nov/2026:03:04:05, field 5 is +0330]
+  app      date understands 2026-11-10T03:04:05.123+03:30 as it is.
+date -u -f - +%FT%TZ converts one date per input line in one go; paste -d' ' A B
+joins the time column with the message column. awk -v a=... '$1 >= a && $1 <= b'
+keeps the window.
+Duplicates: grep -vxF -f FILE drops lines that are exactly a line of FILE.
+Merging: sort -s -k1,1 sorts on the time only and keeps equal lines in input order.
+More: man date, man paste, man sort (-s, -k), man grep (-F -x -f), man jq

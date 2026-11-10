@@ -1,1 +1,14 @@
-`mkdir -p organized/test-brackets` followed by `mv inbox/test-brackets.txt organized/test-brackets/test-brackets-notes.txt` is enough.
+- `[[ ... ]]` is bash syntax, not a command: variables inside are not split
+  and not globbed, so `[[ -n $X ]]` is safe even when X is unset or has spaces.
+  (With `[` you must quote: `[ -n "$X" ]`.)
+- `[[ $X == prod-* ]]`: an UNQUOTED right side is a glob pattern; a quoted one
+  is a literal string. In `[ $X = *-rc* ]` the * is expanded against the files
+  in the current directory, which is never what you want.
+- Glob `*` matches anything, spaces and dots included. For an exact format use
+  a regex: `[[ $X =~ ^prod-[a-z]+-[0-9]+$ ]]`. Keep the regex UNQUOTED (or in a
+  variable): `=~ "^v?[0-9]"` compares against the literal text.
+- Regex pieces: ^ start, $ end, [0-9]+ one or more digits, \. a literal dot,
+  v? optional v, (-rc[0-9]+)? an optional group.
+- Combine inside [[ ]] with && || and ! .
+
+Read more: help [[, help test, man bash ("Conditional Expressions", "=~")

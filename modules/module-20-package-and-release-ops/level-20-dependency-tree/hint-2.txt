@@ -1,1 +1,4 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+apt-cache rdepends --installed libold1       reverse dependencies, but every kind (Depends, Recommends, Suggests, Provides) and one level only
+apt-get -s remove libold1                    -s simulates: it prints "Remv name [version]" for every package that would go, and changes nothing
+awk '/^Remv/ { print $2 }'                   pull the package names out of the simulation
+Compare the two outputs once to see what rdepends over-reports. Leave libold1 itself out of the file.   More: man apt-get, man apt-cache

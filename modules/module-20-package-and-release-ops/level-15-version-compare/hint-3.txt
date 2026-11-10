@@ -1,1 +1,10 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' version-compare-metrics.csv > total.txt`
+mapfile -t v < versions.txt
+n=${#v[@]}
+for ((i = 0; i < n; i++)); do for ((j = 0; j < n - 1 - i; j++)); do if dpkg --compare-versions "${v[j]}" gt "${v[j+1]}"; then t=${v[j]}; v[j]=${v[j+1]}; v[j+1]=$t; fi; done; done
+printf '%s\n' "${v[@]}" > sorted.txt
+head -n 5 sorted.txt
+
+- mapfile -t v        reads the lines of versions.txt into the array v
+- two for loops       bubble sort: repeatedly compares neighbours
+- dpkg --compare-versions A gt B    true when A is newer, so the pair is swapped
+- printf '%s\n' ...   writes the sorted array back, one version per line

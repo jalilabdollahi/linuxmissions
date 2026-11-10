@@ -1,5 +1,6 @@
-Verify the signal triggered the trap:
-cat $SANDBOX/reload.log
-
-Useful reference:
-kill -l
+  sed -i.bak 's/^log_level=info$/log_level=debug/' listener.conf
+      change the setting (-i.bak edits the file in place on Linux and macOS)
+  kill -HUP $(cat listener.pid)
+      send SIGHUP to the PID stored in listener.pid; the listener reloads
+  cat listener.status
+      should now say log_level=debug, with the same PID as before

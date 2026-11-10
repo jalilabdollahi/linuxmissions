@@ -1,1 +1,10 @@
-Example: `sort base64-decode-raw.txt | uniq > unique-sorted.txt`
+  blob=$(grep 'base64 -d | sh' suspicious.cron | sed 's/.* echo \([^ ]*\) |.*/\1/')
+      the word between "echo" and the pipe, nothing else
+  std=$(printf '%s' "$blob" | tr '_-' '/+'); while [ $((${#std} % 4)) -ne 0 ]; do std="$std="; done
+      back to the standard alphabet and re-add the missing = padding
+  printf '%s' "$std" | base64 -d | gunzip > stage2.b64
+      first decode gives gzip data; gunzip turns it into more base64 text
+  base64 -d stage2.b64 > payload.txt; cat payload.txt
+      second decode gives the payload as readable text (it is only read, never run)
+  printf 'c2=%s\ndropped=%s\n' "$(grep -o 'https://[^/]*' payload.txt | cut -d/ -f3)" "$(grep -o 'writing .*"' payload.txt | sed 's/^writing //; s/"$//')" > ioc.txt
+      pick the host and the path out of the payload text

@@ -1,16 +1,11 @@
 {
-  "name": "Systemctl Status: Path Realignment",
-  "description": "In the services and logs lab, a task related to Systemctl Status needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/systemctl-status.txt to organized/systemctl-status/systemctl-status-notes.txt",
+  "name": "Something Is Down",
+  "description": "The pager fires: \"app-02: a service is down\". app-02 runs five units of ours: billing-api, order-worker, search-indexer, notify-gateway and the nightly-export job. The on-call runbook says to start with what systemd knows.",
+  "objective": "Write diagnosis.txt with one line 'UNIT STATUS': the full name of the broken unit (e.g. something.service) and the exit status of its main process, as a number. `systemctl` and `journalctl` are mocks that treat the sandbox as `/`; their output, options and exit codes are the real ones.",
   "xp": 100,
   "difficulty": "beginner",
   "expected_time": "5m",
-  "concepts": [
-    "Systemctl Status",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "concepts": ["systemctl list-units", "systemctl --failed", "systemctl status", "Active: states", "activating (auto-restart)", "Type=oneshot", "exit status"],
   "module": "module-13-services-and-logs",
   "level": "level-1-systemctl-status"
 }

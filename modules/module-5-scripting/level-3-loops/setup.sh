@@ -1,15 +1,18 @@
 #!/bin/bash
 SANDBOX="$1"
 
-mkdir -p "$SANDBOX/incoming"
-echo "alpha" > "$SANDBOX/incoming/a.txt"
-echo "beta" > "$SANDBOX/incoming/b.txt"
-echo "gamma" > "$SANDBOX/incoming/c.txt"
-echo "keep me" > "$SANDBOX/incoming/notes.md"
+mkdir -p "$SANDBOX/incoming/archive"
+echo "alpha"            > "$SANDBOX/incoming/sales.txt"
+echo "beta"             > "$SANDBOX/incoming/q3 report.txt"
+echo "gamma"            > "$SANDBOX/incoming/inventory.txt"
+echo "keep me"          > "$SANDBOX/incoming/notes.md"
+echo "old export"       > "$SANDBOX/incoming/export.txt.old"
+echo "already archived" > "$SANDBOX/incoming/archive/2025.txt"
 
 cat > "$SANDBOX/rename.sh" <<'SCRIPT'
 #!/bin/bash
-# TODO: rename all .txt files in the directory passed as $1 to .bak
+# rename.sh DIR - mark the reports in DIR as processed: NAME.txt -> NAME.bak
+# TODO
 SCRIPT
 
 chmod +x "$SANDBOX/rename.sh"

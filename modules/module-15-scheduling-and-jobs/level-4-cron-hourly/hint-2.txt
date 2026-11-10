@@ -1,1 +1,6 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+From man 5 crontab: a "%" in the command is changed into a newline; everything after
+the first % is sent to the command as standard input. A literal % must be written \%.
+Quotes do NOT protect it: '%F' is cut at the % as well.
+The tar line in crontab.txt shows the escaped form: date -d yesterday +\%F
+Test your line on the simulated clock (this writes real files into reports/):
+  cron-run --crontab crontab.txt --from "2025-06-10 09:00" --to "2025-06-10 11:00" --summary

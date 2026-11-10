@@ -1,1 +1,9 @@
-Example: `chmod 640 passwd-status.sh`
+awk -F: '{ s = ($2 == "") ? "NP" : (($2 ~ /^[!*]/) ? "L" : "P"); print $1, s }' etc/shadow > status.txt
+awk '$2 == "NP" { print $1 }' status.txt > np.txt
+cat status.txt np.txt
+
+- -F:                 split the shadow lines at the colons; $2 is the password field
+- $2 == ""            empty: no password at all (NP)
+- $2 ~ /^[!*]/        starts with ! or *: locked (L), even when a hash follows the !
+- anything else       a usable hash (P)
+- second awk          the NP accounts go to np.txt

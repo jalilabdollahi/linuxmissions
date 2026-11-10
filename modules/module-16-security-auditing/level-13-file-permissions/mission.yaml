@@ -1,15 +1,11 @@
 {
-  "name": "File Permissions: Script Kickoff",
-  "description": "In the security auditing lab, a task related to File Permissions needs cleanup before the handoff.",
-  "objective": "Make jobs/file-permissions.sh executable, run it, and create the token file it writes",
+  "name": "Before the Contractor Logs In",
+  "description": "A contractor gets a shell on this box on Monday. Before that, someone has to check home/ for anything that would let another local user read the owner's secrets or take over the account.",
+  "objective": "Audit home/ (every file and directory below it, hidden ones included). Fix each path that other users could read but should not (credential files, the .ssh folder and its private key) so that only the owner has access, and each path that group or others can write but should not (startup files, scripts and folders that run as the owner), so that they lose that write access. List every path you fixed, one per line as home/..., in findings.txt. Do not change anything else: files meant to be public must keep their modes.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "File Permissions",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "20m",
+  "concepts": ["find -perm", "chmod", "credential files", "account takeover", "symlinks"],
   "module": "module-16-security-auditing",
   "level": "level-13-file-permissions"
 }

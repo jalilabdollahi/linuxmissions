@@ -1,6 +1,20 @@
-One valid pattern is:
-if [ -e "$1" ]; then
-  echo "EXISTS"
+Type this at the prompt. It replaces check_file.sh with a working script:
+
+cat > check_file.sh <<'EOF'
+#!/bin/bash
+if [ -f "$1" ]; then
+  echo "FILE"
+elif [ -d "$1" ]; then
+  echo "DIR"
 else
   echo "MISSING"
+  exit 1
 fi
+EOF
+
+- [ -f "$1" ]      true when the path is a regular file
+- elif [ -d "$1" ] only checked if the first test failed: is it a directory?
+- else ... exit 1  nothing there: print MISSING and end with status 1
+- "$1" in quotes   keeps a path like "my notes.txt" as one word
+
+Try it: bash check_file.sh "my notes.txt"; bash check_file.sh "old reports"; bash check_file.sh nope; echo $?

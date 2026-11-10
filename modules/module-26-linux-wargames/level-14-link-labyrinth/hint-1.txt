@@ -1,1 +1,1 @@
-A short for-loop is the cleanest option here.
+Start by listing every link in the tree with its target, not by guessing: `ls -l` shows the arrows, and `ls -li` also shows inode numbers and link counts, which tells a symbolic link from something else that "looks" like one. Which targets no longer exist since the rename? Which two point at each other? Which target would not exist on another machine? And one file that is not a symlink at all can still fool you: how would you find out what it shares its data with?

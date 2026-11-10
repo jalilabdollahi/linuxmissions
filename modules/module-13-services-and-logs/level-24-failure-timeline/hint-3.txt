@@ -1,1 +1,18 @@
-Example: `chmod 640 failure-timeline.sh`
+a=2026-11-09T23:30:00Z; b=2026-11-09T23:44:59Z
+inwin() { awk -v a="$a" -v b="$b" '$1 >= a && $1 <= b'; }
+jq -r '"\(.__REALTIME_TIMESTAMP | tonumber / 1e6 | floor | todate) journal \(.SYSLOG_IDENTIFIER)[\(._PID)]: \(.MESSAGE)"' export/journal.json | inwin > j.txt
+paste -d' ' <(awk '{ print $1, $2, 2026, $3, "+0330" }' var/log/syslog | date -u -f - +%FT%TZ) <(sed 's/^.\{15\} [^ ]* /syslog /' var/log/syslog) | inwin > s.all
+grep -vxF -f <(sed 's/ journal / syslog /' j.txt) s.all > s.txt
+paste -d' ' <(awk '$9 >= 500 { t = substr($4, 2); sub(":", " ", t); gsub("/", " ", t); print t, substr($5, 1, 5) }' var/log/nginx/access.log | date -u -f - +%FT%TZ) <(awk '$9 >= 500 { print "nginx", substr($6, 2), $7, $9 }' var/log/nginx/access.log) | inwin > n.txt
+grep -E '^[^ ]+ (WARN|ERROR) ' var/log/api/app.log > a.all
+paste -d' ' <(cut -d' ' -f1 a.all | date -u -f - +%FT%TZ) <(cut -d' ' -f2- a.all | sed 's/^/app /') | inwin > a.txt
+cat j.txt s.txt n.txt a.txt | LC_ALL=C sort -s -k1,1 > timeline.txt
+wc -l j.txt s.txt n.txt a.txt timeline.txt
+
+- inwin                   keeps lines whose UTC time is inside the window (string compare works for this format)
+- jq ... todate           journal: µs -> seconds (floor cuts the fraction) -> ISO UTC
+- awk ... 2026 ... +0330  syslog: add the missing year and zone so date can read it; sed drops date and host
+- grep -vxF -f <(...)     drop syslog lines that are exactly a journal line (same time, same text)
+- awk '$9 >= 500'         nginx: 5xx only; the time field rebuilt as "10 Nov 2026 03:04:05 +0330"
+- grep (WARN|ERROR)       app: date reads the ISO time with its offset directly
+- sort -s -k1,1           sort on the time only; -s keeps journal, syslog, nginx, app order for ties

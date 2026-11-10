@@ -1,1 +1,9 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+Directories and files need different modes, so select them separately with find.
+  find DIR -type d -exec chmod MODE {} +       directories only
+  find DIR -type f -perm /111                  files with any execute bit
+  find DIR -type f ! -perm /111                files with none
+A symbolic chmod (g+rwX,o-rwx) is an alternative, but check the result: X only adds
+execute for directories and files that already have it, and it will not give a file
+that was r--r--r-- a writable owner. For directories you can set the setgid and sticky
+bits in the same number as the permissions (the leading digit, man chmod).
+Check yourself with: find srv/projects/apollo -printf '%m %p\n'

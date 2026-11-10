@@ -1,0 +1,7 @@
+useradd does not guess: it reads the ranges in etc/login.defs, looks at the IDs
+already used inside the right range, and picks the next one. Which range
+applies to a person and which to a system account (-r)? Look only at the IDs
+inside that range: the classic accounts below it, and the ones far above it,
+do not count.
+The private group is a separate allocation. Does the group database allow the
+same number for it?

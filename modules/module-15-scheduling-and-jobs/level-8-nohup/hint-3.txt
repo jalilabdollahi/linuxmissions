@@ -1,1 +1,9 @@
-Example: `find cleanup/nohup -name '*.tmp' -delete`
+nohup ./migrate.sh > logs/migrate.log 2>&1 &
+tail -n 3 logs/migrate.log
+grep SigIgn /proc/$!/status
+
+- nohup                starts migrate.sh with SIGHUP ignored
+- > logs/migrate.log   stdout to the log (so nohup does not create nohup.out)
+- 2>&1                 stderr to the same log (the warnings)
+- &                    background job: the prompt comes back at once
+- tail / grep SigIgn   the log grows; SigIgn ends in an odd digit (bit 1 = SIGHUP)

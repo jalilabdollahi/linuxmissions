@@ -1,15 +1,11 @@
 {
-  "name": "Gunzip: Noise Dedup",
-  "description": "In the archives and compression lab, a task related to Gunzip needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from gunzip-raw.txt with sorted unique values",
+  "name": "Partner Drop",
+  "description": "A logistics partner drops gzipped CSV exports into inbox/ every night. The import job reads plain .csv files from import/, and the compliance team wants the original .gz files left in inbox/ exactly as they arrived, for the audit trail.",
+  "objective": "For every inbox/NAME.csv.gz, create import/NAME.csv with its uncompressed content (one CSV per .gz file, same names). Leave inbox/ exactly as it was: all .gz files still there and unchanged, and no uncompressed files in it. import/ must contain only those CSVs.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Gunzip",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "6m",
+  "concepts": ["gunzip -k", "gunzip -c / zcat", "output redirection", "for loop"],
   "module": "module-10-archives-compression",
   "level": "level-4-gunzip"
 }

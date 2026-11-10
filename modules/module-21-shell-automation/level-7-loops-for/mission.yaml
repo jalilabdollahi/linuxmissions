@@ -1,15 +1,11 @@
 {
-  "name": "Loops For: History Window",
-  "description": "In the shell automation lab, a task related to Loops For needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of loops-for-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Loops For",
-    "head",
-    "tail"
-  ],
+  "name": "Gaps in the Dumps",
+  "description": "The DBA needs to know which nightly database dumps are missing (REQUEST.txt). Some nights the backup job left no file, some nights a 0-byte one, and the ranges people ask about keep crossing the end of a month.",
+  "objective": "Write missing_backups.sh as its header describes: `./missing_backups.sh START END` prints, in order, every day from START to END (both included) whose backups/db-YYYY-MM-DD.sql.gz is missing or empty, and exits 1 if it printed any day, 0 if none. Not exactly 2 arguments, a date that does not exist, or END before START: a message on stderr, nothing on stdout, exit 2. It is tested on other backup directories and ranges across month and year ends.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["for ((i=0; ...; i++))", "date -d \"DATE + N day\"", "test -s", "comparing ISO dates as strings", "exit status as a result"],
   "module": "module-21-shell-automation",
   "level": "level-7-loops-for"
 }

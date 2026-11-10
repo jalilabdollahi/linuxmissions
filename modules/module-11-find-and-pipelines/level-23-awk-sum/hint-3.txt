@@ -1,1 +1,7 @@
-Example: `tar -czf awk-sum-backup.tar.gz bundle/awk-sum`
+  awk -F'\t' 'NF == 4 { total[$2] += $3; if ($4 < "2025-01-01") stale[$2] += $3 } END { for (u in total) printf "%s\t%.2f\t%.2f\n", u, total[u] / 1024^3, stale[u] / 1024^3 }' files.lst | sort -t $'\t' -k2,2nr > usage.txt
+      -F'\t'             fields are tab-separated, so spaces in paths don't matter
+      NF == 4            skip the "find: ... Permission denied" lines
+      total / stale      one sum per user; stale only for dates before 2025
+      / 1024^3, %.2f     bytes to GiB with two decimals
+      sort -t $'\t' -k2,2nr   order by the total, numerically, largest first
+  cat usage.txt

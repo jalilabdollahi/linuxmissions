@@ -1,1 +1,13 @@
-Example: `mkdir -p organized/summary-totals && mv inbox/summary-totals.txt organized/summary-totals/summary-totals-notes.txt`
+tail -n +2 ledger.csv | sort -s -t, -k1,1 -k2,2 | awk -F, 'function amount(   a) { a = $5 $6; gsub(/[",]/, "", a); if (a ~ /^\(/) { gsub(/[()]/, "", a); a = -a } return a + 0 }
+NR > 1 && ($1 != dep || $2 != team) { printf "%s\t%s\tTEAM TOTAL\t\t%.2f\n", dep, team, tsum; tsum = 0 }
+NR > 1 && $1 != dep { printf "%s\t\tDEPARTMENT TOTAL\t\t%.2f\n", dep, dsum; dsum = 0 }
+{ a = amount(); printf "%s\t%s\t%s\t%s\t%.2f\n", $1, $2, $3, $4, a; dep = $1; team = $2; tsum += a; dsum += a; gsum += a }
+END { printf "%s\t%s\tTEAM TOTAL\t\t%.2f\n", dep, team, tsum; printf "%s\t\tDEPARTMENT TOTAL\t\t%.2f\n", dep, dsum; printf "\t\tGRAND TOTAL\t\t%.2f\n", gsum }' > report.tsv
+head -20 report.tsv
+
+- tail -n +2 | sort -s ...       drop the header; group by department and team, stable
+- amount()                       glue "1,234.50" back together, strip quotes and commas,
+                                 (45.00) becomes -45
+- NR > 1 && (... changed)        a group just ended: print its subtotal, reset the sum
+- the third block                print the row, remember its keys, add it to all sums
+- END                            the last team, the last department, the grand total

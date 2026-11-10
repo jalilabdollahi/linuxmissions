@@ -1,1 +1,4 @@
-Example: `sort sed-surgery-raw.txt | uniq > unique-sorted.txt`
+One sed over all files with two scoped substitutions, keeping backups:
+  sed -i.bak -E '/^\[tls\]/,/^\[/{s/^([[:space:]]*ssl_protocols[[:space:]]*=[[:space:]]*)[^[:cntrl:]]*/\1TLSv1.2 TLSv1.3/}; /^\[upstream\]/,/^\[/{s/^([[:space:]]*port[[:space:]]*=[[:space:]]*)8080\b/\18443/}' conf/*.conf
+  diff conf/svc-01.conf.bak conf/svc-01.conf
+The first range runs from the [tls] header to the next header and rewrites only an active ssl_protocols line (a commented one starts with # and never matches the anchor); the second does the same for port 8080 inside [upstream]; -i.bak writes each original to .bak first; diff reviews one result.

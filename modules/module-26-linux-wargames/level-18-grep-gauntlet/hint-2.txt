@@ -1,1 +1,1 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+`zgrep` searches plain and .gz files alike; `grep -a` treats binary data as text and `-i` ignores case; `-E` allows `a|b|c` alternatives. Bash can build the variants from the ID: `${id//-/}` removes the dashes. The gateway log uses a different time format than the others, so build a sortable key in front of each line (awk), `sort` on it, then cut it off again.

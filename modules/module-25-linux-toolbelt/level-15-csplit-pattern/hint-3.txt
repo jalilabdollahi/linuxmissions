@@ -1,1 +1,11 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' csplit-pattern-metrics.csv > total.txt`
+  mkdir -p manifests
+  csplit -z -s -f manifests/piece- -b '%02d.part' all.yaml '/^---$/' '{*}'
+      cut before every line that is exactly ---; -z drops the empty piece in front of the first one
+  for f in manifests/piece-*.part; do
+  kind=$(grep -m1 '^kind:' "$f" | cut -d' ' -f2 | tr 'A-Z' 'a-z')
+  name=$(sed -n '/^metadata:/,/^[a-z]/{s/^  name: //p}' "$f" | head -1)
+  [ -z "$kind" ] && { rm "$f"; continue; }
+  sed '1d' "$f" > "manifests/$kind-$name.yaml"; rm "$f"
+  done
+      kind: first top-level kind line; name: the "  name:" line inside the metadata block (the containers' names are deeper, so they do not match)
+      a piece without kind (the trailing comment) is thrown away; sed '1d' drops the --- line; rm removes the numbered piece

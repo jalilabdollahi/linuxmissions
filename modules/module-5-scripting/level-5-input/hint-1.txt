@@ -1,4 +1,5 @@
-Read the file line by line:
-while IFS='=' read -r key value; do
-  ...
-done < "$1"
+Open app.env and find the lines that break `source app.env`: a value with spaces and parentheses, a value containing `=`, a value with `$(...)` in it, comments, blank lines. Also check how the file ends: is there a newline after the last setting?
+
+So do not let bash run the file. Read it line by line yourself: split each line at the first `=` into a name and a value, skip the lines that are not settings, and export the rest.
+
+Game tip: `edit load_env.sh` opens the script in an editor.

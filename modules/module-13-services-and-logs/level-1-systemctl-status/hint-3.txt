@@ -1,1 +1,11 @@
-Example: `mkdir -p organized/systemctl-status && mv inbox/systemctl-status.txt organized/systemctl-status/systemctl-status-notes.txt`
+Find the unit stuck in activating, read its exit status, write both into the file:
+
+unit=$(systemctl list-units --type=service --state=activating --plain --no-legend | awk '{ print $1 }')
+systemctl status "$unit"
+echo "$unit $(systemctl show -P ExecMainStatus "$unit")" > diagnosis.txt
+cat diagnosis.txt
+
+- --state=activating        only units that are (re)starting; a crash loop sits in activating (auto-restart)
+- --plain --no-legend       no tree marks or header, so awk '{ print $1 }' gets just the unit name
+- status "$unit"            shows the Main PID line (code=exited, status=N) and the last log lines
+- show -P ExecMainStatus    the exit status of the main process's last run

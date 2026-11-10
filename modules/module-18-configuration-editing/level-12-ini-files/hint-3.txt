@@ -1,1 +1,13 @@
-Example: `chmod 640 ini-files.sh`
+awk '
+  /^\[mysqld\]/ && !done { inblk = 1 }
+  /^\[/ && !/^\[mysqld\]/ { inblk = 0 }
+  inblk && /^max_connections[[:space:]]*=/ { print "max_connections = 500"; print "innodb_buffer_pool_size = 2G"; done = 1; inblk = 0; next }
+  { print }
+' my.cnf > my.cnf.new && mv my.cnf.new my.cnf
+diff .lm-state/original.cnf my.cnf
+
+- /^\[mysqld\]/ && !done   entering the first [mysqld] block turns the flag on
+- /^\[/ && !/^\[mysqld\]/  any other section header turns it off
+- inblk && /^max_connections.../  the real setting (anchored, so the comment is ignored): replaced, and the new setting printed right after
+- done = 1              makes sure the second [mysqld] block is never touched
+- > my.cnf.new && mv    awk cannot edit in place, so the result replaces the file

@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+Source the file and ask bash what it really stored: `source team/aliases.sh`, then `alias logs` and `type mkcd`.
+
+Two questions:
+- In which kind of quotes is `logs` defined, and when does the shell expand $LOGDIR inside those quotes: when the alias is defined, or when you run it?
+- An alias is pasted in front of whatever you type after it. Where does the argument of `mkcd projects/x` end up, and what is $1 in your interactive shell?

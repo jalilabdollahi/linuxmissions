@@ -1,1 +1,5 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  mountpoint -q DIR       exit 0 if DIR is a mount point, 1 if not (-q: print nothing)
+  if ! mountpoint -q "$TARGET"; then ... exit 1; fi
+Call it as plain `mountpoint`, not /usr/bin/mountpoint, so the checker's stand-in is found through PATH.
+Moving: the glob * does not match names that start with a dot. Use ls -A to see them, and give mv both patterns (.[!.]* and *) or move the directories one by one.
+More: man mountpoint, man bash (Pathname Expansion)

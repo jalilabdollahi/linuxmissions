@@ -1,1 +1,6 @@
-Example: `tar -xzf cut-fields-restore.tar.gz`
+  awk -F'\t' -v OFS='\t' '{ print $5, $2, $9 }' assets.tsv > inventory.tsv
+      fields split on tabs only (-F'\t'), printed as serial, hostname, rack with tabs (OFS)
+  cut -f1-10,12- assets.tsv > vendor.tsv
+      every field except 11, owner_email (on Linux also: cut --complement -f11 assets.tsv)
+  head -3 inventory.tsv vendor.tsv
+      check the header and the first rows

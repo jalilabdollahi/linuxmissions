@@ -1,1 +1,9 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' whitespace-trim.conf > fixed.conf`
+sed $'s/\r$//; s/\xc2\xa0/ /g' users.tsv | awk -F'\t' -v OFS='\t' '{ for (i = 1; i <= NF; i++) { gsub(/ +/, " ", $i); sub(/^ /, "", $i); sub(/ $/, "", $i) } } !seen[$1]++' > users_clean.tsv
+cat -A users_clean.tsv | head
+
+- s/\r$//                      drop the Windows carriage returns
+- s/\xc2\xa0/ /g               non-breaking spaces become normal spaces
+- -F'\t' -v OFS='\t'           work on tab-separated fields, write tabs back
+- gsub(/ +/, " ", $i)          squeeze runs of spaces to one
+- sub(/^ /...); sub(/ $/...)   then drop the one left at either end
+- !seen[$1]++                  print a record only for the first time its username appears

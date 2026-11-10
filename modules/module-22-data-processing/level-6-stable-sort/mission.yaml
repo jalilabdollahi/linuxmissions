@@ -1,15 +1,11 @@
 {
-  "name": "Stable Sort: Config Rewrite",
-  "description": "In the data processing lab, a task related to Stable Sort needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in stable-sort.conf and save the fixed result to fixed.conf",
+  "name": "First Come Within Priority",
+  "description": "The helpdesk tool died and the support queue survives only as queue.txt: one ticket per line (ticket id, priority P1 to P4, customer, subject), in the order the tickets arrived. The team will work through it top to bottom, and customers who wrote first must be served first within the same priority.",
+  "objective": "Write queue_sorted.txt: every line of queue.txt, unchanged, ordered by priority (all P1 tickets, then P2, P3, P4), and within the same priority in the order they appear in queue.txt. Leave queue.txt unchanged.",
   "xp": 100,
   "difficulty": "beginner",
   "expected_time": "5m",
-  "concepts": [
-    "Stable Sort",
-    "sed",
-    "redirection"
-  ],
+  "concepts": ["sort -k2,2", "sort -s (stable)", "last-resort comparison", "key ranges"],
   "module": "module-22-data-processing",
   "level": "level-6-stable-sort"
 }

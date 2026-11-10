@@ -1,15 +1,11 @@
 {
-  "name": "Nice Values: History Window",
-  "description": "In the monitoring and performance lab, a task related to Nice Values needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of nice-values-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Nice Values",
-    "head",
-    "tail"
-  ],
+  "name": "Policy Audit: Who Is Not Nice Enough",
+  "description": "Policy OPS-12 says every batch worker must run at niceness 10 or higher so the API stays responsive. After a week of hand-started jobs nobody knows which workers comply. The workers are running now, next to the API and a monitoring agent.",
+  "objective": "Audit the running processes and write the PIDs of the batch workers (the processes running opt/jobs/batch-*.sh) whose niceness is below 10 to violators.txt, one per line. Do not change any process.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["niceness (NI) in ps", "ps -o pid,ni,cmd", "filtering by command", "awk numeric comparison", "policy vs. name matching"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-7-nice-values"
 }

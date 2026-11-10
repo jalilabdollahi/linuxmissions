@@ -1,16 +1,11 @@
 {
-  "name": "Apt Search: Path Realignment",
-  "description": "In the package and release operations lab, a task related to Apt Search needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/apt-search.txt to organized/apt-search/apt-search-notes.txt",
+  "name": "Find the Right Package",
+  "description": "A developer wants the command-line tool that validates JSON documents against a JSON Schema. The local mirror has about 400 packages, and a plain search for \"json schema\" returns a pile of look-alikes.",
+  "objective": "Write the name of the one package that is the command-line JSON Schema validator itself (not its library, headers or documentation, and not a generator) into package.txt, as a single word on one line. In this sandbox apt-cache is the mirror's own, in bin/ (first on your PATH).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Apt Search",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "8m",
+  "concepts": ["apt-cache search", "apt-cache show", "--names-only", "package descriptions"],
   "module": "module-20-package-and-release-ops",
   "level": "level-1-apt-search"
 }

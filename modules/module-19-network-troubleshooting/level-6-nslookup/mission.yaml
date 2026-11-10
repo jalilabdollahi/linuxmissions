@@ -1,15 +1,11 @@
 {
-  "name": "Nslookup: Config Rewrite",
-  "description": "In the network troubleshooting lab, a task related to Nslookup needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in nslookup.conf and save the fixed result to fixed.conf",
+  "name": "Failed How, Exactly?",
+  "description": "The monitoring script reports every DNS problem as \"lookup failed\", so on-call can't tell a typo from a broken zone or a dead server. A test resolver runs on 127.0.0.1 (port in dns.port); TICKET.txt has the details.",
+  "objective": "For every name in names.txt, ask the local resolver and write results.tsv with one line `NAME<TAB>STATUS`, where STATUS is OK (resolves to an address), NXDOMAIN, SERVFAIL or TIMEOUT (the server never answers).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Nslookup",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["nslookup -port", "NXDOMAIN vs SERVFAIL", "timeouts", "-timeout / -retry", "while read loop"],
   "module": "module-19-network-troubleshooting",
   "level": "level-6-nslookup"
 }

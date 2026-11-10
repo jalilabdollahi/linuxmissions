@@ -1,1 +1,7 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- `NAME=value` on its own line creates a SHELL variable: only this shell sees it.
+- `export NAME` (or `export NAME=value`) puts it in the ENVIRONMENT, which every program started afterwards inherits.
+- `NAME=value ./program` sets it in the environment of that one command only, without changing your shell.
+- `declare -p APP_MODE` tells you which kind you have: `declare -- ...` is a plain shell variable, `declare -x ...` is exported.
+- The region is in TICKET.txt.
+
+Read more: `help export`, `help declare`.

@@ -1,17 +1,21 @@
-# Journal Errors: Alert Filter
+# The Minute It Broke
 
-## What you practiced
-- This level focused on **Journal Errors** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`journalctl -o json` prints one object per entry with every value as a string.
+`__REALTIME_TIMESTAMP` is microseconds since the epoch, so dividing by
+1 000 000 and formatting with `strftime("%H:%M")` buckets entries by minute
+(in UTC). Priority is a syslog level where lower means worse: `err` is 3, but
+`crit` (2) and `alert` (1) are errors too. Because the export is in time
+order, `uniq -c` counts entries per minute, `awk '$1>10'` finds the first
+bucket over the threshold, and a second pass counts units inside just that
+minute.
 
-## Commands to remember
-```bash
-grep 'ALERT' file.log
-grep -n PATTERN file.log
-grep -v PATTERN file.log
-```
+## Common mistakes
+- `PRIORITY == "3"` misses crit/alert entries and may skip the real spike.
+- Counting warnings (4) as errors makes an earlier, harmless minute look like the spike.
+- Using the busiest unit of the whole hour instead of within the spike minute.
+- Using `>= 10`: a minute with exactly 10 errors is below the threshold.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Look for a filtering command that keeps only the alert lines in journal-errors.log.
+## Next step
+`journalctl -p err --since "1 hour ago" -u billing.service` filters in
+journalctl itself, and `-o json-pretty` or `-o cat` change the format.

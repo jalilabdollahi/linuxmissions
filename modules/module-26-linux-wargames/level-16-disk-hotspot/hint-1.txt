@@ -1,1 +1,1 @@
-Measure directory sizes before deciding which one is largest.
+Twelve processes, one name: names and command lines will not separate them. Ask the kernel instead: which process is actually writing, and how much more than its siblings? Look at what each one has open, and at its write counters, sampled twice a few seconds apart.

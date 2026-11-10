@@ -1,1 +1,11 @@
-A grep count or grep piped into wc can produce the number you need.
+- $* and an unquoted $@ glue all arguments together and then split the result
+  again at spaces (and expand * against the files in the directory).
+- "$@" (with the double quotes) expands to every argument as a separate word,
+  exactly as received: spaces, empty strings and * untouched.
+- "$bucket" needs quotes for the same reason.
+- $# is the number of arguments. Check it BEFORE `shift`:
+    if [ "$#" -lt 2 ]; then echo "usage: ..." >&2; exit 2; fi
+- >&2 sends the usage line to stderr, so a caller's pipeline never mistakes
+  it for data.
+
+Read more: man bash, section "Special Parameters" ($@ and $*).

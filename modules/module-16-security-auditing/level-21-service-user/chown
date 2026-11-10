@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+"""chown stand-in (level-local helper): a sandbox cannot change real ownership, so the new
+owner is recorded in .lm/owners of the fake root. Files not listed there still belong to
+their real owner (the login user). `chown --list` prints the records.
+
+  chown [-R] [-v] OWNER[:GROUP] FILE...      chown [-R] :GROUP FILE...      chown --list
+"""
+import os
+import sys
+
+
+def find_root():
+    if os.environ.get("LM_ROOT"):
+        return os.path.abspath(os.environ["LM_ROOT"])
+    here = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(here) if os.path.basename(here) == "bin" else here
+
+
+def table(root, name, idx):
+    out = {}
+    try:
+        for line in open(os.path.join(root, "etc", name)):
+            r = line.rstrip("\n").split(":")
+            if len(r) > idx and not line.startswith("#"):
+                out[r[0]] = int(r[idx])
+    except OSError:
+        pass
+    return out
+
+
+def main(argv):
+    root = find_root()
+    path = os.path.join(root, ".lm/owners")
+    args = argv[1:]
+    if args == ["--list"]:
+        try:
+            for line in open(path):
+                p, u, g = line.rstrip("\n").split("\t")
+                print("/%s  uid=%s gid=%s" % (p, u, g))
+        except OSError:
+            pass
+        return 0
+    rec, verbose = False, False
+    while args and args[0].startswith("-") and args[0] != "-":
+        for ch in args.pop(0)[1:]:
+            if ch == "R":
+                rec = True
+            elif ch in "vc":
+                verbose = True
+            elif ch in "hfH":
+                pass
+            else:
+                print("chown: invalid option -- '%s'" % ch, file=sys.stderr)
+                return 1
+    if len(args) < 2:
+        print("chown: missing operand" + (" after '%s'" % args[0] if args else ""), file=sys.stderr)
+        print("Try 'chown --help' for more information.", file=sys.stderr)
+        return 1
+    spec, files = args[0], args[1:]
+    uname, _, gname = spec.partition(":")
+    uids, gids = table(root, "passwd", 2), table(root, "group", 2)
+    uid = gid = None
+    if uname:
+        if uname.isdigit():
+            uid = int(uname)
+        elif uname in uids:
+            uid = uids[uname]
+        else:
+            print("chown: invalid user: '%s'" % spec, file=sys.stderr)
+            return 1
+    if gname:
+        if gname.isdigit():
+            gid = int(gname)
+        elif gname in gids:
+            gid = gids[gname]
+        else:
+            print("chown: invalid group: '%s'" % spec, file=sys.stderr)
+            return 1
+    records = {}
+    try:
+        for line in open(path):
+            p, u, g = line.rstrip("\n").split("\t")
+            records[p] = (int(u), int(g))
+    except OSError:
+        pass
+    rc = 0
+    for f in files:
+        full = os.path.abspath(f)
+        if not (full == root or full.startswith(root + os.sep)):
+            print("chown: changing ownership of '%s': Operation not permitted" % f, file=sys.stderr)
+            rc = 1
+            continue
+        if not os.path.lexists(full):
+            print("chown: cannot access '%s': No such file or directory" % f, file=sys.stderr)
+            rc = 1
+            continue
+        todo = [full]
+        if rec and os.path.isdir(full) and not os.path.islink(full):
+            for d, dirs, names in os.walk(full):
+                todo += [os.path.join(d, n) for n in dirs + names]
+        for t in todo:
+            rel = os.path.relpath(t, root)
+            st = os.lstat(t)
+            cur = records.get(rel, (st.st_uid, st.st_gid))
+            records[rel] = (cur[0] if uid is None else uid, cur[1] if gid is None else gid)
+            if verbose:
+                print("ownership of '%s' changed" % os.path.relpath(t))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as fh:
+        for p in sorted(records):
+            fh.write("%s\t%d\t%d\n" % ((p,) + records[p]))
+    return rc
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

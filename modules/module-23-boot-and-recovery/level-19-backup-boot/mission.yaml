@@ -1,15 +1,11 @@
 {
-  "name": "Backup Boot: Config Rewrite",
-  "description": "In the boot and recovery lab, a task related to Backup Boot needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in backup-boot.conf and save the fixed result to fixed.conf",
+  "name": "The EFI Partition Is Gone",
+  "description": "A bad partitioning script wiped the EFI system partition: sysroot/boot/efi is empty and the server cannot boot. Nightly tarballs of /boot are in backups/ (newest name last), and EFI.SHA256SUMS lists the checksums of the files that belong in EFI/. Some backups may be damaged.",
+  "objective": "Restore sysroot/boot/efi/EFI/ from the newest backup that is intact, so that every file passes EFI.SHA256SUMS (checked from sysroot/boot/efi) and keeps its mode. Extract only the EFI/ tree: the rest of sysroot/boot is newer than the backups and must not change, and no extra or doubly nested paths may appear.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Backup Boot",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "25m",
+  "concepts": ["tar -tzf", "gzip -t", "extract a subtree", "sha256sum -c", "EFI system partition"],
   "module": "module-23-boot-and-recovery",
   "level": "level-19-backup-boot"
 }

@@ -1,1 +1,13 @@
-A du pipeline sorted numerically is a strong fit here.
+How curl reads the variables (other tools differ slightly, which is why you set both spellings):
+- http:// URLs: only the lower-case http_proxy (HTTP_PROXY is ignored for security reasons, "httpoxy")
+- https:// URLs: https_proxy or HTTPS_PROXY
+- no_proxy first, NO_PROXY only if no_proxy is not set
+- no_proxy is a comma-separated list of host names, domain suffixes and addresses:
+    .internal   matches reports.internal and ci.build.internal
+    localhost, 127.0.0.1   must be listed explicitly
+    "*.internal" is NOT understood (only a lone "*" means "everything")
+
+  . ./proxy.env; curl -v http://localhost:PORT/health     "Uses proxy env variable ..." and where it connected
+  export NAME=$othername                                   copies a value, so both spellings stay equal
+
+Read more: man curl (ENVIRONMENT section, and --noproxy).

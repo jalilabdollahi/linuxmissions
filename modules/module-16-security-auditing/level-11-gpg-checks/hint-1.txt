@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+A signature file proves two things at once: who signed, and that the file has not changed since.
+All four mirrors can fail in different ways: look at what the checker tells you, not only at whether
+it complains. There is a lightweight verifier in the image that needs no key database of its own,
+only a keyring file that you name on the command line. Its exit status is what scripts should test.
+Decide per mirror, write the report, then clean up.

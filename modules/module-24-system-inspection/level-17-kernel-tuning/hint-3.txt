@@ -1,1 +1,11 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+: > sysctl.d/90-search.conf
+for kv in "vm.max_map_count 262144" "fs.file-max 2097152" "net.core.somaxconn 4096"; do set -- $kv; [ "$(sysctl -n $1)" -ge "$2" ] || echo "$1 = $2" >> sysctl.d/90-search.conf; done
+[ "$(sysctl -n vm.swappiness)" = 1 ] || echo "vm.swappiness = 1" >> sysctl.d/90-search.conf
+read -r lo hi < <(sysctl -n net.ipv4.ip_local_port_range); [ "$lo" = 1024 ] || echo "net.ipv4.ip_local_port_range = 1024 $hi" >> sysctl.d/90-search.conf
+cat sysctl.d/90-search.conf
+
+- : > file                       start with an empty file
+- the for loop                   for each "at least" setting, append it only when the live value is below the minimum
+- [ "$(sysctl -n ...)" = 1 ] ||  swappiness must be exactly 1: write it unless it already is
+- read -r lo hi < <(sysctl -n ...)   split the two values of the port range
+- echo "... 1024 $hi"            fix the start, keep the current upper end

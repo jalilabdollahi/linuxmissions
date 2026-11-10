@@ -1,0 +1,3 @@
+A normal copy stores every file again. What is it that two directory entries must share for a file to be stored only once, and what happens to the data when one of the names is then edited in place?
+Think about order too: when must the first snapshot be taken relative to ./change-day.sh? And how can a tool know, while creating day 2, which files it may link to the ones in day 1 instead of copying?
+Check your result with `ls -li` on both days: what does the first column tell you?

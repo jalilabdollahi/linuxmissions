@@ -1,1 +1,6 @@
-This is a sorting task followed by deduplication.
+Look at the file with `cat`: every column starts at the same position. Which
+column holds the rack, and which one the weight? Not every line is a data row:
+comments and blank lines must pass through untouched, even the comment that
+mentions rack B. Which tool understands "the fifth column is B"?
+And think about what happens to the spacing if a tool splits a line into fields
+and then glues the fields back together.

@@ -1,1 +1,9 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+atq                  list the queued jobs: number, time, queue, owner
+at -c N              print job N's script: environment, cd, then the commands
+atrm N               remove job N
+at TIME              queue the commands read from standard input (or -f FILE)
+A queued job cannot be moved: remove it and queue the same command again.
+TIME examples: 03:00, 3am, "03:00 tomorrow", "now + 2 hours", 2025-09-18 needs a time
+first: "03:00 2025-09-18". This mock cannot open the interactive at> prompt, so pipe the
+command in:  echo 'COMMAND' | at TIME
+More: man at

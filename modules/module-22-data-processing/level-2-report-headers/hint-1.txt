@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in report-headers.log.
+You need the header from one file, then every file without its first line.
+The order of the files matters, and a *.csv glob sorts by name, not by month.
+And one invoice "vanished" last time: check how each file ends. tail -c 30
+feb.csv | od -c shows the last bytes; is there a \n after the last row?

@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+Plain `grep -v mkhan` is dangerous here: it is case-sensitive, it also matches the
+colleague mkhanna, and it may delete a line that holds the alias name or is the only
+anchor of a continuation. Edit the lines of each alias deliberately (an editor, or
+`sed -i` with exact patterns such as `/^mkhan@/Id` for the include file).
+For root use an include line: `root: :include:/full/path/to/oncall.list`. Postfix
+only reads the database, so run `newaliases` last and read its output: it warns about
+lines it cannot parse. More: man 5 aliases, man newaliases

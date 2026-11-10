@@ -1,1 +1,14 @@
-Example: `tar -czf incident-notes-backup.tar.gz bundle/incident-notes`
+ip=$(grep 'Accepted password' var/log/auth.log | awk '{for (i = 1; i <= NF; i++) if ($i == "from") print $(i + 1)}' | tail -1)
+fp=$(grep "Accepted publickey.* from $ip " var/log/auth.log | awk '{print $NF}' | tail -1)
+printf '%s\n%s\n' "$ip" "$fp" > iocs.txt
+while read -r line; do [ "$(echo "$line" | ssh-keygen -lf - | awk '{print $2}')" = "$fp" ] || echo "$line"; done < home/deploy/.ssh/authorized_keys > ak.new && cat ak.new > home/deploy/.ssh/authorized_keys && rm ak.new
+crontab -l | grep -v 'base64 -d' | crontab -
+sed -i '/\.sysd\/sw/d' home/deploy/.bashrc
+rm -f home/deploy/.cache/.sysd/sh
+
+- ip, fp          the address that logged in with the password after failing (the brute-forcing scanner never succeeded), and the key fingerprint it used next
+- iocs.txt        the two indicators of compromise, one per line
+- while read      keep every authorized_keys line except the one whose fingerprint is the attacker's (comments can be copied, fingerprints cannot)
+- crontab         the beacon is the only job that pipes a base64 blob into a shell; the others stay (write back through the mock crontab)
+- sed             delete the sudo alias that points into the hidden .sysd directory
+- rm              remove the setuid shell copy (find home -perm -4000 finds it)

@@ -1,1 +1,18 @@
-Example: `sort shell-options-raw.txt | uniq > unique-sorted.txt`
+Edit ingest.sh (`edit ingest.sh`): add two lines above `files=0` and change
+the for line, so the middle of the script reads:
+
+shopt -s nullglob globstar nocaseglob
+set -o noclobber
+files=0
+rows=0
+for f in incoming/**/*.csv; do
+
+Or do both changes with sed, typed as one line:
+sed -i.bak -e 's|^files=0$|shopt -s nullglob globstar nocaseglob\nset -o noclobber\nfiles=0|' -e 's|^for f in incoming/\*\.csv; do$|for f in incoming/**/*.csv; do|' ingest.sh
+
+- nullglob      empty incoming/ -> the loop runs zero times
+- globstar, **  any depth below incoming/
+- nocaseglob    .csv, .CSV and .Csv all match
+- noclobber     `> summary.txt` refuses to replace an existing file, and the script exits 1
+
+Try it: rm -f summary.txt; ./ingest.sh; ./ingest.sh; echo "exit $?"

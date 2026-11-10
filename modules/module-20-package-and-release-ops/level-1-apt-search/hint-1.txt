@@ -1,1 +1,4 @@
-Inspect the sandbox, then create the missing path for organized/apt-search/apt-search-notes.txt.
+A search for "json schema" finds everything that mentions those words: the
+tool, a library for programmers, headers, documentation, and other command-line
+programs that do something different with schemas. The package name alone will
+not tell them apart. What does each candidate say it is?

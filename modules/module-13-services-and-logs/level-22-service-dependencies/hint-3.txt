@@ -1,1 +1,10 @@
-Example: `cut -d, -f2 service-dependencies-report.csv > owners.txt`
+sed -i 's/^Wants=db-proxy.service/Requires=db-proxy.service\nAfter=db-proxy.service/' etc/systemd/system/app.service
+sed -i 's/^After=network.target app.service/After=network.target/' etc/systemd/system/db-proxy.service
+systemctl daemon-reload
+systemctl mock-boot
+systemctl cat app db-proxy
+
+- first sed    app now REQUIRES db-proxy (stops with it) and starts AFTER it
+- second sed   db-proxy loses its stray After=app.service, which would be a cycle
+- daemon-reload   make systemd re-read both files
+- mock-boot    simulate the boot: db-proxy first, no cycle messages

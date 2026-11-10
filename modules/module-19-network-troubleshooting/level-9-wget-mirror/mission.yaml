@@ -1,15 +1,11 @@
 {
-  "name": "Wget Mirror: Link Repair",
-  "description": "In the network troubleshooting lab, a task related to Wget Mirror needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/wget-mirror.conf",
+  "name": "Offline Docs",
+  "description": "The old documentation server is switched off on Friday and support wants an offline copy of the docs. The site runs locally (URL of the docs in docs-url.txt); its pages also link to the blog, the admin area and an archive that robots.txt asks crawlers to avoid. TICKET.txt has the details.",
+  "objective": "Mirror the /docs/ tree into mirror/ so that mirror/index.html is the docs start page (no host or docs/ folder in between), every docs page, stylesheet, script and image is there with links rewritten to work offline, and nothing outside /docs/ or disallowed by robots.txt is included.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Wget Mirror",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "15m",
+  "concepts": ["wget -r", "--no-parent", "-nH / --cut-dirs", "-k (convert links)", "robots.txt"],
   "module": "module-19-network-troubleshooting",
   "level": "level-9-wget-mirror"
 }

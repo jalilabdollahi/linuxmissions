@@ -1,1 +1,72 @@
-Example: `tar -czf reusable-scripts-backup.tar.gz bundle/reusable-scripts`
+Type this at the prompt. It replaces prune.sh:
+
+cat > prune.sh <<'SCRIPT'
+#!/bin/bash
+# prune.sh [OPTIONS] [DIR] - delete old *.tar.gz backups, keep the newest N
+set -euo pipefail
+usage() {
+  cat <<'EOF'
+Usage: prune.sh [OPTIONS] [DIR]
+Delete the *.tar.gz files directly in DIR (default: backups) except the N newest.
+  -k, --keep N     keep the N newest backups (default 7)
+  -n, --dry-run    only print what would be deleted
+  -h, --help       show this help
+Settings: defaults < config file < PRUNE_KEEP/PRUNE_DIR < command line.
+Exit status: 0 done, 1 DIR does not exist, 2 usage error.
+EOF
+}
+usage_error() { echo "prune: $*" >&2; echo "Try 'prune.sh --help'." >&2; exit 2; }
+keep=7
+dir=backups
+config="${PRUNE_CONFIG:-$HOME/.config/prune.conf}"
+if [ -f "$config" ]; then
+  while IFS='=' read -r key value; do
+    case "$key" in
+      keep) keep=$value ;;
+      dir)  dir=$value ;;
+    esac
+  done < "$config"
+fi
+keep="${PRUNE_KEEP:-$keep}"
+dir="${PRUNE_DIR:-$dir}"
+dry_run=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--help)    usage; exit 0 ;;
+    -n|--dry-run) dry_run=1 ;;
+    -k|--keep)    [ $# -ge 2 ] || usage_error "$1 needs a number"
+                  keep=$2; shift ;;
+    --keep=*)     keep=${1#--keep=} ;;
+    --)           shift; break ;;
+    -?*)          usage_error "unknown option: $1" ;;
+    *)            break ;;
+  esac
+  shift
+done
+[ $# -le 1 ] || usage_error "only one DIR, got $#"
+[ $# -eq 1 ] && dir=$1
+case "$keep" in
+  ''|*[!0-9]*) usage_error "keep must be a number, got '$keep'" ;;
+esac
+[ -d "$dir" ] || { echo "prune: no such directory: $dir" >&2; exit 1; }
+shopt -s nullglob
+files=("$dir"/*.tar.gz)
+excess=$(( ${#files[@]} - keep ))
+if [ "$excess" -le 0 ]; then
+  echo "prune: nothing to do in $dir" >&2
+  exit 0
+fi
+echo "prune: removing $excess of ${#files[@]} backups in $dir" >&2
+ls -1dtr -- "${files[@]}" | sed -n "1,${excess}p" | while IFS= read -r path; do
+  if [ "$dry_run" = 0 ]; then rm -f -- "$path"; fi
+  printf '%s\n' "${path##*/}"
+done
+SCRIPT
+
+- keep/dir: defaults, then config, then ${PRUNE_KEEP:-$keep}   each source overwrites the weaker one
+- while/case over "$@", shift          options in any order, --keep=N, -- ends the options
+- usage_error -> stderr, exit 2         missing option value, unknown option, non-numeric N, two DIRs
+- files=("$dir"/*.tar.gz) + ls -1dtr    names with spaces stay whole, oldest first by mtime
+- only ${path##*/} on stdout            callers can pipe the result; every message goes to >&2
+
+Try it: ./prune.sh -n -k 5; ./prune.sh -k 5; ./prune.sh -k 5; echo $?

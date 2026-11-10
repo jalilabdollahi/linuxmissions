@@ -1,1 +1,6 @@
-Inspect the sandbox, then create the missing path for organized/missing-library/missing-library-notes.txt.
+Ask the binary itself what it needs, and ask the toolkit's directory, not the rescue
+system's. `ldd` resolves libraries with the rescue system's own paths, so it will happily find
+copies there and tell you nothing is missing: it cannot answer for the toolkit. The names a
+program needs are recorded inside the ELF file. Libraries can need other libraries, so check
+those too. Then look into the .deb files: there are two versions of each package, and only
+one of them contains a file that provides the name you are missing.

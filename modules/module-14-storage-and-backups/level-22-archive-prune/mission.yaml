@@ -1,15 +1,11 @@
 {
-  "name": "Archive Prune: Field Extract",
-  "description": "In the storage and backups lab, a task related to Archive Prune needs cleanup before the handoff.",
-  "objective": "Extract the second column from archive-prune-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Archive Prune",
-    "cut",
-    "awk"
-  ],
+  "name": "Grandfather, Father, Son",
+  "description": "Nobody ever pruned the database dumps: backups/ holds over a year of db-YYYY-MM-DD.tar.zst files, with gaps, odd files and a db-latest symlink among them.",
+  "objective": "Write prune.sh to apply the retention policy in POLICY.txt (7 daily, 4 weekly, 12 monthly, TODAY taken from the environment). Without arguments it is a dry run that prints would delete NAME for each file and removes nothing; with --apply it deletes them; any other argument prints usage and exits 2. Files that are not valid backup names, including the db-latest.tar.zst symlink, are never touched. The checker runs your script on several fixtures with different TODAY values.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "60m",
+  "concepts": ["date -d arithmetic", "retention rules (GFS)", "calendar validation", "dry run by default", "associative arrays"],
   "module": "module-14-storage-and-backups",
   "level": "level-22-archive-prune"
 }

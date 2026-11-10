@@ -1,15 +1,11 @@
 {
-  "name": "Conditionals If: Link Repair",
-  "description": "In the shell automation lab, a task related to Conditionals If needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/conditionals-if.conf",
+  "name": "Preflight",
+  "description": "The pipeline runs `./preflight.sh && ./deploy.sh`, and preflight.sh has not stopped a single deploy in months: not with 60 MB free on /srv, not during a change freeze, not for a feature branch without FORCE=1 (INCIDENT.txt). Meanwhile a mysterious file called 500 keeps appearing.",
+  "objective": "Fix the four checks in preflight.sh so that it does exactly what its header says for any combination of inputs: the first failing check prints its STOP line and exits 1 (config missing or empty, less than 500 MB free, TODAY inside a freeze window with both days included, a branch other than main without FORCE=1), otherwise it prints `GO: deploying BRANCH` and exits 0. Always exactly one line, and no stray files. It is tested in many scenarios through the environment variables.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Conditionals If",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "18m",
+  "concepts": ["if / elif", "-s vs -f", "-lt (numbers) vs < (strings)", "> inside [ ] is a redirection", "&& / || in [[ ]]", "test errors count as false"],
   "module": "module-21-shell-automation",
   "level": "level-9-conditionals-if"
 }

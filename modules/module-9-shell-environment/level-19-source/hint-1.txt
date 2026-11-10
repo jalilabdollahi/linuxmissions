@@ -1,1 +1,13 @@
-You need a stream editor or another text replacement tool.
+Three complaints, three questions:
+
+1. `./workon.sh api` starts a NEW bash process. Can a child process change the
+   directory or the variables of the shell that started it?
+2. When a file is sourced, which program does $0 name? Try it safely:
+     bash -c "cd /tmp && source $SANDBOX/workon.sh api"
+   and add `echo "0=$0"` near the top of workon.sh to see.
+   Bash has another variable that always holds the path of the file being read.
+3. A sourced file runs inside the caller's shell. What does `exit` end then?
+   Which builtin leaves just the sourced file?
+
+Test the bad-name case only in a throwaway shell:
+  bash -c 'source ./workon.sh apo; echo "still alive: $?"'

@@ -1,1 +1,13 @@
-Example: `head -n 3 globbing-history.log > first3.txt` and `tail -n 3 globbing-history.log > last3.txt`
+Type these at the prompt:
+
+mkdir -p archive/oct-2
+echo logs/app-2026-10-1[0-9].log
+mv logs/app-2026-10-1[0-9].log archive/oct-2/
+
+- mkdir -p archive/oct-2          create the target directory
+- app-2026-10-1[0-9].log          "1", then exactly one digit, then ".log" at the end: days 10-19 only
+                                  (not app-2026-10-1.log, not app-2026-10-100.log, not .log.gz)
+- echo ...                        preview: the shell prints the ten names the pattern expands to
+- mv ... archive/oct-2/           move exactly those ten files
+
+Check: ls archive/oct-2 | wc -l

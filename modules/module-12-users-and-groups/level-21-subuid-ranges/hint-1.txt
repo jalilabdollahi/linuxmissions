@@ -1,0 +1,5 @@
+Each line is user:first-ID:how-many. The next free range is not "the last line plus
+65536": the lines are not in order, and not every count is the same. Sort the ranges by
+their start (look at the second column numerically) and find where the last one ends.
+subuid and subgid are separate files with separate layouts, so work out each on its own.
+And check who already has a line before adding any.

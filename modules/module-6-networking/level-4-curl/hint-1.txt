@@ -1,2 +1,3 @@
-Use curl with a local file URL:
-curl -s "file://$SANDBOX/api/response.json"
+Start by looking at what the API says when you just ask: fetch the base URL from api_url.txt, then /health. Read the error message of the second one: what is missing from your request? Where do you find the value to send?
+
+Once you get a real answer, read the JSON carefully: "status" appears more than once. You want the one inside the "service" object.

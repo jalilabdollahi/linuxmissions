@@ -1,15 +1,11 @@
 {
-  "name": "Cron Hourly: Noise Dedup",
-  "description": "In the scheduling and jobs lab, a task related to Cron Hourly needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from cron-hourly-raw.txt with sorted unique values",
+  "name": "The Percent Sign",
+  "description": "Yesterday someone changed the hourly report job in deploy's crontab.txt so every report gets its own dated file name. Since then no report has been written, and every hour cron mails deploy an error (var/mail/deploy).",
+  "objective": "Fix the hourly report line in crontab.txt so that every run, at minute 0 of each hour, writes the output of app/report.sh to reports/report-YYYY-MM-DD-HH.txt (the date and hour of that run). Leave the other lines of crontab.txt and app/report.sh unchanged. cron-run is a LinuxMissions mock that runs a crontab on a simulated clock with cron's real rules, for example: cron-run --crontab crontab.txt --from \"2025-06-10 09:00\" --to \"2025-06-10 11:00\" --summary",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Cron Hourly",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "8m",
+  "concepts": ["% in crontab", "\\% escaping", "date +%F", "cron mail"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-4-cron-hourly"
 }

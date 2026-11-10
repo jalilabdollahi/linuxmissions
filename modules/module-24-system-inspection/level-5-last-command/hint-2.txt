@@ -1,1 +1,9 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+`last -f FILE` reads another wtmp file. `last -x` also shows system
+entries (shutdown, runlevel), and the pseudo-user `reboot` lists the boots:
+`last -f FILE reboot`. A session that was still open when the machine went
+down is marked `crash` (or `down` after a clean shutdown) where the logout
+time would be.
+`--time-format iso` prints sortable dates like 2026-10-05T03:34:00, which
+are easy to filter with awk or grep. Take care to select by the month of the
+boot (or of the session start), not by any date that appears later in the
+line.

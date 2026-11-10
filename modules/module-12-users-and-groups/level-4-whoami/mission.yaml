@@ -1,15 +1,11 @@
 {
-  "name": "Whoami: Noise Dedup",
-  "description": "In the users and groups lab, a task related to Whoami needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from whoami-raw.txt with sorted unique values",
+  "name": "Fake It",
+  "description": "deploy.sh should only run for the account named in deploy.allowed, but the security review (NOTE.txt) shows that `USER=release ./deploy.sh` gets anyone through, because the guard compares the name with $USER.",
+  "objective": "Change the guard in deploy.sh so it compares deploy.allowed with the user the script is really running as. A caller whose real account is not the allowed one must be refused with exit status 1, even with USER or LOGNAME faked; the allowed account must be able to deploy whatever USER says and also when USER and LOGNAME are not set at all (as under cron). Keep reading the allowed name from deploy.allowed and keep the rest of the script working.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Whoami",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "8m",
+  "concepts": ["whoami", "id -un", "$USER vs effective UID", "$EUID", "logname"],
   "module": "module-12-users-and-groups",
   "level": "level-4-whoami"
 }

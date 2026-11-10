@@ -1,17 +1,13 @@
-# Sed Surgery: Noise Dedup
+## What you did
 
-## What you practiced
-- This level focused on **Sed Surgery** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+You scoped each substitution with an address range (`/^\[tls\]/,/^\[/`), so the same key in `[global]`, `[tls_client]`, `[admin]` and `[logging]` was never touched. Anchoring the pattern at the start of the line left commented examples alone, `[[:space:]]*` coped with both `key=value` and `key = value`, and stopping the match before control characters preserved the one CRLF file. `-i.bak` kept every original.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+- A global `s/8080/8443/` also rewrites the admin port, the comments and the `[global]` port.
+- `.*` at the end of a pattern eats the `\r` of a CRLF line and silently converts the file to LF.
+- `/^\[tls/` also matches `[tls_client]`.
+
+## Next
+
+`sed -n '/^\[tls\]/,/^\[/p' file` prints a section for review; `diff -ru` over two directories checks a whole bulk edit; `crudini` or `git diff --word-diff` are good tools when a config format gets more complex than sed should handle.

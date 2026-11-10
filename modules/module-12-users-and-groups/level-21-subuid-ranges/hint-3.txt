@@ -1,0 +1,15 @@
+for kind in subuid subgid; do
+  next=$(awk -F: '$2 + $3 > m { m = $2 + $3 } END { print m }' etc/$kind)
+  for u in omar pavel nina; do
+    grep -q "^$u:" etc/$kind && continue
+    end=$((next + 65535))
+    if [ $kind = subuid ]; then bin/usermod -v $next-$end $u; else bin/usermod -w $next-$end $u; fi
+    next=$((end + 1))
+  done
+done
+cat etc/subuid etc/subgid
+
+- awk ...        the first ID after the highest range end, whatever the file order or count
+- grep -q ... && continue   skip someone who already has a range in this file (nina in subuid)
+- usermod -v / -w FIRST-LAST   add the 65536 IDs for the user (-v UIDs, -w GIDs)
+- next=$((end + 1))   the next person starts right after

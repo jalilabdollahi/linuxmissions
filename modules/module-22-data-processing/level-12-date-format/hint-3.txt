@@ -1,1 +1,11 @@
-Example: `chmod 640 date-format.sh`
+  awk -F, -v OFS=, 'BEGIN { split("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec", names, " "); for (i = 1; i <= 12; i++) mon[names[i]] = i }
+  NR > 1 && $2 ~ /\// { split($2, p, "/"); $2 = sprintf("%04d-%02d-%02d", p[3], p[2], p[1]) }
+  NR > 1 && $2 ~ / /  { split($2, p, " "); $2 = sprintf("%04d-%02d-%02d", p[3], mon[p[2]], p[1]) }
+  { print }' bookings.csv > bookings_iso.csv
+      BEGIN        a table month name -> number (mon["Nov"] = 11)
+      d/m/y        split on / : year p[3], month p[2], day p[1]
+      d Mon y      split on spaces, look the month up in the table
+      ISO dates    match neither rule and are printed as they are
+      -v OFS=,     the rebuilt line is joined with commas again
+  cut -d, -f2 bookings_iso.csv | sort | uniq -c | sort -rn | head -3
+      check: every value looks like 2026-11-03

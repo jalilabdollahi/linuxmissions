@@ -1,1 +1,5 @@
-Inspect the sandbox, then create the missing path for organized/time-command/time-command-notes.txt.
+"Slow" has three flavours. Time spent waiting (disk, network, sleep) costs
+wall-clock time but almost no CPU. Computing costs CPU in user mode. Doing
+millions of tiny system calls costs CPU in kernel mode. The three numbers that
+`time` reports (real, user, sys) tell them apart. Redirecting `time` the usual
+way may capture nothing at all: think about what `time` is.

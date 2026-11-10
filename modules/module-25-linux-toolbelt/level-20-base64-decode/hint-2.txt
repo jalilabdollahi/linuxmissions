@@ -1,1 +1,5 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  base64 -d             decode standard base64 (needs the normal alphabet and = padding)
+  tr '_-' '/+'          turn the URL-safe alphabet back into the standard one
+  ${#var}               length of a shell variable; base64 text length must be a multiple of 4, fill with =
+  gunzip                decompress gzip data from stdin (`file -` tells you what a result is)
+Three layers: look at the result of each decode with `file` or `head -c 80`. More: man base64

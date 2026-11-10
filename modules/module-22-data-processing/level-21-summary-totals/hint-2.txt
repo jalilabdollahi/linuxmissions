@@ -1,1 +1,12 @@
-`mkdir -p organized/summary-totals` followed by `mv inbox/summary-totals.txt organized/summary-totals/summary-totals-notes.txt` is enough.
+  sort -s -t, -k1,1 -k2,2       sort on department, then team; -s (stable) keeps the
+                                original order of rows with equal keys
+In awk -F, the amount "1,234.50" is split over $5 and $6; $5 $6 glues it back
+(gawk's FPAT='([^,]*)|("[^"]*")' is the cleaner way to read quoted fields):
+  a = $5 $6; gsub(/[",]/, "", a)                  1234.50
+  if (a ~ /^\(/) { gsub(/[()]/, "", a); a = -a }  (45.00) -> -45
+Control break:
+  NR > 1 && ($1 != dep || $2 != team) { print the team total; reset it }
+  NR > 1 && $1 != dep { print the department total; reset it }
+  { print the row; dep = $1; team = $2; add a to every sum }
+  END { the last team total, the last department total, the grand total }
+More: info gawk "Splitting By Content", man sort (-s)

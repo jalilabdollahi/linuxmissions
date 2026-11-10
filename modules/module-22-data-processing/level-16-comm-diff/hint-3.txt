@@ -1,1 +1,13 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+export LC_ALL=C
+grep -v '^#' licenses.txt | tr -d ' \r' | tr 'A-Z' 'a-z' | grep . | sort -u > licensed.lst
+awk -F, 'NR > 1 && $4 == "yes" { print $1 }' directory.csv | sort -u > enabled.lst
+grep ' result=success ' active_30d.log | grep -o 'user=[^ ]*' | cut -d= -f2 | tr 'A-Z' 'a-z' | sort -u > loggedin.lst
+comm -12 enabled.lst loggedin.lst > active.lst
+comm -23 licensed.lst active.lst > unused_seats.txt
+comm -13 licensed.lst active.lst > unlicensed_active.txt
+
+- licensed.lst      seats: no comment or blank lines, no spaces, lowercase, unique
+- enabled.lst       accounts with enabled=yes in the directory
+- loggedin.lst      users with a successful login, wherever user= is on the line
+- comm -12          active = enabled AND logged in
+- comm -23 / -13    licensed but not active / active but not licensed

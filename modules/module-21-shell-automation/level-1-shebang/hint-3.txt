@@ -1,1 +1,13 @@
-Example: `mkdir -p organized/shebang && mv inbox/shebang.txt organized/shebang/shebang-notes.txt`
+Type these at the prompt (or make the same changes with `edit`):
+
+sed -i '1s|^#!/bin/sh$|#!/bin/bash|' bin/disk_report
+sed -i '1{/^$/d}' bin/queue_stats
+sed -i '1s|^#!.*|#!/usr/bin/env python3|' bin/backup_age
+head -n 1 bin/*
+
+- 1s|^#!/bin/sh$|#!/bin/bash|      disk_report uses [[ ]]: run it with bash, not dash
+- 1{/^$/d}                         delete line 1 only if it is empty, so #! becomes the first line
+- 1s|^#!.*|#!/usr/bin/env python3| find python3 through PATH instead of a path from another machine
+- head -n 1 bin/*                  every helper should now start with #!
+
+Check them the way cron does: ./bin/disk_report data/df.txt; ./bin/queue_stats data/queue.txt; ./bin/backup_age data/backups.txt

@@ -1,0 +1,15 @@
+journalctl -k -g 'oom-kill:|Killed process'
+pids=$(journalctl -k -g 'task_memcg=/system.slice/reports.service,' -o cat | sed 's/.*,pid=\([0-9]*\),.*/\1/')
+peak=$(for p in $pids; do journalctl -k -g "Killed process $p " -o cat; done | sed 's/.*anon-rss:\([0-9]*\)kB.*/\1/' | sort -n | tail -1)
+mib=$(( (peak * 3 + 2047) / 2048 )); new=$(( (mib + 255) / 256 * 256 ))
+echo "largest anon-rss ${peak} kB -> MemoryMax=${new}M"
+systemctl set-property reports.service MemoryMax=${new}M
+systemctl show -p MemoryMax reports.service
+systemctl start reports.service
+
+- task_memcg=/system.slice/reports.service   only kills in reports' own cgroup (not the docker scope)
+- Killed process PID ... anon-rss:XkB        the size of each of those killed processes
+- sort -n | tail -1                          the largest one (there were two nights)
+- (peak * 3 + 2047) / 2048                   1.5 x kB in MiB, rounded up
+- (mib + 255) / 256 * 256                    up to the next multiple of 256M
+- set-property                               writes etc/systemd/system.control/reports.service.d/50-MemoryMax.conf

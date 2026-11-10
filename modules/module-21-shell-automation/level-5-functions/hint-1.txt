@@ -1,1 +1,15 @@
-This is a delimiter-based column extraction task.
+Try the function by hand and look at both channels a function has:
+
+  source lib/units.sh
+  to_bytes 512; echo "status $?"
+  out=$(to_bytes 3M); echo "out='$out'"
+  size=10; to_bytes 2K; echo "size is now $size"
+
+`return` sets the function's exit STATUS. What is the biggest number an exit
+status can hold, and what happens to 512 or 3145728? How does check_upload.sh
+expect to receive the value instead?
+
+And variables: in bash, is a variable assigned inside a function private to
+that function unless you say so?
+
+Game tip: `edit lib/units.sh` opens the library in an editor.

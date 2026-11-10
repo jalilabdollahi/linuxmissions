@@ -1,1 +1,7 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Run ./build.sh on its own, then ./build.sh > /dev/null. The lines that still
+appear were never on stdout: they went to stderr, and a pipe only carries
+stdout to the next command.
+
+Second question: after `A | B`, which of the two commands does $? describe?
+The build has to be run once for both numbers, so you need a way to get A's
+status from that same pipeline.

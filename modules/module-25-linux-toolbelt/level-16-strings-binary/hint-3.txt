@@ -1,1 +1,6 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+  url=$(strings -n 8 agent.bin | sed '/^TEST-BEGIN/,/^TEST-END/d' | grep -A1 '^ENDPOINT$' | tail -n 1)
+      strings -n 8 lists the ASCII text; sed removes the TEST block; grep -A1 takes the line after the ENDPOINT label
+  lic=$(strings -n 8 -e l agent.bin | sed '/^TEST-BEGIN/,/^TEST-END/d' | grep '^LIC=' | cut -d= -f2)
+      -e l reads 16-bit little-endian text; the same sed drops the fixture block; cut keeps what follows LIC=
+  printf 'endpoint=%s\nlicense=%s\n' "$url" "$lic" > findings.txt
+      write the two lines

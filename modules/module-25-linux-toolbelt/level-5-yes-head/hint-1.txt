@@ -1,1 +1,4 @@
-This is a delimiter-based column extraction task.
+Run `./install.sh` once by hand and read the prompts: how does it want to be
+answered, and what happens to an empty answer? You do not know how many times
+it will ask. Which command can produce an endless supply of the same answer,
+and what stops it?

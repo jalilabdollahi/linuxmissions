@@ -1,3 +1,7 @@
-Fix directories and files separately using find:
-find $SANDBOX/webroot -type d -exec chmod 755 {} \;
-find $SANDBOX/webroot -type f -exec chmod 644 {} \;
+find can select by type and run a command on every match:
+  find DIR -type d            only directories (DIR itself included)
+  find DIR -type f            only regular files
+  -exec CMD {} +              run CMD with the matches put where {} is
+-exec passes each name as one argument, so spaces in names are safe.
+Look before and after with: find webroot -exec ls -ld {} +
+More: man find (-type, -exec)

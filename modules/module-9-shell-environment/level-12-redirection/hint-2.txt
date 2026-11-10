@@ -1,1 +1,10 @@
-Use chmod with octal mode 640.
+- `> file`    stdout into file, emptying it first      `>> file`   stdout appended to file
+- `2> file`   stderr (file descriptor 2) into file      `2>> file`  stderr appended
+- `2>&1`      "stderr goes wherever stdout goes RIGHT NOW"
+- Redirections are applied left to right:
+    cmd >> all.log 2>&1    stdout -> all.log, then stderr -> the same place: both in the file
+    cmd 2>&1 >> all.log    stderr -> the terminal (stdout's place at that moment), then stdout -> file
+- `&>> file` appends both streams at once (bash 4 and newer).
+- Messed up a file? `rm all.log` and do that part again.
+
+Read more: `man bash`, section REDIRECTION.

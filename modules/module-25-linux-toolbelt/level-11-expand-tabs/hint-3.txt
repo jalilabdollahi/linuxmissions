@@ -1,1 +1,5 @@
-Example: `tar -xzf expand-tabs-restore.tar.gz`
+  expand -i -t 2 deploy.yaml > deploy.yaml.new && mv deploy.yaml.new deploy.yaml
+      -i       only the leading whitespace is converted, so the tabs inside quoted values stay
+      -t 2     a tab advances to the next multiple of 2 columns, which is one indentation level
+      > new && mv  write a new file first, then replace the original (a direct > deploy.yaml would empty it)
+  cat -A deploy.yaml | head -12

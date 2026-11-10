@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  sed -n '...p' FILE          -n: print nothing unless told to; p: print this line
+  sed -n '1200,1260p'         a range of line numbers, both ends included
+  sed -n '1260q'              quit at line 1260: no need to read the other 38,000
+  sed -n '/RE1/,/RE2/p'       from a line matching RE1 to the next line matching RE2
+  /^\[database\]$/            \[ and \] are literal brackets, ^ and $ pin the whole line
+  sed '$d'                    delete the last line ($ = last line)
+Combine commands in one script with ; (e.g. '5,9p;9q'). More: man sed

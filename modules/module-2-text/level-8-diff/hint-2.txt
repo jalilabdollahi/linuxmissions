@@ -1,2 +1,6 @@
--u gives unified format (used by git diff and patches):
-diff -u $SANDBOX/v1.conf $SANDBOX/v2.conf
+  diff OLD NEW         show what must change to turn OLD into NEW
+  -u                   unified format: --- old / +++ new header, @@ hunks,
+                       '-' removed lines, '+' added lines, 3 lines of context
+  > changes.diff       save the output
+To test a patch: cp v1.conf test.conf && patch test.conf < changes.diff && diff test.conf v2.conf
+More: man diff, man patch

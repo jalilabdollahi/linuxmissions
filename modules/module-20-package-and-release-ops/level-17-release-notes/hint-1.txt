@@ -1,1 +1,4 @@
-This mission is about cron field order and exact syntax.
+Three jobs, in this order: first cut the right slice out of the history (the log is newest first
+and has commits on both sides of the two tags), then throw away what does not belong (look closely
+at the "Revert" lines: what must happen to the commit they undo?), then sort the rest into the three
+sections of RELEASE_NOTES.template and reformat each line. Check the template for exact blank lines.

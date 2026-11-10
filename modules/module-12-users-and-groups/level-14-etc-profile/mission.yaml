@@ -1,16 +1,11 @@
 {
-  "name": "/Etc/Profile: Loop Builder",
-  "description": "In the users and groups lab, a task related to /Etc/Profile needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named etc-profile-1.txt through etc-profile-3.txt with matching numbered content",
+  "name": "Environment for Everyone",
+  "description": "Every login user on app-04 needs the company proxy and JAVA_HOME, including for sftp and scp sessions. The values are in it-notes.txt. On Ubuntu, etc/profile sources the snippets in etc/profile.d/ for every login shell, so that is where a system-wide setting belongs.",
+  "objective": "Add a snippet to etc/profile.d/ (without editing etc/profile or the existing snippets) so that a clean login shell gets http_proxy, https_proxy and JAVA_HOME exported with the values in it-notes.txt, under both sh (dash) and bash -l. It must print nothing when sourced, and the existing no_proxy setting must stay in effect. The sandbox's etc/profile reads $LM_ETC/profile.d; LM_ETC defaults to $SANDBOX/etc, so `sh -c '. etc/profile; printenv JAVA_HOME'` tests your snippet.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "/Etc/Profile",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "15m",
+  "concepts": ["/etc/profile and profile.d", "POSIX sh vs bash", "export", "login shell environment"],
   "module": "module-12-users-and-groups",
   "level": "level-14-etc-profile"
 }

@@ -1,1 +1,8 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+`memory.max` holds the limit in bytes, or the word `max` for none (not the
+same as `memory.high`, `memory.swap.max` or `cpu.max`). `memory.events` is a
+list of `name count` lines: `oom` counts how often the limit was hit with the
+OOM killer invoked, `oom_kill` counts processes actually killed; the second
+is what is asked. `cpu.stat` has `nr_periods` and `nr_throttled`, the
+percentage is nr_throttled / nr_periods * 100. Select lines by their first
+word in awk (`$1 == "name"`), and guard against a zero denominator;
+`printf "%.1f"` formats one decimal.

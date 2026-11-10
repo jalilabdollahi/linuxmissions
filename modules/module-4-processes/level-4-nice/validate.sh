@@ -1,33 +1,17 @@
 #!/bin/bash
 SANDBOX="$1"
+PID=$(cat "$SANDBOX/.heavy.pid" 2>/dev/null)
 
-if [ ! -f "$SANDBOX/pid.txt" ]; then
-  echo "❌ FAIL: pid.txt not found"
+STAT=$(ps -o stat= -p "$PID" 2>/dev/null)
+if [ -z "$PID" ] || [ -z "$STAT" ] || [[ "$STAT" == Z* ]]; then
+  echo "❌ The original heavy.sh job is gone; it had to keep running (type reset to start it again)"
   exit 1
 fi
 
-PID="$(cat "$SANDBOX/pid.txt")"
-if ! [[ "$PID" =~ ^[0-9]+$ ]]; then
-  echo "❌ FAIL: pid.txt does not contain a valid PID"
-  exit 1
-fi
-
-if ! kill -0 "$PID" 2>/dev/null; then
-  echo "❌ FAIL: Process $PID is not running"
-  exit 1
-fi
-
-NI="$(ps -o ni= -p "$PID" 2>/dev/null | tr -d '[:space:]')"
-if [ -z "$NI" ]; then
-  echo "❌ FAIL: Could not read niceness for PID $PID"
-  exit 1
-fi
-
-if [ "$NI" -ge 10 ]; then
-  kill "$PID" 2>/dev/null || true
-  echo "✅ PASS: Process $PID is running with niceness $NI"
+NI=$(ps -o ni= -p "$PID" 2>/dev/null | tr -d '[:space:]')
+if [ "$NI" = "15" ]; then
+  echo "✅ heavy.sh (PID $PID) keeps running, now at niceness 15"
   exit 0
 fi
-
-echo "❌ FAIL: Process $PID niceness is $NI, expected at least 10"
+echo "❌ heavy.sh (PID $PID) is running at niceness $NI, expected 15"
 exit 1

@@ -1,1 +1,8 @@
-A grep count or grep piped into wc can produce the number you need.
+  gzip FILE...          compress each FILE into FILE.gz and delete the original
+  gzip -9 FILE...       best compression (slower; fine for old logs)
+  gzip -l FILE.gz       show compressed and uncompressed size and the ratio
+Ways to name exactly 2 to 12 in bash:
+  app.log.{2..12}                  brace expansion: the shell writes out 2 3 ... 12
+  app.log.[2-9] app.log.1[0-2]     two glob patterns
+Check with echo first, e.g.  echo logs/app.log.{2..12}
+More: man gzip

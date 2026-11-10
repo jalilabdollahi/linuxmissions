@@ -1,1 +1,1 @@
-This task usually takes two steps: fix execute permission, then run the script.
+The status file is a list of records, not lines: one paragraph per package, with the fields you need (Package, Status, Version, Depends, Pre-Depends) on different lines of the same paragraph. Think about reading it paragraph by paragraph. And think about versions: they are not numbers or plain strings, so 'newer' must be decided by the same rules dpkg uses.

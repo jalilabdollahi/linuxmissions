@@ -1,1 +1,7 @@
-Archive the directory contents without leaving anything out.
+  ./modprobe-sim -n -v ixgbe                   what would happen (insmod lines, or an install command)
+  ./modprobe-sim -c                            the merged configuration it read
+  grep -rn ixgbe sysroot/etc/modprobe.d/       every mention, with file and line number
+  ls -a sysroot/etc/modprobe.d/                the files, including odd names
+modprobe reads only files that end in .conf. blacklist stops alias-based autoloading;
+an explicit "modprobe NAME" ignores it. install NAME CMD runs CMD instead of loading NAME.
+Comment a line out with a leading #. More: man modprobe.d

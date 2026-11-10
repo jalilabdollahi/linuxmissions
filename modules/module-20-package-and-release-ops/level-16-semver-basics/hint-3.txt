@@ -1,1 +1,13 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+IFS=. read -r M m p < VERSION
+if grep -qE '^[0-9a-f]+ [a-z]+(\([^)]*\))?!: |^BREAKING[ -]CHANGE: ' commits.txt; then new="$((M + 1)).0.0"; elif grep -qE '^[0-9a-f]+ feat(\([^)]*\))?: ' commits.txt; then new="$M.$((m + 1)).0"; else new="$M.$m.$((p + 1))"; fi
+echo "$new" > VERSION
+sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$new\"/" package.json
+grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$' all-tags.txt | sed 's/-/~/' | LC_ALL=C sort -V | sed 's/~/-/' | tail -n 10 > tags.txt
+cat VERSION tags.txt
+
+- read -r M m p        splits 2.3.4 into major, minor, patch
+- first grep           "type!:" in a subject or a "BREAKING CHANGE:" footer means a major bump; else any feat means minor; else patch
+- sed -i               replaces only the version field of package.json
+- grep -E (tags)       keeps real release tags only (drops latest, nightly-..., v2.3)
+- sed 's/-/~/' | sort -V | sed 's/~/-/'    GNU sort -V treats ~ as "lower than nothing", so rc tags sort before their release; the second sed restores the dash
+- tail -n 10           the ten highest, lowest first

@@ -1,0 +1,287 @@
+#!/usr/bin/env python3
+"""Mock crontab(1) for LinuxMissions (Debian cron 3.0pl1 behaviour, Ubuntu 24.04).
+
+Stores tables in a sandbox spool instead of /var/spool/cron/crontabs, so it
+never touches the real user's crontab (important on macOS). Same options,
+messages and exit codes as the real one:
+
+  crontab [-u user] [-n] file     install file ("-" or no argument = stdin)
+  crontab [-u user] -l            list (the 3-line header is hidden)
+  crontab [-u user] [-i] -r       remove (-i asks first)
+  crontab [-u user] -e            edit with $VISUAL / $EDITOR
+
+Settings (environment; mocks/cron/install.sh writes a wrapper that sets them):
+  LM_CRON_SPOOL       spool directory (required), one file per user
+  LM_CRON_USER        the user this shell acts as (default: $USER)
+  LM_CRON_PRIVILEGED  1 = act like root: -u works for any user
+  LM_CRON_NOW         "YYYY-MM-DD HH:MM[:SS]" for the header timestamp
+"""
+import datetime as dt
+import getpass
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import cronlib  # noqa: E402
+
+PROG = "crontab"
+
+
+def usage(msg: str):
+    if msg:
+        print(f"{PROG}: usage error: {msg}", file=sys.stderr)
+    print(f"usage:\t{PROG} [-u user] [-n] file\n"
+          f"\t{PROG} [ -u user ] [ -i ] {{ -e | -l | -r }}\n\n"
+          "\t-h\t(displays this help message)\n\n"
+          "\tfile\t(default operation is replace, per 1003.2)\n"
+          "\t-n\t(dry run: checks the syntax, then bails out)\n"
+          "\t-u user\t(choose the user whose crontab is touched)\n\n"
+          "\t-e\t(edit user's crontab)\n"
+          "\t-l\t(list user's crontab)\n"
+          "\t-r\t(delete user's crontab)\n\n"
+          "\t-i\t(prompt before deleting user's crontab)", file=sys.stderr)
+    sys.exit(1)
+
+
+def now() -> dt.datetime:
+    val = os.environ.get("LM_CRON_NOW")
+    if val:
+        try:
+            return cronlib.parse_time(val)
+        except ValueError:
+            pass
+    return dt.datetime.now()
+
+
+def ask(prompt: str, retry_msg: str, to_stderr: bool) -> bool:
+    """y/n question on stdin; end of input counts as 'n' (the real one would loop)."""
+    sys.stdout.write(prompt)
+    sys.stdout.flush()
+    while True:
+        line = sys.stdin.readline()
+        if not line:
+            sys.stdout.write("\n")
+            return False
+        c = line[:1].lower()
+        if c in ("y", "n"):
+            return c == "y"
+        (sys.stderr if to_stderr else sys.stdout).write(retry_msg)
+        (sys.stderr if to_stderr else sys.stdout).flush()
+
+
+def install(spool: str, user: str, text: str, filename: str, dry_run: bool) -> int:
+    tab = cronlib.parse_crontab(text, filename=filename)
+    for w in tab.warnings:
+        print(w, file=sys.stderr)
+    problems = cronlib.check_install(text, filename)
+    if problems:
+        for line in problems:
+            print(line, file=sys.stderr)
+        return -1
+    if dry_run:
+        print("The syntax of the crontab file was successfully checked.", file=sys.stderr)
+        return 0
+    os.makedirs(spool, exist_ok=True)
+    target = os.path.join(spool, user)
+    fd, tmp = tempfile.mkstemp(prefix="tmp.", dir=spool)
+    with os.fdopen(fd, "w", encoding="utf-8", errors="surrogateescape", newline="") as f:
+        f.write(cronlib.make_header(filename, now()))
+        f.write(text)
+    os.chmod(tmp, 0o600)
+    os.replace(tmp, target)
+    return 0
+
+
+def main(argv) -> int:
+    spool = os.environ.get("LM_CRON_SPOOL")
+    if not spool:
+        print("crontab (mock): LM_CRON_SPOOL is not set; run the crontab installed in the "
+              "sandbox's bin/ directory", file=sys.stderr)
+        return 1
+    real_user = os.environ.get("LM_CRON_USER") or os.environ.get("USER") or getpass.getuser()
+    privileged = os.environ.get("LM_CRON_PRIVILEGED") == "1" or real_user == "root"
+    user = real_user
+    if not argv:
+        argv = ["-"]
+    option = None
+    dry_run = prompt = False
+    i = 0
+    args = []
+    while i < len(argv):          # glibc getopt: options may follow the file name
+        a = argv[i]
+        if a == "--":
+            args.extend(argv[i + 1:])
+            break
+        if a.startswith("-") and a != "-" and len(a) > 1:
+            j = 1
+            while j < len(a):
+                ch = a[j]
+                if ch in "ux":
+                    val = a[j + 1:]
+                    if not val:
+                        i += 1
+                        if i >= len(argv):
+                            print(f"{PROG}: option requires an argument -- '{ch}'", file=sys.stderr)
+                            usage("unrecognized option")
+                        val = argv[i]
+                    if ch == "x":
+                        print(f"{PROG} (mock): -x debug flags not supported", file=sys.stderr)
+                        return 1
+                    if val != real_user and not privileged:
+                        print("must be privileged to use -u", file=sys.stderr)
+                        return 1
+                    if not val or "/" in val or val.startswith("."):
+                        print(f"{PROG}:  user `{val}' unknown", file=sys.stderr)
+                        return 1
+                    user = val
+                    break
+                if ch in "hler":
+                    if option is not None:
+                        usage("only one operation permitted")
+                    option = {"h": "help", "l": "list", "e": "edit", "r": "delete"}[ch]
+                elif ch == "n":
+                    dry_run = True
+                elif ch == "i":
+                    prompt = True
+                else:
+                    print(f"{PROG}: invalid option -- '{ch}'", file=sys.stderr)
+                    usage("unrecognized option")
+                j += 1
+        else:
+            args.append(a)
+        i += 1
+
+    if option is not None:
+        if args:
+            usage("no arguments permitted after this option")
+    elif args:
+        option = "replace"
+    else:
+        usage("file name must be specified for replace")
+
+    path = os.path.join(spool, user)
+
+    if option == "help":
+        usage("")
+    if option == "replace":
+        filename = args[0]
+        if filename == "-":
+            text = sys.stdin.buffer.read().decode("utf-8", "surrogateescape")
+        else:
+            try:
+                if not os.path.isfile(filename) and os.path.exists(filename):
+                    print(f"{filename}: Not a regular file.", file=sys.stderr)
+                    return 1
+                with open(filename, "rb") as f:
+                    text = f.read().decode("utf-8", "surrogateescape")
+            except OSError as exc:
+                print(f"{filename}: {exc.strerror}", file=sys.stderr)
+                return 1
+        return 1 if install(spool, user, text, filename, dry_run) < 0 else 0
+    if option == "list":
+        try:
+            with open(path, "rb") as f:
+                text = f.read().decode("utf-8", "surrogateescape")
+        except FileNotFoundError:
+            print(f"no crontab for {user}", file=sys.stderr)
+            return 1
+        if os.environ.get("CRONTAB_NOHEADER", "").upper()[:1] != "N":
+            text = cronlib.strip_header(text)
+        sys.stdout.write(text.replace("\b", "\\b").replace("\r", "\\r"))
+        return 0
+    if option == "delete":
+        if not os.path.exists(path):
+            print(f"no crontab for {user}", file=sys.stderr)
+            return 1
+        if prompt and not ask(f"crontab: really delete {user}'s crontab? (y/n) ", "Please enter Y or N: ", True):
+            return 0
+        os.unlink(path)
+        return 0
+    if option == "edit":
+        return edit(spool, user, path)
+    return 0
+
+
+def edit(spool: str, user: str, path: str) -> int:
+    help_text = False
+    try:
+        with open(path, "rb") as f:
+            current = f.read().decode("utf-8", "surrogateescape")
+        current = cronlib.strip_header(current)
+    except FileNotFoundError:
+        print(f"no crontab for {user} - using an empty one", file=sys.stderr)
+        current = ""
+        help_text = True
+    tmpdir = tempfile.mkdtemp(prefix="crontab.")
+    filename = os.path.join(tmpdir, "crontab")
+    with open(filename, "w", encoding="utf-8", errors="surrogateescape", newline="") as f:
+        if help_text:
+            f.write(HELP_TEXT)
+        f.write(current)
+    os.chmod(filename, 0o600)
+    editor = os.environ.get("VISUAL") or os.environ.get("EDITOR")
+    if not editor:
+        editor = "/usr/bin/sensible-editor" if os.path.exists("/usr/bin/sensible-editor") else "vi"
+    try:
+        while True:
+            before = os.stat(filename).st_mtime_ns
+            rc = subprocess.call(["/bin/sh", "-c", f"{editor} {filename}"], cwd=tempfile.gettempdir())
+            if rc < 0:
+                print(f'{PROG}: "{editor}" killed; signal {-rc} (no core dumped)', file=sys.stderr)
+                return 1
+            if rc:
+                print(f'{PROG}: "{editor}" exited with status {rc}', file=sys.stderr)
+                return 1
+            try:
+                st = os.stat(filename)
+            except OSError:
+                print("Can't open tempfile after edit: No such file or directory", file=sys.stderr)
+                print("Error while editing crontab", file=sys.stderr)
+                return 1
+            if st.st_mtime_ns == before:
+                print("No modification made", file=sys.stderr)
+                return 0
+            print(f"{PROG}: installing new crontab", file=sys.stderr)
+            with open(filename, "rb") as f:
+                text = f.read().decode("utf-8", "surrogateescape")
+            if install(spool, user, text, filename, False) == 0:
+                return 0
+            if not ask("Do you want to retry the same edit? (y/n) ", "Enter Y or N\n", True):
+                print(f"{PROG}: edits left in {filename}", file=sys.stderr)
+                tmpdir = None
+                return 1
+    finally:
+        if tmpdir:
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+HELP_TEXT = """# Edit this file to introduce tasks to be run by cron.
+#
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+#
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').
+#
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+#
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+#
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+#
+# For more information see the manual pages of crontab(5) and cron(8)
+#
+# m h  dom mon dow   command
+"""
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

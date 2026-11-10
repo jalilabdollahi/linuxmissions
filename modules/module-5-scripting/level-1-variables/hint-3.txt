@@ -1,3 +1,14 @@
-One valid solution is:
+Type this at the prompt. It replaces greet.sh with a working script:
+
+cat > greet.sh <<'EOF'
 #!/bin/bash
-echo "Hello, $1!"
+name="${1:-stranger}"
+echo "Hello, $name!"
+EOF
+
+- cat > greet.sh <<'EOF' ... EOF   writes the lines in between into greet.sh. The quotes around 'EOF' keep $1 and $name as text, so they are expanded when the script runs, not now.
+- #!/bin/bash                      says which program runs the file.
+- name="${1:-stranger}"            the first argument, or "stranger" when there is none.
+- echo "Hello, $name!"             double quotes keep a name like "Ada Lovelace" in one piece.
+
+Try it: bash greet.sh "Ada Lovelace"   and   bash greet.sh

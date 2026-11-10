@@ -1,1 +1,7 @@
-Example: `sort dependency-tree-raw.txt | uniq > unique-sorted.txt`
+apt-get -s remove libold1 | awk '/^Remv/ { print $2 }' | grep -vx libold1 | sort > impact.txt
+cat impact.txt
+
+- apt-get -s remove libold1    the real dependency resolver, as a dry run: "Remv" lines are the packages that would be removed
+- awk '/^Remv/ {print $2}'     keeps just the package names
+- grep -vx libold1             the task asks for the packages that go with it, not the library itself
+- sort > impact.txt            one name per line

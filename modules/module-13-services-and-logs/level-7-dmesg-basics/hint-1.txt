@@ -1,1 +1,5 @@
-Use one command for the beginning of the file and another for the end.
+Look at captures/dmesg.txt: each crash leaves a "segfault at" line naming the program (with its
+PID) and, after " in ", the file the faulting instruction was in. A few report-renderer lines are
+not crashes.
+The number in [brackets] is not a time of day: it's seconds since the kernel booted. Which file
+tells you when the machine booted? Watch the brackets too: small numbers are padded with spaces.

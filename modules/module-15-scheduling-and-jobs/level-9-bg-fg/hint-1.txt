@@ -1,1 +1,4 @@
-This task wants a symbolic link, not a copy.
+Your shell can stop a job without ending it, and continue it later: the process keeps
+its place (here, its heartbeat counter). Stopping is a signal, continuing is another.
+Which job number does the shell give the export when you start it with &? `jobs` shows
+it, and whether it is Running or Stopped.

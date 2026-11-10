@@ -1,1 +1,6 @@
-Example: `for n in 1 2 3; do printf 'process-swarm item %s\n' "$n" > generated/process-swarm-$n.txt; done`
+Find the supervisor and its group, record the disguised child's real exe, then kill the whole group:
+  sw=$(pgrep -x swarmd); pg=$(ps -o pgid= -p $sw | tr -d ' ')
+  for p in $(ps -eo pid=,ppid= | awk -v s=$sw '$2==s{print $1}'); do case "$(tr '\0' ' ' < /proc/$p/cmdline)" in '['*) readlink /proc/$p/exe > hidden.txt;; esac; done
+  cat hidden.txt
+  kill -9 -- -$pg
+The supervisor is the process named swarmd and its PGID is the group of the whole swarm; the loop looks at its children, and the one whose command line looks like a kernel thread ([...]) but still has an exe link gets its path written to hidden.txt; the last line kills every process of that group at once, so nothing can respawn.

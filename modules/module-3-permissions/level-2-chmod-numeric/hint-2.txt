@@ -1,2 +1,9 @@
-755 = rwxr-xr-x  (owner rwx, group rx, others rx)
-600 = rw-------  (owner rw only, nobody else)
+In octal mode each digit is one group (owner, group, others), and the digit is
+the sum of: read = 4, write = 2, execute = 1.
+  rw- = 4+2   = 6
+  r-x = 4+1   = 5
+  r-- = 4     = 4
+  --- = 0
+chmod takes the three digits: chmod 640 file  means rw- r-- ---
+Check your work with ls -l, or stat -c '%a %n' * (on macOS: stat -f '%Lp %N' *).
+More: man chmod

@@ -1,1 +1,5 @@
-You need a stream editor or another text replacement tool.
+Two files, two clocks. kernel-oom.txt says +00:00 on every line: that is UTC.
+app.log has no zone at all: it is the server's local time. Which zone is the
+server in, and how far from UTC is it? Look closely at the minutes of the
+offset, not only the hours.
+Then search app.log for the converted time, down to the second.

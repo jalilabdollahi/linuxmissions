@@ -1,1 +1,5 @@
-This is a sorting task followed by deduplication.
+One snapshot of the process list will never show the culprit: its children
+are gone before you read the output. Sample many times, and collect two
+things for every process you catch: how much CPU it is using and who its
+parent is. The parent lives for a long time and is the same every time.
+Not every spawner is guilty: compare what the children actually cost.

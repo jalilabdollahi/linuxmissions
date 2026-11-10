@@ -1,1 +1,10 @@
-Example: `chmod +x jobs/usb-review.sh && jobs/usb-review.sh`
+cd capture/sys/bus/usb/devices
+for i in *:*; do [ "$(cat $i/bInterfaceClass)" = 08 ] || continue; d=${i%%:*}; vp="$(cat $d/idVendor):$(cat $d/idProduct)"; sed 's/#.*//' $SANDBOX/usb-allowlist.txt | grep -qix "[[:space:]]*$vp[[:space:]]*" && continue; echo "$d $vp $(cat $d/product)"; done | sort -u > $SANDBOX/rogue_usb.txt
+cd $SANDBOX; cat rogue_usb.txt
+
+- for i in *:*          only the interface entries (names with a colon)
+- bInterfaceClass = 08  keep mass-storage interfaces
+- d=${i%%:*}            the device is the name before the colon
+- vp=...                vendor:product from the device's own files
+- sed 's/#.*//' | grep -qix ...   compare with the allowlist ignoring comments, case and spaces; skip allowed ones
+- echo ... | sort -u    one line per device, even with two storage interfaces

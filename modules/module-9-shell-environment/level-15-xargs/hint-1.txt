@@ -1,1 +1,10 @@
-This is a numeric aggregation task.
+Two separate problems:
+
+1. Which lines of tenants.txt are tenants at all? Look for comments that do not
+   start at the first column, and for "blank" lines that contain spaces.
+2. How does xargs cut its input into arguments? Try it without creating
+   anything: `xargs printf '[%s]\n' < tenants.txt`. Look at acme corp, and at
+   what happens when xargs reaches the apostrophe in o'reilly media.
+
+Preview first, create second. tenants/ must end up clean, so remove whatever
+a failed attempt created there.

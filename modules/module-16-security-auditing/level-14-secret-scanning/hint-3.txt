@@ -1,1 +1,13 @@
-Example: `for n in 1 2 3; do printf 'secret-scanning item %s\n' "$n" > generated/secret-scanning-$n.txt; done`
+{
+  grep -rnE 'AKIA[0-9A-Z]{16}' repo | grep -v AKIAIOSFODNN7EXAMPLE | cut -d: -f1,2
+  grep -rnE -- '-----BEGIN .*PRIVATE KEY' repo | cut -d: -f1,2
+  grep -rniE '^[[:space:]]*password[[:space:]]*=[[:space:]]*[^<$[:space:]]' repo | cut -d: -f1,2
+  grep -rnE 'ghp_[A-Za-z0-9]{36}' repo | cut -d: -f1,2
+  find repo -name '*.gz' -exec zgrep -nHE 'ghp_[A-Za-z0-9]{36}' {} + | cut -d: -f1,2
+} | sort -u > leaks.txt
+
+- first grep    AWS key ids, minus the documented example key
+- second grep   the BEGIN line of any private key block (the END line is not matched on purpose)
+- third grep    "password" as the setting name, any case, spaces allowed, with a value that is not empty, <...> or ${...}
+- last two      GitHub tokens in plain files, and inside .gz files that grep cannot read directly
+- sort -u       one line per leak, no duplicates

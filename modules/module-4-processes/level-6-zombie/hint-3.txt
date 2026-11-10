@@ -1,3 +1,10 @@
-Document the zombies first, then kill the parent:
-ps -o pid,comm,stat,ppid | awk '$3 ~ /^Z/ {print}' > $SANDBOX/zombies.txt
-kill $(cat $SANDBOX/parent.pid)
+  ps -eo pid,ppid,stat,comm | awk '$3 ~ /^Z/' > zombies.txt
+      every zombie with PID, parent PID (PPID), state and name
+  cat zombies.txt
+      three python3 zombies share one PPID (your machine may have other
+      zombies too; listing them is fine)
+  ps -o pid,args -p "$(awk '{print $2}' zombies.txt | sort -u | paste -sd, -)"
+      shows each distinct PPID with its command line: one of them is
+      python3 .../job_runner.py (not metrics_agent.py)
+  kill $(pgrep -f job_runner.py)
+      stop that parent; init adopts the zombies and reaps them

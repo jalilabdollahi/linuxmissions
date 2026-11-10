@@ -1,0 +1,11 @@
+{
+  "name": "Change Freeze",
+  "description": "The change freeze starts tonight: the database server and the kernel must not move, but security patches for everything else should keep flowing. FREEZE.txt has the exact package names. There are many pending upgrades, and several share a name prefix with the two that must stay.",
+  "objective": "Put exactly the two packages named in FREEZE.txt on hold, without upgrading anything for real, and save the simulated upgrade plan made after the holds to upgrade-plan.txt. Other pending upgrades (including packages that merely share a prefix with the held ones) must still be planned. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "12m",
+  "concepts": ["apt-mark hold", "apt-mark showhold", "dpkg --get-selections", "apt-get -s upgrade", "wildcards"],
+  "module": "module-20-package-and-release-ops",
+  "level": "level-9-package-holds"
+}

@@ -1,15 +1,11 @@
 {
-  "name": "Yes Head: Field Extract",
-  "description": "In the linux toolbelt lab, a task related to Yes Head needs cleanup before the handoff.",
-  "objective": "Extract the second column from yes-head-report.csv into owners.txt",
+  "name": "Unattended Installer, Thousand Pings",
+  "description": "The vendor installer ./install.sh asks for confirmation again and again, and the deployment pipeline has nobody to type the answers. QA also wants a load-test fixture with a thousand identical lines.",
+  "objective": "Run ./install.sh so it completes without you answering any question by hand (it writes install.done when it succeeds), and create load.txt containing exactly 1000 lines, each one the word ping.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Yes Head",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "10m",
+  "concepts": ["yes", "yes | command", "yes ping | head -n 1000", "SIGPIPE ends yes"],
   "module": "module-25-linux-toolbelt",
   "level": "level-5-yes-head"
 }

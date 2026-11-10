@@ -1,3 +1,5 @@
-Or use octal (1 prefix = sticky bit):
-chmod 1777 $SANDBOX/shared
-ls -ld $SANDBOX/shared  # look for 't' at the end of permissions
+  chmod +t shared
+      add the sticky bit and leave rwxrwxrwx as it is
+      (same result: chmod 1777 shared)
+  ls -ld shared
+      should now show drwxrwxrwt, just like /tmp

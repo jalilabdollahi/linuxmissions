@@ -1,1 +1,7 @@
-Example: `ln -s releases/histogram.conf current.conf`
+  awk -F, 'NR > 1 { b = int($2 / 100); if (b > 10) b = 10; count[b]++ } END { for (i = 0; i <= 10; i++) { if (i < 10) label = (i * 100) "-" (i * 100 + 99); else label = "1000+"; bar = ""; for (j = 1; j <= int(count[i] / 10); j++) bar = bar "#"; printf "%s %d %s\n", label, count[i], bar } }' results.jtl > histogram.txt
+      NR > 1             skip the header
+      int($2 / 100)      elapsed 100..199 -> bucket 1, exactly 100 included
+      b > 10 -> 10       one bucket for 1000 and above
+      for i = 0..10      print every bucket, empty ones as 0
+      bar                one # per full 10 requests
+  cat histogram.txt

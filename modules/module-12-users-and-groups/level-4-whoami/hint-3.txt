@@ -1,1 +1,9 @@
-Example: `sort whoami-raw.txt | uniq > unique-sorted.txt`
+sed -i 's/\$USER/$(id -un)/g' deploy.sh
+grep -n 'id -un' deploy.sh
+USER=release ./deploy.sh
+
+- sed -i 's/\$USER/$(id -un)/g'  replaces every $USER in the script with $(id -un), the effective
+                                 user's name asked from the system (whoami works too)
+- grep -n                        check the guard line now reads: if [ "$(id -un)" != "$allowed" ]
+- USER=release ./deploy.sh       faking USER no longer helps: it refuses with exit 1
+(or open the script with `edit deploy.sh` and change the two $USER by hand)

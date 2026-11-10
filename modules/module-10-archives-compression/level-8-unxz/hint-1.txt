@@ -1,1 +1,4 @@
-Use a targeted file search so you do not remove the wrong files.
+An xz file records how big its content is, so you can get the size without
+unpacking anything to disk. But look closely at what `xz -l` prints: are those
+sizes in bytes, or rounded to KiB/MiB? The ticket needs exact bytes.
+Then unpack only customers, and keep its .xz too.

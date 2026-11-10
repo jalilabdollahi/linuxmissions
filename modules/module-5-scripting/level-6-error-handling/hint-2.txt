@@ -1,3 +1,9 @@
-Check whether the first argument was provided before using it.
-If it is missing, print:
-SOURCE_FILE is required
+- `set -e`  stop the script as soon as a command fails.
+- `set -u`  using a variable that was never set is an error.
+- `set -o pipefail`  a pipeline fails if ANY command in it fails, not only the last one. Without it, `grep missing.conf | tr ...` counts as success because tr succeeded.
+  All three at once: `set -euo pipefail`, near the top of the script.
+- With `set -u`, a plain `$1` is an error when no argument was given. `${1:-}` means "$1, or empty", so `[ -z "${1:-}" ]` tests for a missing argument safely.
+- `echo "message" >&2` writes to stderr; `exit 1` ends with status 1.
+- Quote "$SOURCE_FILE" so "shop settings.conf" stays one argument.
+
+Read more: `help set` (look for -e, -u and pipefail).

@@ -1,1 +1,25 @@
-Example: `cut -d, -f2 subnet-math-report.csv > owners.txt`
+Write the script (up to the second PY line), then run it:
+
+cat > cidr.py <<'PY'
+import ipaddress as ip, re
+entries = [(t, ip.ip_network(t, strict=False))
+           for t in (l.split("#")[0].strip() for l in open("allow.cidr")) if t]
+with open("redundant.txt", "w") as out:
+    for i, (t, n) in enumerate(entries):
+        if any(i != j and n.version == m.version and n.subnet_of(m) and (n != m or j < i)
+               for j, (_, m) in enumerate(entries)):
+            print(t, file=out)
+srcs = {ip.ip_address(s) for s in re.findall(r"SRC=(\S+)", open("blocked.log").read())}
+with open("misblocked.txt", "w") as out:
+    for a in sorted(srcs, key=lambda a: (a.version, a)):
+        if any(a.version == n.version and a in n for _, n in entries):
+            print(a, file=out)
+PY
+python3 cidr.py
+
+- entries: the text as written plus the real network (strict=False: host bits allowed, bare address = /32)
+- subnet_of(m) for another entry m; equal networks count only when the other line comes first (j < i)
+- SRC=(\S+): the sender only, never DST; ip_address() understands the long IPv6 form in the log
+- a in n: is the address inside the network (same IP version only)
+
+Check it: cat redundant.txt misblocked.txt

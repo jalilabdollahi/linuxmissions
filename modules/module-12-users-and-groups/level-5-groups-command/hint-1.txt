@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Two views of the same user: the group database (what the user SHOULD have
+now) and the credentials of a process that is already running (what it
+actually has). Group changes never reach a process that is already running.
+Compare the two lists user by user, in numbers, because the session files
+only know GIDs. Which direction of difference means "needs a new login"?

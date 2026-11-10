@@ -1,1 +1,26 @@
-Example: `mkdir -p organized/unit-files && mv inbox/unit-files.txt organized/unit-files/unit-files-notes.txt`
+cat > etc/systemd/system/report-api.service <<EOF
+[Unit]
+Description=Report API
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/report-api
+ExecStart=/opt/report-api/bin/report-api --port $(cat .lm-state/port) --foreground
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemd-analyze verify etc/systemd/system/report-api.service
+systemctl daemon-reload
+systemctl enable --now report-api
+systemctl status report-api
+
+- $(cat .lm-state/port)   the port from the ticket (you can type the number)
+- WorkingDirectory=       where the program finds report-api.conf
+- ExecStart=...--foreground   absolute path; the flag keeps the process in the foreground
+- Restart=on-failure      restart it when it crashes
+- WantedBy=               what enable hooks the service into for boot
+- verify                  catch mistakes before systemd does
+- enable --now            create the boot link and start it right away

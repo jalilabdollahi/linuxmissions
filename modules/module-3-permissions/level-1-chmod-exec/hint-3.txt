@@ -1,2 +1,5 @@
-Then run it:
-chmod u+x $SANDBOX/deploy.sh && $SANDBOX/deploy.sh
+  chmod u+x deploy.sh
+      adds execute for the owner only; ls -l now shows -rwxr--r--
+  ./deploy.sh
+      runs it; ./ tells the shell the program is in the current folder.
+      It writes output.txt.

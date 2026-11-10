@@ -1,16 +1,11 @@
 {
-  "name": "Gzip: Event Counter",
-  "description": "In the archives and compression lab, a task related to Gzip needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in gzip-events.txt and write the number to ok-count.txt",
+  "name": "Disk at 92%",
+  "description": "The monitoring alert says /var on shop-02 is 92% full. In logs/ the app's rotated logs app.log.2 to app.log.12 were never compressed because the logrotate job broke. Logrotate runs with delaycompress: app.log is the file the app is writing right now, and app.log.1 stays plain for one more day.",
+  "objective": "In logs/, compress app.log.2 through app.log.12 with gzip, so that each one becomes app.log.N.gz with the same content and no uncompressed copy is left. app.log and app.log.1 must stay exactly as they are (same file, same content), and the old app.log.13.gz and app.log.14.gz stay unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Gzip",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "6m",
+  "concepts": ["gzip", "gzip -l", "brace expansion", "glob character classes"],
   "module": "module-10-archives-compression",
   "level": "level-3-gzip"
 }

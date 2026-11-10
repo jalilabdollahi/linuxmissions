@@ -1,0 +1,8 @@
+  grep -E '^[A-Z_]*(UID|GID)_(MIN|MAX)' etc/login.defs   the ranges (lines starting with # are comments)
+  cut -d: -f1,3 etc/passwd | sort -t: -k2 -n             accounts by UID
+  cut -d: -f1,3 etc/group  | sort -t: -k2 -n             groups by GID
+How shadow-utils picks (man useradd, man login.defs):
+  regular account: the highest UID in use inside UID_MIN..UID_MAX, plus 1
+  system account:  counting down inside SYS_UID_MIN..SYS_UID_MAX, below the lowest one in use
+  private group:   the same number as the UID when no group has it; otherwise a new GID by the same rules
+Check each answer against etc/group before you write it down.

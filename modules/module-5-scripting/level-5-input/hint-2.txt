@@ -1,2 +1,7 @@
-Export each key/value pair:
-export "$key=$value"
+- `while IFS='=' read -r key value; do ... done < "$1"` reads FILE one line at a time. IFS='=' splits at `=`; the last variable (value) gets the whole rest of the line, extra `=` included. `-r` keeps backslashes as they are.
+- `read` returns "failure" on a last line without a newline, even though it filled the variables. Keep the loop going for it: `while IFS='=' read -r key value || [ -n "$key" ]; do`
+- Skip comments and blank lines with a `case` on the key: `''|'#'*) continue ;;`
+- `export "$key=$value"` sets the variable. Nothing inside $value is run, because the text is never parsed as code again (do not use eval).
+- The file is sourced, not run: test with `source load_env.sh app.env; echo "$APP_TITLE"`.
+
+Read more: `help read`, `help export`.

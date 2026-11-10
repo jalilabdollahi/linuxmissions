@@ -1,1 +1,8 @@
-Use `ln -s` so current.conf points at the release file.
+- ionice -p PID shows the I/O class of a process; ionice -c3 -p PID puts a
+  running process into class 3 (idle). man ionice lists the classes.
+- pstree -p PID (or ps -eo pid,ppid,cmd --forest) shows the family tree
+  below a process, and pgrep -P PID lists direct children only.
+- Changing a process does not change processes it already started, so each
+  one in the family needs its own ionice (it is fine to include the harmless
+  helper processes between tar and gzip).
+- Check the result with `ionice -p` on each process, and compare with the DB.

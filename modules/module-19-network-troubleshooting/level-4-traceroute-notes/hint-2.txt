@@ -1,1 +1,7 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- traceroute: `N  name (address)  t1 ms  t2 ms  t3 ms`. `*` = no answer to that probe within the timeout. The address is the part in parentheses.
+- Routers often rate-limit or ignore the ICMP "time exceeded" messages traceroute relies on, so a single silent hop with answering hops after it means nothing. The path really ends where every hop after it is silent.
+- mtr report columns: hop, host (??? = no reply), Loss%, Snt, Last, Avg, Best, Wrst, StDev. In awk that is $1="N.|--", $2=host, $6=Avg.
+- To compare each answering hop with the previous answering one in awk, keep the last Avg in a variable: `prev = $6`.
+
+`grep -v '\* \* \*' traceroute.txt | tail -n 1` shows the last line that has an answer.
+Read more: `man traceroute`, `man mtr` (--report, -n).

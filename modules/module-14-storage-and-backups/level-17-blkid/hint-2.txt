@@ -1,1 +1,6 @@
-Write the schedule into crontab.txt using the standard five time fields.
+  blkid -p -o export FILE          low-level probe of a file, output as KEY=value lines (TYPE, UUID, LABEL; PTTYPE for a partition table)
+  blkid -p -O BYTES FILE           probe at a byte offset: the start of a partition, not the start of the image
+  sfdisk -d FILE                   dump the partition table; "start=" is counted in 512-byte sectors
+  exit status 2 of blkid           nothing found: do not let it stop your loop
+Loop over images/*.img, print a CSV row per image (or per partition, named FILE@pN), leave empty fields empty.
+More: man blkid, man sfdisk

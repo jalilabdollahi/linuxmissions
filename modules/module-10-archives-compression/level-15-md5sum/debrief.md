@@ -1,17 +1,23 @@
-# Md5Sum: Metric Sum
+# Seeing Double
 
-## What you practiced
-- This level focused on **Md5Sum** in a safe sandbox.
-- The shortest path usually combines `awk` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`md5sum` reduces each file to a 128-bit fingerprint; files with the same bytes
+get the same hash. After `sort`, `awk 'seen[$1]++'` is false the first time a
+hash shows up (0, then incremented) and true for every later copy, so exactly
+the extra copies flow on to `mv`. Reading names with `while IFS= read -r`
+keeps spaces, quotes and leading blanks as they are.
 
-## Commands to remember
-```bash
-awk -F, 'NR>1 {sum += $2} END {print sum}' file.csv
-cut -d, -f2 file.csv
-paste -sd+ numbers.txt | bc
-```
+## Common mistakes
+- Deduplicating by size (`ls -l | sort -k5`): here dozens of different
+  pictures share a size, and you would have moved originals.
+- `... | xargs mv -t dupes/`: xargs splits `WhatsApp Image 2026-...` into
+  several arguments and stops at the unmatched quote in `Mom's birthday`.
+- `uniq -D` moves *every* copy, including the first, leaving that picture
+  with no copy in photos/.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a numeric aggregation task.
+## Learn next
+MD5 is fine for finding accidental duplicates, but it is broken for security:
+two different files with the same MD5 can be crafted on purpose. Use
+`sha256sum` whenever someone might try to fool the check. Dedicated tools such
+as `fdupes -r` or `rdfind` compare sizes first and only hash candidates, which
+is much faster on large photo libraries.

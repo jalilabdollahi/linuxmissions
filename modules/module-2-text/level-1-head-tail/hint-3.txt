@@ -1,2 +1,6 @@
-Bonus: tail -f follows a file live (great for watching logs):
-tail -f /var/log/syslog
+  head -n 5 app.log > first5.txt
+      the first 5 lines (service start-up) go into first5.txt
+  tail -n 5 app.log > last5.txt
+      the last 5 lines (the crash) go into last5.txt
+  cat last5.txt
+      check: you should see the FATAL line and the shutdown

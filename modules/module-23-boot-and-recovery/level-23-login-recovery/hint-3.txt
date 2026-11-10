@@ -1,1 +1,12 @@
-Example: `tar -czf login-recovery-backup.tar.gz bundle/login-recovery`
+cat sysroot/var/log/auth.log | grep -i ops
+bin/usermod -s /bin/bash ops
+bin/chage -E -1 ops
+rm sysroot/etc/nologin
+chmod 755 sysroot/home/ops; chmod 700 sysroot/home/ops/.ssh; chmod 600 sysroot/home/ops/.ssh/authorized_keys
+grep '^ops:' sysroot/etc/passwd sysroot/etc/shadow | cut -c1-60; ls -ld sysroot/home/ops sysroot/home/ops/.ssh
+
+- the first line lists the refusals; each is one cause: nologin file, missing shell, expired account, bad modes
+- usermod -s puts an existing, listed shell on ops and chage -E -1 removes the account expiry (both act on sysroot through the mock)
+- rm removes the /etc/nologin that stops all non-root logins
+- the chmod line sets the exact modes: the home directory must not be group-writable, .ssh and the key file private
+- the last line shows the result

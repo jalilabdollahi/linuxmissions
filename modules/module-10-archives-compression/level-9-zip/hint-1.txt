@@ -1,1 +1,5 @@
-This task wants a symbolic link, not a copy.
+Compare what is in the zip (`unzip -l handover.zip`) with the folder. Three
+kinds of change must reach the zip: changed files, new files, and files that
+no longer exist. Deleting the zip and zipping again loses the comment
+(`unzip -z handover.zip` shows it). And by default zip follows symlinks and
+stores the target file's content instead of the link.

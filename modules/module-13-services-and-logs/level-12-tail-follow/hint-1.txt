@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+The token is printed once, right after the agent rotates deploy.log, and is scrubbed a few
+seconds later, before trigger-deploy.sh even returns. So you have to be watching the log before
+you trigger the deploy, and keep watching across the rotation. When a log is rotated, the old file
+is renamed and a new one is created under the same name. Does your watcher follow the file it
+opened or the name? Also: the log already contains other, revoked tokens.

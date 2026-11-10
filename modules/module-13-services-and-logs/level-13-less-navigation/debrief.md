@@ -1,17 +1,28 @@
-# Less Navigation: Script Kickoff
+# Needle in huge.log
 
-## What you practiced
-- This level focused on **Less Navigation** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+The answer depends on **where** a line is, not just what it says. In `less`
+a search starts at the current screen, so `/deploy finished:` then `n` walks
+you marker by marker, and the next `/panic:` finds the first panic *after*
+the place you stand. `-N` shows line numbers, so "two lines above" is simple
+arithmetic. The colon in the search matters: `deploy finished (dry-run):`
+does not match `deploy finished:`.
 
-## Commands to remember
-```bash
-chmod +x script.sh
-./script.sh
-bash script.sh
-```
+The command-line route does the same with line numbers: `grep -n` numbers the
+markers, `awk 'NR > m'` searches only after one of them, and `sed -n Np` prints
+one line by number.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task usually takes two steps: fix execute permission, then run the script.
+## Common mistakes
+- Counting the dry-run marker as the second deploy: it changes nothing.
+- `/panic` without the colon stops at the config dump after each deploy
+  (`panic_on_fail=false`).
+- Taking the nearest `trace=`: the line directly above a panic is often an
+  unrelated request from another goroutine.
+- `grep panic huge.log | head`: that finds the first panic of the whole day,
+  not the first one after a given point.
+
+## Next step
+Inside less, `&pattern` hides every line that doesn't match (like a live
+grep), `ma` sets a mark and `'a` jumps back to it, and `less +/pattern file`
+opens the file already at the first match. `grep -B2 -m1` prints two lines of
+context before the first match.

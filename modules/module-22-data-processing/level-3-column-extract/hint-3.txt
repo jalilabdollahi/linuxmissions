@@ -1,1 +1,8 @@
-Example: `grep -c '^ok$' column-extract-events.txt > ok-count.txt`
+  head -1 old_export.csv | tr , '\n' | grep -nx email
+  head -1 new_export.csv | tr , '\n' | grep -nx email
+      one header name per line, numbered; -x skips email_verified (3 and 5)
+  tail -n +2 old_export.csv | cut -d, -f3 > emails.txt
+      the old file's data rows, column 3
+  tail -n +2 new_export.csv | cut -d, -f5 >> emails.txt
+      the new file's data rows, column 5, appended after them
+  wc -l emails.txt

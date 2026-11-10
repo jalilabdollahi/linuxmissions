@@ -1,1 +1,5 @@
-This is a sorting task followed by deduplication.
+Read the first few lines of vmstat.txt and match each column to its heading.
+Two columns describe swap *activity* per second; another one shows how much swap
+is merely *in use* and says nothing about activity right now.
+Then look at how the file is built: not every line is a sample. How do you
+tell a sample line from a heading line?

@@ -1,1 +1,12 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+awk '/tag: v2\.4\.0[,)]/ { on = 1; next } /tag: v2\.3\.0[,)]/ { on = 0 } on' gitlog.txt | awk '{ a[NR] = $0 } END { for (i = NR; i >= 1; i--) print a[i] }' > range.txt
+sed -nE 's/^[0-9a-f]+ Revert "(.*)" \(#[0-9]+\)$/\1/p' range.txt > reverted.txt
+grep -vF -f reverted.txt range.txt | grep -v ' Revert "' > keep.txt
+sec() { grep -E "$1" keep.txt | sed -E 's/^[0-9a-f]+ [a-z]+(\([^)]*\))?!?: /- /'; }
+{ echo "# Release v2.4.0"; echo; echo "## Features"; echo; sec '^[0-9a-f]+ feat(\([^)]*\))?: '; echo; echo "## Fixes"; echo; sec '^[0-9a-f]+ fix(\([^)]*\))?: '; echo; echo "## Breaking"; echo; sec '^[0-9a-f]+ [a-z]+(\([^)]*\))?!: '; } > RELEASE_NOTES.md
+cat RELEASE_NOTES.md
+
+- first awk         keeps the lines between the v2.4.0 and v2.3.0 tag markers (the v2.4.0 release commit itself is skipped); the second awk reverses to oldest first
+- sed -n ... p      for every Revert line, the subject of the commit it undoes
+- grep -vF -f       removes the reverted commits (and the Revert lines themselves, with the next grep -v); merges and chores never match a section
+- sec()             picks the lines of one section and turns "hash type(scope): text (#PR)" into "- text (#PR)"
+- { ...; } > file   writes headings and sections in the template's order: Features (feat), Fixes (fix), Breaking (type!:)

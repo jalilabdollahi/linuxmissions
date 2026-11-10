@@ -1,1 +1,12 @@
-An awk one-liner can skip the header and add the second field.
+- Process substitution: `<(cmd)` runs cmd and gives a path such as
+  /dev/fd/63 that reads its output. No file is written:
+    comm -23 <(cmd1 | sort) <(cmd2 | sort)
+- Feeding a loop without a pipe, so it runs in the main shell:
+    while read -r line; do ...; done < <(cmd)
+  (the space between the two < matters). After the loop, the counter is set.
+- Filter the system accounts by uid:   awk -F: '$2 >= 1000 && $2 < 60000 {print $1}'
+- Keep employees, lower-cased:   awk -F, 'NR > 1 && ($3=="active" || $3=="leave") {print tolower($2)}'
+- comm -23 prints the lines only in the first input. Both inputs must be
+  sorted the same way.
+
+Read more: man bash, "Process Substitution"; man comm.

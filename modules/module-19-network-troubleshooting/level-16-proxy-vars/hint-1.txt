@@ -1,1 +1,6 @@
-Measure directory sizes before deciding which one is largest.
+Run ./check-access.sh, then call one failing URL yourself with verbose output after loading proxy.env (. ./proxy.env). The first lines tell you whether curl connected to the service or to the proxy, and why.
+
+Then read proxy.env line by line and ask, for curl:
+- Which of the two no_proxy variables does it use when both are set?
+- Does it understand "*.internal"?
+- Which proxy variables does it read for http:// URLs, and which spelling do other tools need?

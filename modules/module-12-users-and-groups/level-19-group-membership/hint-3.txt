@@ -1,1 +1,12 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' group-membership.conf > fixed.conf`
+tail -n +2 changes.csv | while IFS=, read -r action user group; do
+  case "$action" in
+    add)    bin/gpasswd -a "$user" "$group" ;;
+    remove) bin/gpasswd -d "$user" "$group" ;;
+  esac
+done
+cat etc/group
+
+- tail -n +2        skips the header row
+- IFS=, read -r ... splits each row into action, user and group
+- case ... gpasswd -a / -d   adds or removes in both etc/group and etc/gshadow (errors for no-op rows are fine)
+- cat etc/group     look at the result: no stray commas, emptied groups end with a bare colon

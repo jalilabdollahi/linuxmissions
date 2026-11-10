@@ -1,1 +1,6 @@
-Look for a filtering command that keeps only the alert lines in group-file.log.
+A line of etc/group reads name:password:GID:member,member,... and its member
+list only holds people for whom this is a SUPPLEMENTARY group.
+A user's primary group is not stored in etc/group at all: it is the GID in
+field 4 of their etc/passwd line. Those users are in the group too.
+Also be careful what you match: is every line that contains "docker" the
+docker group? And what does an empty piece after the last comma mean?

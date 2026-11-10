@@ -1,0 +1,11 @@
+{
+  "name": "Needle in a Gzip Stack",
+  "description": "Support needs the full history of order 88412 (TICKET.txt). Its log lines are spread over two weeks of rotated logs in logs/: app.log, app.log.1, then compressed rotations, some gzip, some bzip2, some xz. The disk is almost full, so nothing gets unpacked.",
+  "objective": "Write order-88412.txt with every log line whose order= field is exactly 88412, from all files in logs/, oldest first, as plain log lines (no file names in front). Leave every file in logs/ as it is and don't write decompressed copies anywhere.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["zgrep", "bzgrep", "xzgrep", "zcat / bzcat / xzcat", "grep -h", "rotation order", "exact field match"],
+  "module": "module-10-archives-compression",
+  "level": "level-20-zgrep-rotated-logs"
+}

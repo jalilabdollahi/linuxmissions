@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+The error names the key id that signed the repository but is missing on this
+machine. Of the three keyring files, only one actually contains that key: you
+can test each against the repository's signed Release file instead of guessing
+from the file names. Then look at the repository's source line under
+rootfs/etc/apt/sources.list.d/: it has no way yet to say which key to trust for it.

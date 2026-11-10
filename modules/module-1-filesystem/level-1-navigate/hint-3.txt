@@ -1,2 +1,10 @@
-Full path: $SANDBOX/var/app/config/prod/secrets/secret.conf
-Use: cat $SANDBOX/var/app/config/prod/secrets/secret.conf
+From the sandbox root:
+
+  find . -name secret.conf
+      prints the one path that matches: ./var/lib/billing/state/vault/secret.conf
+  cat var/lib/billing/state/vault/secret.conf
+      shows the file; the line you need is access_code=...
+  grep '^access_code=' var/lib/billing/state/vault/secret.conf | cut -d= -f2 > answer.txt
+      grep picks that line, cut keeps the text after '=', > saves it to answer.txt
+
+(Typing the code yourself with echo LM-... > answer.txt works too.)

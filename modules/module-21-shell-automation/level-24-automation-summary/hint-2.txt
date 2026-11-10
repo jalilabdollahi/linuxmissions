@@ -1,1 +1,22 @@
-Use chmod with octal mode 640.
+- Skip non-checks:   [ -f "$check" ] && [ -x "$check" ] || continue
+  (a directory is "executable" too, -x alone is not enough)
+- `timeout N cmd` kills cmd after N seconds and then exits with 124; any
+  other status is cmd's own.
+- Settings with defaults:  CHECK_TIMEOUT="${CHECK_TIMEOUT:-10}"
+- Retry loop:
+    attempt=1
+    while :; do
+      timeout "$CHECK_TIMEOUT" "$check"; rc=$?
+      [ "$rc" -eq 0 ] && break                  # PASS
+      [ "$attempt" -ge 3 ] && break             # give up: FAIL or TIMEOUT
+      sleep $(( RETRY_DELAY * attempt ))        # 1x, then 2x
+      attempt=$((attempt + 1))
+    done
+- Lock without waiting (util-linux flock):
+    exec 9> run_checks.lock
+    flock -n 9 || { echo "already running" >&2; exit 75; }
+  The lock lasts as long as fd 9 is open, i.e. until the script ends.
+- Lines: printf '%s %s %d\n' "$name" "$status" "$attempt". Collect them in a
+  temp file and `mv` it to summary.txt at the end; `exit "$failed"`.
+
+Read more: man timeout, man flock, `help printf`.

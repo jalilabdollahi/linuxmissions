@@ -1,1 +1,12 @@
-Use tar with create, gzip, and file flags.
+Run it and look: ./parse-dsn.sh 'postgres://app:p@ss@db-2:5432/orders'; cat db.env
+
+Everything is empty. Try this at the prompt and think about why:
+  echo "a:b" | IFS=: read -r x y; echo "x=$x"
+Each side of a pipe runs in its own subshell; when that subshell ends, so
+do its variables.
+
+Then the splitting itself: in p@ss@db-2, which @ separates the credentials
+from the host, the first or the last? And for the password: which : matters?
+
+Last: db.env is read with `source`, so its values are parsed as shell code.
+What does `source` make of DB_PASS=pa$$w0rd! or a value with a space?

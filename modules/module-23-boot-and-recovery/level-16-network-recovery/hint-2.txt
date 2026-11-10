@@ -1,1 +1,7 @@
-A du pipeline sorted numerically is a strong fit here.
+  cat ticket.txt ip-o-link.txt
+  cat sysroot/etc/systemd/network/*.network
+  man systemd.network       [Match] Name=, MACAddress=;  [Network] Address=, Gateway=, DNS=
+A /25 covers 128 addresses, a /24 covers 256, a /23 covers 512 and so on: the network starts
+at the address with the host bits set to zero (python3 -c 'import ipaddress; print(ipaddress.ip_interface("10.0.4.7/22").network)'
+does the math). [Match] may use Name= (the interface name) or MACAddress=, and the backup file
+matches the MAC of the old board, so it is as stale as the old name.

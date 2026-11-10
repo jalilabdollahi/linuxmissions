@@ -1,1 +1,10 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- Redirections are processed left to right: `cmd > log 2>&1` sends stdout to the log and
+  then stderr to where stdout points now (the log). `2>&1 > log` does it the other way round.
+- In a crontab an unescaped % ends the command, so write date's format as +\%F.
+- Cron's PATH is only /usr/bin:/bin. A line `PATH=/dir:/usr/bin:/bin` in the crontab sets it
+  for the jobs below it (cron does not expand $SANDBOX or ~ there, spell the path out).
+- cron mails whatever a job still prints. So let the job print one short line only when
+  report.sh fails:   cmd >> log 2>&1 || echo "report failed, see log"
+- MAILTO=ops@example.com goes above the job line.
+Test: cron-run --root . --crontab crontab.txt:reports --from "2026-11-10 06:00" --days 3 --no-periodic
+      (the feed for 2026-11-12 is missing, so that run should fail and mail)

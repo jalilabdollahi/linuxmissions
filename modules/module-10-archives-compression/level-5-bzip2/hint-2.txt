@@ -1,1 +1,5 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  file FILE                   names the real format (gzip, bzip2, ...) from its first bytes
+  tar -cjf NAME.tar.bz2 DIR   j = bzip2 (z would be gzip); overwrites NAME if it exists
+  bzip2 -k FILE               write FILE.bz2 and keep FILE
+  bzip2 -c FILE > OUT.bz2     or: compress to stdout and redirect it wherever you like
+More: man bzip2, man tar

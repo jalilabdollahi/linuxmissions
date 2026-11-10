@@ -1,1 +1,6 @@
-`mkdir -p organized/memory-leaks` followed by `mv inbox/memory-leaks.txt organized/memory-leaks/memory-leaks-notes.txt` is enough.
+- The resident memory of a process is the VmRSS line in /proc/PID/status
+  (in KiB), or `ps -o rss= -p PID`. pgrep -f opt/worker.py lists the four PIDs.
+- Record PID and RSS for all workers into a file, sleep for 10 seconds or more,
+  record again, and subtract: (second - first) / seconds = KiB per second.
+- join file1 file2 pairs the lines by PID; awk does the arithmetic.
+- Tiny differences (a few KiB) are noise: only steady growth is a leak.

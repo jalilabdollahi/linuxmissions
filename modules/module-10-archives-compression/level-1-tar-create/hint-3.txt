@@ -1,1 +1,6 @@
-Example: `mkdir -p organized/tar-create && mv inbox/tar-create.txt organized/tar-create/tar-create-notes.txt`
+  tar -czf release-2.3.tar.gz -C build/dist site
+      create (c) a gzip (z) archive file (f) release-2.3.tar.gz in the current
+      directory; -C build/dist makes tar look for "site" inside build/dist, so
+      the stored names are site/..., including site/.htaccess
+  tar -tzf release-2.3.tar.gz
+      list it: every line starts with site/

@@ -1,16 +1,11 @@
 {
-  "name": "Service Envfiles: Loop Builder",
-  "description": "In the services and logs lab, a task related to Service Envfiles needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named service-envfiles-1.txt through service-envfiles-3.txt with matching numbered content",
+  "name": "Wrong Database",
+  "description": "Config management moved billing to a new database primary (TICKET.txt), but billing.service still connects to the decommissioned pg-legacy-01. The vendor binary takes its settings only from environment variables.",
+  "objective": "Make billing.service run with the DB_HOST and DB_PORT from TICKET.txt, loaded from etc/billing/env, the file config management owns (keep the values there). Don't modify opt/billing/bin/billing-server. `systemctl` and `journalctl` are mocks that treat the sandbox as /: /etc/billing/env is ./etc/billing/env.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Service Envfiles",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "12m",
+  "concepts": ["EnvironmentFile=", "EnvironmentFile=-path (optional)", "EnvironmentFile overrides Environment", "env-file syntax", "systemctl show -p Environment", "daemon-reload"],
   "module": "module-13-services-and-logs",
   "level": "level-14-service-envfiles"
 }

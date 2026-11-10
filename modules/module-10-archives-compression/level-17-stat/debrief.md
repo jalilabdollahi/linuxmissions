@@ -1,17 +1,23 @@
-# Stat: Schedule Entry
+# Time and Permission
 
-## What you practiced
-- This level focused on **Stat** in a safe sandbox.
-- The shortest path usually combines `crontab` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`stat -c '%a %Y'` prints exactly what the manifest stores: the octal mode and
+the mtime as epoch seconds. Without `-L`, stat describes the entry itself, so
+the symlink reports its own (drifted) time. Reading MANIFEST with
+`while read -r mode epoch path` gives the last variable the rest of the line,
+which keeps `acme agent helper` and `Release Notes.txt` in one piece.
+The fix uses `touch -h -d @EPOCH`, which sets the link's own time instead of
+the target's, and skips `chmod` on the link.
 
-## Commands to remember
-```bash
-crontab -l
-printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt
-cat crontab.txt
-```
+## Common mistakes
+- `chmod 777 lib/libacme.so.4` follows the link and makes the real library
+  world-writable, a new drift (and a security hole).
+- `touch -d @N` on the link without `-h` changes the library's mtime.
+- `awk '{print $3}' MANIFEST` cuts paths at the first space.
+- Fixing first and listing later: once fixed, there is nothing left to list.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This mission is about cron field order and exact syntax.
+## Learn next
+`tar` stores modes and mtimes: `tar -xpf` restores modes exactly (default
+for root), and `--preserve-permissions`/`--touch` control it. `find PATH
+-newermt '2026-10-01'` filters by mtime, and on macOS the same stat call is
+`stat -f '%Lp %m'`.

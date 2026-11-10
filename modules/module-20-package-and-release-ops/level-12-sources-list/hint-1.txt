@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+Read the exact W: and E: lines apt prints: they name the file and line of each
+problem. Two different things are wrong. One is a repository listed twice (where,
+and in which formats?). The other is a suite name that does not exist on the
+mirror: compare the names in the sources with the directories under repos/ubuntu/dists/.
+Then look at how the vendor repository is written compared with the Ubuntu one.

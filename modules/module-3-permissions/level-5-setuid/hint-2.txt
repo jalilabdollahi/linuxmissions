@@ -1,2 +1,8 @@
-Find SUID or SGID (4000 or 2000):
-find $SANDBOX -perm /6000
+find can test permission bits with -perm:
+  -perm -4000      the SUID bit is set (other bits don't matter)
+  -perm -2000      the SGID bit is set
+  \( A -o B \)     A or B   (-o is "or"; the brackets need a backslash)
+  -type f          regular files only, no directories
+GNU find also accepts -perm /6000 ("any of these bits"); the -o form works
+everywhere, macOS included. Redirect find's output into the answer file.
+More: man find (search for -perm)

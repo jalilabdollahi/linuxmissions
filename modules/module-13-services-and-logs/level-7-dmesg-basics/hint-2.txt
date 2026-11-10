@@ -1,1 +1,8 @@
-Save each result into its own file.
+  grep 'segfault at' captures/dmesg.txt           the crash lines
+  awk '$1 == "btime" { print $2 }' captures/proc-stat.txt   boot time, seconds since 1970 (UTC)
+  date -u -d @1794100000 +%Y-%m-%dT%H:%M:%SZ      turn epoch seconds into a UTC timestamp
+One way to pull the three parts out of each crash line, whatever the padding, is sed -E with groups:
+  sed -nE 's/^\[ *([0-9]+)\.[0-9]+\] ([^[]+)\[[0-9]+\]: segfault at .* in ([^[]+)\[.*/\1 \2 \3/p'
+That prints "seconds binary library"; then add btime to the seconds in a while read loop or awk.
+On a live system `dmesg -T` does this conversion for you (and can drift after suspend).
+Read more: man dmesg, man proc (/proc/stat btime), man date

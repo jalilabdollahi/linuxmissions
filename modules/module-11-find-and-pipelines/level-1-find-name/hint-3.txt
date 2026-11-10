@@ -1,1 +1,4 @@
-Example: `mkdir -p organized/find-name && mv inbox/find-name.txt organized/find-name/find-name-notes.txt`
+  find share -type f -iname '*invoice*.pdf'
+      preview: files under share/ whose name contains invoice and ends in .pdf, any case (10 of them)
+  find share -type f -iname '*invoice*.pdf' > invoices.txt
+      the same search, saved to invoices.txt

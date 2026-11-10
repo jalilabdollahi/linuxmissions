@@ -1,1 +1,17 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+: > dormant.txt
+for u in $(awk -F: '$3 >= 1000 && $3 <= 59999 { print $1 }' etc/passwd); do
+  latest=$(grep "^$u " lastlog.txt | cut -c44-)
+  if [ -z "$latest" ] || [ "$latest" = '**Never logged in**' ]; then
+    echo "$u never" >> dormant.txt
+  else
+    d=$(date -u -d "$latest" +%F)
+    [[ "$d" > 2026-08-12 ]] || echo "$u $d" >> dormant.txt
+  fi
+done
+cat dormant.txt
+
+- awk ... etc/passwd   the regular accounts (UID 1000-59999)
+- grep "^$u " | cut -c44-   that user's row, then the fixed-width Latest column
+- empty or **Never logged in**   never logged in (an account lastlog doesn't list gives an empty result)
+- date -u -d ... +%F   converts the time and offset to the UTC date, as YYYY-MM-DD
+- [[ "$d" > 2026-08-12 ]] || echo ...   keep the date only when it is on or before the cut-off

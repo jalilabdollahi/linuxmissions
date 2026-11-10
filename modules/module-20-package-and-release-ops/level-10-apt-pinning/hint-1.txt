@@ -1,0 +1,4 @@
+Backports is a NotAutomatic repository: apt gives it priority 100, so nothing is
+chosen from it by accident. To get one package from it you need a rule that raises
+the priority of that package, in that repository only. Which fields identify the
+repository in apt's eyes, and what does apt itself call them?

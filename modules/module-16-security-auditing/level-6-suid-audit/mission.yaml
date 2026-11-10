@@ -1,15 +1,11 @@
 {
-  "name": "Suid Audit: Config Rewrite",
-  "description": "In the security auditing lab, a task related to Suid Audit needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in suid-audit.conf and save the fixed result to fixed.conf",
+  "name": "Who Gave That Root?",
+  "description": "A hardened image was delivered with a baseline of the setuid and setgid programs the vendor expects. Someone suspects that other programs on the image can run with elevated rights. The image's file system is unpacked under rootfs/.",
+  "objective": "Find every file under rootfs/ that has the setuid or setgid bit and is not listed in suid-baseline.txt (the baseline paths are written as seen from inside the image, starting with /). Write those paths in the same style, one per line, to unexpected.txt, and remove both special bits from exactly those files without changing their other permissions. Files in the baseline must keep their bits.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Suid Audit",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["setuid", "setgid", "find -perm /6000", "baseline comparison", "chmod u-s,g-s"],
   "module": "module-16-security-auditing",
   "level": "level-6-suid-audit"
 }

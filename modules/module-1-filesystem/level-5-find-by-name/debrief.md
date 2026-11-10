@@ -1,14 +1,16 @@
 # Needle in a Haystack
 
-## What you practiced
-- `find` with `-name` does shell glob matching (not regex)
-- `>` redirects stdout to a file (overwrites); `>>` appends
-- Combining `find` output with redirection is a core shell pattern
+## Why it works
+`find` walks the whole tree, hidden folders included, and prints one path per
+line, which is exactly the format `>` writes to `found.txt`. `-name '*.py'`
+matches names that end in `.py` (so not `setup.py.bak` or `parser.pyc`), and
+`-type f` drops `tools.py`, which is a directory.
 
-## Commands to remember
-```bash
-find /path -name "*.py" > list.txt      # save results to file
-find /path -name "*.py" | wc -l         # count matches
-find /path -iname "*.PY"                # case-insensitive
-find /path -name "*.py" -not -path "*/venv/*"  # exclude venv
-```
+## Common mistakes
+- Leaving the pattern unquoted: if the current folder has a .py file, the shell
+  expands `*.py` to that name and find searches for only that one file.
+- `ls -R | grep .py` misses hidden folders and also matches `.pyc` (the `.` in grep means "any character").
+
+## Learn next
+`find . -name '*.py' -not -path '*/.venv/*'` skips the virtualenv, and
+`find . -name '*.py' | wc -l` counts the results. `-iname` ignores case.

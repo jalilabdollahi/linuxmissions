@@ -1,1 +1,6 @@
-A du pipeline sorted numerically is a strong fit here.
+grep -nE '^[0-9a-f]+ feat' commits.txt       a commit line is "hash type(scope)!: text"; "!" before the colon marks a breaking change
+grep -n '^BREAKING CHANGE:' commits.txt      the other spelling: a footer line at the start of a body line
+Major bump resets minor and patch to 0, minor bump resets patch.
+sed -i 's/old/new/' package.json              edit the one field in place
+For the order, sort -V is close: semver puts 1.0.0-rc.1 BEFORE 1.0.0 and compares rc.10 after rc.2.
+Making the prerelease dash a "~" before sorting (and undoing it after) fixes the first problem.   More: man sort, semver.org

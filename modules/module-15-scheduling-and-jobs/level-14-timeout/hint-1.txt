@@ -1,1 +1,7 @@
-A short for-loop is the cleanest option here.
+Try a few hosts by hand: ./healthcheck.sh web-01.prod; echo "exit $?"
+Some answer at once, some fail at once, some never return (Ctrl-C stops
+them). You need a way to start a command with a deadline, and a way to tell
+afterwards whether it finished on its own or was stopped. Its exit status
+is the place to look.
+
+Afterwards, check that nothing was left behind: ps -ef | grep healthcheck

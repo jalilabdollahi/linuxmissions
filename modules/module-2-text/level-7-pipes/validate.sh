@@ -1,22 +1,46 @@
 #!/bin/bash
+# $1 = sandbox path
 SANDBOX="$1"
-if [ ! -f "$SANDBOX/post_ips.txt" ]; then
-  echo "❌ FAIL: post_ips.txt not found"; exit 1
+cd "$SANDBOX" || exit 1
+
+if [ "$(cksum < access.log 2>/dev/null)" != "3255063544 176375" ]; then
+  echo "❌ access.log was changed or removed; type 'reset' to restore it"
+  exit 1
 fi
-# Should contain 3 IPs (all 3 sent POSTs), highest count first
-LINES=$(wc -l < "$SANDBOX/post_ips.txt")
-if [ "$LINES" -lt 3 ]; then
-  echo "❌ FAIL: post_ips.txt has $LINES lines, expected 3 IPs"; exit 1
+if [ ! -f post_ips.txt ]; then
+  echo "❌ post_ips.txt does not exist yet"
+  exit 1
 fi
-# Check no GET lines slipped in
-if grep -q "GET" "$SANDBOX/post_ips.txt"; then
-  echo "❌ FAIL: post_ips.txt contains GET entries"; exit 1
+
+bad=$(tr -d '\r' < post_ips.txt | awk 'NF && !(NF == 2 && $1 ~ /^[0-9]+$/) {print NR; exit}')
+if [ -n "$bad" ]; then
+  echo "❌ line $bad of post_ips.txt is not in the form '<count> <ip>'"
+  exit 1
 fi
-# Top IP should have count 4 (10.0.1.2)
-FIRST_COUNT=$(head -1 "$SANDBOX/post_ips.txt" | awk '{print $1}')
-if [ "$FIRST_COUNT" = "4" ]; then
-  echo "✅ PASS: post_ips.txt correctly ranked (10.0.1.2 has 4 POSTs on top)"
-  exit 0
+dup=$(tr -d '\r' < post_ips.txt | awk 'NF {print $2}' | sort | uniq -d | head -n 1)
+if [ -n "$dup" ]; then
+  echo "❌ $dup appears more than once: sort before uniq -c"
+  exit 1
 fi
-echo "❌ FAIL: Top count should be 4 (10.0.1.2), got: $FIRST_COUNT"
-exit 1
+
+# Real POST counts: field 6 of the combined format is the quote + method
+real=$(awk '$6 == "\"POST" {print $1}' access.log | sort | uniq -c | awk '{print $2, $1}' | sort)
+mine=$(tr -d '\r' < post_ips.txt | awk 'NF {print $2, $1}' | sort)
+if [ "$real" != "$mine" ]; then
+  extra=$(comm -13 <(printf '%s\n' "$real" | cut -d' ' -f1) <(printf '%s\n' "$mine" | cut -d' ' -f1) | grep -c .)
+  missing=$(comm -23 <(printf '%s\n' "$real" | cut -d' ' -f1) <(printf '%s\n' "$mine" | cut -d' ' -f1) | grep -c .)
+  if [ "$extra" -gt 0 ]; then
+    echo "❌ post_ips.txt lists $extra client(s) that never sent a POST (does POST appear elsewhere in some lines?)"
+  elif [ "$missing" -gt 0 ]; then
+    echo "❌ post_ips.txt is missing $missing client(s) that sent POST requests"
+  else
+    echo "❌ the right clients are listed, but some counts are off (count only the request method, not URLs or other text)"
+  fi
+  exit 1
+fi
+if ! tr -d '\r' < post_ips.txt | awk 'NF {print $1}' | sort -c -n -r 2>/dev/null; then
+  echo "❌ the counts are right, but the list is not ranked highest first"
+  exit 1
+fi
+echo "✅ post_ips.txt ranks all $(printf '%s\n' "$real" | grep -c .) POST clients correctly"
+exit 0

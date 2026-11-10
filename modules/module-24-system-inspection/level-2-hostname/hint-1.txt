@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in hostname.log.
+Two questions: what name does this machine have right now, and which
+line of agent.conf is the one the agent actually reads? Look at the whole
+file before you edit it: more than one line mentions "hostname", and a line
+starting with # is only a comment.

@@ -1,11 +1,11 @@
 {
   "name": "Spot the Difference",
-  "description": "Two versions of a config file exist. You need to see what changed between them and document the differences.",
-  "objective": "Compare v1.conf and v2.conf using diff and save the output to changes.diff",
-  "xp": 120,
+  "description": "Release 4.2 changes the shop-api config. Before the change goes out, the reviewers want it as a patch they can read and apply with the patch tool on the servers that still run v1.conf.",
+  "objective": "Save the differences from v1.conf (old) to v2.conf (new) as a unified diff in changes.diff, so that applying changes.diff to v1.conf produces v2.conf. Leave v1.conf and v2.conf unchanged.",
+  "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": ["diff", "patch", "-u", "unified format"],
+  "expected_time": "6m",
+  "concepts": ["diff", "diff -u", "unified format", "patch"],
   "module": "module-2-text",
   "level": "level-8-diff"
 }

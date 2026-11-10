@@ -1,2 +1,4 @@
-Alternative with xargs (useful when -delete isn't available):
-find $SANDBOX -name "*.tmp" | xargs rm -f
+  find . -type f -name '*.tmp'
+      preview: every regular file below . whose name ends in .tmp (12 of them)
+  find . -type f -name '*.tmp' -delete
+      the same search, with -delete removing each match

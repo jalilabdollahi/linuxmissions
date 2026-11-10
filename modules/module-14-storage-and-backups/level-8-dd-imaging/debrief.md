@@ -1,17 +1,18 @@
-# Dd Imaging: Cleanup Sweep
+# Cut Out Partition 2
 
-## What you practiced
-- This level focused on **Dd Imaging** in a safe sandbox.
-- The shortest path usually combines `find` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A partition is just a range of sectors in the disk image. `sfdisk -d` gives the first sector and the
+length of each in 512-byte sectors. `dd` copies in blocks of `bs` bytes: `skip=` blocks are skipped on the
+input and `count=` blocks are copied. With `bs=512` the numbers from the table can be used unchanged.
+`sha256sum -c` then verifies the result against the vendor's file.
 
-## Commands to remember
-```bash
-find dir -name '*.tmp'
-find dir -name '*.tmp' -delete
-find dir -type f -exec rm {} \;
-```
+## Common mistakes
+- `bs=1M skip=<start sector>`: `skip` counts blocks, so this skips that many megabytes (and a partition
+  does not have to start on a megabyte).
+- Forgetting `count`, so dd copies everything after the start of the partition, including partition 3.
+- Using a big `bs` (for speed) together with sector numbers from the table. If you want a big block size,
+  use `iflag=skip_bytes,count_bytes` and give skip and count in bytes (sectors times 512).
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use a targeted file search so you do not remove the wrong files.
+## Next step
+`dd status=progress` shows progress, `losetup -P` (root) exposes the partitions of an image as devices, and
+`partx --show disk.img` or `fdisk -l` lists them. `ddrescue` is the tool for failing disks.

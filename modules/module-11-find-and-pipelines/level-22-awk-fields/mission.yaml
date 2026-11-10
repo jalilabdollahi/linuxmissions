@@ -1,15 +1,11 @@
 {
-  "name": "Awk Fields: Field Extract",
-  "description": "In the search and pipelines lab, a task related to Awk Fields needs cleanup before the handoff.",
-  "objective": "Extract the second column from awk-fields-report.csv into owners.txt",
+  "name": "Logfmt To CSV",
+  "description": "The new tracing dashboard imports CSV, but the shop's services log in logfmt: app.log has lines of key=value pairs such as ts=... level=info svc=api msg=\"request done\" dur=850ms, with the keys in any order. Durations are written in microseconds (us), milliseconds (ms) or seconds (s), and some lines have no dur at all.",
+  "objective": "Write slow.csv: the header line ts,svc,dur_ms, then one line ts,svc,dur_ms for every log line whose dur= value is more than 500 milliseconds, in the order of app.log. ts and svc are copied from the ts= and svc= keys; dur_ms is the duration in milliseconds as a whole number, rounded (1.2s becomes 1200). Other keys that merely contain those names (db_dur, upstream_svc) are not the ones you want.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Awk Fields",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "20m",
+  "concepts": ["awk for loop over NF", "split / index + substr", "exact key matching", "unit conversion", "printf %.0f rounding"],
   "module": "module-11-find-and-pipelines",
   "level": "level-22-awk-fields"
 }

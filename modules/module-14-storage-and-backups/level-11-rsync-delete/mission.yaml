@@ -1,15 +1,11 @@
 {
-  "name": "Rsync Delete: Restore Drill",
-  "description": "In the storage and backups lab, a task related to Rsync Delete needs cleanup before the handoff.",
-  "objective": "Extract rsync-delete-restore.tar.gz so the restored/rsync-delete directory appears in the sandbox",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Rsync Delete",
-    "tar",
-    "archive extraction"
-  ],
+  "name": "Mirror Without Mercy",
+  "description": "The public mirror still serves releases that were pulled at the source. It must become an exact copy of releases/, but the mirror admin keeps private notes inside it.",
+  "objective": "Make mirror/ an exact copy of releases/ (removing everything that no longer exists there, updating changed files and links) while mirror/.local-notes/ stays untouched. Before changing anything, save a dry run in plan.txt containing exactly the \"*deleting\" lines that the real run carries out, and nothing else.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["rsync --delete", "protecting paths with --exclude or filter rules", "dry run -n -i", "trailing slash", "--delete-excluded"],
   "module": "module-14-storage-and-backups",
   "level": "level-11-rsync-delete"
 }

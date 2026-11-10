@@ -1,15 +1,11 @@
 {
-  "name": "Seq Command: Noise Dedup",
-  "description": "In the linux toolbelt lab, a task related to Seq Command needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from seq-command-raw.txt with sorted unique values",
+  "name": "Labels for the B-Side PDUs",
+  "description": "The datacenter team is printing labels for the second power feed. Each PDU outlet gets a label naming its rack position, and the label printer sorts them as text, so the numbers must all have two digits.",
+  "objective": "Read the rack and range in label-request.txt and write labels.txt with one label per line, in the form rack-<letter>-<NN>, for every second position (the start, then every 2nd after it) up to the last one, numbers always two digits, e.g. rack-a-02. No other lines.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Seq Command",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "10m",
+  "concepts": ["seq FIRST INCREMENT LAST", "seq -f format", "seq -w", "zero padding"],
   "module": "module-25-linux-toolbelt",
   "level": "level-4-seq-command"
 }

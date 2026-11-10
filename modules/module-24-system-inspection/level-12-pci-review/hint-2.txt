@@ -1,1 +1,8 @@
-Use chmod with octal mode 640.
+In `lspci -nnk` the first bracket group `[0200]` is the PCI class (01xx =
+storage, 02xx = network), the last one `[8086:158b]` is vendor:device.
+`Kernel driver in use:` exists only when a driver is bound;
+`Kernel modules:` lists the modules that could handle the device.
+awk can read blank-line-separated records with `-v RS=` (paragraph mode)
+and `-F'\n'` (each line is a field). Within a record test the header for the
+class, test the other lines for the driver, and print the pieces you need;
+a loop over the fields works well, and sub() can cut text out of a line.

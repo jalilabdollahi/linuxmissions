@@ -1,11 +1,11 @@
 {
   "name": "New Hire",
-  "description": "A mock user database in the sandbox needs a new developer account. Use the provided helpers to add the user and put them in the docker group.",
-  "objective": "Use the sandbox helpers to create `devuser` and add them to the `docker` group",
-  "xp": 220,
+  "description": "Dana Kim joins the platform team today and needs a login on the build server. Sam, already on the team, now also needs to run containers.",
+  "objective": "Create the user dana with a home directory /home/dana built from /etc/skel, login shell /bin/bash, full name \"Dana Kim\" and supplementary groups dev and docker. Add the existing user sam to docker without removing any of his current groups. The sandbox has real-format etc/passwd and etc/group files and mock ./useradd, ./usermod, ./userdel, ./id and ./groups tools that edit them like the real ones (no root needed).",
+  "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "9m",
-  "concepts": ["useradd", "usermod -aG", "groups", "id"],
+  "expected_time": "10m",
+  "concepts": ["useradd -m -s -c -G", "usermod -aG", "/etc/passwd", "/etc/group", "id"],
   "module": "module-7-sysadmin",
   "level": "level-4-users"
 }

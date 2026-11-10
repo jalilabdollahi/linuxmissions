@@ -1,1 +1,8 @@
-Use `chmod +x jobs/yaml-basics.sh` and then execute it.
+Get the parser's complaint with:
+  python3 -c 'import yaml; yaml.safe_load(open("compose.yml"))'
+and show invisible characters with `cat -A compose.yml` (a tab shows as ^I).
+YAML forbids tabs for indentation, and all keys of one mapping must start in the
+same column. For the version bump, use a sed address that selects only the
+worker line (for example a pattern that contains the service's image name), not
+a global s/2.7.0/2.7.1/. Run the parser again after every edit.
+More: man sed, man cat

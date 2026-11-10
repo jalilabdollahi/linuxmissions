@@ -1,1 +1,5 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  seq FIRST INCREMENT LAST     counts from FIRST to LAST in steps of INCREMENT
+  seq -f FORMAT ...            printf-style format for each number (%g, %02g)
+  seq -w ...                   pad with zeros to the same width
+Putting text in the format (`-f 'name-%02g'`) builds the whole label. Look at
+what `-w` would do if the last number had three digits. More: man seq

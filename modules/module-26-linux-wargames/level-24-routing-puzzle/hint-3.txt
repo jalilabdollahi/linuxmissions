@@ -1,1 +1,10 @@
-Example: `chmod 640 routing-puzzle.sh`
+Remove the stale host rule, give the backup and dc tables the routes they lack (including the storage /24 in both), and break the default-route tie:
+  ip rule del priority 50
+  ip route add 10.20.0.0/16 via 10.9.255.1 dev eth2 table backup
+  ip route add 10.20.8.0/24 via 10.9.255.2 dev eth2 table backup
+  ip route add 10.20.8.0/24 via 10.20.255.2 dev eth1 table dc
+  ip route add 10.0.0.0/24 dev eth3 table backup
+  ip route del default via 10.20.255.1 dev eth1 metric 100
+  ip route add default via 10.20.255.1 dev eth1 metric 300
+  ip route get 10.20.8.15 from 10.9.0.5
+Rule 50 was an old per-host exception that beat the backup rule; the backup table needs the /16 and the more specific storage /24 on eth2; the dc rule (200) is consulted before main, so the storage /24 must exist in the dc table too; the backup table's own default would otherwise swallow traffic for the management network, so it needs the directly connected 10.0.0.0/24 as well; the two defaults had the same metric, so the datacenter default is moved to metric 300 and the uplink wins.

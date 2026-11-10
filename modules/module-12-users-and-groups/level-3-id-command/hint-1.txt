@@ -1,1 +1,7 @@
-Count matching lines instead of copying them out by hand.
+Read the five captures: `id` prints the user (uid=), the PRIMARY group (gid=) and
+every group the user is in (groups=), each as NUMBER(name).
+On which hosts does none of them name exactly www-data? A primary group gives
+the same access as a supplementary one, and a group whose name merely starts
+with www-data is a different group.
+For me.txt: the same command, run on your own account, has options that print
+only the numbers.

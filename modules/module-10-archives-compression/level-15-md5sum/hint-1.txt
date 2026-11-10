@@ -1,1 +1,5 @@
-This is a numeric aggregation task.
+Names tell you nothing here ("IMG_0412 (1).jpg" isn't necessarily a copy), and
+neither do sizes: many different pictures have exactly the same size. Two
+files are copies only when their bytes are the same, and a hash turns "same
+bytes" into "same short string". Hash everything, then look at which hashes
+appear more than once. Watch out: many names contain spaces and quotes.

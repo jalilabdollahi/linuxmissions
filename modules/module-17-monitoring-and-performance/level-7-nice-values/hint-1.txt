@@ -1,1 +1,4 @@
-Use one command for the beginning of the file and another for the end.
+Two things have to line up: which processes are batch workers, and what their
+niceness is right now. A name can be misleading: decide by the script a process
+runs, as the objective says, not by a word you expect in the name.
+Remember that a lower niceness number means a higher priority.

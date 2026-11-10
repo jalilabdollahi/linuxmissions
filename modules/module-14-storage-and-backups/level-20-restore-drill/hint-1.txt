@@ -1,1 +1,3 @@
-This is a sorting task followed by deduplication.
+Before extracting anything, ask what a plain extract does when a file of the same name is already there. Is that what you want for the files people edited today?
+You want only the files that are gone. Can the extraction tool skip files that already exist, or can you restore into a scratch place and copy over only what is missing?
+After the restore, compare modes and modification times with what the archive says (`tar -tvzf` shows them). A normal user's umask can change permissions during extraction unless you ask otherwise.

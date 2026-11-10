@@ -1,4 +1,11 @@
-Pass the service name into the function:
-deploy_service api
-deploy_service web
-deploy_service worker
+- Define a function before you call it:
+    deploy_service() {
+      ...commands...
+    }
+- Call it like a command: `deploy_service api`. Inside the function, `$1` is `api`.
+- `local name="$1"` gives the value a readable name that exists only inside the function.
+- Replace the three blocks with one function and three calls.
+
+To test the function on its own: `source deploy.sh` loads it into your shell (and runs the deploy once), then `deploy_service web`.
+
+Read more: `help local`, and `man bash`, section "FUNCTIONS".

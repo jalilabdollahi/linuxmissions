@@ -1,1 +1,9 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' uptime-load.conf > fixed.conf`
+sed 's/: .*load average: /\t/; s/, /\t/g' uptime.txt | sort > load.tsv
+sort inventory.tsv > cpus.tsv
+join -t "$(printf '\t')" load.tsv cpus.tsv | awk -F'\t' '$3 / $5 > 1.0 {print $1}' > overloaded.txt
+cat overloaded.txt
+
+- the sed          keeps host, then 1-, 5-, 15-minute load as tab-separated columns, whatever the uptime part looked like
+- sort > load.tsv / cpus.tsv   join needs both files sorted on the host name
+- join -t TAB      appends the nproc of each host: host, l1, l5, l15, nproc
+- awk '$3 / $5 > 1.0'  5-minute load divided by CPUs, strictly above 1.0; print the host

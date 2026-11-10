@@ -1,0 +1,12 @@
+openssl reads the first certificate of a file:
+  openssl x509 -in FILE -noout -subject -issuer -dates -ext subjectAltName
+  openssl x509 -in FILE -noout -checkend 0                 exit 1 if it has expired
+  openssl x509 -in FILE -noout -checkhost HOSTNAME         "does match" / "does NOT match" (uses the SAN)
+  openssl verify -CAfile certs/internal-root-ca.pem -untrusted FILE FILE
+      -CAfile    the root you trust
+      -untrusted extra certificates the server sent along (the intermediate); they help build the chain but aren't trusted on their own
+      error 20 "unable to get local issuer certificate" = a link of the chain is missing
+      error 10 "certificate has expired"
+
+How many certificates are in a file?  grep -c 'BEGIN CERTIFICATE' FILE
+Read more: man openssl-x509, man openssl-verify.

@@ -1,15 +1,11 @@
 {
-  "name": "Loops While: Cleanup Sweep",
-  "description": "In the shell automation lab, a task related to Loops While needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/loops-while and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Loops While",
-    "find",
-    "rm"
-  ],
+  "name": "Roll Call",
+  "description": "check_hosts.sh is supposed to log in to every host in inventory.txt and record its uptime, but status.txt only ever contains web-01. ./tools/remote is this lab's stand-in for ssh and behaves like it, and the inventory comes straight from the CMDB export.",
+  "objective": "Fix check_hosts.sh so that `./check_hosts.sh INVENTORY` calls ./tools/remote once for every host in INVENTORY, in order, and writes status.txt as its header describes (`host: output` or `host: UNREACHABLE`, one line per host, no stray characters). Skip comments and empty lines, cope with Windows line endings, and include the last host even when the file does not end with a newline. It is tested with another inventory as well.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["while read -r", "commands that read stdin inside a loop", "< /dev/null / ssh -n / read -u", "CRLF (\\r) removal", "last line without newline"],
   "module": "module-21-shell-automation",
   "level": "level-8-loops-while"
 }

@@ -1,1 +1,17 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+cat > logrotate.conf <<CONF
+$SANDBOX/app.log {
+    rotate 5
+    compress
+    delaycompress
+    copytruncate
+    missingok
+}
+CONF
+logrotate -d -s logrotate.state logrotate.conf
+logrotate -f -s logrotate.state logrotate.conf
+
+- cat > logrotate.conf <<CONF   writes the config; the unquoted CONF lets the shell fill in $SANDBOX
+- rotate 5 / compress / delaycompress   five old logs, gzipped, except the newest
+- copytruncate   copies app.log to app.log.1 and truncates the original: the app keeps writing to app.log
+- -d   dry run, only shows the plan
+- -f -s logrotate.state   force the rotation now and record it in a state file we may write

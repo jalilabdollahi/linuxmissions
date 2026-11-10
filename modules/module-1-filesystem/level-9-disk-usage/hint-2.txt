@@ -1,2 +1,7 @@
-Or use find with -printf for a cleaner sort:
-find $SANDBOX -type f -printf "%s %p\n" | sort -rn | head -1
+  du -k FILE...              disk usage in KB, printed as "size<TAB>path"
+  find . -type f -exec du -k {} +    run du on every regular file in the tree
+  sort -n                    sort numerically, smallest first (-r for largest first)
+  tail -1 / head -1          keep the last / first line
+  cut -f2                    keep the second tab-separated field (the path)
+ls -lS sorts a single folder by size, but it does not look inside subfolders.
+More: man du, man sort

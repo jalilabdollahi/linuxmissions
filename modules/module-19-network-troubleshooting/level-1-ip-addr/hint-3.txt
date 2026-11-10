@@ -1,1 +1,15 @@
-Example: `mkdir -p organized/ip-addr && mv inbox/ip-addr.txt organized/ip-addr/ip-addr-notes.txt`
+Type these at the prompt:
+
+line=$(grep -E 'inet 10\.20\.[0-3]\.' ip-addr.txt)
+iface=$(echo "$line" | awk '{print $NF}')
+addr=$(echo "$line" | awk '{print $2}' | cut -d/ -f1)
+state=$(grep -E "^[0-9]+: $iface[@:]" ip-addr.txt | sed 's/.* state \([A-Z]*\) .*/\1/')
+printf 'IFACE=%s\nADDR=%s\nSTATE=%s\n' "$iface" "$addr" "$state" > db-iface.env
+
+- grep -E 'inet 10\.20\.[0-3]\.'    the inet line in 10.20.0.0/22 (third octet 0-3; 10.20.4.x is the next /22)
+- awk '{print $NF}'                  the last word of that line: the interface label
+- awk '{print $2}' | cut -d/ -f1     the address without /22
+- grep "^[0-9]+: $iface[@:]"         that interface's own header line (its name ends with @ or :)
+- sed 's/.* state \([A-Z]*\) .*/\1/' keep only the word after "state"
+
+Check it: cat db-iface.env

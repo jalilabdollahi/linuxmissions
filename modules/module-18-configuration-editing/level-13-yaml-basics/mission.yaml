@@ -1,15 +1,11 @@
 {
-  "name": "Yaml Basics: Script Kickoff",
-  "description": "In the configuration editing lab, a task related to Yaml Basics needs cleanup before the handoff.",
-  "objective": "Make jobs/yaml-basics.sh executable, run it, and create the token file it writes",
+  "name": "Compose After the Hotfix",
+  "description": "A late-night hotfix left compose.yml unparsable, so the stack will not come up, and the release that is going out tonight needs a new worker image.",
+  "objective": "Repair compose.yml so that it parses as YAML, and bump only the worker service's image to tag 2.7.1. The api service stays on 2.7.0, and every other key, value and comment must stay exactly as it is.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Yaml Basics",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "15m",
+  "concepts": ["YAML indentation", "tabs are forbidden in YAML", "mappings", "minimal edits"],
   "module": "module-18-configuration-editing",
   "level": "level-13-yaml-basics"
 }

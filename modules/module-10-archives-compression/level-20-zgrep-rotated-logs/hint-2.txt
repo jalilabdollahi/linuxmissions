@@ -1,0 +1,9 @@
+  zgrep PATTERN FILE...      grep inside gzip files (plain files work too)
+  bzgrep / xzgrep            the same for bzip2 / xz; xzgrep also reads .gz and .bz2 by their suffix
+  zcat / bzcat / xzcat FILE  decompress to stdout only; nothing is written to disk
+  grep -h                    don't print file names in front of the lines
+  grep -E 'order=88412( |$)' the value must end there (or use grep -w 'order=88412')
+  for i in $(seq 14 -1 2); do ... logs/app.log.$i.* ; done
+                             visit the rotations oldest first, whatever their extension
+Careful: zgrep doesn't fail on .bz2 or .xz files, it just finds nothing in them.
+More: man zgrep, man xzgrep

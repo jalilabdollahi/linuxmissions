@@ -1,1 +1,6 @@
-Use one command for the beginning of the file and another for the end.
+The month a log belongs to is in its name: app-2026-09-30.log is a September
+log. Look at `ls -l logs | grep -- -09-30` though: the date ls shows is when
+the file was last written, which for the last day of a month is already the
+next month. So pick files by name, not with find -newermt or by date in ls.
+Six months means six archives: a loop saves typing. Delete a month's logs only
+after its archive tested fine.

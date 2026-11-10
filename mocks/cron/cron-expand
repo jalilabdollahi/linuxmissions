@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""cron-expand: list when crontab lines fire (LinuxMissions helper).
+
+  cron-expand [options] [FILE | -]
+  cron-expand [options] -e 'LINE' [-e 'LINE' ...]
+
+Same parser and semantics as cron (see cronlib.py). Prints one line per run,
+ordered by time: "YYYY-MM-DD HH:MM<TAB>LINENO<TAB>COMMAND". LINENO is the
+line in FILE, or the position of the -e argument (1, 2, ...).
+
+  --system            lines carry a user field (/etc/crontab, /etc/cron.d)
+  --from TIME         window start, inclusive (default LM_CRON_NOW or now)
+  --to TIME           window end, exclusive
+  --days N            window length when --to is not given (default 1)
+  --format FMT        strftime format of the time column (default %Y-%m-%d %H:%M)
+  --times-only        print only the time column
+  --count             print "RUNS<TAB>LINENO<TAB>COMMAND" per job line instead
+  --json              one JSON object per run (time, line, user, schedule,
+                      command, stdin) instead of text
+  --check             only check the syntax, like `crontab -n` (exit 1 on errors)
+
+Exit status 1 if the input has an error that would make crontab refuse it.
+@reboot lines never fire inside a window.
+"""
+import argparse
+import datetime as dt
+import json
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import cronlib  # noqa: E402
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(prog="cron-expand", description="List when crontab lines fire.")
+    ap.add_argument("file", nargs="?")
+    ap.add_argument("-e", "--entry", action="append", default=[])
+    ap.add_argument("--system", action="store_true")
+    ap.add_argument("--from", dest="start")
+    ap.add_argument("--to")
+    ap.add_argument("--days", type=float, default=1)
+    ap.add_argument("--format", default="%Y-%m-%d %H:%M")
+    ap.add_argument("--times-only", action="store_true")
+    ap.add_argument("--count", action="store_true")
+    ap.add_argument("--json", action="store_true")
+    ap.add_argument("--check", action="store_true")
+    args = ap.parse_args(argv)
+
+    entries = []
+    if args.entry:
+        if args.file:
+            ap.error("give either FILE or -e LINE, not both")
+        for n, line in enumerate(args.entry, 1):
+            tab = cronlib.parse_crontab(line.rstrip("\n") + "\n", system=args.system, filename=f"-e {n}")
+            if tab.errors:
+                for msg in tab.errors:
+                    print(msg, file=sys.stderr)
+                return 1
+            for e in tab.entries:
+                e.lineno = n
+                entries.append(e)
+    else:
+        name = args.file or "-"
+        try:
+            if name == "-":
+                text = sys.stdin.buffer.read().decode("utf-8", "surrogateescape")
+            else:
+                with open(name, "rb") as f:
+                    text = f.read().decode("utf-8", "surrogateescape")
+        except OSError as exc:
+            print(f"cron-expand: {name}: {exc.strerror}", file=sys.stderr)
+            return 1
+        problems = cronlib.check_install(text, name, system=args.system)
+        if problems:
+            for msg in problems:
+                print(msg, file=sys.stderr)
+            return 1
+        entries = cronlib.parse_crontab(text, system=args.system, filename=name).entries
+    if args.check:
+        print("The syntax of the crontab file was successfully checked.", file=sys.stderr)
+        return 0
+
+    try:
+        start = cronlib.parse_time(args.start or os.environ.get("LM_CRON_NOW") or "now")
+        end = cronlib.parse_time(args.to) if args.to else start + dt.timedelta(days=args.days)
+    except ValueError as exc:
+        ap.error(str(exc))
+
+    runs = cronlib.expand(entries, start, end)
+    if args.count:
+        counts = {}
+        for _, e in runs:
+            counts[id(e)] = counts.get(id(e), 0) + 1
+        for e in entries:
+            print(f"{counts.get(id(e), 0)}\t{e.lineno}\t{e.command}")
+        return 0
+    for t, e in runs:
+        if args.json:
+            cmd, stdin = e.split()
+            print(json.dumps({"time": t.strftime("%Y-%m-%d %H:%M"), "line": e.lineno, "user": e.user,
+                              "schedule": e.schedule, "command": cmd, "stdin": stdin}))
+        elif args.times_only:
+            print(t.strftime(args.format))
+        else:
+            print(f"{t.strftime(args.format)}\t{e.lineno}\t{e.command}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

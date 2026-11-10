@@ -1,17 +1,13 @@
-# Disk Hotspot: Capacity Report
+## What you did
 
-## What you practiced
-- This level focused on **Disk Hotspot** in a safe sandbox.
-- The shortest path usually combines `du` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+You could not tell the workers apart by name or command line, so you asked the kernel who was writing: `/proc/PID/io` holds cumulative write counters, and sampling twice shows rates. `/proc/PID/fd` told the same story from the other side (one process held the hidden `.dump-*` files), and `/proc/PID/exe` showed it was running from a different binary than its siblings. Then you stopped exactly that PID.
 
-## Commands to remember
-```bash
-du -s datasets/*
-du -sh datasets/* | sort -h
-sort -n report.txt | tail -n 1
-```
+## Common mistakes
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Measure directory sizes before deciding which one is largest.
+- `pkill worker` kills the legitimate pipeline too; matching by name is only safe when names are unique.
+- Deleting the junk first frees nothing while the process still holds the descriptor open. Stop the writer, then delete.
+- `write_bytes` lags behind (it counts only data that reached the block layer), so `wchar` is the better live signal on a busy page cache.
+
+## Next
+
+`pidstat -d 1` and `iotop -o` rank processes by disk I/O when they are installed; `lsof +L1` finds files that are deleted but still held open.

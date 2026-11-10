@@ -1,15 +1,11 @@
 {
-  "name": "Last Command: Field Extract",
-  "description": "In the system inspection lab, a task related to Last Command needs cleanup before the handoff.",
-  "objective": "Extract the second column from last-command-report.csv into owners.txt",
+  "name": "Why Did It Reboot?",
+  "description": "db-02 rebooted on its own several times this autumn and management wants numbers. Its login history (the binary /var/log/wtmp) was copied to capture/wtmp. The live `last` on this machine reads an empty log and tells you nothing.",
+  "objective": "From capture/wtmp, write two files. reboots.txt: just the number of reboots recorded in October 2026. crash_users.txt: the users (sorted, each once) whose sessions were cut off by a crash during an October reboot, one name per line. Sessions that ended cleanly, or at a clean shutdown (\"down\"), do not count, and neither do September or November events.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Last Command",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "15m",
+  "concepts": ["last -f", "wtmp", "last -x", "reboot pseudo-user", "crash vs down vs still logged in", "--time-format iso"],
   "module": "module-24-system-inspection",
   "level": "level-5-last-command"
 }

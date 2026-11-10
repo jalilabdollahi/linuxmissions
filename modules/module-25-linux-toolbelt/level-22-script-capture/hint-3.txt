@@ -1,1 +1,6 @@
-Example: `cut -d, -f2 script-capture-report.csv > owners.txt`
+  script -q -c ./vendor-diag diag.typescript </dev/null
+      runs the tool on a pseudo-terminal (so it prints its report) and logs everything in diag.typescript; </dev/null keeps script from reading (and swallowing) the shell's own input
+  sed 's/\x1b\[[0-9;?]*[A-Za-z]//g; s/\r$//; s/.*\r//' diag.typescript | grep -avE '^(Script |$)' > diag.txt
+      remove colour/erase codes; drop the \r that ends each line; for lines with spinner frames keep only what follows the last \r; drop the "Script started/done" lines and the blank line before the last one
+  cat -A diag.txt
+      no ^[ or ^M should be left

@@ -1,1 +1,5 @@
-Inspect the sandbox, then create the missing path for organized/prompt-customize/prompt-customize-notes.txt.
+Read the prompt line in home/.bashrc: what does each piece do, and which parts
+print nothing on the screen but still take up bytes? readline measures the
+prompt to know where the cursor is, so it has to be told which parts are
+invisible. Next, how can a prompt know the exit status of the last command?
+Think about when `$?` is valid and what overwrites it.

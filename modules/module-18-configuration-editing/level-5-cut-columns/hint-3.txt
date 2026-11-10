@@ -1,1 +1,9 @@
-Example: `cut -d, -f2 cut-columns-report.csv > owners.txt`
+grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' prod.env | sed 's/^export //' | cut -d= -f1 > keys.txt
+grep '^SIGNING_KEY=' prod.env | cut -d= -f2- > signing_key.txt
+cat keys.txt signing_key.txt
+
+- grep -v -e ... -e ...   removes comment lines and blank lines
+- sed 's/^export //'      strips the export prefix so only the name is left
+- cut -d= -f1             the name: field 1 when splitting at "="
+- grep '^SIGNING_KEY='    exactly that setting (not the commented OLD_SIGNING_KEY)
+- cut -d= -f2-            the value: from field 2 to the end, so the trailing == survives

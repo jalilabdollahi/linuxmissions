@@ -1,1 +1,12 @@
-Example: `cut -d, -f2 at-jobs-report.csv > owners.txt`
+atq
+at -c 4 | tail -n 3
+atrm 4
+echo '/usr/local/bin/pgctl restart main --mode=fast' | at 03:00 tomorrow
+atq
+
+- atq                    jobs 4 and 5 at 15:00 today, job 6 tomorrow 03:30
+- at -c 4 | tail -n 3    the end of job 4's script: pgctl restart main --mode=fast
+                         (at -c 5 is the cache flush, which belongs at 15:00)
+- atrm 4                 drop the badly timed restart
+- echo '...' | at 03:00 tomorrow   queue the same command for Thu 03:00
+- atq                    check: 5 at 15:00, the new job at 03:00, 6 at 03:30

@@ -1,15 +1,11 @@
 {
-  "name": "Xargs: Metric Sum",
-  "description": "In the shell environment lab, a task related to Xargs needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of xargs-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Xargs",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Tenant Onboarding",
+  "description": "Ticket OPS-4521 lists the new tenants in tenants.txt, one per line, between comments and blank lines. Every tenant needs its own config directory before the platform team can switch them on. Last sprint, a quick `cat tenants.txt | xargs mkdir` created directories called `acme`, `corp` and `#`.",
+  "objective": "For every tenant line in tenants.txt, create the directory tenants/<tenant name> (the whole line is the name, spaces and punctuation included) containing a copy of template/app.conf. Comment lines (starting with #, also when indented) and blank lines are not tenants and must not produce anything. tenants/ must contain nothing else, and tenants.txt stays unchanged.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["xargs -d", "xargs -I{}", "xargs -t", "grep -v", "how xargs splits input"],
   "module": "module-9-shell-environment",
   "level": "level-15-xargs"
 }

@@ -1,0 +1,11 @@
+{
+  "name": "Week of Incrementals",
+  "description": "Capstone. data/ gets a full backup on Sunday and incremental backups Monday to Wednesday (BACKUP-PLAN.txt). It is Sunday evening; ./simulate-day.sh plays each next day, and on Thursday the data disk dies. Needs GNU tar (Linux).",
+  "objective": "Take backups/data-sun.tar.gz (full) now, then after each of ./simulate-day.sh mon, tue and wed take backups/data-mon.tar.gz, data-tue.tar.gz and data-wed.tar.gz: gzip-compressed GNU incremental archives that hold only what changed. Then run ./simulate-day.sh thu and restore Wednesday's state into restored/, so that restored/data is exactly data/ as it was on Wednesday night, with files deleted during the week absent.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["tar --listed-incremental", "snapshot (.snar) files", "level 0 vs incremental", "restore with --listed-incremental=/dev/null", "tar -tvG"],
+  "module": "module-10-archives-compression",
+  "level": "level-22-tar-incremental"
+}

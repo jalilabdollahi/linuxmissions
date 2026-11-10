@@ -1,15 +1,11 @@
 {
-  "name": "Apt Install: Alert Filter",
-  "description": "In the package and release operations lab, a task related to Apt Install needs cleanup before the handoff.",
-  "objective": "Write every alert line from apt-install.log into alerts.txt",
+  "name": "Exactly 3.1.4",
+  "description": "The newest fluxd breaks our plugin. The ticket (TICKET.txt) names the exact release to run until the plugin is fixed, and the server is still on a newer libflux1 than that release accepts.",
+  "objective": "Install the fluxd release named in TICKET.txt, with the libflux1 that release needs, and change nothing else. The package tools in bin/ (apt, apt-cache, dpkg ...) work on this sandbox's own system and mirror; they come first on your PATH.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Apt Install",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["apt-cache madison", "apt-cache policy", "apt install pkg=version", "dependency constraints"],
   "module": "module-20-package-and-release-ops",
   "level": "level-2-apt-install"
 }

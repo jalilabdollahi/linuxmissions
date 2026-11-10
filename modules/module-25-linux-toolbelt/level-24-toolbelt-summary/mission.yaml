@@ -1,15 +1,11 @@
 {
-  "name": "Toolbelt Summary: Permission Fix",
-  "description": "In the linux toolbelt lab, a task related to Toolbelt Summary needs cleanup before the handoff.",
-  "objective": "Set the mode of toolbelt-summary.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Toolbelt Summary",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Unpack The Support Bundle",
+  "description": "Support sent bundle.eml, one MIME message with an explanation and two attachments, and asked three questions that need the contents of all three parts. The labels in the headers cannot be fully trusted, and one attachment is in an encoding grep does not understand.",
+  "objective": "Write summary.txt with exactly three lines: 'errors: N' (the number of lines whose level is ERROR in the service log attachment), 'kernel: V' (the kernel version from the 'Linux version' line of the kernel log attachment) and 'setting: K=V' (the line marked 'Recommended setting' in the text part of the message; ignore the old value mentioned next to it). Decode every part yourself; work out what a part really is from its content, not from its Content-Type.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "40m",
+  "concepts": ["csplit", "base64 -d", "file", "xxd magic bytes", "zcat", "iconv -f UTF-16", "grep -c"],
   "module": "module-25-linux-toolbelt",
   "level": "level-24-toolbelt-summary"
 }

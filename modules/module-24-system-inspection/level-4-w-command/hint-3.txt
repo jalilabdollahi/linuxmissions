@@ -1,1 +1,9 @@
-Example: `sort w-command-raw.txt | uniq > unique-sorted.txt`
+awk 'NR > 2 { i = $5; if (i ~ /days$/ || i ~ /m$/) ok = 0; else if (i ~ /s$/) ok = 1; else { split(i, t, ":"); ok = (t[1] < 10) } if (ok) print $1 }' capture/w.txt | sort -u > warn_users.txt
+cat warn_users.txt
+
+- NR > 2                skip the two header lines
+- $5                    the IDLE column
+- /days$/ or /m$/       "2days" or "1:05m" (hours:minutes): abandoned
+- /s$/                  "45.00s": seconds, under a minute, so active
+- split(i, t, ":")      "min:sec": active only if the minutes are below 10
+- sort -u               each user once, sorted

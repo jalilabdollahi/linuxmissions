@@ -1,15 +1,11 @@
 {
-  "name": "Arrays: Config Rewrite",
-  "description": "In the shell automation lab, a task related to Arrays needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in arrays.conf and save the fixed result to fixed.conf",
+  "name": "Batch Job",
+  "description": "upload_batch.sh sends the files listed in manifest.txt to the media store, four per request. Since the marketing team started using real file names, \"Q3 report.pdf\" arrives as two missing files called \"media/Q3\" and \"report.pdf\", and the upload count is wrong.",
+  "objective": "Fix upload_batch.sh so that `./upload_batch.sh MANIFEST` passes every non-empty line of MANIFEST to ./tools/upload as exactly one argument (spaces, double spaces, backslashes and glob characters kept), in manifest order and in calls of at most 4 files, and then prints `uploaded N files` with the right N. upload.log records every call. It is tested with manifests you have not seen.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Arrays",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["arrays", "mapfile -t", "\"${arr[@]}\"", "${#arr[@]}", "slices ${arr[@]:i:n}"],
   "module": "module-21-shell-automation",
   "level": "level-6-arrays"
 }

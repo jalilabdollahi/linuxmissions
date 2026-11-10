@@ -1,1 +1,5 @@
-This is a sorting task followed by deduplication.
+Open capture/w.txt and look at the IDLE column. It is not always written the
+same way: find all the different shapes it takes (seconds, minutes and
+seconds, hours, days) and work out what each one means before you compare
+anything to ten minutes.
+Also: can the same user appear twice? What should happen then?

@@ -1,1 +1,5 @@
-This mission is about cron field order and exact syntax.
+You cannot tell which settings need a change from the vendor sheet alone:
+the answer depends on this machine. Where does the kernel publish its
+current tunables, and how do you read a single one? Compare each with the
+requirement, paying attention to which ones say "at least" and which say
+"exactly". One of the settings is not a single number.

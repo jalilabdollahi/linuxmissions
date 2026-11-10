@@ -1,1 +1,8 @@
-Use chmod with octal mode 640.
+`sha256sum -c LIST` wants "hash  name" lines (two spaces, or space and *), or BSD lines
+"SHA256 (name) = hash". Names are relative to where you run it. `--ignore-missing` skips entries for files
+that are absent, which also hides a name that is wrong (like dist/name when the file is just name).
+So normalise a copy of the list with sed: turn BSD lines into GNU lines, drop the dist/ prefix, make the
+separator two spaces, drop the carriage returns, then check from inside release/:
+  sed -E -e 's/\r$//' -e 's/^SHA256 \((.*)\) = ([0-9a-f]{64})$/\2  \1/' ... SHA256SUMS > SHA256SUMS.fixed
+It prints "name: OK" / "name: FAILED" per file (warnings go to stderr: use 2>&1 for the log). Move the failing file.
+More: man sha256sum, man sed

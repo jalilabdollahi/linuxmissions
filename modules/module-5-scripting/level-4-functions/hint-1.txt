@@ -1,4 +1,5 @@
-Put the repeated logic in one function:
-deploy_service() {
-  ...
-}
+Read deploy.sh and compare the three blocks line by line. Only one word changes between them: which one?
+
+That word becomes the argument of a function. Inside a function, its arguments arrive the same way a script's arguments do.
+
+Game tip: `edit deploy.sh` opens the script in an editor.

@@ -1,0 +1,3 @@
+bash can open a TCP connection itself, as if it were a file, and keep it open on a file descriptor of your shell. Then you write commands to that descriptor and read the replies from it, one at a time.
+
+An SMTP conversation: wait for the greeting, introduce yourself, give the envelope sender, then the recipient, then say you are sending data, send the message (headers, a blank line, the body) and end it with a line that holds only a dot. After every command, read the server's answer before you send the next one.

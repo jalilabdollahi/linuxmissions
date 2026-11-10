@@ -1,1 +1,20 @@
-Example: `grep 'ALERT' noisy-logs.log > alerts.txt`
+rm app/app.env.d/zz-debug.env
+kill -HUP $(pgrep -f "$SANDBOX/app/app.py")
+sleep 1
+truncate -s 0 app/app.log
+cat > rotate.conf <<CONF
+$SANDBOX/app/app.log {
+    size 5M
+    rotate 4
+    compress
+    missingok
+    copytruncate
+}
+CONF
+logrotate -d -s logrotate.state rotate.conf
+
+- rm zz-debug.env     the late-sorting override file is what turns debug on
+- kill -HUP           the same process re-reads its config and reopens its log, no restart
+- truncate -s 0       empties the file in place, so the app's open file descriptor stays valid
+- rotate.conf         the real log path, valid directives, and copytruncate so the open file can be rotated
+- logrotate -d        dry run to confirm there are no errors

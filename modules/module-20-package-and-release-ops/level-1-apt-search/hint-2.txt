@@ -1,1 +1,7 @@
-`mkdir -p organized/apt-search` followed by `mv inbox/apt-search.txt organized/apt-search/apt-search-notes.txt` is enough.
+apt-cache search WORD...      lists packages whose name or description matches ALL the words
+apt-cache search --names-only WORD   looks only at package names
+apt-cache show PACKAGE        prints the full record: synopsis, long description, section
+
+Read the one-line synopsis of each hit, then use show on the plausible ones.
+The synopsis of the right package says what it is in a few words. You can also
+narrow the search by adding words from that synopsis.   More: man apt-cache

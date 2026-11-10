@@ -1,1 +1,4 @@
-Measure directory sizes before deciding which one is largest.
+Two jobs. First: which kinds of lines in the history carry a secret? Read the file and note the
+shapes (what comes after the database client's -p? which exports hold credentials?), and also the lines
+that look suspicious but are harmless. Second: bash has a setting that controls which commands are
+remembered. Where is the existing setting, and could a later line in .bashrc undo yours?

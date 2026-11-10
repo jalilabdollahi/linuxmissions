@@ -1,0 +1,45 @@
+#!/bin/bash
+cat > prune.sh <<'XEOF'
+#!/bin/bash
+# GFS retention for backups/db-YYYY-MM-DD.tar.zst, see POLICY.txt.
+cd "$(dirname "$0")" || exit 1
+apply=0
+case "$1" in
+  --apply) apply=1 ;;
+  "") ;;
+  *) echo "usage: $0 [--apply]" >&2; exit 2 ;;
+esac
+[ $# -le 1 ] || { echo "usage: $0 [--apply]" >&2; exit 2; }
+
+TODAY=${TODAY:-$(date +%F)}
+day() { echo $(( $(date -u -d "$1" +%s) / 86400 )); }
+t=$(day "$TODAY")
+s0=$(( t - $(date -u -d "$TODAY" +%u) % 7 ))                    # last Sunday on or before TODAY
+first=$(day "$(date -u -d "$(date -u -d "$TODAY" +%Y-%m-01) -11 months" +%F)")
+
+declare -A keep bestn bestf
+for f in backups/db-*.tar.zst; do
+  [ -f "$f" ] && [ ! -L "$f" ] || continue
+  name=${f##*/}
+  [[ $name =~ ^db-([0-9]{4}-[0-9]{2}-[0-9]{2})\.tar\.zst$ ]] || continue
+  d=${BASH_REMATCH[1]}
+  [ "$(date -u -d "$d" +%F 2>/dev/null)" = "$d" ] || continue     # real calendar dates only
+  valid+=("$name")
+  n=$(day "$d")
+  [ "$n" -gt "$t" ] && keep[$name]=1                               # future
+  [ $((t - n)) -le 6 ] && [ "$n" -le "$t" ] && keep[$name]=1       # daily
+  [ "${d:8:2}" = 01 ] && [ "$n" -ge "$first" ] && keep[$name]=1    # monthly
+  if [ "$n" -le "$s0" ] && [ $((s0 - n)) -lt 28 ]; then          # newest of each of the last 4 weeks
+    k=$(( (s0 - n) / 7 ))
+    if [ -z "${bestn[$k]}" ] || [ "$n" -gt "${bestn[$k]}" ]; then bestn[$k]=$n; bestf[$k]=$name; fi
+  fi
+done
+for k in "${!bestf[@]}"; do keep[${bestf[$k]}]=1; done
+
+for name in "${valid[@]}"; do
+  [ -n "${keep[$name]}" ] && continue
+  if [ "$apply" = 1 ]; then rm -f -- "backups/$name" && echo "deleted $name"; else echo "would delete $name"; fi
+done
+XEOF
+chmod +x prune.sh
+TODAY=2026-11-10 ./prune.sh | head -5

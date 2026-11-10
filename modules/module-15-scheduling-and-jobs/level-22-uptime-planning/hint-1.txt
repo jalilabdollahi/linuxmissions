@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Think in time spans, not in single lines. The box is down from each `shutdown` record until
+the next `reboot` record. Which of the 14 times 02:00 fall inside such a span, and which
+nights have no shutdown record at all? Look at how the crash night looks in the file and at
+what the session line before the next reboot says; the ticket tells you when it went down.
+For the second part: how does anacron decide a job is due, and which fields does a line need?

@@ -1,1 +1,6 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  tar -tvzf ARCHIVE                 list with modes and mtimes, without extracting
+  tar -xzf ARCHIVE --skip-old-files   extract, leaving files that exist alone, silently (-k / --keep-old-files does the same but reports errors and exits 2)
+  tar -p (--preserve-permissions)   keep stored modes instead of applying the umask (the default for root only)
+  rsync -a --ignore-existing SRC/ DEST/    alternative: extract to a scratch directory first, then copy over only what is missing
+The archive paths start with projects/, so extract in the folder that contains projects/. Extracting into a temporary directory leaves that directory behind unless you remove it.
+More: man tar (search "overwrite")

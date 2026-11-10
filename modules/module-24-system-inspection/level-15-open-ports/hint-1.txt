@@ -1,1 +1,6 @@
-This is a numeric aggregation task.
+First get the full list of listening TCP sockets, with the process that owns
+each one: which tool shows sockets, and which option adds the owner? Compare
+it with approved.txt by PORT, not by name: a name is only what the process
+chooses to call itself. Also remember that a listener can sit on an IPv6
+address, which looks different in the output. Once you have the culprit, ask
+the kernel what it really is running.

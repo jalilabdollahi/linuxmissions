@@ -1,15 +1,17 @@
 {
-  "name": "Corrupt Config: Event Counter",
-  "description": "In the linux war games lab, a task related to Corrupt Config needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in corrupt-config-events.txt and write the number to ok-count.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Friday's Change",
+  "description": "The service has not started since Friday's hand edit of config.json. TICKET.md describes the change that was approved, and config.json.last-good is the last version that worked.",
+  "objective": "Make ./app --check pass with a config.json that is the last-good config plus exactly the change in TICKET.md: nothing else may differ, not even a value the parser would silently accept.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
   "concepts": [
-    "Corrupt Config",
-    "grep",
-    "wc",
-    "redirection"
+    "diff",
+    "jq",
+    "cat -A",
+    "JSON syntax faults",
+    "duplicate keys",
+    "merge conflicts"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-3-corrupt-config"

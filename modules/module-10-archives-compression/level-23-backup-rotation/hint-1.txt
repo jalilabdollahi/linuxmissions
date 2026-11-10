@@ -1,1 +1,6 @@
-Use tar with create, gzip, and file flags.
+Read Kim's draft and play it through by hand with three generations: after
+`mv .1 .2`, what happened to the old .2? And what happens next when the draft
+moves .2 to .3? Then imagine .3 doesn't exist: `set -e` stops the script at the
+first failing command.
+Think of a stack of boxes on numbered shelves: to move everything up one
+shelf, which box do you have to move first?

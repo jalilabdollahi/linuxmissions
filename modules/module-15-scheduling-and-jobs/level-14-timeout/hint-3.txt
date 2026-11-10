@@ -1,1 +1,16 @@
-Example: `for n in 1 2 3; do printf 'timeout item %s\n' "$n" > generated/timeout-$n.txt; done`
+while read -r host; do
+  timeout -k 2 3 ./healthcheck.sh "$host" >/dev/null 2>&1
+  case $? in
+    0) echo "$host OK" ;;
+    124|137) echo "$host TIMEOUT" ;;
+    *) echo "$host FAIL" ;;
+  esac
+done < hosts.txt > report.txt
+cat report.txt
+
+- timeout -k 2 3     TERM after 3 s; KILL 2 s later if the check ignores TERM
+- >/dev/null 2>&1    keep the check's own chatter out of the report
+- 0                  the check passed
+- 124|137            stopped by timeout (137 = it needed the KILL)
+- *                  any other status: the check itself said "unhealthy"
+- > report.txt       after `done`, so the whole loop writes one file

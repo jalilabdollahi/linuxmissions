@@ -1,1 +1,12 @@
-Inspect the sandbox, then create the missing path for organized/shebang/shebang-notes.txt.
+`bash bin/disk_report` and `./bin/disk_report` are not the same thing. In the
+first case YOU chose the interpreter. In the second, the kernel reads the first
+line of the file to decide which program runs it. So look at exactly that
+first line of each helper, invisible characters included:
+
+  head -n 2 bin/* | cat -A
+
+Then ask, for each one: does that line start with #! in the very first two
+bytes? Does the program it names exist on this machine (ls -l it)? And is that
+program able to understand the code below it? Compare with cron-mail.txt.
+
+Game tip: `edit bin/disk_report` opens a helper in an editor.

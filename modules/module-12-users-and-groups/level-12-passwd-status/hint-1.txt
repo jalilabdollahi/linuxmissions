@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+Look at the second field of etc/shadow, for every account. It has only a few shapes:
+nothing at all, a normal hash, a hash with a character in front of it, or a short marker
+that no hash can ever match. Which shapes let someone log in with a password, which
+block it, and which mean there is no password to ask for? Group the accounts by the
+first character of that field before you decide.

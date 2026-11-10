@@ -1,1 +1,7 @@
-Archive the directory contents without leaving anything out.
+envsubst reads a template on standard input and writes the result to standard output:
+  envsubst < template > output
+Without arguments it replaces every variable it finds (unset ones become empty).
+Give it a SHELL-FORMAT string naming the variables to replace, and it leaves all
+others alone:   envsubst '$ONE $TWO' < in > out     (single quotes, so your shell keeps the $)
+envsubst only sees exported variables. `set -a` before `. ./deploy.env` exports
+everything the file defines; `set +a` switches that off again. More: man envsubst

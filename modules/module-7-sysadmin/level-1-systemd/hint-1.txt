@@ -1,2 +1,3 @@
-Use the provided helper from inside the sandbox:
-./systemctl status myapp.service
+Ask the service manager first: what does the status of myapp.service say about why it failed?
+Then compare the path in the unit's ExecStart line with what really exists under opt/myapp/.
+Separately: enabling a unit needs an instruction telling systemd *which target* should pull it in at boot. Does this unit have one?

@@ -1,17 +1,19 @@
-# Uname: Path Realignment
+# Vendor Asks: What Kernel?
 
-## What you practiced
-- This level focused on **Uname** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`uname` asks the running kernel about itself, so the answer is always the
+truth about *this* machine. `-s` is the kernel name (`Linux`), `-r` the
+release (`6.8.0-45-generic`, the number to quote to a vendor) and `-m` the
+hardware name (`x86_64`, `aarch64`). `$(...)` pastes a command's output into
+the line being written.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- Cutting `uname -a` by field number: the build-version field contains
+  spaces, so the fields after it move around.
+- Using `uname -p`: the processor type often just prints `unknown`.
+- Confusing release (`-r`) with version (`-v`, a build string with a date).
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/uname/uname-notes.txt.
+## Next step
+`uname -n` prints the node name (the hostname), which is the next level.
+`/proc/version` and `/proc/sys/kernel/osrelease` show the same facts straight
+from the kernel.

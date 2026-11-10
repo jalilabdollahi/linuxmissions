@@ -1,15 +1,11 @@
 {
-  "name": "String Ops: Permission Fix",
-  "description": "In the shell automation lab, a task related to String Ops needs cleanup before the handoff.",
-  "objective": "Set the mode of string-ops.sh to 640",
+  "name": "Name Tag",
+  "description": "The release bot needs the app name, version, OS, architecture and extension of every file it publishes. parse_artifact.sh gets them wrong for any app with a hyphen in its name, and on the bot's minimal runner it cannot even start cut, sed or basename (RUNNER.txt).",
+  "objective": "Rewrite parse_artifact.sh so that `./parse_artifact.sh FILE` prints `name=... version=... os=... arch=... ext=...` for every name in the format its header describes (a leading directory ignored), and for anything else prints `parse_artifact: not an artifact name: FILE` on stderr and exits 1. It must work with bash alone: it is tested as `env -i PATH=/nonexistent /bin/bash parse_artifact.sh NAME` with names you have not seen.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "String Ops",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "15m",
+  "concepts": ["${v##*/}", "${v%-*} / ${v##*-}", "${v%%.*} / ${v#*.}", "[[ =~ ]] with an anchored regex", "BASH_REMATCH"],
   "module": "module-21-shell-automation",
   "level": "level-12-string-ops"
 }

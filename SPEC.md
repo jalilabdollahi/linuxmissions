@@ -1,3 +1,5 @@
+> **Historical document.** This was the original build spec. For the current level format and rules see [docs/LEVEL_AUTHORING.md](docs/LEVEL_AUTHORING.md).
+
 # LinuxMissions — Full Implementation Specification
 
 This document is a complete specification for implementing the remaining parts of the **LinuxMissions** game — a terminal-based Linux learning game modeled after `k8smissions` and `dockermissions`.

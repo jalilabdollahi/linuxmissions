@@ -1,3 +1,7 @@
-Verify none remain:
-find $SANDBOX/app -perm /o+w -type f
-# Should return nothing
+  find app -type f -perm -o+w
+      list the culprits first: 6 files, including data/.lock and "run backup.sh"
+  find app -type f -perm -o+w -exec chmod o-w {} +
+      remove only the 'others write' bit from each of them; 666 becomes 664,
+      777 becomes 775, owner and group bits are untouched
+  find app -type f -perm -o+w
+      prints nothing now

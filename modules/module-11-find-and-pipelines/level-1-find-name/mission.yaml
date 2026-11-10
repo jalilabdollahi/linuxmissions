@@ -1,16 +1,11 @@
 {
-  "name": "Find Name: Path Realignment",
-  "description": "In the search and pipelines lab, a task related to Find Name needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/find-name.txt to organized/find-name/find-name-notes.txt",
+  "name": "Invoices for Legal",
+  "description": "Legal is preparing for an audit and wants a copy of every invoice PDF on the old shared drive. The dump in share/ grew for ten years without rules: Invoice_2026-03.PDF sits next to 'invoice - april.pdf', and templates, backups and receipts are mixed in.",
+  "objective": "Write the path of every file under share/ whose name contains the word invoice and ends in .pdf, both in any letter case, to invoices.txt (one path per line, like share/Finance/x.pdf or ./share/Finance/x.pdf). Nothing else goes in the list; do not change share/.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Find Name",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "6m",
+  "concepts": ["find -iname", "wildcards", "quoting patterns", "-type f"],
   "module": "module-11-find-and-pipelines",
   "level": "level-1-find-name"
 }

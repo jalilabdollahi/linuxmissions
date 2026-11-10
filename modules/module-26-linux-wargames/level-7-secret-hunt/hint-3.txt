@@ -1,1 +1,12 @@
-Example: `head -n 3 secret-hunt-history.log > first3.txt` and `tail -n 3 secret-hunt-history.log > last3.txt`
+KEY=$(grep -o 'pk_live_[A-Za-z0-9]*' TICKET.md | head -1)
+B64=$(printf %s "$KEY" | base64 -w0)
+{ grep -rIlF "$KEY" site; grep -rIlF "$B64" site; grep -rIlE 'pk_live_[A-Za-z0-9]*\\$' site; for f in $(find site -name '*.gz' ! -name '*.tgz'); do zgrep -qF "$KEY" "$f" && echo "$f"; done; for a in $(find site -name '*.tgz'); do for m in $(tar -tzf "$a"); do tar -xzOf "$a" "$m" | grep -qF "$KEY" && echo "$a:$m"; done; done; } | sort -u > leaks.txt
+grep -rIlF "$KEY" site | xargs sed -i "s/$KEY/REDACTED/g"
+grep -rIlF "$B64" site | xargs sed -i "s/$B64/UkVEQUNURUQ=/g"
+for f in $(grep -rIlE 'pk_live_[A-Za-z0-9]*\\$' site); do sed -i -z 's/pk_live_[A-Za-z0-9]*\\\n[A-Za-z0-9]*/REDACTED/' "$f"; done
+cat leaks.txt
+
+- grep -rIlF / zgrep / tar -xzOf   one search per form: plain, base64, continued line, inside .gz, inside tarballs
+- sort -u > leaks.txt   the list: paths, and archive:member for tar members
+- sed -i s/KEY/REDACTED/g   redacts plain text in place (the archives are left alone)
+- sed -i -z ...   joins a backslash-continued value into a single REDACTED

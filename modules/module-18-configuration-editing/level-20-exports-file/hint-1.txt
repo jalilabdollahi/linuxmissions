@@ -1,1 +1,6 @@
-This is a sorting task followed by deduplication.
+Read etc/exports and then `exportfs -v`: the second one shows what the server
+really exports today, per client. Compare it with what the file seems to say.
+Look closely at how each client is written: where exactly does the option list
+start, and what separates one client from the next? Think about who ends up with
+write access when "a client" and "its options" come apart. Then look for the
+squash option the scanner complained about.

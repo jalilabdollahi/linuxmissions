@@ -1,15 +1,11 @@
 {
-  "name": "Quoting: Config Rewrite",
-  "description": "In the shell environment lab, a task related to Quoting needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in quoting.conf and save the fixed result to fixed.conf",
+  "name": "Awkward Names",
+  "description": "Files from the customer portal land in uploads/ with whatever names people typed. Finance has asked for three of them to be archived: `Q3 report (final).pdf`, `price$list.csv` and `it's done.txt`. Some other files in uploads/ have names that look a lot like pieces of those.",
+  "objective": "Move exactly these three files from uploads/ into archive/, keeping their names and content: `Q3 report (final).pdf`, `price$list.csv` and `it's done.txt`. Every other file in uploads/ must stay where it is, unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Quoting",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "6m",
+  "concepts": ["single quotes", "double quotes", "backslash escapes", "word splitting", "tab completion"],
   "module": "module-9-shell-environment",
   "level": "level-6-quoting"
 }

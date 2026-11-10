@@ -1,1 +1,6 @@
-This is a delimiter-based column extraction task.
+Three questions: how serious, since when, and in what format.
+- "How serious" is a field stored with each entry, not a word in the message. Some lines shout
+  ERROR at a harmless level, and some real failures never say "error".
+- It is 03:10 now and the window opened at 23:40, which was yesterday. What does a bare
+  "23:40" mean to a tool when no date is given?
+- The server was rebooted during the window. Entries from before the reboot count too.

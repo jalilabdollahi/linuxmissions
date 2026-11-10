@@ -1,16 +1,11 @@
 {
-  "name": "Split By Lines: Loop Builder",
-  "description": "In the linux toolbelt lab, a task related to Split By Lines needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named split-by-lines-1.txt through split-by-lines-3.txt with matching numbered content",
+  "name": "Five Thousand At A Time",
+  "description": "The CRM import API rejects any CSV with more than 5,000 data rows, and it needs the header line in every file it receives. customers.csv has 23,417 customers.",
+  "objective": "Cut customers.csv into the directory chunks/ as part-00.csv, part-01.csv, part-02.csv and so on. Every chunk must start with the header line and hold at most 5,000 data rows, the chunks must be as full as possible (no more files than needed), and the data rows of all chunks put back together must equal the data rows of customers.csv.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Split By Lines",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "15m",
+  "concepts": ["split -l", "split -d", "split --additional-suffix", "split --filter", "tail -n +2"],
   "module": "module-25-linux-toolbelt",
   "level": "level-14-split-by-lines"
 }

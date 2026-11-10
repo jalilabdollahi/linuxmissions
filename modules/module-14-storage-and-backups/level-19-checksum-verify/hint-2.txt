@@ -1,1 +1,6 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  cut -f1 MANIFEST.tsv | LC_ALL=C sort        the manifest's path list
+  (cd restored && find . -type f | LC_ALL=C sort)   the same kind of list from the disk
+  comm -23 A B / comm -13 A B / comm -12 A B  lines only in A / only in B / in both (both inputs must be sorted)
+  sha256sum < FILE | cut -d' ' -f1            the hash of a file's content; compare it with column 4 of the manifest line (awk -F'\t' -v p="$p" '$1==p {print $4}' MANIFEST.tsv)
+A file with a different mode but the same hash is not corrupted. Write the three headers and the lists with { ...; } > verify-report.txt.
+More: man comm

@@ -1,15 +1,11 @@
 {
-  "name": "Skeleton Files: Link Repair",
-  "description": "In the users and groups lab, a task related to Skeleton Files needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/skeleton-files.conf",
+  "name": "Broken Skeleton",
+  "description": "Every new hire gets a broken shell: their prompt is plain, .profile is missing, and the first thing they find in ~/.ssh is somebody's old key. New accounts start from a copy of /etc/skel. The spec of what a new home must contain is in skel-spec.txt; Dana starts on Monday and alice already has a home from the old skeleton.",
+  "objective": "Fix etc/skel so it holds exactly the files and modes in skel-spec.txt (take the three dotfile contents from usr/share/base-files/dot.*), then create the account dana with the mock `bin/useradd -m dana` so that home/dana is a copy of the fixed skeleton. Leave alice's existing home as it is. The sandbox's etc/default/useradd already points at etc/skel.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Skeleton Files",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "15m",
+  "concepts": ["/etc/skel", "dotfiles", "file modes", "skeleton is copied at account creation"],
   "module": "module-12-users-and-groups",
   "level": "level-9-skeleton-files"
 }

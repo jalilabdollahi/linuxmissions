@@ -1,11 +1,11 @@
 {
   "name": "The Gatekeeper",
-  "description": "An automation script should tell you whether a target file exists, but the conditional logic is missing.",
-  "objective": "Write check_file.sh so it prints `EXISTS` when the path exists and `MISSING` when it does not",
-  "xp": 160,
+  "description": "The nightly backup job has to know what a path is before it touches it: it crashed last night because a 'file' it was given turned out to be a directory.",
+  "objective": "Make `bash check_file.sh PATH` print `FILE` when PATH is a regular file, `DIR` when it is a directory, and `MISSING` when nothing exists there. In the MISSING case the script must exit with status 1. Paths may contain spaces (try `my notes.txt` and `old reports`).",
+  "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "6m",
-  "concepts": ["if", "else", "test", "-f", "-e"],
+  "expected_time": "7m",
+  "concepts": ["if / elif / else", "test -f / -d", "quoting", "exit status"],
   "module": "module-5-scripting",
   "level": "level-2-conditionals"
 }

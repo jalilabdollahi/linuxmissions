@@ -1,15 +1,11 @@
 {
-  "name": "Join Keys: Metric Sum",
-  "description": "In the data processing lab, a task related to Join Keys needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of join-keys-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Join Keys",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Customer Totals",
+  "description": "Sales wants a list of every customer with how much they ordered this year, including the customers who never ordered (the account managers want to call those). The CRM export customers.csv and the shop's orders.csv are both unsorted, both have a header line, and the customer id is in a different column in each.",
+  "objective": "Write customer_totals.csv: the header line customer_id,name,orders,total, then one line per customer in customers.csv, ordered by customer_id as a number (smallest first). orders is the number of orders that customer has in orders.csv and total the sum of their amounts with two decimals; a customer without orders gets 0 and 0.00. Orders whose customer_id is not in customers.csv (deleted test accounts) are not reported. Leave both input files unchanged.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["join -t, -a1 -e -o", "sort order that join expects", "LC_ALL=C", "aggregate before joining", "sort -t, -k1,1n"],
   "module": "module-22-data-processing",
   "level": "level-15-join-keys"
 }

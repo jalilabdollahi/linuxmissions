@@ -1,1 +1,1 @@
-Use a targeted file search so you do not remove the wrong files.
+Every rule in RETENTION.md is about age, but "age" is a precise thing, and the policy has exceptions that a plain `find ... -delete` would trample. Before deleting anything, ask what the running batch job is holding (the kernel knows), and how you can walk a list of files whose names contain spaces and even a newline without word-splitting them.

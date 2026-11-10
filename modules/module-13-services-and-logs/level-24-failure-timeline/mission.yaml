@@ -1,15 +1,11 @@
 {
-  "name": "Failure Timeline: Permission Fix",
-  "description": "In the services and logs lab, a task related to Failure Timeline needs cleanup before the handoff.",
-  "objective": "Set the mode of failure-timeline.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Failure Timeline",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Four Clocks, One Timeline",
+  "description": "Postmortem for last night's API outage on web-01. The evidence is in four places that each tell time differently: a journal export (microseconds since the epoch), syslog (local time, no year, no zone), the nginx access log ([10/Nov/2026:03:04:05 +0330]) and the app log (ISO 8601 with offset). rsyslog also copied every journal message into syslog.",
+  "objective": "Write timeline.txt exactly as TIMELINE-SPEC.txt describes: every event from 03:00:00 to 03:14:59 server local time on Nov 10, one per line as `UTC-TIME SOURCE MESSAGE` (time as 2026-11-09T23:31:05Z, fractions cut off), oldest first; journal entries once (drop their syslog copies), nginx only 5xx, app only WARN/ERROR; events in the same second keep the order journal, syslog, nginx, app and their file order. `timedatectl` and `journalctl` are mocks (journalctl --file reads the export). Don't change the logs.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["timestamp formats", "date -u -f - (batch conversion)", "jq todate / journalctl --utc", "syslog has no year or zone", "grep -vxF -f (remove duplicates)", "sort -s -k1,1 (stable sort)", "paste"],
   "module": "module-13-services-and-logs",
   "level": "level-24-failure-timeline"
 }

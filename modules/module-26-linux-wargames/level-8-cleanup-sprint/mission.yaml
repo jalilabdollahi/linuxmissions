@@ -1,14 +1,17 @@
 {
-  "name": "Cleanup Sprint: Cleanup Sweep",
-  "description": "In the linux war games lab, a task related to Cleanup Sprint needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/cleanup-sprint and leave the other files intact",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Cleanup Sprint",
+  "description": "var/ is full and the 09:00 batch needs the space. RETENTION.md says what may go, and the nightly batch job is running right now.",
+  "objective": "Apply RETENTION.md to var/: delete expired logs, gzip the logs the policy says to compress, delete expired core dumps, keep every .keep file, and leave everything the running batch job holds open exactly as it is (the job must stay running).",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
   "concepts": [
-    "Cleanup Sprint",
-    "find",
-    "rm"
+    "find -mtime",
+    "-print0 and xargs -0",
+    "gzip",
+    "lsof and /proc fd",
+    "safe cleanup",
+    ".keep files"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-8-cleanup-sprint"

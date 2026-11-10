@@ -1,15 +1,11 @@
 {
-  "name": "Recovery Log: Config Rewrite",
-  "description": "In the boot and recovery lab, a task related to Recovery Log needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in recovery-log.conf and save the fixed result to fixed.conf",
+  "name": "What Failed on Boot?",
+  "description": "Red [FAILED] lines scrolled past on the console during the last boot of the server, and nobody wrote them down. The console output was saved in sysroot/var/log/boot.log, escape codes and all.",
+  "objective": "Write failed_units.txt: the unit name of every unit that has a [FAILED] line in sysroot/var/log/boot.log (the name systemctl status takes, such as foo.service), one per line, in the order they first failed, each unit once. Units that only got a Dependency failed line did not fail themselves.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Recovery Log",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["boot.log", "grep", "sed", "ANSI escape codes", "cat -v", "systemd boot messages"],
   "module": "module-23-boot-and-recovery",
   "level": "level-6-recovery-log"
 }

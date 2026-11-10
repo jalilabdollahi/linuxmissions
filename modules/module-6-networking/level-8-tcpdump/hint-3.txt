@@ -1,2 +1,22 @@
-The protocol name to save is:
-DNS
+Type these at the prompt, one at a time.
+
+1. Rank the SYN senders by how many DIFFERENT ports they tried, and save the top one:
+
+tcpdump -nn -r capture.pcap 'tcp[tcpflags] == tcp-syn' 2>/dev/null | awk '{ split($3, s, "."); n = split($5, d, "."); sub(":", "", d[n]); print s[1] "." s[2] "." s[3] "." s[4], d[n] }' | sort -u | awk '{ print $1 }' | uniq -c | sort -nr | head -1 | awk '{ print $2 }' > scanner.txt
+
+- 'tcp[tcpflags] == tcp-syn'   only connection attempts (SYN set, nothing else)
+- awk ... print IP, PORT       source IP (first 4 parts of $3) and destination port (after the last dot of $5)
+- sort -u                      each IP/port pair once
+- awk '{print $1}' | uniq -c   count the distinct ports per IP
+- sort -nr | head -1 | awk     the IP with the most ports
+(Leave out the last two steps to see the whole ranking.)
+
+2. List the ports that answered that IP with SYN-ACK:
+
+tcpdump -nn -r capture.pcap "src host 10.20.4.17 and dst host $(cat scanner.txt) and tcp[tcpflags] == (tcp-syn|tcp-ack)" 2>/dev/null | awk '{ n = split($3, a, "."); print a[n] }' | sort -n > open_ports.txt
+
+- src host 10.20.4.17 and dst host ...   replies from web-03 to the scanner
+- tcp[tcpflags] == (tcp-syn|tcp-ack)     SYN-ACK only: "this port is open"
+- split($3, a, ".") ... a[n]             the source port of the reply = the open port
+
+Check: cat scanner.txt open_ports.txt

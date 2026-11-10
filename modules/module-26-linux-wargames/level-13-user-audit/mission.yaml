@@ -1,14 +1,17 @@
 {
-  "name": "User Audit: Script Kickoff",
-  "description": "In the linux war games lab, a task related to User Audit needs cleanup before the handoff.",
-  "objective": "Make jobs/user-audit.sh executable, run it, and create the token file it writes",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
+  "name": "User Audit",
+  "description": "Three people left last month and OFFBOARD.md lists what must be cut off. The captured server state is in sysroot/, with the account tools in sysroot/bin.",
+  "objective": "In sysroot/: lock the three departed accounts in shadow, remove every copy of their keys from every authorized_keys (shared accounts included, whatever the comment says), remove the non-root account with UID 0, and write audit.txt with the findings in the form OFFBOARD.md defines. Nothing else about the system may change.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
   "concepts": [
-    "User Audit",
-    "chmod",
-    "bash"
+    "passwd and shadow formats",
+    "usermod -L",
+    "awk -F: on account files",
+    "matching ssh keys by body",
+    "authorized_keys audit",
+    "persistence backdoors"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-13-user-audit"

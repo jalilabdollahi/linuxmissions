@@ -1,15 +1,11 @@
 {
-  "name": "Http Status: Schedule Entry",
-  "description": "In the network troubleshooting lab, a task related to Http Status needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Red Dashboard",
+  "description": "TICKET.txt: the health dashboard only says \"degraded\". The eleven health endpoints in endpoints.txt are served by a web server on this machine; some answer slowly, some redirect, some fail and one never answers at all.",
+  "objective": "Write status.tsv with one line per URL from endpoints.txt: URL, HTTP code and total request time in seconds, tab-separated. The code is what the URL itself answers (redirects not followed; 000 when no answer arrives within a few seconds). Then write bad.txt with every URL that is not a 2xx answer or took longer than 1 second, one per line.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Http Status",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "20m",
+  "concepts": ["curl -w '%{http_code} %{time_total}'", "curl --max-time", "curl -o /dev/null", "redirects (3xx)", "while read loops", "awk filters"],
   "module": "module-19-network-troubleshooting",
   "level": "level-17-http-status"
 }

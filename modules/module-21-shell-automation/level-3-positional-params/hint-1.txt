@@ -1,1 +1,12 @@
-Count matching lines instead of copying them out by hand.
+Reproduce the ticket and read the log the mock writes:
+
+  ./archive.sh "finance archive" "reports/2026 Q3/summary final.pdf" reports/ledger.csv
+  cat upload.log
+
+Each <...> line is one argument upload received. The shell received the
+right three arguments from you; where in archive.sh do they get broken apart
+again? Look at every variable on the upload line that has no quotes around it.
+
+Also try `./archive.sh; echo $?` and `./archive.sh finance '*'`.
+
+Game tip: `edit archive.sh` opens the script in an editor.

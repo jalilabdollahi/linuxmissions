@@ -1,1 +1,1 @@
-A short for-loop is the cleanest option here.
+Each time you kill a member something starts a new one, so find out who. Look at the family tree and at process groups and sessions, not just names. For the imposter: real kernel threads are children of PID 2 and have no executable on disk; a process that merely names itself like one is a child of something else and runs a real binary.

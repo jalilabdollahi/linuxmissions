@@ -1,1 +1,39 @@
-Example: `tar -czf case-esac-backup.tar.gz bundle/case-esac`
+Type this at the prompt. It rewrites unpack.sh with the patterns in the right order:
+
+cat > unpack.sh <<'EOF'
+#!/bin/bash
+# unpack.sh FILE - extract a vendor delivery into the current directory.
+f=$1
+base=${f##*/}
+shopt -s nocasematch
+
+case $base in
+  *.tar.gz|*.tar.xz)
+    name=${base%.*}; name=${name%.*}
+    mkdir -p "$name" && tar -xf "$f" -C "$name"
+    ;;
+  *.tgz)
+    name=${base%.*}
+    mkdir -p "$name" && tar -xzf "$f" -C "$name"
+    ;;
+  *.zip)
+    unzip -q "$f" -d "${base%.*}"
+    ;;
+  *.gz)
+    gunzip -c "$f" > "${base%.*}"
+    ;;
+  *)
+    echo "unpack: unsupported file: $f" >&2
+    exit 2
+    ;;
+esac
+EOF
+
+- shopt -s nocasematch              case patterns ignore letter case: .ZIP and .TGZ match
+- *.tar.gz|*.tar.xz) before *.gz)   the first matching pattern wins, so specific ones go first
+- ${base%.*} twice                  strip .gz, then .tar (dots inside NAME survive)
+- tar -xf                           GNU tar detects gzip or xz compression by itself
+- gunzip -c ... > NAME              decompress into a new file, leave the original alone
+- >&2; exit 2                       unsupported: message on stderr, failure status
+
+Check: mkdir -p try && cd try && ../unpack.sh "../inbox/Invoices Oct.ZIP"; ls; cd ..

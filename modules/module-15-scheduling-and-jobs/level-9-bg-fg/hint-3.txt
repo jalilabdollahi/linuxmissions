@@ -1,1 +1,11 @@
-Example: `ln -s releases/bg-fg.conf current.conf`
+./export.sh &
+kill -STOP %1
+./snapshot.sh
+bg %1
+wait %1
+
+- ./export.sh &        job [1] starts writing heartbeats to export.log
+- kill -STOP %1        pauses job 1: no more heartbeats, jobs shows it as Stopped
+- ./snapshot.sh        runs for about 5 s while the export is paused
+- bg %1                SIGCONT: the export continues in the background, counter intact
+- wait %1              blocks until the export has written DONE (fg %1 works too)

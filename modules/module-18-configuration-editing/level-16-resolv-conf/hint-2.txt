@@ -1,1 +1,7 @@
-A du pipeline sorted numerically is a strong fit here.
+systemd-resolved reads etc/systemd/resolved.conf and then every *.conf in
+etc/systemd/resolved.conf.d/, in alphabetical order. Put your settings in a new
+drop-in there, under a [Resolve] section, with `DNS=` and `Domains=`.
+Careful: DNS= and Domains= are lists, and a later file adds to the list instead
+of replacing it. An empty assignment (`DNS=`) clears the list so far. Look at the
+other drop-in before you write yours. Apply with `systemctl restart systemd-resolved`
+and verify with `resolvectl status`. More: man resolved.conf

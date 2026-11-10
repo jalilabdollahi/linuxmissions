@@ -1,1 +1,12 @@
-Example: `mkdir -p organized/shell-startup && mv inbox/shell-startup.txt organized/shell-startup/shell-startup-notes.txt`
+Type these at the prompt:
+
+grep PROJECT_ROOT home/.profile >> home/.bashrc
+grep -v PROJECT_ROOT home/.profile > home/profile.tmp && mv home/profile.tmp home/.profile
+echo '[ -f ~/.bashrc ] && . ~/.bashrc' >> home/.bash_profile
+
+- grep ... >> home/.bashrc          append the export line to .bashrc (read by every interactive shell)
+- grep -v ... && mv ...             rewrite .profile without that line, so it is defined only once
+- echo '...' >> home/.bash_profile  login shells read .bash_profile; now it also loads .bashrc
+                                    (single quotes keep ~ in the file, it expands when the file runs)
+
+Check: env -i HOME="$SANDBOX/home" bash -l -c 'echo $PROJECT_ROOT'

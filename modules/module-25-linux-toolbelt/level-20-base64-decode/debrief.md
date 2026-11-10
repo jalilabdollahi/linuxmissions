@@ -1,17 +1,22 @@
-# Base64 Decode: Noise Dedup
+# Read It, Never Run It
 
-## What you practiced
-- This level focused on **Base64 Decode** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+The blob was wrapped in three layers. The outer one is base64url: it uses `-`
+and `_` instead of `+` and `/` and has no `=` padding, so plain `base64 -d`
+refuses it. `tr '_-' '/+'` restores the alphabet and a loop adds padding until
+the length is a multiple of 4. The result is gzip data, and `gunzip` produces
+text that is base64 again; one more `base64 -d` shows the payload. Each step
+writes to a file or a pipe you can inspect: nothing is ever passed to `sh`.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- Running `echo BLOB | base64 -d | sh` "to see what happens". Decode, read,
+  then decide; the attacker's command should only ever run on the attacker's
+  schedule.
+- Forgetting that `base64 -d` on a url-safe string reports "invalid input"
+  and may print half of a result.
+- Treating the first decoded bytes as text: `file -` or `xxd | head` shows the
+  gzip magic number `1f 8b` first.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Learn next
+`basenc --base64url -d` decodes the URL-safe form directly (padding still
+required), and `base64 -d -i` ignores garbage characters.

@@ -1,1 +1,4 @@
-Use one command for the beginning of the file and another for the end.
+Two files: the .service says WHAT to run, the .timer says WHEN. A timer starts the
+service with the same name unless it says otherwise. Look at stats-export.timer for the
+layout, but don't copy it blindly: does `*-*-* 01:15:00` care about weekdays? Does it
+catch up after downtime? Which option in [Timer] does that?

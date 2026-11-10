@@ -1,16 +1,11 @@
 {
-  "name": "Secret Scanning: Loop Builder",
-  "description": "In the security auditing lab, a task related to Secret Scanning needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named secret-scanning-1.txt through secret-scanning-3.txt with matching numbered content",
+  "name": "Before the Repo Goes Public",
+  "description": "A snapshot of the billing-sync repository in repo/ will be published tomorrow. Over the years people committed AWS keys, a private key, passwords and tokens, some of them in hidden folders and old compressed logs.",
+  "objective": "Find every real credential under repo/ (hidden folders and .gz files included) and write one `file:line` per leak to leaks.txt, for example `repo/config/x.ini:7` (for a .gz file the line number is the line in the decompressed text; for a private key, the BEGIN line). Real credentials are: AWS access key ids (AKIA followed by 16 capitals or digits), private key blocks, `password` settings (any case, with or without spaces around `=`) that have a real value, and GitHub tokens that start with `ghp_`. Documented placeholders, empty values, `<...>` and `${...}` values and settings that merely contain the word password are not leaks. Do not edit anything in repo/ yet: the line numbers must stay valid.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Secret Scanning",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "25m",
+  "concepts": ["grep -r", "extended regex", "zgrep", "hidden files", "false positives"],
   "module": "module-16-security-auditing",
   "level": "level-14-secret-scanning"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Netstat Legacy: Metric Sum",
-  "description": "In the monitoring and performance lab, a task related to Netstat Legacy needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of netstat-legacy-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Netstat Legacy",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Retiring netstat",
+  "description": "The old monitoring plugin conn_states.sh counts TCP connections per state with `netstat -tan`. The net-tools package is being removed from every host next week, and the plugin's output feeds dashboards and alert rules that match on exact state names, so nothing about the output may change.",
+  "objective": "Rewrite conn_states.sh (in place) to use ss instead of netstat, so that its output is byte-for-byte what the old script printed: one `STATE count` line per state, sorted, with netstat's state names. The script must not call netstat any more.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "30m",
+  "concepts": ["ss -tan", "netstat vs ss state names", "header lines", "awk counting", "output compatibility"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-15-netstat-legacy"
 }

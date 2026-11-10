@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Run `type -a deploy-helper` after `source env.sh`: it lists every copy bash can find, in the order it would try them.
+
+PATH is a colon-separated list of directories, searched from left to right; the first match wins. Where does env.sh put legacy/bin, and where would tools/bin need to go?
+
+Also keep in mind: env.sh is sourced by other people's shells and by CI, from other directories, where $SANDBOX does not exist.

@@ -1,1 +1,1 @@
-This is a numeric aggregation task.
+Look at one broken file next to its env file and the template, character by character: which values arrived damaged, and what do those values have in common? Check the env files with `cat -A` (what does the end of a line look like, and what is in front of some names?). Then ask how a template engine decides which `$` things are placeholders, and how you can tell it. For the drift list, first decide what "different" means: comparing whole files will flag all twelve.

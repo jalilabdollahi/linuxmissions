@@ -1,1 +1,13 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+N=sysroot/etc/systemd/network
+read -r _ LMAC LADDR _ LGW _ < <(grep '^LAN ' ticket.txt)
+read -r _ BMAC _ < <(grep '^BACKUP ' ticket.txt)
+LIF=$(awk -v m="$LMAC" 'index($0,m){sub(":","",$2); print $2}' ip-o-link.txt)
+BIF=$(awk -v m="$BMAC" 'index($0,m){sub(":","",$2); print $2}' ip-o-link.txt)
+sed -i -e "s|^Name=.*|Name=$LIF|" -e "s|^Address=.*|Address=$LADDR|" -e "s|^Gateway=.*|Gateway=$LGW|" $N/10-lan.network
+sed -i "s|^MACAddress=.*|Name=$BIF|" $N/20-backup.network
+cat $N/*.network
+
+- read splits the ticket rows into MAC, address with prefix and gateway
+- awk finds the interface name that carries each MAC in the captured ip -o link output
+- the first sed points the LAN file at the new name and writes the ticket's address, prefix and gateway
+- the second sed replaces the old board's MAC in the backup file with the new interface name; the last line shows the result

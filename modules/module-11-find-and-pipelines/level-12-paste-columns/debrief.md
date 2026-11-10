@@ -1,17 +1,21 @@
-# Paste Columns: Permission Fix
+# Three Exports, One Report
 
-## What you practiced
-- This level focused on **Paste Columns** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`paste` reads its files in parallel and joins line N of each with a tab, which
+is exactly how per-metric exports fit together. `-` stands for standard input,
+so a cleaned-up copy of cpu.txt can go in the middle without a temp file. With
+`-s` paste works the other way round: all lines of one input become a single
+line, joined by the `-d` character, with no separator after the last item.
 
-## Commands to remember
-```bash
-chmod 750 script.sh
-ls -l script.sh
-stat -c '%a %n' script.sh
-```
+## Common mistakes
+- Pasting cpu.txt as it is: each row becomes `host<TAB>71.6\r<TAB>29.9`.
+  The terminal hides the `\r`, but scripts reading the file break on it.
+- `tr '\n' ','` instead of `paste -s`: the last newline also becomes a comma,
+  leaving `...,lb-06,` and no newline at the end.
+- `paste -d,` without `-s` does nothing useful on a single column.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the current mode first if you want to verify the change.
+## Learn next
+`paste - - - < file` folds a single column into rows of three, and
+`paste -d'\t\n'` cycles through several separators. `dos2unix` converts a
+file in place, and `file cpu.txt` tells you "with CRLF line terminators"
+before you start.

@@ -1,15 +1,11 @@
 {
-  "name": "Chmod Octal: Alert Filter",
-  "description": "In the security auditing lab, a task related to Chmod Octal needs cleanup before the handoff.",
-  "objective": "Write every alert line from chmod-octal.log into alerts.txt",
+  "name": "Never Loosen",
+  "description": "The security policy in policy.txt caps the permissions of everything in app/. The files were copied around by several people and many are too open, but a few secrets were already locked down harder than the policy requires.",
+  "objective": "Bring every file under app/ in line with policy.txt without ever making a file more permissive than it is now: a file must end up with exactly the permissions it has now minus whatever the policy does not allow. Leave file contents and folder modes alone.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Chmod Octal",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["stat -c %a", "octal modes", "permission masks", "chmod", "find -exec"],
   "module": "module-16-security-auditing",
   "level": "level-2-chmod-octal"
 }

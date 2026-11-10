@@ -1,1 +1,1 @@
-Look for a filtering command that keeps only the alert lines in grep-gauntlet.log.
+One ID, several spellings: ask yourself how each service might print the same UUID (case, separators, encoding), and which log files exist besides the obvious ones. Also remember that rotated files may be compressed, and that grep refuses to print lines from a file it thinks is binary.

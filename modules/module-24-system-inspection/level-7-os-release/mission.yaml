@@ -1,15 +1,11 @@
 {
-  "name": "Os Release: History Window",
-  "description": "In the system inspection lab, a task related to Os Release needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of os-release-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Os Release",
-    "head",
-    "tail"
-  ],
+  "name": "End-of-Life Audit",
+  "description": "Compliance wants to know which of the 15 servers still run an operating system that is past its end-of-life date as of 2026-11-10. Each server's /etc was captured under fleet/<host>/etc/, and eol.csv lists the end-of-life date of each distribution release.",
+  "objective": "Write eol_hosts.txt with one line `host ID VERSION_ID` for every host whose OS reached end of life on or before 2026-11-10, sorted by host name. ID and VERSION_ID are the values from the host's os-release, without quotes. eol.csv is keyed by distribution ID and major version.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "20m",
+  "concepts": ["os-release", "sourcing a file in a subshell", "relative symlinks", "quoted vs unquoted values", "joining data with awk"],
   "module": "module-24-system-inspection",
   "level": "level-7-os-release"
 }

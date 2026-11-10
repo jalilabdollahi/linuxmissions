@@ -1,1 +1,26 @@
-Example: `cut -d, -f2 ownership-audit-report.csv > owners.txt`
+awk '
+  FILENAME == "old/etc/passwd" { split($0, a, ":"); ou[a[3]] = a[1]; next }
+  FILENAME == "old/etc/group"  { split($0, a, ":"); og[a[3]] = a[1]; next }
+  FILENAME == "etc/passwd"     { split($0, a, ":"); nu[a[1]] = 1; next }
+  FILENAME == "etc/group"      { split($0, a, ":"); ng[a[1]] = 1; next }
+  {
+    path = $0; for (i = 1; i <= 7; i++) sub(/^[^ ]+ +/, "", path)
+    u = ou[$3]; g = og[$4]
+    if (!(u in nu)) seen["user " u] = 1
+    if (!(g in ng)) seen["group " g] = 1
+    spec = ""
+    if (u in nu && g in ng) spec = u ":" g
+    else if (u in nu) spec = u
+    else if (g in ng) spec = ":" g
+    q = path; gsub(/\047/, "\047\\\047\047", q)
+    if (spec != "") printf "chown %s \047%s\047\n", spec, q > "chown-plan.sh"
+  }
+  END { for (k in seen) print k > "unmapped.txt" }
+' old/etc/passwd old/etc/group etc/passwd etc/group restore-listing.txt
+cat chown-plan.sh unmapped.txt
+
+- the first four rules   build old UID->name and GID->name, and the sets of names that exist on app-09
+- path = $0; ... sub(...)   cut the seven ls fields off the front so the path (with spaces) is left
+- u in nu, g in ng       a name is mapped only if the new server has it; spec is user:group, user, or :group
+- gsub(/\047/, ...)      \047 is a single quote: it is escaped as '\'' so the path stays one word
+- END { ... }            every owner seen without a match on app-09 goes to unmapped.txt

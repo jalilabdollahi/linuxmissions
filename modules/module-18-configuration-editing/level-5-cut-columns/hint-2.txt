@@ -1,1 +1,7 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+cut -d= -f1 prints field 1 when the line is split at every "=". To get everything
+after the first "=", ask for a range of fields: -f2- means "field 2 to the end",
+which also keeps the later "=" signs of a base64 value.
+  grep -v '^#' file        drop comment lines (-e can be repeated for blank lines: '^$')
+  sed 's/^export //'       remove a prefix
+  grep '^NAME=' file       select one setting
+Chain them with pipes and redirect the result with >. More: man cut

@@ -1,1 +1,7 @@
-You need the interface name from lines ending with `:` and the IPv4 address from `inet` lines.
+- IPv4 address lines start with the word `inet` (IPv6 lines start with `inet6`).
+- awk splits each line into fields: on an inet line, $1 is "inet", $2 is "10.20.4.17/24", and $NF (the last field) is the interface label, e.g. "eno1" or "eno1.120".
+- Compare the whole field, `$1 == "inet"`, so inet6 lines don't match.
+- `split($2, a, "/")` cuts "10.20.4.17/24" at the slash; a[1] is the address.
+- `print X, Y` prints two values separated by a space.
+
+Read more: `man awk` (fields, NF, split). On a live system `ip -4 -o addr` or `ip -br addr` gives a one-line-per-address view.

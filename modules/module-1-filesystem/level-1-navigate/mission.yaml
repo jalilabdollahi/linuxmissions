@@ -1,11 +1,11 @@
 {
   "name": "Lost in the Maze",
-  "description": "A configuration file is buried somewhere inside a nested directory tree inside the sandbox.",
-  "objective": "Find the file named 'secret.conf' and print its contents",
+  "description": "The billing service needs its vault access code, but nobody remembers where the old admin left secret.conf. The sandbox is a copy of the server's directory tree.",
+  "objective": "Find the file named exactly secret.conf and write the value of its access_code setting (only the value, without 'access_code=') to answer.txt in the sandbox root",
   "xp": 100,
   "difficulty": "beginner",
   "expected_time": "5m",
-  "concepts": ["ls", "cd", "find", "cat", "pwd"],
+  "concepts": ["find", "ls", "cd", "pwd", "cat"],
   "module": "module-1-filesystem",
   "level": "level-1-navigate"
 }

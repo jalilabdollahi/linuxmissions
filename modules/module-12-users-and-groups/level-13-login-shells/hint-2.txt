@@ -1,1 +1,6 @@
-Use `chmod +x jobs/login-shells.sh` and then execute it.
+  cut -d: -f1,3,7 etc/passwd | cat -A     user, UID, shell; cat -A shows a trailing space before the $
+  grep -v '^#' etc/shells                 the valid shells; compare whole lines (grep -qxF SHELL)
+  awk -F: '$3 < 1000 { print $1, $7 }'    the service accounts and their shells
+  bin/usermod -s /usr/sbin/nologin NAME   the mock edits only the shell field of that line
+  bin/usermod -s /bin/bash NAME           the same for people with an invalid shell
+Do not rewrite the file with a generator that drops a field (the +:::::: line!). More: man usermod

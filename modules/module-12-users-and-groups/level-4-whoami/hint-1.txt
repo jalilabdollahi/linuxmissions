@@ -1,1 +1,5 @@
-This is a sorting task followed by deduplication.
+Read deploy.sh and NOTE.txt. $USER is an environment variable: whoever starts
+the script can set it to anything, and under cron it may not be set at all.
+What tells you which account a process really runs as? The kernel keeps that
+as a number (the effective UID); you need a command that turns it into a name.
+Try it: USER=release ./deploy.sh

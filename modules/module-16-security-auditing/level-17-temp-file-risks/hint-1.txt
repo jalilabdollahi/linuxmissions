@@ -1,1 +1,3 @@
-This mission is about cron field order and exact syntax.
+Look at how the script picks its temporary file name and when it deletes it. What happens if a
+file or symlink with that name already exists when the script starts? And what happens to the file if the
+script stops before its last line? Try running it on a data file with a broken line and look at $TMPDIR.

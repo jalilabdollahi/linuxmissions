@@ -1,15 +1,16 @@
 {
-  "name": "Link Labyrinth: Loop Builder",
-  "description": "In the linux war games lab, a task related to Link Labyrinth needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named link-labyrinth-1.txt through link-labyrinth-3.txt with matching numbered content",
+  "name": "Link Labyrinth",
+  "description": "The app reads a stale config, and since the release folders were renamed some paths fail ('No such file', 'Too many levels of symbolic links'). NOTES.md describes the intended layout of deploy/.",
+  "objective": "Make deploy/ match NOTES.md: no broken, looping or absolute links, editing releases/<new>/app.conf (in place or with an editor) changes what config/active.conf shows, the old release stays untouched, and the whole tree still works after being copied to another directory.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
+  "expected_time": "25m",
   "concepts": [
-    "Link Labyrinth",
-    "for",
-    "seq",
-    "printf"
+    "symlinks vs hard links",
+    "inodes and ls -li",
+    "relative links and ln -sr",
+    "find -L",
+    "relocatable trees"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-14-link-labyrinth"

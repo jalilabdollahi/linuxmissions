@@ -1,1 +1,6 @@
-Look for a filtering command that keeps only the alert lines in profile-d.log.
+Two questions. First: which files in etc/profile.d are actually loaded by a login
+shell? Compare the working scripts with the draft and look at their names.
+Second: what should happen when the script runs a second time, or when the
+directory is already in PATH, or when the directory is not there? Write down
+those three cases before you write any code. The test shell for all of this is
+plain `sh`, which on Ubuntu is dash, not bash.

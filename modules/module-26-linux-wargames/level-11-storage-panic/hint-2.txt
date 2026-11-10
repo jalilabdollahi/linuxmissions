@@ -1,1 +1,4 @@
-Use tar extraction flags and point at the archive file.
+- `man df`: `-i` reports inodes instead of blocks. One inode is used per file, however small.
+- `find var -type f -printf '%h\n' | sort | uniq -c | sort -rn | head` counts files per directory.
+- `ls -lS` sorts by apparent size, `du` by blocks actually used: `du -h --apparent-size var/lib/vm/vm.img` against `du -h var/lib/vm/vm.img` (a sparse file).
+- `find DIR -type f -mtime +0` is "modified more than a full day ago"; add `-delete` only after you looked at the list (`| head`, `| wc -l`).

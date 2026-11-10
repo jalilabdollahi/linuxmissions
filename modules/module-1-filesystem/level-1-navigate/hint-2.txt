@@ -1,2 +1,6 @@
-Once you locate it, use: cat /path/to/secret.conf
-The sandbox path is shown at the top of the mission briefing.
+find searches a directory tree:  find . -name secret.conf
+  .             start here (the sandbox root) and go down into every subfolder
+  -name NAME    match the file name exactly (use quotes for patterns: -name '*.conf')
+Then read the file with cat <path>. pwd shows where you are; cd "$SANDBOX" takes
+you back to the root, where answer.txt must go.
+More: man find

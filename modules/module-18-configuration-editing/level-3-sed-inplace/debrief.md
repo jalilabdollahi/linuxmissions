@@ -1,17 +1,19 @@
-# Sed Inplace: Event Counter
+# Staging Moves Over
 
-## What you practiced
-- This level focused on **Sed Inplace** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A sed command can be restricted with an address. `/^\[staging\]/,/^\[/` selects
+the lines from the staging header up to the next header, so the substitution never
+sees `[production]`. Anchoring the pattern (`^port = 8080$`) keeps it away from
+comments and from settings such as `admin_port = 18080`. `-i.bak` makes sed write
+the result back and keep the untouched original next to it, which is the safety net
+for any in-place edit of a config.
 
-## Commands to remember
-```bash
-grep -c '^pattern$' file.txt
-grep PATTERN file.txt | wc -l
-wc -l file.txt
-```
+## Common mistakes
+- `sed -i 's/8080/9080/g'` changes production, comments and admin_port as well.
+- `sed -i.bak` typed after the edit, or `cp` made after changing the file: the backup must
+  be the original.
+- A range whose end pattern is the same as the start (`/^\[staging\]/,/^\[staging\]/`) never ends.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Count matching lines instead of copying them out by hand.
+## Next step
+`sed -n '/^\[staging\]/,/^\[/p' services.conf` prints the section you are about to change,
+and `diff services.conf.bak services.conf` is the quickest review of any in-place edit.

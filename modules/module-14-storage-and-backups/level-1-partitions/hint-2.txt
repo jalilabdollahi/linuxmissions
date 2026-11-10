@@ -1,1 +1,6 @@
-`mkdir -p organized/partitions` followed by `mv inbox/partitions.txt organized/partitions/partitions-notes.txt` is enough.
+Two tools read a partition table:
+  fdisk -l disk.img       human-readable table (sizes with units, type names)
+  sfdisk -d disk.img      a dump with exact start and size in sectors and the hex type id
+Sectors are 512 bytes, so one MiB is 2048 sectors. A partition of type 5 (or f, or 85) is an extended container: it only holds logical partitions.
+awk can do the arithmetic; sed 's/[=,]/ /g' turns "start=2048," into separate fields.
+More: man sfdisk, man fdisk

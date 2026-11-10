@@ -1,15 +1,11 @@
 {
-  "name": "Tabular Output: Noise Dedup",
-  "description": "In the data processing lab, a task related to Tabular Output needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from tabular-output-raw.txt with sorted unique values",
+  "name": "Weekly Cost Mail",
+  "description": "Every Monday the team leads get the cloud cost per team in a plain-text mail, read in a fixed-width font. The cost export costs.csv is messy (a comment line, padding, numbers like 1e3), and last week's hand-made table was misaligned so badly that two teams were billed each other's costs.",
+  "objective": "Write report.txt, exactly in this layout, every line 33 characters wide with no tabs and no trailing spaces: line 1 TEAM left-aligned in 20 columns, a space, COST (USD) right-aligned in 12 columns; line 2 a rule of 20 dashes, a space and 12 dashes; then one line per team of costs.csv in file order: the team name without surrounding spaces, left-aligned in 20 columns (a name longer than 20 characters is cut to its first 19 followed by ~), a space, the cost right-aligned in 12 columns with exactly 2 decimals; then the rule again; and last TOTAL in the same layout with the sum of all costs.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Tabular Output",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "15m",
+  "concepts": ["printf %-20s %12.2f", "fixed-width text reports", "awk length() / substr()", "numbers like 1e3", "BEGIN / END blocks"],
   "module": "module-22-data-processing",
   "level": "level-20-tabular-output"
 }

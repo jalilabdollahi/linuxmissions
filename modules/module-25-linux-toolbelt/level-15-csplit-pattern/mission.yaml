@@ -1,15 +1,11 @@
 {
-  "name": "Csplit Pattern: Metric Sum",
-  "description": "In the linux toolbelt lab, a task related to Csplit Pattern needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of csplit-pattern-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Csplit Pattern",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "One File Per Resource",
+  "description": "A cluster export, all.yaml, holds 14 Kubernetes manifests in one stream separated by --- lines. The GitOps repository wants one file per resource, named after what it is.",
+  "objective": "Split all.yaml into the directory manifests/ so that each of the 14 resources has its own file named <kind>-<name>.yaml, with kind in lower case and name taken from the resource's own metadata (for a Deployment named web: deployment-web.yaml). Each file holds exactly the lines of its document, without the --- separator line. There must be 14 files, none empty, and no leftovers from the splitting.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["csplit", "csplit -z", "csplit -f -b", "{*} repeat", "renaming from file content"],
   "module": "module-25-linux-toolbelt",
   "level": "level-15-csplit-pattern"
 }

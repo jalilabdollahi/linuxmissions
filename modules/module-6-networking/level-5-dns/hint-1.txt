@@ -1,2 +1,3 @@
-Use the provided DNS helper:
-./mock_dig.sh app.internal
+Look up a few names by hand with ./dig and read the full answer: the status in the HEADER line, and the ANSWER SECTION. Compare app.internal, www.internal, api.internal and legacy.internal. What is different about each one?
+
+Then try the short form of the output, which prints only the answer data. Which of its lines are addresses, and which are names?

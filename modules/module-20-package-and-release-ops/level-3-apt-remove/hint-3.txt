@@ -1,1 +1,7 @@
-Example: `grep -c '^ok$' apt-remove-events.txt > ok-count.txt`
+dpkg -l | grep oldmon
+apt purge oldmon
+dpkg -l | grep oldmon
+
+- dpkg -l | grep       before: oldmon is rc (removed), oldmon-plugins is ii (installed, not ours to touch)
+- apt purge oldmon     deletes the leftover conffiles and the package's database entry
+- dpkg -l | grep       after: only oldmon-plugins is left

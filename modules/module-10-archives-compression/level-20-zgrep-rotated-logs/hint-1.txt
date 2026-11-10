@@ -1,0 +1,7 @@
+Three questions. Which file is the oldest? In a logrotate setup, app.log is
+today and the higher the number, the older the file. In what order does
+`ls logs` show them, and is that the order you want?
+How do you search compressed files without unpacking them? Look at the
+extensions: is there one tool that reads all three formats?
+And what exactly matches "88412"? Look for lines that mention it in
+another way (order=884120, amount_cents=88412).

@@ -1,1 +1,4 @@
-This is a delimiter-based column extraction task.
+Read outbox/transfer-rejected.txt: the system looked at the first bytes of the
+file, not at its name. What does `file outbox/ledger-2025.tar.bz2` say it is?
+Renaming will not help; the archive has to be built again with bzip2. And for
+audit.log: by default bzip2 replaces the file it compresses.

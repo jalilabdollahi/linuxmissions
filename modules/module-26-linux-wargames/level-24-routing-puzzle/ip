@@ -1,0 +1,212 @@
+#!/usr/bin/env python3
+"""ip: a small simulation of iproute2's `ip rule` and `ip route` (policy routing).
+
+  ip rule [show|list]
+  ip rule add [from P] [to P] [iif DEV] [priority N] lookup TABLE
+  ip rule del priority N | ip rule del [from P] [to P] lookup TABLE
+  ip route [show] [table TABLE|all]
+  ip route add|replace|del PREFIX [via GW] [dev DEV] [metric M] [table TABLE]
+  ip route get DST [from SRC] [iif DEV]
+
+State lives in $LM_IPDIR (default: the net/ directory next to this script):
+rules, routes and rt_tables, in the formats `ip` prints.
+"""
+import ipaddress, os, re, sys
+
+D = os.environ.get("LM_IPDIR") or os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "..", "net")
+D = os.path.abspath(D)
+
+def die(msg, code=2):
+    sys.stderr.write(msg + "\n"); sys.exit(code)
+
+def tables():
+    t = {"255": "local", "254": "main", "253": "default", "local": "local", "main": "main", "default": "default"}
+    p = os.path.join(D, "rt_tables")
+    if os.path.exists(p):
+        for l in open(p):
+            l = l.split("#")[0].split()
+            if len(l) == 2: t[l[0]] = l[1]; t[l[1]] = l[1]
+    return t
+
+def tname(x):
+    t = tables()
+    if x not in t: die('Error: argument "%s" is wrong: invalid table ID/name' % x if False else 'Error: unknown table "%s"' % x)
+    return t[x]
+
+def load_rules():
+    out = []
+    for l in open(os.path.join(D, "rules")):
+        l = l.rstrip("\n")
+        if not l.strip(): continue
+        m = re.match(r"^(\d+):\s+(.*)$", l)
+        if not m: continue
+        toks = m.group(2).split(); r = {"prio": int(m.group(1)), "from": None, "to": None, "iif": None, "table": None}
+        i = 0
+        while i < len(toks):
+            if toks[i] == "from" and toks[i+1] != "all": r["from"] = toks[i+1]; i += 2
+            elif toks[i] == "from": i += 2
+            elif toks[i] == "to": r["to"] = toks[i+1]; i += 2
+            elif toks[i] == "iif": r["iif"] = toks[i+1]; i += 2
+            elif toks[i] in ("lookup", "table"): r["table"] = toks[i+1]; i += 2
+            else: i += 1
+        out.append(r)
+    return out
+
+def fmt_rule(r):
+    s = "%d:\t" % r["prio"]
+    s += "from %s " % (r["from"] or "all")
+    if r["to"]: s += "to %s " % r["to"]
+    if r["iif"]: s += "iif %s " % r["iif"]
+    return s + "lookup %s " % r["table"]
+
+def save_rules(rs):
+    rs = sorted(rs, key=lambda r: r["prio"])
+    open(os.path.join(D, "rules"), "w").write("".join(fmt_rule(r).rstrip() + "\n" for r in rs))
+
+def parse_route(line):
+    toks = line.split()
+    r = {"dst": toks[0], "via": None, "dev": None, "metric": 0, "table": "main", "extra": []}
+    i = 1
+    while i < len(toks):
+        k = toks[i]
+        if k == "via": r["via"] = toks[i+1]; i += 2
+        elif k == "dev": r["dev"] = toks[i+1]; i += 2
+        elif k == "metric": r["metric"] = int(toks[i+1]); i += 2
+        elif k == "table": r["table"] = toks[i+1]; i += 2
+        else: r["extra"].append(k); i += 1
+    return r
+
+def load_routes():
+    p = os.path.join(D, "routes")
+    return [parse_route(l) for l in open(p) if l.strip() and not l.startswith("#")]
+
+def fmt_route(r, with_table):
+    s = r["dst"]
+    if r["via"]: s += " via " + r["via"]
+    if r["dev"]: s += " dev " + r["dev"]
+    if r["metric"]: s += " metric %d" % r["metric"]
+    if with_table and r["table"] != "main": s += " table " + r["table"]
+    return s
+
+def save_routes(rs):
+    open(os.path.join(D, "routes"), "w").write("".join(fmt_route(r, True) + "\n" for r in rs))
+
+def net(x):
+    if x == "default": return ipaddress.ip_network("0.0.0.0/0")
+    try: return ipaddress.ip_network(x if "/" in x else x + "/32", strict=False)
+    except ValueError: die('Error: inet prefix is expected rather than "%s".' % x)
+
+def lookup(table, dst, rs):
+    best = None
+    for r in rs:
+        if r["table"] != table or "blackhole" in r["extra"] or "unreachable" in r["extra"]: continue
+        n = net(r["dst"])
+        if dst not in n: continue
+        key = (-n.prefixlen, r["metric"])
+        if best is None or key < best[0]: best = (key, r)      # ties: first listed wins
+    return best[1] if best else None
+
+def cmd_rule(a):
+    if not a or a[0] in ("show", "list", "ls"):
+        for r in load_rules(): print(fmt_rule(r))
+        return
+    verb = a[0]; rest = a[1:]
+    r = {"prio": None, "from": None, "to": None, "iif": None, "table": None}
+    i = 0
+    while i < len(rest):
+        k = rest[i]
+        if k in ("from", "to", "iif") and i + 1 < len(rest):
+            if not (k == "from" and rest[i+1] == "all"): r[k] = rest[i+1]
+            i += 2
+        elif k in ("priority", "pref", "preference") and i + 1 < len(rest): r["prio"] = int(rest[i+1]); i += 2
+        elif k in ("lookup", "table") and i + 1 < len(rest): r["table"] = tname(rest[i+1]); i += 2
+        else: die('Error: argument "%s" is wrong: unknown or incomplete selector' % k)
+    rs = load_rules()
+    if verb == "add":
+        if not r["table"]: die("Error: Not enough information: \"lookup\" is required.")
+        if r["prio"] is None: r["prio"] = min([x["prio"] for x in rs if x["prio"] > 0 and x["prio"] < 32766] + [32766]) - 1
+        for x in rs:
+            if all(x[k] == r[k] for k in ("prio", "from", "to", "iif", "table")): die("RTNETLINK answers: File exists", 2)
+        rs.append(r); save_rules(rs)
+    elif verb in ("del", "delete"):
+        def match(x):
+            return all(r[k] is None or x[k] == r[k] for k in ("prio", "from", "to", "iif", "table"))
+        hit = [x for x in rs if match(x)]
+        if not hit: die("RTNETLINK answers: No such file or directory", 2)
+        rs.remove(hit[0]); save_rules(rs)
+    else: die('Command "%s" is unknown, try "ip rule help".' % verb)
+
+def cmd_route(a):
+    verb = a[0] if a and a[0] in ("show", "list", "add", "replace", "change", "del", "delete", "get") else "show"
+    rest = a[1:] if a and a[0] == verb else a
+    if verb in ("show", "list"):
+        tab = "main"; i = 0
+        while i < len(rest):
+            if rest[i] == "table" and i + 1 < len(rest): tab = rest[i+1]; i += 2
+            else: i += 1
+        rs = load_routes()
+        if tab == "all":
+            for r in rs: print(fmt_route(r, True))
+        else:
+            t = tname(tab)
+            for r in rs:
+                if r["table"] == t: print(fmt_route(r, False))
+        return
+    if verb == "get":
+        if not rest: die("Command \"get\" requires an address")
+        dst = ipaddress.ip_address(rest[0]); src = None; iif = None; i = 1
+        while i < len(rest):
+            if rest[i] == "from": src = ipaddress.ip_address(rest[i+1]); i += 2
+            elif rest[i] == "iif": iif = rest[i+1]; i += 2
+            else: i += 1
+        rs = load_routes()
+        for rule in sorted(load_rules(), key=lambda r: r["prio"]):
+            if rule["from"] and (src is None or src not in net(rule["from"])): continue
+            if rule["to"] and dst not in net(rule["to"]): continue
+            if rule["iif"] and rule["iif"] != iif: continue
+            hit = lookup(rule["table"], dst, rs)
+            if hit:
+                s = str(dst)
+                if src: s += " from %s" % src
+                if hit["via"]: s += " via " + hit["via"]
+                s += " dev " + hit["dev"]
+                if hit["table"] != "main": s += " table " + hit["table"]
+                print(s + " uid %d \n    cache " % os.getuid())
+                return
+        die("RTNETLINK answers: Network is unreachable", 2)
+    # add / replace / del
+    if not rest: die("Error: Route needs a prefix")
+    r = {"dst": rest[0], "via": None, "dev": None, "metric": 0, "table": "main", "extra": []}
+    net(r["dst"]); i = 1
+    while i < len(rest):
+        k = rest[i]
+        if k in ("via", "dev", "metric", "table") and i + 1 < len(rest):
+            r[k] = int(rest[i+1]) if k == "metric" else rest[i+1]; i += 2
+        else: die('Error: argument "%s" is wrong: unknown or incomplete' % k)
+    r["table"] = tname(r["table"])
+    if r["dst"] == "default": pass
+    rs = load_routes()
+    same = lambda x: net(x["dst"]) == net(r["dst"]) and x["table"] == r["table"] and (verb in ("replace", "change") and x["metric"] == r["metric"] or verb in ("add", "del", "delete") and x["metric"] == r["metric"])
+    if verb == "add":
+        if any(same(x) for x in rs): die("RTNETLINK answers: File exists", 2)
+        if not r["dev"]: die("Error: Device for nexthop is not up." if False else "RTNETLINK answers: Network is unreachable", 2)
+        rs.append(r)
+    elif verb in ("replace", "change"):
+        if not r["dev"]: die("RTNETLINK answers: Network is unreachable", 2)
+        for k, x in enumerate(rs):
+            if same(x): rs[k] = r; break
+        else: rs.append(r)
+    else:
+        hit = [x for x in rs if net(x["dst"]) == net(r["dst"]) and x["table"] == r["table"] and (not any(t in a for t in ("metric",)) or x["metric"] == r["metric"]) and (r["via"] is None or x["via"] == r["via"])]
+        if not hit: die("RTNETLINK answers: No such process", 2)
+        rs.remove(hit[0])
+    save_routes(rs)
+
+def main():
+    a = [x for x in sys.argv[1:] if x not in ("-4", "-4", "-s", "-o")]
+    if not a: die("Usage: ip [rule|route] ...", 255)
+    obj, rest = a[0], a[1:]
+    if obj in ("rule", "ru", "r"): cmd_rule(rest)
+    elif obj in ("route", "ro", "r"): cmd_route(rest)
+    else: die("mock: ip %s is not supported (only rule and route)" % obj, 1)
+main()

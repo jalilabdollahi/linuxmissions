@@ -1,1 +1,9 @@
-Example: `grep -c '^ok$' corrupt-config-events.txt > ok-count.txt`
+n=$(grep -o 'to [0-9]*' TICKET.md | head -1 | cut -d' ' -f2)
+jq --argjson n "$n" '.db.pool_size = $n | .features.audit_log = true' config.json.last-good > config.json.new
+mv config.json.new config.json
+./app --check
+
+- grep ... TICKET.md   pulls the new pool size out of the ticket text
+- jq '.db.pool_size = $n | ...'   starts from last-good and applies exactly the two ticketed changes
+- mv config.json.new  replaces the broken file only after jq succeeded
+- ./app --check       the same test the init script runs

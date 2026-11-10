@@ -1,4 +1,7 @@
-If it doesn't respond to SIGTERM (kill default), use SIGKILL:
-kill -9 <PID>
-# or:
-pkill -9 -f sleep_loop.sh
+  pgrep -af debug_logger.sh
+      shows the PID and full command line; check it's the logger, not the server
+      (on macOS use pgrep -lf)
+  kill $(pgrep -f debug_logger.sh)
+      $(...) puts the PID in place; kill sends SIGTERM to it
+  pgrep -af '\.sh'
+      only web_server.sh should be left

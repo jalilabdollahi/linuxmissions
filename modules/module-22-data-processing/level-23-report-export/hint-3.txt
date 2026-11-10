@@ -1,1 +1,12 @@
-Example: `tar -czf report-export-backup.tar.gz bundle/report-export`
+printf '\xef\xbb\xbf' > export.csv
+awk -F'\t' -v OFS=, '{ for (i = 1; i <= NF; i++) if ($i ~ /[",]/) { gsub(/"/, "\"\"", $i); $i = "\"" $i "\"" } $1 = $1; print }' clean.tsv >> export.csv
+jq -R -s 'split("\n") | map(select(length > 0) | split("\t")) | .[0] as $h | .[1:] | map([$h, .] | transpose | map({key: .[0], value: .[1]}) | from_entries | .id |= tonumber | .amount |= tonumber)' clean.tsv > export.json
+jq '.[0]' export.json
+
+- printf '\xef\xbb\xbf'          the byte-order mark, before anything else
+- if ($i ~ /[",]/) { ... }       a field with , or " gets quotes, inner " doubled
+- $1 = $1; print                 rebuild every line with commas (OFS), then print
+- jq -R -s 'split(...)'          the TSV as a list of rows of fields
+- .[0] as $h | .[1:]             keep the header, map over the data rows
+- transpose | ... from_entries   header names + values -> one object per row
+- .id |= tonumber ...            only id and amount become numbers; zip stays "02134"

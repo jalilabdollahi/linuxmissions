@@ -1,17 +1,21 @@
-# Missing Library: Path Realignment
+# The Rescue Toolkit Will Not Start
 
-## What you practiced
-- This level focused on **Missing Library** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A dynamically linked program stores the names (SONAMEs) of the libraries it needs in its
+`NEEDED` entries, and the loader finds each one by that exact name in its search path. `ldd` runs
+the real loader with the rescue system's paths, so it found the host's libraries and reported
+nothing missing; the toolkit, which brings its own, has to be checked against its own
+directory, with `readelf -d` for the names and a walk down the dependency chain (jq needs
+`libjq`, which needs `libonig`). The package cache had two builds: you had to pick the one
+whose file really provides the missing SONAME, unpack it with `dpkg-deb -x`, and add the link
+`libX.so.N -> libX.so.N.M.P` that `ldconfig` would normally create.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- Trusting `ldd` on the toolkit's binary and concluding that nothing is missing.
+- Copying the versioned file but not creating the SONAME link: the loader still cannot find the name.
+- Taking the older package because its version number looked right.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/missing-library/missing-library-notes.txt.
+## Next step
+`LD_DEBUG=libs` makes the loader print where each library came from, and
+`ld.so --list` or `LD_LIBRARY_PATH` give faster checks on a normal system. `patchelf --set-rpath`
+and `ldconfig -n DIR` are the tools for fixing search paths and creating SONAME links in bulk.

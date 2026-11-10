@@ -1,1 +1,1 @@
-Inspect the current mode first if you want to verify the change.
+Don't start by editing routes. Read the rules in priority order first: for a packet from a given source to a given destination, which rule is consulted first, and which table does it point at? Then look at what those tables contain. Remember how the kernel decides inside a table: the most specific prefix wins, and only then the lowest metric.

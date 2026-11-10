@@ -1,1 +1,0 @@
-Write the schedule into crontab.txt using the standard five time fields.

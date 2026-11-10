@@ -1,11 +1,11 @@
 {
   "name": "JSON Surgeon",
-  "description": "A nested JSON file describes an owner and a set of services. Extract the owner email and the active services into a short report.",
-  "objective": "Read data.json and write report.txt with `owner=...` and `active=...`",
-  "xp": 250,
+  "description": "The inventory API dumped its view of the platform to data.json: 30 services with nested status objects, and an owner with several contact entries. The incident template needs two facts from it.",
+  "objective": "Write report.txt with exactly two lines: `owner=<the owner's e-mail address>` and `active=<names of the services whose status.active is true, comma-separated, no spaces, in the order they appear in data.json>`.",
+  "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "9m",
-  "concepts": ["jq", "json", "arrays", "select"],
+  "expected_time": "10m",
+  "concepts": ["jq paths", "jq select", "jq -r", "join", "command substitution"],
   "module": "module-8-advanced-text",
   "level": "level-4-jq"
 }

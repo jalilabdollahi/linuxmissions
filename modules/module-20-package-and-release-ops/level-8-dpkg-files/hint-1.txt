@@ -1,1 +1,4 @@
-Use a targeted file search so you do not remove the wrong files.
+dpkg keeps, for every installed package, the list of files it put on the disk.
+You can ask it who owns a path. But a path you see may not be the path the package
+recorded: look at how /bin, /sbin and /lib are set up in rootfs/ (ls -l rootfs).
+And some files simply were not installed by any package.

@@ -1,15 +1,11 @@
 {
-  "name": "Incident Summary: Backup Bundle",
-  "description": "In the services and logs lab, a task related to Incident Summary needs cleanup before the handoff.",
-  "objective": "Create incident-summary-backup.tar.gz containing the files under bundle/incident-summary",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Incident Summary",
-    "tar",
-    "compression"
-  ],
+  "name": "502 at 03:10",
+  "description": "The pager went off at 03:10: the API answers 502. web-02 left you five sources: the live services (mock systemctl), a journal export, the nginx access log, a dmesg capture and a df snapshot (INCIDENT.md). Each keeps time in its own way.",
+  "objective": "Find what really broke, fix it, and fill in incident.txt (four exact fields: first_error_utc, root_cause_unit, trigger from the listed values, failed_requests) as INCIDENT.md defines them. The unit that caused the incident must run healthy again, and api must be running; don't delete anything that isn't part of the damage. `systemctl` and `journalctl` are mocks (the sandbox is /; journalctl --file reads the export).",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "40m",
+  "concepts": ["incident triage across sources", "journalctl -p / --file / --utc", "symptom vs root cause", "nginx log fields and time zones", "dmesg and df evidence", "sparse files and apparent size", "systemctl restart / reset-failed", "EnvironmentFile"],
   "module": "module-13-services-and-logs",
   "level": "level-23-incident-summary"
 }

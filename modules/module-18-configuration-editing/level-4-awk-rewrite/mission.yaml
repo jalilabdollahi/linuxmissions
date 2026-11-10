@@ -1,15 +1,11 @@
 {
-  "name": "Awk Rewrite: Noise Dedup",
-  "description": "In the configuration editing lab, a task related to Awk Rewrite needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from awk-rewrite-raw.txt with sorted unique values",
+  "name": "Drain Rack B",
+  "description": "Facilities will cut power to rack B on Friday. The load balancer reads upstreams.tab, a hand-aligned table of backends, and traffic must stop going to every rack-B host before then.",
+  "objective": "In upstreams.tab set the weight of every backend that is in rack B to 0, without touching other rows. The file's column alignment and all comment and blank lines must stay exactly as they are (only the weight column of rack-B rows changes).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Awk Rewrite",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "12m",
+  "concepts": ["awk fields", "printf widths", "comment passthrough", "preserving alignment"],
   "module": "module-18-configuration-editing",
   "level": "level-4-awk-rewrite"
 }

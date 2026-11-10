@@ -1,1 +1,9 @@
-Example: `sort sticky-bit-raw.txt | uniq > unique-sorted.txt`
+find srv -type d -perm -0002 ! -perm -1000 | sort > fixed.txt
+while IFS= read -r d; do chmod +t "$d"; done < fixed.txt
+cat fixed.txt
+
+- -type d                  only real directories (not files, not symlinks)
+- -perm -0002              others have the write bit
+- ! -perm -1000            and the sticky bit is missing
+- sort > fixed.txt         save the list before changing anything
+- while read ... chmod +t  fix one directory per line, safe for names with spaces

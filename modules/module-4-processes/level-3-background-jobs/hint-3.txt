@@ -1,7 +1,8 @@
-One valid flow is:
-bash $SANDBOX/process.sh &
-jobs
-fg %1
-
-When it finishes, confirm the output:
-cat $SANDBOX/result.txt
+  ./process.sh &
+      start it in the background; bash prints [1] and its PID
+  jobs -l > jobs.txt
+      save the job list with PIDs while it is still Running
+  wait
+      blocks for the rest of the ~10 s until the job is done
+  cat jobs.txt result.txt
+      the PID in jobs.txt matches the PID in result.txt

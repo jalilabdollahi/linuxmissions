@@ -1,15 +1,11 @@
 {
-  "name": "Cleanup Jobs: Config Rewrite",
-  "description": "In the scheduling and jobs lab, a task related to Cleanup Jobs needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in cleanup-jobs.conf and save the fixed result to fixed.conf",
+  "name": "The Cleanup That Ate The Server",
+  "description": "A nightly cleanup job wiped web-03's uploads when its CACHE_DIR variable went missing from the crontab (POSTMORTEM.txt). The job is one `find` line with no safety net.",
+  "objective": "Rewrite cleanup.sh. With CACHE_DIR set to a directory it deletes only regular files below it whose last change is more than 7 days ago; it keeps every .keep file, every directory and every symlink, and never touches what a symlink points to. With CACHE_DIR unset, empty or not a directory it prints a reason on stderr, exits non-zero and deletes nothing. File names may contain spaces, leading dashes and newlines. It must stay executable.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Cleanup Jobs",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["set -u", "${VAR:?}", "find -type f -mtime", "find -delete", "defensive scripting"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-19-cleanup-jobs"
 }

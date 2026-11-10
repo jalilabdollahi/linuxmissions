@@ -1,15 +1,11 @@
 {
-  "name": "Redirection: Permission Fix",
-  "description": "In the shell environment lab, a task related to Redirection needs cleanup before the handoff.",
-  "objective": "Set the mode of redirection.sh to 640",
+  "name": "Split the Streams",
+  "description": "nightly.sh prints its progress on stdout and its warnings and errors on stderr, and so far everything just scrolled past in a terminal. Ops wants it logged properly before the job moves to cron. Every run stamps its lines with a run id, so mixed-up logs are easy to spot.",
+  "objective": "1) Run nightly.sh once so that out.log gets only its stdout and err.log only its stderr (both from that same run, nothing shown on the terminal). 2) Run it two more times so that all.log ends up with both streams of both runs, in the order they were printed, the second run after the first. all.log must hold exactly those two runs.",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "8m",
-  "concepts": [
-    "Redirection",
-    "chmod",
-    "permissions"
-  ],
+  "concepts": [">", ">>", "2>", "2>&1", "redirection order", "&>>"],
   "module": "module-9-shell-environment",
   "level": "level-12-redirection"
 }

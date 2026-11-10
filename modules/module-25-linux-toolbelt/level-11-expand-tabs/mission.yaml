@@ -1,15 +1,11 @@
 {
-  "name": "Expand Tabs: Restore Drill",
-  "description": "In the linux toolbelt lab, a task related to Expand Tabs needs cleanup before the handoff.",
-  "objective": "Extract expand-tabs-restore.tar.gz so the restored/expand-tabs directory appears in the sandbox",
+  "name": "YAML Forbids Tabs",
+  "description": "The CI linter rejects deploy.yaml: 'found character that cannot start any token'. An editor indented parts of the file with tabs, sometimes mixed with spaces. YAML allows only spaces for indentation, but two values in the file contain a real tab on purpose.",
+  "objective": "Fix deploy.yaml in place so that no line has a tab in its indentation: each indentation level must end up as 2 spaces, whatever mix of tabs and spaces it was written with (a tab advances to the next multiple of 2 columns). The tab characters inside the quoted values (banner and message) must stay, and nothing else in the file may change. The untouched original is kept as deploy.yaml.orig.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Expand Tabs",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "15m",
+  "concepts": ["expand -i", "expand -t 2", "tab stops", "cat -A", "redirecting onto your own input"],
   "module": "module-25-linux-toolbelt",
   "level": "level-11-expand-tabs"
 }

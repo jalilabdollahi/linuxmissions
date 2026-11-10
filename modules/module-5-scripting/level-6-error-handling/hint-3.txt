@@ -1,5 +1,25 @@
-One valid pattern is:
-if [ $# -lt 1 ]; then
-  echo "SOURCE_FILE is required"
+Type this at the prompt. It replaces safe_copy.sh with a hardened version:
+
+cat > safe_copy.sh <<'EOF'
+#!/bin/bash
+# safe_copy.sh SOURCE_FILE
+# Copy a config into deploy/app.conf, without its comment lines.
+set -euo pipefail
+
+if [ -z "${1:-}" ]; then
+  echo "SOURCE_FILE is required" >&2
   exit 1
 fi
+SOURCE_FILE="$1"
+
+grep -v '^#' "$SOURCE_FILE" | tr -d '\r' > deploy/app.conf
+echo "copy complete"
+EOF
+
+- set -euo pipefail                stop on any failing command, on unset variables, and on a failure anywhere in a pipeline
+- [ -z "${1:-}" ]                  no argument? (${1:-} avoids the set -u error on a missing $1)
+- echo ... >&2; exit 1             error message on stderr, status 1
+- "$SOURCE_FILE" in quotes         a name with spaces stays one argument
+- grep fails on a missing or unreadable file -> pipefail makes the pipeline fail -> set -e stops before "copy complete"
+
+Try it: bash safe_copy.sh; echo $?; bash safe_copy.sh nope.conf; echo $?; bash safe_copy.sh "shop settings.conf"

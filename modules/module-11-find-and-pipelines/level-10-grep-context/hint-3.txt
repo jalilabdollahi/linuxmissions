@@ -1,1 +1,6 @@
-Example: `tar -czf grep-context-backup.tar.gz bundle/grep-context`
+  grep -B1 FATAL worker.log | head
+      look: each FATAL with the line before it, groups separated by --
+  grep -B1 FATAL worker.log | grep -o -w 'req=[0-9a-f]*' | cut -d= -f2 > fatal-reqs.txt
+      take only the req= fields (-w skips parent_req=; FATAL and -- lines have none), keep the id
+  cat fatal-reqs.txt
+      15 ids, in log order

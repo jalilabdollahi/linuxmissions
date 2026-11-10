@@ -1,0 +1,10 @@
+Don't guess: ask a brand-new shell of each kind what `deploy` means to it.
+  env -i HOME=$SANDBOX/home PATH=/usr/bin:/bin bash -l -i -c 'type -a deploy'
+  env -i HOME=$SANDBOX/home PATH=/usr/bin:/bin bash -i -c 'type -a deploy'
+(-l = login shell like SSH, -i = interactive; ignore the "no job control"
+warnings.) `type -a` lists EVERY meaning of the name, in the order bash
+tries them; the first one wins.
+
+Then find where each of those meanings comes from: which file does a login
+shell read, which file does a new tab read, and which other file gets pulled
+in? grep -rn deploy home/  shows all mentions, hidden files included.

@@ -1,15 +1,11 @@
 {
-  "name": "Shift Handovers: Backup Bundle",
-  "description": "In the scheduling and jobs lab, a task related to Shift Handovers needs cleanup before the handoff.",
-  "objective": "Create shift-handovers-backup.tar.gz containing the files under bundle/shift-handovers",
+  "name": "Night Shift Handover",
+  "description": "The night team wants one list of everything that will run by itself on app-07: crontabs of several kinds, systemd timers and queued at jobs live in five different places (HANDOVER.txt).",
+  "objective": "Write inventory.tsv with one tab-separated row per really scheduled item and the columns source, user, schedule, command (the exact definitions are in HANDOVER.txt), no header, any order. Leave out comments, blank lines, VAR=value lines, disabled timers and files cron ignores. bin/atq and bin/at (for at -c) are mocks of the real tools.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Shift Handovers",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "25m",
+  "concepts": ["crontab formats", "system crontab user field", "cron.d file name rules", "systemd timer enablement", "atq and at -c", "shell text parsing"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-23-shift-handovers"
 }

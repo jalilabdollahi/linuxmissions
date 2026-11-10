@@ -1,1 +1,10 @@
-Save each result into its own file.
+purge.service:  [Service] with Type=oneshot and ExecStart=/opt/app/purge.sh
+purge.timer:
+  [Timer]
+  OnCalendar=WEEKDAYS YEAR-MONTH-DAY HH:MM:SS   weekdays as Mon..Fri or Mon,Tue,...
+  Persistent=true      if the box was off at the scheduled time, run at next boot
+  [Install]
+  WantedBy=timers.target
+Check a spec before using it (this mock only knows the calendar verb):
+  systemd-analyze calendar --iterations=5 'Sat 10:00'
+"daily" means *-*-* 00:00:00, every day.   More: man systemd.timer, man systemd.time

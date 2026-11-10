@@ -1,2 +1,4 @@
-Start the block with:
-/var/log/myapp/*.log {
+Compare the existing rule with the files in var/log/myapp/LISTING.txt: which logs does
+the rule's file pattern match, and which ones are never rotated?
+Then read the developers' note at the bottom of the listing. If logrotate renames
+worker.log while myapp still holds it open, which file will myapp write to next?

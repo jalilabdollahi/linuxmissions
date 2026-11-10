@@ -1,1 +1,18 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+Step 1, reproduce (before changing anything):
+
+env -i $(grep -v '^#' cron.env) ./report-gen > cron-run.log 2>&1
+cat cron-run.log
+
+- env -i                      start from an empty environment
+- $(grep -v '^#' cron.env)    add cron's variables, without the comment line
+- > cron-run.log 2>&1         keep stdout and the error message
+
+Step 2, fix the two lines that need things cron does not provide:
+
+sed -i.bak -e 's/^author="\$USER"$/author="${USER:-$LOGNAME}"/' -e 's/^width=\$(tput cols)$/width=$(tput cols 2>\/dev\/null || echo 80)/' report-gen
+
+- author="${USER:-$LOGNAME}"                 cron sets LOGNAME, not USER
+- width=$(tput cols 2>/dev/null || echo 80)  no terminal under cron: use 80 columns
+- -i.bak                                     edit in place, keep report-gen.bak (works with GNU and macOS sed)
+
+Step 3, check:  env -i $(grep -v '^#' cron.env) ./report-gen; echo "exit $?"

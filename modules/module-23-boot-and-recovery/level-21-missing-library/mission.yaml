@@ -1,16 +1,11 @@
 {
-  "name": "Missing Library: Path Realignment",
-  "description": "In the boot and recovery lab, a task related to Missing Library needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/missing-library.txt to organized/missing-library/missing-library-notes.txt",
+  "name": "The Rescue Toolkit Will Not Start",
+  "description": "The rescue toolkit in rescue/ carries its own jq, loader (rescue/ld.so) and libraries (rescue/usr/lib/<arch dir>). In this rescue system jq fails with \"error while loading shared libraries\" when it runs with the toolkit's libraries, and a library is missing from the toolkit. The package cache pkgcache/ holds .deb files of the library packages.",
+  "objective": "Find the library that rescue/usr/bin/jq needs and the toolkit lacks, and restore it into the rescue library directory from the right package in pkgcache/, including its SONAME link, so that every library jq needs is there. Afterwards rescue/ld.so --library-path <that directory> rescue/usr/bin/jq must work and load every library from it. Do not change the jq binary or the loader.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Missing Library",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "30m",
+  "concepts": ["shared libraries", "SONAME", "readelf -d", "ld.so --library-path", "dpkg-deb -x"],
   "module": "module-23-boot-and-recovery",
   "level": "level-21-missing-library"
 }

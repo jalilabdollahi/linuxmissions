@@ -1,15 +1,11 @@
 {
-  "name": "History: Restore Drill",
-  "description": "In the shell environment lab, a task related to History needs cleanup before the handoff.",
-  "objective": "Extract history-restore.tar.gz so the restored/history directory appears in the sandbox",
+  "name": "Who Deleted the Uploads",
+  "description": "On the bastion host, customer uploads vanished during the night (INCIDENT.txt has the date and the time window). Only the deploy account was logged in. Its history file, home/deploy/.bash_history, was saved with timestamps, but the account's .bashrc keeps a tiny history that hides some commands.",
+  "objective": "1) Find the command that deleted the uploads. Write it to culprit.txt exactly as it appears in the history file, and the time it ran to when.txt as UTC in the form YYYY-MM-DD HH:MM:SS. 2) Fix home/deploy/.bashrc so that a new interactive shell for deploy records timestamps (HISTTIMEFORMAT), keeps at least 10000 commands in memory and in the file (HISTSIZE, HISTFILESIZE), appends to the history file instead of overwriting it, and no longer drops commands that start with a space.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "History",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "15m",
+  "concepts": ["history file format", "#epoch timestamps", "date -u", "HISTTIMEFORMAT", "HISTSIZE/HISTFILESIZE", "histappend", "HISTCONTROL"],
   "module": "module-9-shell-environment",
   "level": "level-11-history"
 }

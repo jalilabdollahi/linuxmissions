@@ -1,1 +1,16 @@
-Example: `tar -czf ss-ports-backup.tar.gz bundle/ss-ports`
+Type these at the prompt, one at a time:
+
+port=$(awk -F: '/^listen=/ {print $NF}' releases/ledger-api-2.0/ledger-api.conf)
+pid=$(ss -Hltnp "sport = :$port" | grep -o 'pid=[0-9]*' | cut -d= -f2)
+ps -ww -o pid,args -p "$pid"
+kill "$pid"
+./releases/ledger-api-2.0/start.sh
+
+- awk -F: ... {print $NF}           the port from listen=127.0.0.1:PORT
+- ss -Hltnp "sport = :$port"         only the socket listening on exactly that port, with its owner
+- grep -o 'pid=[0-9]*' | cut ...     the PID from users:(("python3",pid=...,fd=...))
+- ps -ww -o pid,args -p "$pid"       check it is the old ledger-api 1.9 before killing it
+- kill "$pid"                        stop it (SIGTERM)
+- start.sh                           start 2.0 on the freed port
+
+Check it: ss -ltnp

@@ -1,1 +1,14 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' apt-cache.conf > fixed.conf`
+cand=$(apt-cache policy nginx | awk '/Candidate:/ {print $2}')
+prio=$(apt-cache policy nginx | awk -v v="$cand" '{sub(/^[ *]+/, "")} $1 == v {print $2}')
+url=$(apt-cache policy nginx | awk -v v="$cand" '{sub(/^[ *]+/, "")} $1 == v {f=1; next} f && $2 ~ /^file:/ {print $2; exit}')
+origin=$(apt-cache policy | grep -A1 -F "$url " | grep -o 'o=[^,]*' | head -1 | cut -c3-)
+file=$(grep -l "Pin-Priority: $prio" rootfs/etc/apt/preferences.d/*.pref | head -1)
+printf 'CANDIDATE=%s\nORIGIN=%s\nPREF_FILE=%s\n' "$cand" "$origin" "$file" > why.env; cat why.env
+
+- cand    the Candidate version from apt-cache policy nginx
+- prio    its priority: the number next to that version in the table
+- url     the repository line under that version
+- origin  that repository's "release o=ORIGIN,..." line in plain apt-cache policy
+- file    the .pref that declares exactly that Pin-Priority (.bak files are not read by apt, so *.pref only)
+- printf  writes the three lines into why.env
+(by hand: apt-cache policy nginx, apt-cache policy | grep -A1 REPO, grep Pin rootfs/etc/apt/preferences.d/*)

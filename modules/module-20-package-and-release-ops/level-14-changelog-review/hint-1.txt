@@ -1,1 +1,5 @@
-A short for-loop is the cleanest option here.
+There are two questions, and the answers are in two different places: the changelog of the
+newest release says what each version did about the CVE, and the dpkg database says which
+version is installed here. Read the changelog entries that mention the CVE from the oldest
+to the newest and ask what each one really does: fix, revert, or just mention. A similar CVE
+number or a mere mention is not a fix.

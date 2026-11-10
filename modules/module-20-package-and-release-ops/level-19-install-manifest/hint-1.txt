@@ -1,1 +1,5 @@
-You need a stream editor or another text replacement tool.
+Think of MANIFEST as a fingerprint of every file: content (a hash), permissions and name. Once
+you can print that fingerprint for any tree, the deployed tree gets the same treatment and the
+comparison is between two lists with the same format. Which differences count: changed content,
+changed permissions, files that vanished and files that appeared? Look at the file names with
+spaces in them before you choose how to read the list back.

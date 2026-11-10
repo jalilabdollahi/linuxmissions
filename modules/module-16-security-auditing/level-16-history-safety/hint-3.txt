@@ -1,1 +1,7 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+sed -i -E -e '/^(mysql|mysqldump) .*(-p[^[:space:]]|-p [[:punct:]]|--password=)/d' -e '/^export (API_TOKEN|[A-Z_]*PASSWORD)=/d' home/.bash_history
+echo 'HISTCONTROL=ignorespace' >> home/.bashrc
+
+- sed -i -E      edit the history in place, keeping its 600 mode
+- first -e       delete mysql/mysqldump lines where -p is directly followed by text, or by a space and a quote, or where --password= is used (a bare "-p" at the end of the line stays)
+- second -e      delete exports of API_TOKEN and of any variable name ending in PASSWORD (API_URL stays)
+- echo >> bashrc append the setting at the end, so it comes after the existing HISTCONTROL=ignoredups line and wins

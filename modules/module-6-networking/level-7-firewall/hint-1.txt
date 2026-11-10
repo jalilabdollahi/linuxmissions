@@ -1,1 +1,3 @@
-You are looking for the rule that explicitly drops traffic.
+Read TICKET.txt, then walk through firewall.rules from the top, like the kernel does, with one packet in mind: a NEW TCP connection from 10.20.4.9 to port 8443.
+
+Which rule is the first one that matches it? Does the kernel ever look at the rules below that one?

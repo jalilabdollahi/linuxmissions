@@ -1,15 +1,11 @@
 {
-  "name": "Pwd Cd: Alert Filter",
-  "description": "In the shell environment lab, a task related to Pwd Cd needs cleanup before the handoff.",
-  "objective": "Write every alert line from pwd-cd.log into alerts.txt",
+  "name": "Behind the Symlink",
+  "description": "A bad release is live and you are about to roll back. Step 1 of the runbook (deploy/RUNBOOK.txt): write down which directory deploy/current really is, because symlinks get swapped during a rollback.",
+  "objective": "Change into deploy/current. Save the path as the shell shows it through the symlink (absolute, ending in deploy/current) to logical.txt, and the real directory behind every symlink (absolute) to physical.txt. Both files go in the sandbox root, one path per file.",
   "xp": 100,
   "difficulty": "beginner",
   "expected_time": "5m",
-  "concepts": [
-    "Pwd Cd",
-    "grep",
-    "output redirection"
-  ],
+  "concepts": ["cd", "pwd -L", "pwd -P", "symlinks", "cd -"],
   "module": "module-9-shell-environment",
   "level": "level-2-pwd-cd"
 }

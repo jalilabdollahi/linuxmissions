@@ -1,1 +1,8 @@
-Example: `find cleanup/renice-plan -name '*.tmp' -delete`
+for pid in $(ps -eo pid,ni,cmd | awk '/opt\/jobs\/batch-/ && !/awk/ && $2 < 10 {print $1}'); do
+  renice -n 15 -p "$pid"
+done
+ps -eo pid,pgid,ni,cmd | grep 'opt/jobs/batch-' | grep -v grep
+
+- ps | awk          the PIDs of batch scripts whose niceness is below 10 (all three batch-etl processes included)
+- for ... do renice -n 15 -p "$pid"   sets each to 15; the compliant workers, API and agent are never touched
+- the last ps       shows the result: niceness column, and the PGID column if you want to see the pipeline's group

@@ -1,1 +1,6 @@
-Use chmod with octal mode 640.
+  split -b SIZE FILE PREFIX     pieces of SIZE bytes named PREFIXaa, PREFIXab, ...
+      SIZE: 5000000 = plain bytes;  5M = 5 MiB (1024*1024);  5MB = 5,000,000 (GNU split)
+  sha256sum FILE > FILE.sha256  "<hash>  FILE"; sha256sum -c reads it back and checks FILE
+  ls -l outgoing                check the piece sizes
+Run sha256sum from the folder the backup is in, so the line holds just its name.
+More: man split, man sha256sum   (macOS without sha256sum: shasum -a 256)

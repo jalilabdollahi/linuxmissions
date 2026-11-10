@@ -1,1 +1,7 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+  grep -n '^[[:space:]]*linux' sysroot/boot/grub/grub.cfg     what the generated entries boot with
+  grep -rn emergency sysroot/etc/default                      every place the option is set
+  ls sysroot/etc/default/grub.d                                files read after the main file
+GRUB_CMDLINE_LINUX goes into every entry (recovery ones too); GRUB_CMDLINE_LINUX_DEFAULT only
+into the normal ones. A later file in grub.d can append to a variable set earlier, so one
+leftover is enough to bring the problem back. Change only the debug option, not the whole
+variable: the other arguments are needed. Then run ./update-grub.

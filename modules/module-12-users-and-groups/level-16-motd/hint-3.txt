@@ -1,1 +1,13 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+chmod -x etc/update-motd.d/20-maintenance
+cat > etc/update-motd.d/50-disk <<'LMEND'
+#!/bin/sh
+printf 'Disk usage (/): %s\n' "$(df -P / | awk 'NR == 2 { print $5 }')"
+LMEND
+chmod +x etc/update-motd.d/50-disk
+bin/render-motd
+
+- chmod -x ...                the stale notice stays in the directory but run-parts skips it
+- cat > ... <<'LMEND'          writes the new script (the quoted marker stops $(...) expanding now)
+- df -P / | awk 'NR == 2 ...'  the second line of df's table, fifth column: the Use% value
+- chmod +x                     run-parts only runs executable files
+- bin/render-motd              shows the banner as users will see it

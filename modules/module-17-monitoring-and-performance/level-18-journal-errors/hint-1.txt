@@ -1,1 +1,5 @@
-Look for a filtering command that keeps only the alert lines in journal-errors.log.
+Each line of journal.json is one JSON object; look at a few with jq to see
+the field names, and at what type the values have (the quotes tell you).
+You need to turn timestamps into minutes, keep only real errors, count per
+minute, and only then look at which unit is behind the burst. Warnings are
+not errors.

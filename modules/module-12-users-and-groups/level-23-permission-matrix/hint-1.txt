@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+For each user and file, two questions come in order. First: can they reach the file at
+all (what does every directory on the way need)? Then: which single set of permission
+bits applies to them, owner, group or other, and does the first match win even when a
+later one would be more generous? Group membership has two sources, one of which does
+not show up in the member lists of etc/group. Work out the five users' groups first.

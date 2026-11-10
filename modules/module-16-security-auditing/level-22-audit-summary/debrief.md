@@ -1,17 +1,19 @@
-# Audit Summary: Field Extract
+# Quarterly Audit, Read Only
 
-## What you practiced
-- This level focused on **Audit Summary** in a safe sandbox.
-- The shortest path usually combines `cut` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+An audit is a set of narrow, repeatable questions, each answered by the tool that sees the real state:
+`find` with `-perm` and `-printf` for modes, a comparison against a baseline for SUID files, `grep -l` on a
+content marker for private keys (names lie), `sshd -T` for the effective configuration (the file text misses drop-ins
+that win, defaults and `Match` rules), and an anchored `grep -i` for secrets. Writing every finding in one fixed shape
+(`category`, `path`, `detail`) makes the report diffable next quarter. Not touching the host keeps the evidence intact and
+the line numbers valid.
 
-## Commands to remember
-```bash
-cut -d, -f2 file.csv
-awk -F, '{print $2}' file.csv
-column -s, -t file.csv
-```
+## Common mistakes
+- `find -perm 777` instead of `-perm -0002`: misses 666, 646 and the like.
+- Reading `sshd_config` instead of asking sshd: drop-ins and defaults are missed.
+- Reporting directories, symlinks, `.pub` files or `<placeholder>` values as findings.
+- Fixing as you go: the audit then no longer shows what was wrong.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a delimiter-based column extraction task.
+## Next step
+Save the output with a date and `diff` it against the previous one. Tools such as `lynis` and OpenSCAP automate the same
+idea with many more categories. `find ... -printf '%p %u %g %m\n'` adds owner and group to any of these lists.

@@ -1,1 +1,1 @@
-This is a delimiter-based column extraction task.
+Two groups of paths need two different treatments. For everything that existed last month there is a precise record, and it holds more than the mode digits: `chmod` cannot say everything that record says. For everything created afterwards there is only the policy. How do you tell the two groups apart without reading hundreds of lines by hand (look at timestamps), and which file in POLICY.md has to win when they disagree?

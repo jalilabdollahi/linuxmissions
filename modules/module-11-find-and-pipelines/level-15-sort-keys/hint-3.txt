@@ -1,1 +1,6 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' sort-keys-metrics.csv > total.txt`
+  head -1 inventory.txt > sorted.txt
+      the header goes first
+  tail -n +2 inventory.txt | sort -k2,2 -k4,4gr -k1,1V >> sorted.txt
+      the hosts, sorted by datacenter, then load (general numeric, highest
+      first), then host name (natural order); >> appends after the header
+  head -20 sorted.txt

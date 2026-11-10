@@ -1,17 +1,21 @@
-# Watch Loops: Backup Bundle
+# One Sample per Second
 
-## What you practiced
-- This level focused on **Watch Loops** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`/proc/PID/stat` is a single line, and its second field is the process name
+in parentheses, written exactly as the kernel knows it. For `etl job (v2)` that
+adds two extra words and a stray parenthesis, so `awk '{print $14, $15}'` reads
+the wrong columns. Cutting everything up to the last `) ` with
+`sed 's/.*) //'` leaves clean, fixed fields, where utime and stime are the 12th
+and 13th words. The loop reads, prints, sleeps; when the process is gone the
+reads fail, and `|| exit 0` ends the run quietly instead of printing rows
+full of empty values.
 
-## Commands to remember
-```bash
-tar -czf backup.tar.gz folder/
-tar -tf backup.tar.gz
-gzip file.txt
-```
+## Common mistakes
+- Splitting on spaces without handling the name: the CPU columns shift for any name with a space.
+- Sleeping before the first sample or after the last one: the output is late and the run too long.
+- Not guarding against a vanished PID: the script keeps printing `,,` lines or errors.
+- Counting utime only; CPU time used is user plus system.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use tar with create, gzip, and file flags.
+## Next step
+Divide ticks by `getconf CLK_TCK` (usually 100) to get seconds; `pidstat -p PID 1 N`
+from sysstat does the same sampling; `watch -n 1` repeats a command on screen.

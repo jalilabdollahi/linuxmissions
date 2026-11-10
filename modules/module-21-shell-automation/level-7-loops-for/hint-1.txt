@@ -1,1 +1,10 @@
-Use one command for the beginning of the file and another for the end.
+Start with `ls -l backups/`: which files count as a good dump for a day? A
+0-byte file, a .part file or a plain .sql do not.
+
+The loop is over DAYS, not over files: the missing ones are exactly the
+files that do not exist. So you need "the day after X" for any X. Adding 1
+to the day part of 2026-10-31 gives 2026-10-32, so let a tool that knows the
+calendar do the counting: day number i after START, for i = 0, 1, 2, ...
+until you pass END.
+
+Game tip: `edit missing_backups.sh` opens the script in an editor.

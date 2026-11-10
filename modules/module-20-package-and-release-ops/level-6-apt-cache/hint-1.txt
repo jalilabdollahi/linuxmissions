@@ -1,1 +1,4 @@
-You need a stream editor or another text replacement tool.
+apt picks the version with the highest priority, and only if priorities are
+equal does the newest version win. So the question is not "which is newer" but
+"what priority does each version have, and who set it". Start by asking apt
+for nginx's versions and priorities, then find the file that set that number.

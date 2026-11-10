@@ -1,15 +1,11 @@
 {
-  "name": "Bg Fg: Link Repair",
-  "description": "In the scheduling and jobs lab, a task related to Bg Fg needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/bg-fg.conf",
+  "name": "Pause, Snapshot, Resume",
+  "description": "export.sh streams the orders archive to the backup disk for about a minute. The DBA needs a consistent snapshot of that disk right now, and snapshot.sh refuses to run while anything is writing to it. Nobody wants to restart the export from the beginning.",
+  "objective": "Start export.sh as a background job, pause it, run snapshot.sh while it is paused, then let the same export continue in the background until it writes DONE to export.log. The check reads export.log and snapshot.log: one export run must contain a pause, the whole snapshot must fall inside that pause, and the export's heartbeat counter must continue where it stopped. Linux only: on macOS play with --docker.",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "8m",
-  "concepts": [
-    "Bg Fg",
-    "ln",
-    "symbolic links"
-  ],
+  "concepts": ["job control", "kill -STOP %1", "bg %1", "fg", "jobs", "SIGSTOP / SIGCONT"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-9-bg-fg"
 }

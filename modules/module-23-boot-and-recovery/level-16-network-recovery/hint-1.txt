@@ -1,1 +1,6 @@
-Measure directory sizes before deciding which one is largest.
+For each .network file ask two questions. First: which NIC does its [Match] section select
+now, and does that NIC still exist on the new board? The ticket identifies the new NICs by
+MAC address, and ip-o-link.txt tells you which name the kernel gave each MAC. Second: do the
+address, prefix and gateway agree with the ticket and with each other? A gateway has to be a
+neighbour, so it must lie inside the subnet that the address and prefix define: work out
+the range of addresses that the prefix covers.

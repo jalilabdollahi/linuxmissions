@@ -1,1 +1,8 @@
-Save each result into its own file.
+A new file gets mode 666 minus the umask, a new directory 777 minus the umask. So the
+cure is to run the creating commands under a restrictive umask, without changing the
+caller's umask for good: put them in a subshell.
+  ( umask 077; mkdir -p DIR; command > FILE )
+`( ... )` runs in a child shell, so the umask setting dies with it. With umask 077 new files
+are 600 and new directories 700, from the first moment. A `chmod` afterwards is then
+unnecessary. Test it with `umask 000; ./issue-cert.sh x` and look at the modes.
+More: help umask, man bash (section "Compound Commands")

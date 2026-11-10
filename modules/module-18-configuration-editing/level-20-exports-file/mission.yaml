@@ -1,15 +1,11 @@
 {
-  "name": "Exports File: Noise Dedup",
-  "description": "In the configuration editing lab, a task related to Exports File needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from exports-file-raw.txt with sorted unique values",
+  "name": "Who Can Write to Builds",
+  "description": "The security scanner reports that /srv/builds on the file server is writable by the whole world, and that the ISO mirror allows root on clients to act as root on the server. A stand-in exportfs is in bin/ (it works on etc/exports of this sandbox).",
+  "objective": "Fix etc/exports: /srv/builds is exported read-write to the subnet 10.20.0.0/24 and to nobody else, /srv/iso is exported read-only to everyone, and no_root_squash appears nowhere. Keep the /srv/backup entry and the comments as they are, and apply the change with exportfs -r so that exportfs -v shows the new state.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Exports File",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "20m",
+  "concepts": ["/etc/exports syntax", "host(options) grouping", "whitespace before the option list", "root_squash", "exportfs -r"],
   "module": "module-18-configuration-editing",
   "level": "level-20-exports-file"
 }

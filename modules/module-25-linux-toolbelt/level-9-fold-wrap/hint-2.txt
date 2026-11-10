@@ -1,1 +1,5 @@
-Use `ln -s` so current.conf points at the release file.
+  fold -w N      breaks lines that are longer than N characters, exactly at N
+  fold -s        break at the last space before N instead of in the middle of a word
+fold does not join or reflow anything, it only inserts newlines (which is why no
+text is lost). A word longer than N still has to be cut. Check with `wc -L alert.sms`.
+More: man fold

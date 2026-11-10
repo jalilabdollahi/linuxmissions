@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+Look at the raw content of /proc/PID/stat for the ETL job next to the
+documented field list in `man proc`, and count fields by hand. The second
+field is the process name; check what that does to a split on spaces.
+Then think about the loop: one sample, then a pause, N times, and what each
+read can do when the process has exited in between.

@@ -1,15 +1,11 @@
 {
-  "name": "Multiline Fixes: Alert Filter",
-  "description": "In the data processing lab, a task related to Multiline Fixes needs cleanup before the handoff.",
-  "objective": "Write every alert line from multiline-fixes.log into alerts.txt",
+  "name": "Helpdesk Export",
+  "description": "The helpdesk exports its tickets as tickets.csv, and every line-based tool gives a different ticket count: the notes field (in double quotes) often spans several lines, and a few subjects do too. The weekly report script is line-based and can't be changed before Friday.",
+  "objective": "Write tickets_flat.csv: the same CSV records as tickets.csv, header included and in the same order, but every record on exactly one line, each line break inside a field replaced by one space. Nothing else may change (fields, quotes and commas stay valid CSV). Write the number of tickets (records, not counting the header) to count.txt. Leave tickets.csv unchanged.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Multiline Fixes",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "20m",
+  "concepts": ["CSV quoting rules", "multi-line records", "counting quotes with gsub", "awk state across lines", "escaped quotes \"\""],
   "module": "module-22-data-processing",
   "level": "level-18-multiline-fixes"
 }

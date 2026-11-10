@@ -1,1 +1,7 @@
-Use chmod with octal mode 640.
+  grep -n -E 'menuentry|submenu|set default|^}' ROOT/boot/grub/grub.cfg
+  awk: count top-level entries, and entries inside a submenu, by tracking whether you are inside one
+  grep -qi " UUID=\"$v\"" ROOT/blkid.txt            -i ignores case; the leading space skips PARTUUID=
+  readlink LINK; [ -e "$ROOT$target" ]               an absolute target is looked up below ROOT
+  awk '$NF=="/boot"' ROOT/df.txt                     the Available column, with the M suffix removed
+Write each check as a function that succeeds or fails (return status), and one wrapper that prints PASS
+or FAIL and counts. `exit $fails` gives the status. A link can point at another link: loop until it is not one.

@@ -1,16 +1,11 @@
 {
-  "name": "Cat Review: Path Realignment",
-  "description": "In the configuration editing lab, a task related to Cat Review needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/cat-review.txt to organized/cat-review/cat-review-notes.txt",
+  "name": "The Invisible Key",
+  "description": "The report service refuses to start: \"app.conf: invalid key 'port'\". The line looks perfect on screen, so something in the file is not what it seems.",
+  "objective": "Clean app.conf in place so that it contains only plain text: Unix line endings, no trailing whitespace on any line, and no non-breaking spaces. Keep every setting and comment, and keep the layout `key = value` like the other lines.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Cat Review",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "8m",
+  "concepts": ["cat -A", "od -c", "CRLF line endings", "non-breaking space", "sed -i"],
   "module": "module-18-configuration-editing",
   "level": "level-1-cat-review"
 }

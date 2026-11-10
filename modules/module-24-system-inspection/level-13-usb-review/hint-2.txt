@@ -1,1 +1,7 @@
-Use `chmod +x jobs/usb-review.sh` and then execute it.
+The device directory has `bDeviceClass`, which is `00` for most devices and
+only says "look at the interfaces". The interfaces are the entries with a
+colon in their name (`1-4:1.0`), each with a `bInterfaceClass`; class `08`
+is mass storage. The device is the part of the name before the colon.
+`cat dir/idVendor dir/idProduct dir/product` gives the rest. In the
+allowlist, text after `#` is a comment, and a vendor id alone is not enough
+to identify a device. A shell `for` loop over `*:*` plus `sort -u` fits.

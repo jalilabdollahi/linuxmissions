@@ -1,15 +1,11 @@
 {
-  "name": "Uptime Load: Config Rewrite",
-  "description": "In the monitoring and performance lab, a task related to Uptime Load needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in uptime-load.conf and save the fixed result to fixed.conf",
+  "name": "Load Per CPU",
+  "description": "Monitoring pasted the `uptime` line of eight hosts into uptime.txt, and the CMDB export in inventory.tsv has the CPU count (nproc) of each. A load of 8 is a disaster on 2 CPUs and perfectly fine on 16, so raw numbers are no use.",
+  "objective": "Write the names of the hosts whose 5-minute load average per CPU is above 1.0 to overloaded.txt, one per line (hosts at exactly 1.0 are not above it).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Uptime Load",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["uptime output format", "1/5/15 minute load averages", "load per CPU", "awk division", "joining two files"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-6-uptime-load"
 }

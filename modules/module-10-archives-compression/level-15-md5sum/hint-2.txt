@@ -1,1 +1,11 @@
-An awk one-liner can skip the header and add the second field.
+  md5sum photos/*             one line per file: 32 hex characters, two spaces, the name
+  sort                        puts equal hashes next to each other
+  uniq -w32 -d / -D           compare only the first 32 characters (the hash)
+  awk 'seen[$1]++'            prints a line only if its hash was seen before,
+                              i.e. every copy except the first one
+  cut -c35-                   the file name (it starts at character 35)
+  while IFS= read -r f; do mv -- "$f" dupes/; done
+                              act on one name per line, spaces and quotes kept intact
+xargs splits on spaces and chokes on the ' in "Mom's birthday", so prefer the while loop.
+On older macOS: md5 -r prints the same "hash name" layout.
+More: man md5sum, man uniq

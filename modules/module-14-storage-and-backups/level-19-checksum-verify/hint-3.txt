@@ -1,1 +1,8 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' checksum-verify.conf > fixed.conf`
+cut -f1 MANIFEST.tsv | LC_ALL=C sort > want.lst; (cd restored && find . -type f | LC_ALL=C sort) > have.lst
+{ echo "== MISSING =="; comm -23 want.lst have.lst; echo "== EXTRA =="; comm -13 want.lst have.lst; echo "== CORRUPTED =="; comm -12 want.lst have.lst | while IFS= read -r p; do now=$(sha256sum < "restored/$p" | cut -d' ' -f1); was=$(awk -F'\t' -v p="$p" '$1 == p {print $4}' MANIFEST.tsv); [ "$now" = "$was" ] || echo "$p"; done; } > verify-report.txt
+rm -f want.lst have.lst; cat verify-report.txt
+
+- want.lst / have.lst   sorted path lists from the manifest and from the disk, both in ./ style
+- comm -23 / -13        only in the manifest = missing; only on disk = extra
+- comm -12 + the loop   files on both sides: print the path if the sha256 of the content differs from the manifest's
+- modes and times are never compared, so a chmod'ed file is not reported

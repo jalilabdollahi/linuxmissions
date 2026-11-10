@@ -1,1 +1,3 @@
-Inspect the current mode first if you want to verify the change.
+Run ./smoke.sh and read each FAIL line closely: a timeout, "couldn't connect" and an HTTP error code mean three very different things. A timeout hides everything behind it, so fix what causes the timeouts first, run smoke.sh again, and repeat: each round shows you the next problem.
+
+For every failing call ask: did it even reach the backend? Which address and port did it use, and where did that come from? Compare what app-31 believes (client.env, getent) with what the network says (changes.log, the DNS server). Leave the brief for last; the log and the change log have everything it needs.

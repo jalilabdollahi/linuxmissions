@@ -1,11 +1,11 @@
 {
   "name": "Scheduled Sweep",
-  "description": "A daily cleanup task needs to run automatically. Write the cron entry in the sandbox's crontab file.",
-  "objective": "Write a crontab entry in crontab.txt that runs cleanup.sh every day at 3am",
-  "xp": 190,
+  "description": "Upload temp files pile up on the app server. cleanup.sh deletes them, but nobody has scheduled it yet.",
+  "objective": "Add one job to crontab.txt that runs cleanup.sh (from this sandbox, by its absolute path) at 03:00 every weekday, Monday to Friday. Keep the existing lines of crontab.txt unchanged. crontab.txt is the file you would install with `crontab crontab.txt`.",
+  "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "7m",
-  "concepts": ["cron", "crontab", "scheduling", "cron syntax"],
+  "expected_time": "8m",
+  "concepts": ["crontab", "cron time fields", "day-of-week", "absolute paths in cron"],
   "module": "module-7-sysadmin",
   "level": "level-3-cron"
 }

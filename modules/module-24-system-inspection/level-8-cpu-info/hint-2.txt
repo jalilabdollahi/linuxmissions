@@ -1,1 +1,7 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+The fields are `physical id` (the socket) and `core id` (the core inside it).
+Two sockets both have a core 0, so a core is identified by the pair
+(physical id, core id). With hyperthreading, two `processor` blocks share
+the same pair.
+In awk, an array keyed by the pair removes duplicates for you:
+`c[p ":" id] = 1`, and `length(c)` counts the distinct keys. Split lines at
+the colon with `-F': *'`. Count `processor` lines for the threads.

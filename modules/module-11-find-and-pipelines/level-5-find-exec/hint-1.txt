@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Preview before you compress: list the .log files under app/logs with their
+modification dates and decide by hand which ones are more than 7 days old.
+Then make find print exactly that list before letting it run gzip. Look
+closely at the logs from about 7.5 days ago: does your age test include them?
+And cron.log.1 and the .gz file do not end in .log.

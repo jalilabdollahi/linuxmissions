@@ -1,0 +1,44 @@
+#!/bin/bash
+# Stand-in for df: the sandbox has one filesystem, "/", whose use is kept in
+# .lm-state/usedpct (the level changes it so a script cannot just hard-code a
+# number). Understands: (no option), -P, -k, -h, --output=LIST (source, size,
+# used, avail, pcent, target).
+here=$(cd "$(dirname "$0")" && pwd)
+pct=$(cat "${here%/bin}/.lm-state/usedpct" 2>/dev/null || echo 50)
+total=314572800                       # 1K blocks (300 GiB)
+used=$((total * pct / 100))
+avail=$((total - used))
+human() { awk -v k="$1" 'BEGIN { printf "%.0fG", k / 1048576 }'; }
+mode=k; out=
+for a in "$@"; do
+  case "$a" in
+    -h) mode=h ;;
+    -k|-P) ;;
+    --output=*) out=${a#--output=} ;;
+    -*) echo "df: invalid option -- '${a#-}'" >&2; exit 1 ;;
+  esac
+done
+if [ -n "$out" ]; then
+  hdr=; row=
+  for f in ${out//,/ }; do
+    case $f in
+      source) hdr="$hdr Filesystem"; row="$row /dev/sda1" ;;
+      size)   hdr="$hdr 1K-blocks"; row="$row $total" ;;
+      used)   hdr="$hdr Used"; row="$row $used" ;;
+      avail)  hdr="$hdr Avail"; row="$row $avail" ;;
+      pcent)  hdr="$hdr Use%"; row="$row ${pct}%" ;;
+      target) hdr="$hdr Mounted on"; row="$row /" ;;
+      *) echo "df: option '--output': field '$f' is unknown" >&2; exit 1 ;;
+    esac
+  done
+  [ "${row# }" = "${pct}%" ] && row=$(printf ' %3s%%' "$pct")
+  printf '%s\n%s\n' "${hdr# }" "${row# }"
+  exit 0
+fi
+if [ $mode = h ]; then
+  printf 'Filesystem      Size  Used Avail Use%% Mounted on\n'
+  printf '/dev/sda1       %4s  %4s  %4s  %3s%% /\n' "$(human $total)" "$(human $used)" "$(human $avail)" "$pct"
+else
+  printf 'Filesystem     1K-blocks      Used Available Use%% Mounted on\n'
+  printf '/dev/sda1      %9d %9d %9d %3s%% /\n' $total $used $avail "$pct"
+fi

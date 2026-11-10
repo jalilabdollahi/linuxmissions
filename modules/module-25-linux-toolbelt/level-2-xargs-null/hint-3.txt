@@ -1,1 +1,6 @@
-Example: `grep 'ALERT' xargs-null.log > alerts.txt`
+  find photos -type f -name '*.thumb' -print0 | xargs -0 rm
+      -type f        only regular files, so the *.thumb directory is not touched
+      -name '*.thumb'  names ending in .thumb (quoted for find, not the shell)
+      -print0        end each name with a NUL byte instead of a newline
+      xargs -0 rm    read NUL-separated names and run rm on them
+  find photos -name '*.thumb'

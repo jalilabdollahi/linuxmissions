@@ -1,0 +1,7 @@
+setsid CMD          run CMD as the leader of a new session, with no controlling terminal
+setsid -f CMD       always fork first (so it also works for a process-group leader) and
+                    return at once
+< /dev/null         stdin from /dev/null (the consumer must not read your keyboard)
+>> FILE 2>&1        append stdout to FILE, and stderr to the same place
+Check: ps -o pid,sid,tty,cmd -p PID   (SID = PID and TTY = ? when it is detached)
+More: man setsid, man 7 credentials (sessions)

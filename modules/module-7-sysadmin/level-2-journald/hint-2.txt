@@ -1,2 +1,7 @@
-Pipe the recent logs through grep:
-./journalctl --since "1 hour ago" | grep error
+Let journalctl do the filtering with its own options:
+  -u UNIT         only one service, e.g. -u myapp.service (or just -u myapp)
+  -p LEVEL        that priority and everything more serious: emerg(0) alert(1) crit(2)
+                  err(3) warning(4) notice(5) info(6) debug(7)
+  --since TIME    "14:00", "2024-04-08 14:00", "30 min ago", "today"
+Combine all three, then redirect the output into the file.
+Read more: man journalctl (OPTIONS: -p, -S), man systemd.time for the time formats

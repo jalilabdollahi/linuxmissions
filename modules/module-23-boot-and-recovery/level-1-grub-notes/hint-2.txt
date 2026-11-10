@@ -1,1 +1,5 @@
-`mkdir -p organized/grub-notes` followed by `mv inbox/grub-notes.txt organized/grub-notes/grub-notes-notes.txt` is enough.
+  grep -n '^set default' sysroot/boot/grub/grub.cfg     the pinned default
+  grep -n 'menuentry\|submenu' sysroot/boot/grub/grub.cfg    every entry, with line numbers and indentation
+In "A>B", A is the index of a top-level item and B an index inside that item's submenu.
+Entries inside "submenu ... { }" are indented. The kernel version is in the entry's
+linux line (the vmlinuz file name). See the GRUB manual, section "default".

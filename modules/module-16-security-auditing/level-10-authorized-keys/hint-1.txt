@@ -1,1 +1,6 @@
-Use tar with create, gzip, and file flags.
+The comment at the end of a key line is just free text anyone can type: it proves nothing.
+What identifies a key is its fingerprint, and offboard.txt gives you three of them. How can
+you print the fingerprint of every key in authorized_keys? Compare, then remove the matching
+lines only; lines for people who are staying must stay character for character.
+For the CI key, think of everything it should be forbidden from doing, and which options
+in front of a key line enforce that (see the sshd man page, section AUTHORIZED_KEYS FILE FORMAT).

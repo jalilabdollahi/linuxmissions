@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+There is a tool made for filling `$NAME` placeholders in a text file from
+environment variables. Two things will go wrong with a naive try: the tool may
+also replace every other `$word` in the file (nginx has plenty), and the
+variables in deploy.env are only defined in that file, not in your shell's
+environment. Run the tool once the naive way and look at what happens to $host.

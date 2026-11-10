@@ -1,1 +1,8 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- ps -eo ppid,pid,pcpu,etimes,args prints parent PID, CPU share and age of
+  every process; man ps lists the output columns. pcpu is CPU time divided
+  by lifetime, so a child that burns CPU all its short life shows a high value.
+- Run it in a loop with a short sleep (sleep 0.1) 20-30 times and filter the
+  lines with awk on the CPU column; the process name will not give the answer away.
+- Count how often each parent PID appears among the heavy children:
+  sort | uniq -c | sort -rn.
+- top -b -n 1 -o %CPU is another view, but a single sample misses most children.

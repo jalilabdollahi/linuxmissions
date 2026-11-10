@@ -1,1 +1,3 @@
-This is a sorting task followed by deduplication.
+Read traceroute.txt from the top. Where do the `* * *` lines start, and do any hops answer AFTER a `* * *` line? A router that drops probes in the middle of a path that goes on is not the break.
+
+For the jump, use the Avg column of mtr-report.txt, not single probes: one slow probe or a big Wrst value is a hiccup, not the path getting longer. And skip the hops that never answered when you compare.

@@ -1,1 +1,19 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' interface-state.conf > fixed.conf`
+Type these at the prompt (the first command is one block, up to the closing quote and file name):
+
+awk '/^[0-9]+: / { sub(":", "", $2); ifc = $2 }
+     /RX errors:/ { getline; crc[ifc] = $2 }
+     /TX errors:/ { getline; print ifc, $5, crc[ifc] }' ip-link-1402.txt > before.txt
+awk '/^[0-9]+: / { sub(":", "", $2); ifc = $2 } /RX errors:/ { getline; crc[ifc] = $2 } /TX errors:/ { getline; print ifc, $5, crc[ifc] }' ip-link-1403.txt > after.txt
+join before.txt after.txt
+flap=$(join before.txt after.txt | awk '$2 != $4 { print $1 }')
+crc=$(join before.txt after.txt | awk -v i="$flap" '$1 == i { print $5 - $3 }')
+half=$(grep '/duplex:half$' sysfs-net.txt | cut -d/ -f5)
+printf 'FLAPPING=%s\nDUPLEX_MISMATCH=%s\nCRC_DELTA=%s\n' "$flap" "$half" "$crc" > link.env
+
+- awk ...            "name transns crc" for every interface in one capture
+- join               both captures side by side: name transns crc transns crc
+- $2 != $4           the interface whose carrier transitions grew: the flapping one
+- $5 - $3            its CRC errors in those 60 seconds
+- duplex:half        the port that negotiated half duplex (eno2 says "unknown" because it is down)
+
+Check it: cat link.env

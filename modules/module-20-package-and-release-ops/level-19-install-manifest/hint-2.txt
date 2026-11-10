@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+find DIR -type f -printf '%P\n'        file names relative to DIR (GNU find); %m prints the mode in octal
+stat -c %a FILE                        the mode in octal (GNU)
+sha256sum < FILE                       reads stdin, so no file name in the output
+while IFS= read -r p; do ... done      keeps names with spaces intact (quote "$p" everywhere)
+awk: build an array keyed by path from the first file (NR==FNR), then look the paths of the second file up in it
+(the path is everything after the second space: sub(/^[^ ]+ [^ ]+ /, "", k)).
+Write the same manifest for deployed/ into a scratch file and compare the two with awk, then sort the result.   More: man find, man awk

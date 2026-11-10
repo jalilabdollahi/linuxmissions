@@ -1,0 +1,10 @@
+  tar -czf OUT.tar.gz --exclude=PATTERN ... DIR   leave out every member whose name matches
+  --exclude=node_modules     matches a file or dir with exactly that name, at any depth (a dir goes with its content)
+  --exclude='*.log'          quote wildcards so the shell doesn't expand them first
+  --exclude=.env             exactly .env; '.env*' would also drop .env.example
+  --exclude-vcs              .git, .gitignore and other version-control files (but not .github)
+  -X FILE                    read one pattern per line from FILE
+  tar -tzf OUT.tar.gz        review the result
+Put the options before DIR (macOS bsdtar ignores options after the paths).
+`--exclude=logs` would drop the whole logs/ dir, .keep included.
+More: man tar (look for --exclude, --exclude-vcs)

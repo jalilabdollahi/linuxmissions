@@ -1,2 +1,6 @@
-One valid command is:
-column -t report.txt > table.txt
+column -t -s , services.csv > table.txt
+cat table.txt
+
+- column -t       build a table: pad each column to its widest value, separate with spaces
+- -s ,            the input fields are separated by commas, so "Public REST API" stays one field
+- > table.txt     save the result

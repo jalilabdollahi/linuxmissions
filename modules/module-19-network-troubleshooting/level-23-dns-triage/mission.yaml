@@ -1,15 +1,11 @@
 {
-  "name": "Dns Triage: Backup Bundle",
-  "description": "In the network troubleshooting lab, a task related to Dns Triage needs cleanup before the handoff.",
-  "objective": "Create dns-triage-backup.tar.gz containing the files under bundle/dns-triage",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Dns Triage",
-    "tar",
-    "compression"
-  ],
+  "name": "One in Three",
+  "description": "Capstone. TICKET.txt: since last week's payments migration, checkout on app-21 fails about one request in three, and a retry usually works. The DNS team checked www on every name server and says DNS is fine. The three corp.example name servers run on loopback (servers.txt), app-21 resolves through etc/resolv.conf, and the checkout team's smoke test `smoke-dns` is on your PATH.",
+  "objective": "Find the name server that serves out-of-date data and write triage.env with STALE= its name (ns1, ns2 or ns3), STALE_SERIAL= the corp.example SOA serial it has, and GOOD_SERIAL= the primary's serial. Then fix etc/resolv.conf so app-21 no longer gets answers from the stale server: smoke-dns must report 20/20.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["dig @server -p", "SOA serial", "primary / secondary name servers", "resolv.conf options rotate", "intermittent failures", "comparing answers per server"],
   "module": "module-19-network-troubleshooting",
   "level": "level-23-dns-triage"
 }

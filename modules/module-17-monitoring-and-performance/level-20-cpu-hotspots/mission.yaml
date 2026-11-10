@@ -1,15 +1,11 @@
 {
-  "name": "Cpu Hotspots: Noise Dedup",
-  "description": "In the monitoring and performance lab, a task related to Cpu Hotspots needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from cpu-hotspots-raw.txt with sorted unique values",
+  "name": "100 Percent of Nothing",
+  "description": "The monitoring graph shows the CPUs pinned at 100 %, but `top` never shows a single process above a few percent. Something is burning CPU in tiny, short-lived pieces: each piece is gone before you can look at it, and the next one has a different PID. Two other loops on the host also spawn short-lived children all the time, but theirs are harmless.",
+  "objective": "Find the long-running parent process that keeps spawning the CPU-heavy short-lived children and write its PID (just the number) to culprit.txt. Do not kill anything.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Cpu Hotspots",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "30m",
+  "concepts": ["sampling ps repeatedly", "PPID", "ps -o pcpu,ppid,etimes", "short-lived processes", "/proc/PID/stat utime"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-20-cpu-hotspots"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Functions: Field Extract",
-  "description": "In the shell automation lab, a task related to Functions needs cleanup before the handoff.",
-  "objective": "Extract the second column from functions-report.csv into owners.txt",
+  "name": "Return to Sender",
+  "description": "The upload scripts share lib/units.sh. Since someone added to_bytes, `./check_upload.sh 64K uploads/*` never reports anything as too big, and a script that sources the library found its own $size variable changed behind its back (NOTES.txt).",
+  "objective": "Fix to_bytes in lib/units.sh so that, as its comment says, it prints the size in bytes on stdout and returns 0, prints nothing and returns 1 for anything that is not a whole number with an optional K, M, G or T, and creates or changes no variable in the shell that calls it. check_upload.sh must then work unchanged. It is tested by sourcing the library and calling to_bytes with many inputs.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Functions",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "12m",
+  "concepts": ["function output via echo + $(fn)", "return is a status (0-255)", "local", "input validation with case"],
   "module": "module-21-shell-automation",
   "level": "level-5-functions"
 }

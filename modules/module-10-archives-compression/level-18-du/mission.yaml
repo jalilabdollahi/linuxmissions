@@ -1,15 +1,11 @@
 {
-  "name": "Du: Alert Filter",
-  "description": "In the archives and compression lab, a task related to Du needs cleanup before the handoff.",
-  "objective": "Write every alert line from du.log into alerts.txt",
+  "name": "Dead Weight",
+  "description": "projects/ is going to cold storage, and the archive should not carry caches that any build can recreate (ARCHIVE-PLAN.txt). First the team wants to see which cache dirs are worth excluding.",
+  "objective": "Write bloat.txt in the sandbox root: one line 'KiB<TAB>path' for every directory named node_modules, .cache, target or build under projects/ that uses more than 5 MiB (5120 KiB) on disk, sorted largest first. Size = what `du -sk` reports for that dir, path relative like projects/app/build. Only the outermost cache dir counts: skip cache dirs that sit inside another cache dir. Don't delete anything.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Du",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["du -sk", "find -prune", "find -name with -o", "awk numeric filter", "sort -nr"],
   "module": "module-10-archives-compression",
   "level": "level-18-du"
 }

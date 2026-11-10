@@ -1,1 +1,25 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+Type this loop at the prompt (it continues on ...> lines until "done"):
+
+for f in recovered/*; do
+  n=$(basename "$f"); n=${n%%.*}
+  case "$(file -b "$f")" in
+    empty)          t=empty ;;
+    gzip*)          if file -bz "$f" | grep -q 'tar archive'; then t=tar.gz; else t=gz; fi ;;
+    bzip2*)         t=bz2 ;;
+    XZ*)            t=xz ;;
+    Zip*)           t=zip ;;
+    *tar\ archive*) t=tar ;;
+    PNG*)           t=png ;;
+    PDF*)           t=pdf ;;
+    *text*)         t=txt ;;
+    *)              echo "unknown: $f: $(file -b "$f")"; continue ;;
+  esac
+  mkdir -p "sorted/$t"
+  if [ "$t" = empty ]; then mv "$f" "sorted/empty/$n"; else mv "$f" "sorted/$t/$n.$t"; fi
+done
+
+- n=${n%%.*}        the chunk number without the carver's guessed extension
+- file -b           the real type from the magic bytes; case matches its first words
+- file -bz | grep   for gzip only: is there a tar archive inside? then it is tar.gz
+- mkdir -p / mv     create the type folder and move the chunk with its new name
+Check: ls recovered | wc -l  (0)   and   ls sorted

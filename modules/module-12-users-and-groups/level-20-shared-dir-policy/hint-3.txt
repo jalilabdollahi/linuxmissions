@@ -1,1 +1,11 @@
-Example: `sort shared-dir-policy-raw.txt | uniq > unique-sorted.txt`
+T=srv/projects/apollo
+find $T -type d -exec chmod 3770 {} +
+find $T -type f -perm /111 -exec chmod 770 {} +
+find $T -type f ! -perm /111 -exec chmod 660 {} +
+find $T -printf '%m %p\n' | sort -k2
+
+- find -type d ... chmod 3770   every directory, hidden ones included: setgid (2) + sticky (1) + rwx for owner and group, nothing for others
+- find -type f -perm /111 ... 770   files with any execute bit keep it, for owner and team
+- find -type f ! -perm /111 ... 660   all other files: read/write for owner and team
+- -type d / -type f   skip the symlink, so chmod does not follow it out of the tree
+- the last find   prints each entry's mode so you can check

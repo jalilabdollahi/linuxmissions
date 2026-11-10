@@ -1,1 +1,7 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+`w` prints idle time as `45.00s` (seconds), `3:12` (minutes:seconds),
+`1:05m` (hours:minutes, note the m) and `2days`. Only the first two
+shapes can be under ten minutes, and for `min:sec` only the part before
+the colon matters.
+awk can split the IDLE field (column 5) with `split(field, parts, ":")`.
+Skip the first two lines (the header). Finish with `sort -u` so each user
+appears once.

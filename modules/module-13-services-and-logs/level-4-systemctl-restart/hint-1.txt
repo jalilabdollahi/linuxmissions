@@ -1,1 +1,4 @@
-This is a sorting task followed by deduplication.
+"Restart" stops the process and starts a new one, and the README in opt/api says what that
+does to running jobs. What does the api offer instead, and does systemd know about it?
+Try the gentle way first and read the error carefully. There are two different
+"reloads" involved here: one for systemd's view of the unit file, one for the api's own config.

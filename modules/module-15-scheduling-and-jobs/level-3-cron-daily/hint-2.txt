@@ -1,1 +1,10 @@
-A grep count or grep piped into wc can produce the number you need.
+run-parts --test DIR    print the files run-parts would run, without running them
+run-parts rules (Debian/Ubuntu, without --lsbsysinit):
+  - the name may only contain letters, digits, _ and -   (so NO dots: x.sh is skipped)
+  - the file must be executable
+  - files are run in alphabetical order
+mv OLD NEW renames a file; chmod +x FILE makes it executable. The #!/bin/sh line
+stays: it tells the kernel which interpreter runs the file.
+To watch the daily job run on a simulated clock:
+  cron-run --from "2025-05-14 06:00" --to "2025-05-14 07:00" --summary
+More: man run-parts

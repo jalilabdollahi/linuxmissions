@@ -1,15 +1,11 @@
 {
-  "name": "Here Strings: Backup Bundle",
-  "description": "In the shell environment lab, a task related to Here Strings needs cleanup before the handoff.",
-  "objective": "Create here-strings-backup.tar.gz containing the files under bundle/here-strings",
+  "name": "DSN Splitter",
+  "description": "The app reads its database settings from db.env, which parse-dsn.sh writes from a DSN out of the secrets vault. Since the vault switched to generated passwords, every db.env comes out empty or broken. Some examples are in dsns.txt.",
+  "objective": "Fix parse-dsn.sh so that `./parse-dsn.sh 'scheme://user:password@host[:port]/dbname'` writes db.env in the current directory, and `source db.env` then sets DB_USER, DB_PASS, DB_HOST, DB_PORT (5432 when the DSN has none) and DB_NAME to exactly the DSN's parts. Passwords may contain @, :, $, # and spaces; user names and host names never contain @ or :. Use only shell variables: no temporary files. It is tested with DSNs you have not seen.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Here Strings",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "20m",
+  "concepts": ["here-strings <<<", "IFS=... read -r", "pipes run read in a subshell", "${v%@*} / ${v##*@}", "${v:-default}", "printf %q"],
   "module": "module-9-shell-environment",
   "level": "level-23-here-strings"
 }

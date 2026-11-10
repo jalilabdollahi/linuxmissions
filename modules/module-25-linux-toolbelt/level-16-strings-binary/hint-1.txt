@@ -1,1 +1,4 @@
-Measure directory sizes before deciding which one is largest.
+A binary is mostly bytes that are not text, but readable strings survive in it.
+Print them and look at the context around URLs. Careful: not every URL or ID
+is real; the file says where the test fixtures are. And if the licence ID
+never shows up, ask how else text can be stored in a file.

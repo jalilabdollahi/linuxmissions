@@ -1,1 +1,6 @@
-This is a delimiter-based column extraction task.
+Work through CHANGES.txt one item at a time, and for each ask: which lines exactly
+does it apply to, and how can I tell the editor so? Items 1 and 2 are not "everywhere
+in the file": one is limited by markers inside the file, the other by line numbers.
+Look at the data around those limits: lines right before and after the LEGACY block,
+and the http_port lines on, just outside and inside lines 120 and 180. Compare your
+result with `diff` against a copy of the original.

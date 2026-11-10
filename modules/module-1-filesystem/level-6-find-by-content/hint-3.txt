@@ -1,2 +1,5 @@
-Save the result:
-grep -rl "password=" $SANDBOX > $SANDBOX/leak.txt
+  grep -rl 'password=' . > leak.txt
+      -r reads every file below . (hidden ones included), -l prints each matching
+      file name once, > writes the list to leak.txt
+  cat leak.txt
+      check it: 5 files, e.g. ./.env and ./deploy/old settings.ini

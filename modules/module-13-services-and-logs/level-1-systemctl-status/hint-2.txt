@@ -1,1 +1,8 @@
-`mkdir -p organized/systemctl-status` followed by `mv inbox/systemctl-status.txt organized/systemctl-status/systemctl-status-notes.txt` is enough.
+systemctl is a mock here, but its options and output are the real ones:
+  systemctl list-units --type=service --all   every service with its ACTIVE and SUB state
+  systemctl --failed                          only units in the "failed" state
+  systemctl status UNIT                       the Active: line, and the Main PID: line with
+                                              (code=exited, status=N): N is the exit status
+  systemctl show -P ExecMainStatus UNIT       the same number, nothing else
+Compare "activating (auto-restart)" with "inactive (dead)" and a Type=oneshot unit.
+Read more: man systemctl (list-units, status, show), man systemd.service (Type=, Restart=)

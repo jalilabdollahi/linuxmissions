@@ -1,2 +1,9 @@
-Sort by CPU (column 3, descending) and take top 5:
-ps aux --sort=-%cpu | head -6
+ps aux lists every process; column 3 is %CPU, column 2 is the PID, the last
+column is the command.
+  Linux:   ps aux --sort=-%cpu        (- = highest first)
+  macOS:   ps aux -r                  (-r = sort by CPU)
+  anywhere: ps aux | sort -nrk 3      (numeric, reverse, on column 3;
+                                       the header line ends up last)
+head -n N keeps the first N lines (with ps, line 1 is the header).
+pgrep -f TEXT prints the PIDs whose command line contains TEXT.
+More: man ps, man pgrep

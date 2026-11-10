@@ -1,1 +1,11 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' config-storm-metrics.csv > total.txt`
+vars='${SVC_NAME} ${LISTEN_PORT} ${DB_HOST} ${DB_USER} ${DB_PASS} ${MAX_CONN}'
+for f in env/*.env; do svc=$(basename "$f" .env); ( while IFS='=' read -r k v; do export "${k#export }=$v"; done < <(tr -d '\r' < "$f" | grep '='); envsubst "$vars" < template.conf > "rendered/$svc.conf" ); done
+: > drift.txt
+for f in env/*.env; do svc=$(basename "$f" .env); if ! diff -q <(grep -v '^#' "live/$svc.conf" | grep -v '^$') <(grep -v '^#' "rendered/$svc.conf" | grep -v '^$') >/dev/null; then echo "$svc" >> drift.txt; fi; done
+sort -o drift.txt drift.txt
+cat drift.txt
+
+- vars=...        the explicit list of placeholders: $RUNTIME_DIR is not in it, so it stays literal
+- while read -r k v   loads each env file as raw data ($ in passwords survives); tr drops CRs, ${k#export } the prefix
+- envsubst "$vars"    fills only those placeholders, once, from the environment of the subshell
+- the second loop     compares live and rendered without comments and blank lines; differing services go to drift.txt

@@ -1,1 +1,13 @@
-Example: `grep -c '^ok$' free-memory-events.txt > ok-count.txt`
+total=$(awk '/^Mem:/ {print $2}' free2.txt)
+avail=$(awk '/^Mem:/ {print $7}' free2.txt)
+swap1=$(awk '/^Swap:/ {print $3}' free1.txt)
+swap2=$(awk '/^Swap:/ {print $3}' free2.txt)
+verdict=ok
+if [ $((avail * 10)) -lt "$total" ] || [ "$swap2" -gt "$swap1" ]; then verdict=pressure; fi
+printf 'available_mib=%s\nswap_used_mib=%s\nverdict=%s\n' "$avail" "$swap2" "$verdict" > memory.env
+cat memory.env
+
+- total / avail     the Mem: line of the later capture (columns 2 and 7)
+- swap1 / swap2     the "used" column of the Swap: line in each capture
+- the if            pressure when available is under 10 % of total, or swap grew
+- printf > memory.env  writes the three keys

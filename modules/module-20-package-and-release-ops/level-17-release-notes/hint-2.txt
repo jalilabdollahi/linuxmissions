@@ -1,1 +1,6 @@
-Write the schedule into crontab.txt using the standard five time fields.
+awk '/pattern/ { on=1; next } /other/ { on=0 } on'     prints only the lines between two markers (the tag lines contain "tag: v2.4.0")
+reverse a file                                          the log is newest first, the notes oldest first
+sed -nE 's/^[0-9a-f]+ Revert "(.*)" \(#[0-9]+\)$/\1/p'  extracts the subject a revert undoes
+grep -vF -f reverted.txt range.txt                      drops every line that contains one of those subjects (-F: plain text)
+grep -E and sed -E                                      split by type: feat(scope): , fix(scope): , and type!: for breaking
+Build the file with { echo ...; grep ...; } > RELEASE_NOTES.md.   More: man awk, man grep

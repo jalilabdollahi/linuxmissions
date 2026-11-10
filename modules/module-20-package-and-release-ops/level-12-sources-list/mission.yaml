@@ -1,15 +1,11 @@
 {
-  "name": "Sources List: Permission Fix",
-  "description": "In the package and release operations lab, a task related to Sources List needs cleanup before the handoff.",
-  "objective": "Set the mode of sources-list.sh to 640",
+  "name": "Sources Cleanup",
+  "description": "apt update on this server prints a warning that a target is configured multiple times, and an error that one repository has no Release file. The sources were edited by three different people over the years: an old sources.list, the Ubuntu .sources file, and a one-line file for the vendor repository.",
+  "objective": "Clean up the apt sources in rootfs/etc/apt/ (sources.list and sources.list.d/) so that apt update prints no W: or E: lines. The main archive must still offer all three of its suites (noble, noble-updates, noble-security) exactly once, and the vendor repository must now be described by a deb822 .sources file with Types, URIs, Suites, Components and Signed-By, and no longer by any .list line. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Sources List",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "20m",
+  "concepts": ["sources.list", "deb822 .sources", "suites and components", "duplicate targets", "Signed-By"],
   "module": "module-20-package-and-release-ops",
   "level": "level-12-sources-list"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Repo Keys: Restore Drill",
-  "description": "In the package and release operations lab, a task related to Repo Keys needs cleanup before the handoff.",
-  "objective": "Extract repo-keys-restore.tar.gz so the restored/repo-keys directory appears in the sandbox",
+  "name": "Key Rotation",
+  "description": "After the vendor rotated its signing keys, apt update on this server fails for the Acme repository with NO_PUBKEY. The vendor shipped three keyring files in keyrings/ in the confusion: one holds the old key, one the new one, one belongs to a different product.",
+  "objective": "Make apt update succeed for the Acme repository the modern way: find which keyring in keyrings/ really verifies the repository's signature and reference it with signed-by in the repository's source line. Do not mark the repository trusted=yes and do not add any key to the system-wide trusted keyrings. After the fix, apt update must print no warnings or errors. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Repo Keys",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "15m",
+  "concepts": ["signed-by", "gpgv --keyring", "InRelease", "NO_PUBKEY", "apt-key is deprecated", "trusted=yes"],
   "module": "module-20-package-and-release-ops",
   "level": "level-11-repo-keys"
 }

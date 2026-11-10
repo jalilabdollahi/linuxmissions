@@ -1,1 +1,6 @@
-Archive the directory contents without leaving anything out.
+grep ' DEPLOY ' deploy.log; grep ROLLBACK deploy.log     the history: a release counts if it was deployed "ok" and no "ROLLBACK <it> -> ..." line exists
+ln -sfn releases/X current.new    make the new link under a temporary name (-n: do not follow an existing symlink-to-directory, -f: replace)
+mv -T current.new current         rename(2) over the old link: atomic, current is never missing (-T: treat current as a file, not a directory to move into)
+kill -HUP "$(cat run/app.pid)"    the app re-reads current on SIGHUP
+echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) ROLLBACK ..." >> deploy.log      append one line, do not rewrite the file
+curl -s http://127.0.0.1:PORT/health       PORT is in app.port; look at the reported version.   More: man ln, man mv

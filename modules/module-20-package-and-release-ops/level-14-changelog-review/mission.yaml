@@ -1,16 +1,11 @@
 {
-  "name": "Changelog Review: Loop Builder",
-  "description": "In the package and release operations lab, a task related to Changelog Review needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named changelog-review-1.txt through changelog-review-3.txt with matching numbered content",
+  "name": "Was CVE-2026-1182 Fixed?",
+  "description": "Security wants to know which version of libxparse first fixed CVE-2026-1182 and whether the copy running on this server is patched. The newest release's changelog is in libxparse/changelog.Debian.gz, and the installed version is in this sandbox's dpkg database (rootfs/).",
+  "objective": "Write cve.env with two lines: first_fixed=<the first version whose changelog entry fixes CVE-2026-1182> and patched=yes or patched=no for the installed version of libxparse1. patched=yes only if the fix is in effect in the installed version: a later entry may revert the fix until another entry applies it again. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Changelog Review",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "15m",
+  "concepts": ["changelog.Debian.gz", "zcat", "Debian changelog format", "awk", "dpkg-query"],
   "module": "module-20-package-and-release-ops",
   "level": "level-14-changelog-review"
 }

@@ -304,11 +304,14 @@ class Repo:
                 raise FixtureError(f"repo {self.name}: {p.name} uses component {p.component!r} "
                                    f"not in {self.components}")
 
-    def build(self, tmp: str):
-        if os.path.isdir(os.path.join(self.path, "dists")):
-            shutil.rmtree(os.path.join(self.path, "dists"))
-        if os.path.isdir(os.path.join(self.path, "pool")):
-            shutil.rmtree(os.path.join(self.path, "pool"))
+    def build(self, tmp: str, clean: bool = True):
+        # clean=False: another repository with the same "path" (several suites of
+        # one mirror) was built first and its dists/ and pool/ must be kept.
+        if clean:
+            if os.path.isdir(os.path.join(self.path, "dists")):
+                shutil.rmtree(os.path.join(self.path, "dists"))
+            if os.path.isdir(os.path.join(self.path, "pool")):
+                shutil.rmtree(os.path.join(self.path, "pool"))
         stanzas = {c: [] for c in self.components}
         for p in sorted(self.packages, key=lambda p: (p.name, p.version)):
             rel = f"{pool_dir(p.component, p.source)}/{deb_basename(p.name, p.version, p.arch)}"
@@ -475,8 +478,10 @@ def build(sandbox: str, fixture: dict, update=True, repos_only=False):
         names = [r.name for r in repos]
         if len(set(names)) != len(names):
             raise FixtureError(f"repo names must be unique: {names}")
+        built_paths = set()
         for r in repos:
-            r.build(tmp)
+            r.build(tmp, clean=r.path not in built_paths)
+            built_paths.add(r.path)
         if repos_only:
             if update and fixture.get("update", True):
                 apt_update(root, fixture.get("update", True))

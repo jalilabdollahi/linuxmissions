@@ -1,1 +1,8 @@
-Example: `cut -d, -f2 apt-upgrade-report.csv > owners.txt`
+apt-get -s upgrade | awk '/have been kept back/ {on=1; next} on && /^  / {for (i=1;i<=NF;i++) print $i; next} {on=0}' > kept-back.txt
+cat kept-back.txt
+
+- apt-get -s upgrade   simulate the upgrade; nothing is installed
+- awk '/have been kept back/ {on=1; next}   start printing after the "kept back" heading
+- on && /^  / {for ...}   the names are on indented lines; print one name per line
+- {on=0}               stop at the next paragraph
+(to see WHY they are kept back, compare with: apt-get -s full-upgrade)

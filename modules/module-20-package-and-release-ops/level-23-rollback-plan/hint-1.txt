@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+Three questions. Which release is the "last good" one? ls releases/ alone cannot tell you: read
+deploy.log from top to bottom and see which releases went out fine but were pulled back later, and
+which never went out properly. Second, how do you repoint a symlink so that there is never a moment
+without it, and what happens when the target of ln is an existing symlink to a directory? Third, the
+app loaded its release when it started: how do you tell a running process to look again?

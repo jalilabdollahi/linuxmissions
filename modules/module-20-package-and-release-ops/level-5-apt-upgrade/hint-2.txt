@@ -1,1 +1,7 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+apt-get -s upgrade        -s simulates: prints the plan, changes nothing
+apt-get -s full-upgrade   the same plan, but allowed to install new dependencies and remove packages
+
+Compare the two: whatever upgrade keeps back and full-upgrade then does is what
+needs a human look. Pick the names out of the "The following packages have been
+kept back:" paragraph (indented lines under it) into the file, one per line.
+More: man apt-get

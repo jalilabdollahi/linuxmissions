@@ -1,1 +1,8 @@
-Example: `grep 'ALERT' apt-install.log > alerts.txt`
+apt-cache madison fluxd libflux1
+apt-cache show fluxd=3.1.4-1 | grep ^Depends
+apt install fluxd=3.1.4-1 libflux1=1.4.2-1
+
+- madison            lists every version of both packages and where it is offered
+- show ... Depends   fluxd 3.1.4 wants libflux1 older than 1.5 (and at least 1.4)
+- install a=x b=y    one transaction: apt installs fluxd and downgrades libflux1 to the pinned version
+(1.4.2-1 is the newest libflux1 below the 1.5 limit)

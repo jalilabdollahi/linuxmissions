@@ -1,1 +1,9 @@
-Example: `ln -s releases/snap-notes.conf current.conf`
+apt-mark hold postgresql-16 linux-image-generic
+apt-mark showhold
+apt-get -s upgrade > upgrade-plan.txt
+grep -E '^(Inst|The following)' upgrade-plan.txt
+
+- apt-mark hold A B       holds exactly those two (a pattern like linux-* would also hold linux-firmware)
+- apt-mark showhold       check: only the two names
+- apt-get -s upgrade > f  the plan with the holds in effect, saved to the file
+- grep                    quick look: the two are "kept back", the rest are Inst lines

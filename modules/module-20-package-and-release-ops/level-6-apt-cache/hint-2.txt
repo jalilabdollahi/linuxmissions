@@ -1,1 +1,9 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+apt-cache policy nginx     Installed, Candidate, and a version table: every version with its
+                           priority (the number) and the repository (URL, suite) that offers it
+apt-cache policy           without a package name: every repository, with a "release o=..." line
+                           (o= is the Origin) under its URL
+rootfs/etc/apt/preferences.d/   the pin files; each has Package:, Pin: and Pin-Priority:
+grep -n Pin-Priority DIR/*      shows every priority at once
+
+Match the winning priority to the file that declares it. apt reads only names with no
+extension or ending in .pref; a file such as x.pref.bak is ignored.   More: man apt_preferences

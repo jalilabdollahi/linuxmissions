@@ -1,1 +1,4 @@
-This task wants a symbolic link, not a copy.
+Read FREEZE.txt for the exact names. A hold is a mark on a package that tells apt
+and dpkg to leave its version alone. Before you mark anything, look at which
+installed packages share a prefix with the two names: would a pattern that is
+convenient to type also catch a package that should keep upgrading?

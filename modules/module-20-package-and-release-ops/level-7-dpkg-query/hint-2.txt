@@ -1,1 +1,7 @@
-Save each result into its own file.
+dpkg-query --admindir=DIR -W -f='FORMAT'    one line per package, as you format it
+  ${db:Status-Abbrev}   three letters: wanted, current state, flags (ii, hi, rc, iU, iF, iH, it, iW ...)
+  ${Package} ${Installed-Size} ${Section}   some packages have no Section: put it LAST on the line
+Installed-Size is in KiB: divide by 1024 for MiB.
+Use a separator that cannot appear in the fields (such as |) with awk -F.
+Section libs is not libdevel or oldlibs, and not "any name containing lib".
+More: man dpkg-query (see the field list)

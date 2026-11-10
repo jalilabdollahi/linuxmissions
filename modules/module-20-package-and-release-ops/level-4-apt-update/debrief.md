@@ -1,17 +1,20 @@
-# Apt Update: Noise Dedup
+# Stale Package Lists
 
-## What you practiced
-- This level focused on **Apt Update** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+apt never asks the repository "what is new?" at install time. It reads the index files it
+downloaded earlier (under `/var/lib/apt/lists/`) and decides from those. `apt update`
+refreshes the indexes, after which `apt-cache policy` shows the new **Candidate**. Nothing
+is installed by it: that is a separate `apt install` or `apt upgrade`.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- Writing the version you expect into the file without updating: the validator asks apt
+  itself, so a guess fails.
+- Running `apt upgrade` or `apt install agentd` instead of `apt update`: that installs the
+  new build, which this task did not ask for.
+- Forgetting that `apt update` and `apt upgrade` are different: update fetches lists,
+  upgrade changes packages.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Next step
+`apt list --upgradable` shows what a refreshed index lets you upgrade, and
+`apt-cache policy` also lists every version table with its repository, which is the first
+place to look when apt offers something unexpected.

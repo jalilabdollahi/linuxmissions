@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+Write down the five gates from PROMOTION_POLICY.md and, for each, the one command that answers
+"does this build pass?" with its exit status. The script is then a chain: run a check, and on
+failure print the reason and stop. Think about which checks are tricky: how a signature is verified
+without gpg, how to compare 1.10.0 with 1.9.5, how to match a version in the changelog exactly
+(1.4.4 vs 1.4.40), and how to read modes and owners without extracting the tarball.

@@ -1,17 +1,20 @@
-# Package Audit: Script Kickoff
+# Prod vs Staging Drift
 
-## What you practiced
-- This level focused on **Package Audit** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`join` pairs lines with the same key, but only when the key is spelled the same and both inputs
+are sorted the same way. The two dumps used a tab and a space, and one wrote `libc6:amd64` where
+the other wrote `libc6`, so a plain `join` found nothing in common. Normalising first (awk splits
+on any blanks and `sub()` strips the suffix) turns the task into an ordinary outer join:
+`-a1 -a2` keeps the unmatched lines of both sides, `-e -` fills the empty side with a dash, and
+filtering on `$2 != $3` leaves exactly the drift.
 
-## Commands to remember
-```bash
-chmod +x script.sh
-./script.sh
-bash script.sh
-```
+## Common mistakes
+- Sorting with one locale and joining with another: `join` then warns "not in sorted order" or
+  silently drops pairs. Set `LC_ALL=C` for both steps.
+- Comparing whole lines with `comm`: a changed version makes the line differ, but you lose the
+  package-level view (the same name appears once on each side).
+- Forgetting packages that exist only on staging.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task usually takes two steps: fix execute permission, then run the script.
+## Next step
+`comm -23 a b` / `comm -13 a b` give the lines unique to each sorted file, and `diff <(cut -f1 a) <(cut -f1 b)`
+is a quick check of which names differ. `dpkg-query -W -f='${binary:Package}\t${Version}\n'` makes the same format on every server.

@@ -1,1 +1,10 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' install-manifest.conf > fixed.conf`
+export LC_ALL=C
+manifest() { (cd "$1" && find . -type f -printf '%P\n' | sort | while IFS= read -r p; do printf '%s %s %s\n' "$(stat -c %a "$p")" "$(sha256sum < "$p" | cut -d' ' -f1)" "$p"; done); }
+manifest release > MANIFEST; manifest deployed > deployed.manifest
+awk 'NR == FNR { k = $0; sub(/^[^ ]+ [^ ]+ /, "", k); m[k] = $1 " " $2; next } { k = $0; sub(/^[^ ]+ [^ ]+ /, "", k); d[k] = $1 " " $2; if (!(k in m)) print "EXTRA " k; else if (m[k] != d[k]) print "MODIFIED " k } END { for (k in m) if (!(k in d)) print "MISSING " k }' MANIFEST deployed.manifest | sort > deploy-diff.txt
+cat deploy-diff.txt
+
+- manifest()      for every file (sorted by path): octal mode, sha256 of the content, then the path last so spaces in it are harmless
+- (cd "$1" && ...) paths come out relative to the tree
+- awk, 1st file    stores "mode hash" for each path of MANIFEST
+- awk, 2nd file    EXTRA = path not in the manifest, MODIFIED = mode or hash differs; END prints the paths never seen as MISSING

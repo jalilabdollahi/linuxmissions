@@ -1,16 +1,11 @@
 {
-  "name": "Apt Remove: Event Counter",
-  "description": "In the package and release operations lab, a task related to Apt Remove needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in apt-remove-events.txt and write the number to ok-count.txt",
+  "name": "Remove Is Not Purge",
+  "description": "oldmon was removed from this server last month, yet the rollout of the new monitoring agent keeps tripping over leftovers of the old one. The package list does not show oldmon as installed, but it has not really gone.",
+  "objective": "Get rid of oldmon completely: no package database entry of any kind, and none of its configuration files left under rootfs/etc/oldmon/. Every other package must stay as it is, including the ones whose names start with oldmon and the other half-removed package on the box. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Apt Remove",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["dpkg -l states (ii, rc)", "apt remove vs apt purge", "conffiles", "dpkg -P"],
   "module": "module-20-package-and-release-ops",
   "level": "level-3-apt-remove"
 }

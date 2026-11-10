@@ -1,1 +1,5 @@
-Look for a filtering command that keeps only the alert lines in apt-install.log.
+Which versions of fluxd does the mirror offer, and what does each one need?
+Ask apt what it would install by default and compare that with the ticket.
+Then look at the installed libflux1: is it a version the old fluxd accepts?
+apt resolves dependencies, but it will not quietly downgrade something that is
+already installed to make a package fit.

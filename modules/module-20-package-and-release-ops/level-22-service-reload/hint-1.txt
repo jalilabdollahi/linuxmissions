@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Two things must stay true: the same daemon process keeps running and its open connections are not cut.
+That rules out stopping and starting it. Before you tell the daemon to re-read anything, ask the tool
+whether the new file is acceptable, because this daemon exits when a reload finds a broken file. Read
+the check's message: it names a line. Then work out how to send a daemon the "re-read your config"
+signal, and where its process id is written down.

@@ -1,15 +1,11 @@
 {
-  "name": "Promotion Checks: Permission Fix",
-  "description": "In the package and release operations lab, a task related to Promotion Checks needs cleanup before the handoff.",
-  "objective": "Set the mode of promotion-checks.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Promotion Checks",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Promotion Gate",
+  "description": "Builds are promoted from staging to prod by hand, and last week a rebuilt artifact with the same version slipped through. The team wants a gate script. PROMOTION_POLICY.md lists the checks and the output format, ARTIFACT_SPEC.md describes the layout, prod/VERSION holds the version running in prod, keys/release.gpg is the release key, and builds/ has three sample builds.",
+  "objective": "Write promote.sh BUILD_DIR in this directory that applies the gates of PROMOTION_POLICY.md in the order given and prints exactly one line: PROMOTE (exit status 0) or REJECT: <gate> (exit status 1, <gate> being the name of the first gate that fails). It must work from any directory and must not modify anything. The validator runs it against the three sample builds and against more builds it creates itself, each failing a different gate.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "45m",
+  "concepts": ["gpgv", "sha256sum -c", "dpkg --compare-versions", "tar -tv parsing", "exit codes", "shell scripting"],
   "module": "module-20-package-and-release-ops",
   "level": "level-24-promotion-checks"
 }

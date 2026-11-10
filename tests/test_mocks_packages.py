@@ -308,6 +308,18 @@ class PackageWorldTests(unittest.TestCase):
         self.assertIn("2.0-2", self.sh("apt-cache madison tool").stdout)
         self.assertEqual(self.status()["tool"], ("hi", "2.0-1"))   # --repos-only left the system alone
 
+    def test_suites_sharing_one_path(self):
+        pk = lambda n, v: {"name": n, "version": v, "description": n}  # noqa: E731
+        fx = {"repos": [
+            {"name": "a", "suite": "noble", "path": "repos/m", "packages": [pk("x", "1.0-1")]},
+            {"name": "b", "suite": "noble-updates", "codename": "noble", "path": "repos/m", "packages": [pk("x", "1.1-1")]}],
+            "update": False, "base_files": False}
+        sb, _ = self.make(fx)
+        self.assertTrue((sb / "repos/m/dists/noble/Release").exists())
+        self.assertTrue((sb / "repos/m/dists/noble-updates/Release").exists())
+        self.sh("apt-get update", check=True)
+        self.assertIn("1.1-1", self.sh("apt-cache policy x").stdout)
+
     def test_dpkg_install_local_deb(self):
         sb, _ = self.make({"repos": [{"name": "main", "packages": [{"name": "base-lib", "version": "1"}]}]})
         tree = sb / "build/DEBIAN"

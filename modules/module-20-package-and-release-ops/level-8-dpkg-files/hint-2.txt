@@ -1,1 +1,7 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+dpkg -S PATH       which package owns this exact path (prints "package: /path", or an error if none)
+dpkg -L PACKAGE    every path a package owns, to check from the other side
+readlink -f PATH   the real path after resolving symlinks (it will start with the sandbox path:
+                   cut that part and the leading rootfs off to get the path dpkg knows)
+
+dpkg -S matches the recorded path literally. "No path found" can mean "owned under another
+name" or "owned by nobody": check with ls -l and dpkg -L before you decide.   More: man dpkg

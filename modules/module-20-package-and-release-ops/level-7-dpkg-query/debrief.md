@@ -1,17 +1,21 @@
-# Dpkg Query: History Window
+# Autopsy of a Failed Upgrade
 
-## What you practiced
-- This level focused on **Dpkg Query** in a safe sandbox.
-- The shortest path usually combines `head` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`dpkg-query -W -f` prints exactly the fields you ask for, one line per package.
+`${db:Status-Abbrev}` is the `dpkg -l` state in three letters: the second one is the
+current state (`i` installed, `c` config-files left, `U` unpacked, `F` half-configured,
+`H` half-installed, `t`/`W` waiting for triggers, `n` not installed). `--admindir`
+points dpkg at a copied database instead of the live one, which is the safe way to
+investigate a dead server's package state.
 
-## Commands to remember
-```bash
-head -n 3 file.log
-tail -n 3 file.log
-tail -f file.log
-```
+## Common mistakes
+- Treating `Installed-Size` as bytes or MiB: it is **KiB**.
+- `grep libs` over whole lines: it matches `libssl-dev` (section libdevel) and names
+  containing "libs".
+- Putting `${Section}` in the middle of a space-separated format: a package without a
+  Section leaves an empty field and shifts every column after it.
+- Counting `hi` (held) as broken. A hold is a choice, not damage.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use one command for the beginning of the file and another for the end.
+## Next step
+`dpkg --audit` (as root on the server) lists packages left half-installed, and
+`dpkg --configure -a` finishes configuring what was unpacked.

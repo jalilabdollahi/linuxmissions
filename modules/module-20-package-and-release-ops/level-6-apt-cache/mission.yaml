@@ -1,15 +1,11 @@
 {
-  "name": "Apt Cache: Config Rewrite",
-  "description": "In the package and release operations lab, a task related to Apt Cache needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in apt-cache.conf and save the fixed result to fixed.conf",
+  "name": "Why Not The New nginx",
+  "description": "Two repositories offer nginx: the old mirror has 1.18, the new archive has 1.24. Everybody expects apt to pick the newer one, but apt install nginx wants the old build, and nobody can say why.",
+  "objective": "Find out which nginx version apt would install, where it comes from and which file under rootfs/etc/apt/preferences.d/ is responsible, and record them in why.env as three lines: CANDIDATE=<version>, ORIGIN=<the Origin name of the repository it comes from, as apt-cache policy shows after o=>, PREF_FILE=<path of the preferences file that makes it win>. Do not change the preferences. The package tools in bin/ work on this sandbox's own system and come first on your PATH.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Apt Cache",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["apt-cache policy", "pin priorities", "apt_preferences", "preferences.d"],
   "module": "module-20-package-and-release-ops",
   "level": "level-6-apt-cache"
 }

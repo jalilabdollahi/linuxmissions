@@ -1,1 +1,4 @@
-This is a delimiter-based column extraction task.
+You want to know what the upgrade WOULD do without letting it do anything.
+apt has a simulation mode for that. In the plan it prints, packages are either
+upgraded, installed as new, or mentioned in a separate "kept back" paragraph.
+Which of these paragraphs is the one you are after?

@@ -1,1 +1,6 @@
-An awk one-liner can skip the header and add the second field.
+dpkg --compare-versions A lt B     exit status 0 if A is older than B (also: le, eq, ge, gt)
+dpkg --compare-versions A gt B && echo yes     use it in an if or with && inside a loop
+There is no "sort with a custom comparison" command, so build the order yourself: read the file into a
+bash array (mapfile -t v < versions.txt) and sort it with two nested loops that swap neighbours when
+the left one is "gt" the right one (a bubble sort: 30 items are quick).
+Write the array out with printf '%s\n' "${v[@]}".   More: man deb-version

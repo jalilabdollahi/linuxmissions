@@ -1,1 +1,7 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+apt-cache policy NAME     Installed and Candidate version, and which repositories offer which version
+apt update                downloads the current index of every configured repository
+                          (it installs nothing: that is apt upgrade / apt install)
+
+Run update, then read the policy again. The Candidate line is what to record.
+In this sandbox the tools in bin/ are the ones wired to the sandbox: if a bare
+apt-get complains about permissions you reached the system's own.   More: man apt-get

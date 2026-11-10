@@ -1,17 +1,18 @@
-# Snap Notes: Link Repair
+# Change Freeze
 
-## What you practiced
-- This level focused on **Snap Notes** in a safe sandbox.
-- The shortest path usually combines `ln` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`apt-mark hold` sets the package's selection to `hold` in the dpkg database. From then on
+apt will not upgrade, downgrade or remove it by itself, and the simulated upgrade lists it
+under "kept back" instead of planning it. Naming the two packages keeps every other package
+upgradable, so the freeze blocks only what it should. `apt-get -s upgrade` shows it all
+without touching the system.
 
-## Commands to remember
-```bash
-ln -s target linkname
-ls -l current.conf
-readlink current.conf
-```
+## Common mistakes
+- `apt-mark hold 'linux-*'` also holds `linux-firmware`, and `postgresql-*` holds the client
+  tools. Freezes are about exact names.
+- Saving the plan before holding: it still contains the kernel and database upgrades.
+- Running `apt upgrade` "to test": the packages really move, and a freeze cannot undo that.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task wants a symbolic link, not a copy.
+## Next step
+`apt-mark showhold` is the audit command; put it in the freeze checklist. When the freeze
+ends, `apt-mark unhold NAME`, then `apt-get -s upgrade` again to see what accumulated.

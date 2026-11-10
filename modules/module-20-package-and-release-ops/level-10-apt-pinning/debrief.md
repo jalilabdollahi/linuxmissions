@@ -1,17 +1,19 @@
-# Flatpak Notes: Backup Bundle
+# One Package From Backports
 
-## What you practiced
-- This level focused on **Flatpak Notes** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+apt chooses the version with the highest priority. The main archive is 500; a
+`NotAutomatic: yes` repository such as backports is 100, so its packages are never picked
+unless asked for. A pin with `Package: ripgrep`, `Pin: release a=noble-backports` and
+`Pin-Priority: 600` raises only that package's backports version above 500, so apt offers it
+and everything else is untouched. The release field matters: `a=` is the **Suite** in the
+repository's Release file (`noble-backports`); `n=` is the **Codename**, `noble`, which main
+shares, so `n=noble-backports` matches nothing.
 
-## Commands to remember
-```bash
-tar -czf backup.tar.gz folder/
-tar -tf backup.tar.gz
-gzip file.txt
-```
+## Common mistakes
+- `Package: *` with a pin on the backports release: every backported package is offered.
+- A file named `ripgrep.conf` or `ripgrep.pref.txt`: apt ignores it silently.
+- Priority 500 or lower: no better than main, and the version tie-break is easy to get wrong.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use tar with create, gzip, and file flags.
+## Next step
+`apt install -t noble-backports ripgrep` takes one package from backports for one command
+without writing a pin, and `apt-cache policy` shows the priority of every repository.

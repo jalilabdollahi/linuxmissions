@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+tar --owner=0 --group=0 --numeric-owner     fixed owner, no names from this machine
+tar --mtime=@EPOCH --sort=name              one timestamp for all members, files in name order (GNU tar; prefix with LC_ALL=C)
+tar --exclude='*.o' --exclude=.DS_Store     patterns match at any depth; careful, '.*' would also drop conf/.defaults
+tar -C DIR ... agent-1.4.2                  archive a directory under the right top name (copy src/agent to stage/agent-1.4.2 first)
+modes: tar --mode only sets one mode for everything, so set the modes on the staged copy with find ... -exec chmod
+... | gzip -n > dist/...tar.gz               -n stores no name and no timestamp in the gzip header
+Put the commands in build.sh with set -e; test with tar -tvzf and by building twice and comparing sha256sum.   More: man tar

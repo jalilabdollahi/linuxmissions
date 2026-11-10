@@ -1,1 +1,7 @@
-Use tar extraction flags and point at the archive file.
+gpgv --keyring ./keyrings/FILE repos/acme/dists/noble/InRelease
+    "Good signature" = this keyring holds the signing key; "Can't check signature: No public key" = it does not
+    (a relative keyring path must start with ./ or gpgv looks in its own home directory)
+Source line:   deb [signed-by=/full/path/to/keyring.gpg] URI SUITE COMPONENTS
+    signed-by takes an absolute path; keep the rest of the line as it is.
+Do not use [trusted=yes] (no checking at all) or apt-key / trusted.gpg.d (trusts the key for every repository).
+Then run apt update again.   More: man sources.list, man gpgv

@@ -1,1 +1,8 @@
-Use `ln -s` so current.conf points at the release file.
+apt-mark hold NAME...      put each named package on hold
+apt-mark showhold          list what is held now
+apt-mark unhold NAME...    release a hold (use it if you caught too many)
+apt-get -s upgrade         simulate the upgrade: held packages show up under "kept back",
+                           everything else under "will be upgraded" with an Inst line each
+
+Name the two packages one by one rather than with a wildcard.
+Redirect the simulation's output to upgrade-plan.txt AFTER the holds are set.   More: man apt-mark

@@ -1,1 +1,5 @@
-Use one command for the beginning of the file and another for the end.
+Every package in the status file has a state, and dpkg-query can print it for
+all packages at once. Two letters are enough: what was asked for and what is
+true now. Which of those second letters mean "done" and which mean "stuck"?
+For the size, check what unit dpkg stores it in, and look closely at which
+packages really belong to section libs and are really installed.

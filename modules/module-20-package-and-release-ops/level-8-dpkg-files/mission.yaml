@@ -1,15 +1,11 @@
 {
-  "name": "Dpkg Files: Cleanup Sweep",
-  "description": "In the package and release operations lab, a task related to Dpkg Files needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/dpkg-files and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Dpkg Files",
-    "find",
-    "rm"
-  ],
+  "name": "Who Owns This File",
+  "description": "During an audit six files on the server look suspicious. For each one the auditors want to know which package put it there, and whether any package did at all. The server's root filesystem is the directory rootfs/ in your sandbox.",
+  "objective": "suspects.txt lists six paths as they look inside the server (so /bin/x is rootfs/bin/x on disk). Write owners.tsv with one line per path: the path exactly as in suspects.txt, a TAB, and the name of the installed package that owns the file, or the word none if no package owns it. The package tools in bin/ work on that root and come first on your PATH.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["dpkg -S", "dpkg -L", "usrmerge symlinks", "readlink -f", "files no package owns"],
   "module": "module-20-package-and-release-ops",
   "level": "level-8-dpkg-files"
 }

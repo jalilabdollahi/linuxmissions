@@ -1,15 +1,11 @@
 {
-  "name": "Dpkg Query: History Window",
-  "description": "In the package and release operations lab, a task related to Dpkg Query needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of dpkg-query-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Dpkg Query",
-    "head",
-    "tail"
-  ],
+  "name": "Autopsy of a Failed Upgrade",
+  "description": "A production server had an upgrade that died halfway. Its dpkg status file was copied to prod/var/lib/dpkg/status so you can read it safely here, and the postmortem needs two facts from it.",
+  "objective": "Write to broken.txt the name of every package that is not cleanly installed (stuck unpacked, half-configured, half-installed, waiting for triggers, or removed with config files left; a package that is installed and merely on hold is fine, and so is one that is simply not installed). Write to libs-mib.txt the total installed size, in whole MiB (rounded), of the fully installed packages in section libs. Read the status file with dpkg-query --admindir=prod/var/lib/dpkg; don't edit it.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["dpkg-query -W -f", "db:Status-Abbrev", "Installed-Size is KiB", "package states", "awk sums"],
   "module": "module-20-package-and-release-ops",
   "level": "level-7-dpkg-query"
 }

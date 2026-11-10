@@ -1,9 +1,0 @@
-{
-  "task": {
-    "type": "run_script_token",
-    "script_path": "jobs/package-audit.sh",
-    "token_path": "jobs/package-audit.token",
-    "token": "package-audit-done",
-    "initial_mode": 416
-  }
-}

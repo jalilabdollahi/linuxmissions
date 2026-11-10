@@ -1,1 +1,6 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+pricer --check FILE            validates a config file and names the line and key that are wrong
+sed -i -E 's/OLD/NEW/' FILE    fix just that value in the shipped file (look at what the error says the value should be)
+cat run/pricer.pid             the daemon's PID
+kill -HUP PID                  SIGHUP = reload; kill -l lists signals (never kill -9 or a restart: it drops connections)
+curl -s http://127.0.0.1:PORT/version     asks the daemon which config it runs now (PORT is listen_port in the config)
+Order: check, fix, check again, copy into etc/pricer/pricer.conf, HUP, confirm with /version.   More: man kill

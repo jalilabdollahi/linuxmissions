@@ -1,17 +1,18 @@
-# Release Notes: Schedule Entry
+# Release Notes for v2.4.0
 
-## What you practiced
-- This level focused on **Release Notes** in a safe sandbox.
-- The shortest path usually combines `crontab` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Release notes are a filter over history: a range (between two tags), a set of commit types, and a few
+exceptions. The awk range pattern `/start/ {on=1; next} /end/ {on=0} on` turns the tag markers into an on/off
+switch; Conventional Commit prefixes make the sections a matter of one regex each (`!` before the colon
+means breaking). A revert is two commits that cancel out, so both have to disappear: extract the reverted
+subject from the revert line and drop everything that contains it (`grep -vF -f`).
 
-## Commands to remember
-```bash
-crontab -l
-printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt
-cat crontab.txt
-```
+## Common mistakes
+- Including commits after v2.4.0 or before v2.3.0 because the whole file was processed.
+- Listing the reverted fix and its `Revert "..."` line, or only dropping one of them.
+- Putting a `feat!:` commit under both Features and Breaking, or keeping the `type(scope):` prefix.
+- Using grep without `-F` for subjects: parentheses and dots are regex characters.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This mission is about cron field order and exact syntax.
+## Next step
+With git available, `git log v2.3.0..v2.4.0 --oneline --no-merges` produces this range directly, and
+`git log --grep='^Revert'` finds the reverts.

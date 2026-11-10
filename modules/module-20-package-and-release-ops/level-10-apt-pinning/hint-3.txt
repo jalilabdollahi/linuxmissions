@@ -1,1 +1,7 @@
-Example: `tar -czf flatpak-notes-backup.tar.gz bundle/flatpak-notes`
+apt-cache policy | grep -A1 backports
+printf 'Package: ripgrep\nPin: release a=noble-backports\nPin-Priority: 600\n' > rootfs/etc/apt/preferences.d/ripgrep.pref
+apt-cache policy ripgrep fd-find
+
+- policy | grep   the backports repository's release line: a=noble-backports (n= is just noble, same as main)
+- printf > ripgrep.pref   a pin for ONE package (Package: ripgrep) on that archive, priority 600 > 500
+- policy ripgrep fd-find  ripgrep's Candidate is now the ~bpo build; fd-find stays on 9.0.0

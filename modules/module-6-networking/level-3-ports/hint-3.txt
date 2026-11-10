@@ -1,2 +1,10 @@
-One valid command is:
-awk '$1=="LISTEN" {split($4,a,":"); print a[length(a)]}' ss-output.txt | sort -n > listening.txt
+Type this at the prompt:
+
+awk '$1 == "LISTEN" && $4 !~ /^(127\.|\[::1\])/ { n = split($4, a, ":"); print a[n] }' ss-output.txt | sort -nu > exposed.txt
+
+- $1 == "LISTEN"                  only sockets waiting for connections
+- $4 !~ /^(127\.|\[::1\])/        drop the ones bound to a loopback address
+- n = split($4, a, ":"); a[n]     the part after the last colon is the port ("[::]:22" -> 22)
+- sort -nu                        numeric order, each port once
+
+Check it: cat exposed.txt     (5 ports)

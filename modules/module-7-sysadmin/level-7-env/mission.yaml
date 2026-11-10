@@ -1,11 +1,11 @@
 {
   "name": "Env Surgery",
-  "description": "A startup script expects environment variables from a `.env` file, but the file is incomplete.",
-  "objective": "Fill in `.env` so sourcing it sets APP_MODE=production and APP_PORT=8080, then run app.sh successfully",
-  "xp": 260,
-  "difficulty": "advanced",
+  "description": "myapp will not start: start.sh loads its settings from .env, but app.sh keeps complaining about missing environment variables, and the shell prints strange 'command not found' errors.",
+  "objective": "Fix .env (leave start.sh and app.sh unchanged) so that sourcing it raises no errors and app.sh, started by ./start.sh, receives APP_MODE=production, APP_PORT=8080 and APP_NAME=My Shop.",
+  "xp": 150,
+  "difficulty": "intermediate",
   "expected_time": "10m",
-  "concepts": ["export", "source", ".env", "printenv"],
+  "concepts": ["shell variable assignment", "quoting", "export", "source / .", "child process environment"],
   "module": "module-7-sysadmin",
   "level": "level-7-env"
 }

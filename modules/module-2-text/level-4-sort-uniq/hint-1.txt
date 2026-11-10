@@ -1,2 +1,4 @@
-Extract IPs, sort them, then count consecutive duplicates:
-awk '{print $1}' $SANDBOX/access.log | sort | uniq -c
+You need three things: the IP of every request, a count per IP, and a ranking.
+The log is not ordered by IP, so the same client's requests are spread across the
+file. A tool that counts repeated lines only sees repeats that sit next to each
+other. What has to happen before counting?

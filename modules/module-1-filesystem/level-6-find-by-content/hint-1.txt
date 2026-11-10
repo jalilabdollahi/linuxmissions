@@ -1,2 +1,3 @@
-grep can search file contents recursively:
-grep -r "password=" $SANDBOX
+This time you know what is inside the files, not what they are called. Is there
+a tool that reads every file under a folder and reports which ones contain a
+piece of text? Hidden files and names with spaces count too.

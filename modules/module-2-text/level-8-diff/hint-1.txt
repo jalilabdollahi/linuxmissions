@@ -1,2 +1,4 @@
-diff shows differences between two files:
-diff $SANDBOX/v1.conf $SANDBOX/v2.conf
+There is a standard tool that compares two files line by line and prints only
+what changed. Its default output style is not the one reviewers and the patch
+tool use; there is an option for the "unified" style (the one git diff shows).
+The order of the two files matters: old first, new second.

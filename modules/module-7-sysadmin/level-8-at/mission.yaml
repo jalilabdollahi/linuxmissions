@@ -1,11 +1,11 @@
 {
   "name": "One-Shot Task",
-  "description": "A one-time cleanup command should be queued with a sandbox-safe mock `at` helper.",
-  "objective": "Use the provided at helper to schedule `./cleanup.sh` to run in 1 minute",
-  "xp": 280,
-  "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["at", "atq", "one-time scheduling", "stdin"],
+  "description": "A colleague queued the one-off cleanup.sh run for 03:30 tomorrow, right in the middle of the nightly backup. Change management approved tonight, 23:30, instead.",
+  "objective": "Leave the at queue with cleanup.sh (from this sandbox) queued exactly once, for tonight at 23:30, and no cleanup job at any other time. The unrelated certificate job must stay. ./at, ./atq and ./atrm are mocks of the real tools; their clock is frozen at Mon 2024-04-08 14:30.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["at", "atq", "atrm", "at -c", "at time specs"],
   "module": "module-7-sysadmin",
   "level": "level-8-at"
 }

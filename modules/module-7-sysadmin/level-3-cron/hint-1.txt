@@ -1,2 +1,5 @@
-Cron format is:
-minute hour day month weekday command
+Look at the comment header and the existing jobs in crontab.txt: every job line has five
+time fields and then the command. Which field holds the hour, and which one holds the
+days of the week?
+Also ask yourself: when cron starts the job at 3 a.m., which directory will it be in,
+and will it know any of your shell variables?

@@ -1,11 +1,11 @@
 {
   "name": "Speak Variable",
-  "description": "Your onboarding script should greet whoever runs it, but the dynamic name support was never written.",
-  "objective": "Write greet.sh so running `bash greet.sh World` prints `Hello, World!`",
-  "xp": 150,
+  "description": "The onboarding script greet.sh is supposed to greet whoever runs it, but nobody ever got past the TODO comment.",
+  "objective": "Make `bash greet.sh NAME` print `Hello, NAME!` (also for a quoted name with a space, like \"Ada Lovelace\"), and make `bash greet.sh` with no name print `Hello, stranger!`. Tip: `edit greet.sh` opens the file in an editor.",
+  "xp": 100,
   "difficulty": "beginner",
   "expected_time": "5m",
-  "concepts": ["bash", "$1", "echo", "variables"],
+  "concepts": ["$1", "variables", "${var:-default}", "quoting"],
   "module": "module-5-scripting",
   "level": "level-1-variables"
 }

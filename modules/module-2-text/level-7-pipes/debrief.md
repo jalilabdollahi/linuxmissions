@@ -1,23 +1,20 @@
 # Pipeline Master
 
-## What you practiced
-Pipes (`|`) connect commands so the output of one becomes the input of the next.
-This level used a 5-stage pipeline: `grep | awk | sort | uniq -c | sort -rn`
+## Why it works
+Each stage does one job and passes its output on: filter, extract, group, count,
+rank. The filter is the important part. `grep POST` also matches
+`GET /docs/POST-requests`, which put two crawlers that never sent a POST at the top
+of the list. Matching `"POST ` (quote, method, space), or comparing awk's field 6,
+only matches the method itself.
 
-## The power of pipes
-Each tool does one thing well. Composing them handles complex transformations without writing a script.
+## Common mistakes
+- Filtering on a word that can appear anywhere in the line (URL, user agent, referer).
+- Skipping the first `sort`, so `uniq -c` counts the same IP many times.
+- Building the whole pipeline at once: when the result looks wrong, you cannot see
+  which stage broke. Add stages one by one and check with `| head`.
 
-## Commands to remember
-```bash
-# Classic log analysis pipeline
-grep "POST" access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head -10
-
-# tee: write to file AND continue pipeline
-cat big.log | tee backup.log | grep ERROR | wc -l
-
-# xargs: use pipeline output as arguments
-find . -name "*.log" | xargs wc -l
-
-# process substitution (bash)
-diff <(sort file1) <(sort file2)
-```
+## Learn next
+`tee` saves a copy of the stream mid-pipeline:
+`grep '"POST ' access.log | tee posts.log | awk '{print $1}' | ...`.
+`awk '$6 == "\"POST" {n[$1]++} END {for (ip in n) print n[ip], ip}' access.log | sort -rn`
+does the filter and the count in one awk program.

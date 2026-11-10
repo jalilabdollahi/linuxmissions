@@ -1,2 +1,4 @@
-Run the script in the background so your shell prompt returns immediately:
-bash $SANDBOX/process.sh &
+The shell can start a command and give you the prompt back straight away; the
+command keeps running as a "job" of your shell. The shell keeps a numbered list
+of its jobs, and it can show each job's PID too. You have about 10 seconds to
+save that list after starting the job; after that, wait for the job to finish.

@@ -1,4 +1,7 @@
-Change all files at once:
-chown $(whoami) $SANDBOX/config/*.conf
-# Or recursively:
-chown -R $(whoami) $SANDBOX/config/
+  xargs stat -c '%n %U %G' < paths.txt > owners.txt
+      stat every path; %n = name, %U = owner, %G = group
+      (macOS: xargs stat -f '%N %Su %Sg' < paths.txt > owners.txt)
+  xargs -I{} find {} -maxdepth 0 -user "$(whoami)" < paths.txt > fixable.txt
+      for each path, find prints it only if you are the owner
+  cat owners.txt fixable.txt
+      check: the root-owned system files are not in fixable.txt

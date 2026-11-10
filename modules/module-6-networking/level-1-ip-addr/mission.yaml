@@ -1,11 +1,11 @@
 {
   "name": "What's My IP?",
-  "description": "You were given a saved `ip addr` capture and need to summarize which interfaces have which addresses.",
-  "objective": "Extract each interface and IPv4 address from ip_addr.txt and save them to interfaces.txt",
+  "description": "A support ticket for the server app-07 came with the output of `ip addr` pasted in, and the network team wants a plain list of which IPv4 address sits on which interface.",
+  "objective": "From ip_addr.txt, write interfaces.txt with one line `INTERFACE ADDRESS` for every IPv4 address in the capture (address without the /prefix, interfaces with two addresses get two lines), in the order they appear. Interfaces without an IPv4 address are left out, and IPv6 addresses are ignored.",
   "xp": 150,
-  "difficulty": "beginner",
-  "expected_time": "6m",
-  "concepts": ["ip addr", "grep", "awk", "interfaces"],
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["ip addr", "inet vs inet6", "awk", "secondary addresses"],
   "module": "module-6-networking",
   "level": "level-1-ip-addr"
 }

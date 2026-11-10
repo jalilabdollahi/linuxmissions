@@ -1,2 +1,24 @@
-Then start it:
-./systemctl start myapp.service
+Rewrite the unit with the fixed path and an [Install] section, then reload, enable and start:
+
+cat > etc/systemd/system/myapp.service <<'UNIT'
+[Unit]
+Description=MyApp API server
+After=network.target
+
+[Service]
+Type=simple
+User=myapp
+ExecStart=/opt/myapp/current/bin/myapp --port 8080
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+./systemctl daemon-reload
+./systemctl enable --now myapp.service
+./systemctl status myapp.service
+
+- ExecStart=/opt/myapp/current/bin/myapp   the release now lives behind the `current` symlink
+- [Install] WantedBy=multi-user.target     tells `enable` where to link the unit for boot
+- daemon-reload                            systemd keeps the old unit in memory until you reload
+- enable --now                             creates the boot symlink and starts the service now

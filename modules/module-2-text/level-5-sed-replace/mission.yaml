@@ -1,11 +1,11 @@
 {
   "name": "Find and Replace",
-  "description": "The staging config file still has old hostname references that need to be updated for production.",
-  "objective": "Replace all occurrences of 'staging.internal' with 'prod.internal' in config.conf and save to config.prod.conf",
+  "description": "The app is moving from staging to production. Its config.conf still points at hosts in the staging.internal domain; production uses prod.internal. The staging file itself must stay as it is.",
+  "objective": "Create config.prod.conf: a copy of config.conf in which every occurrence of staging.internal is replaced by prod.internal and nothing else changes. config.conf must stay unchanged.",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "8m",
-  "concepts": ["sed", "s/old/new/g", "-i", "substitution"],
+  "concepts": ["sed", "s/old/new/g", "escaping .", "output redirection", "diff"],
   "module": "module-2-text",
   "level": "level-5-sed-replace"
 }

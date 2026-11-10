@@ -1,2 +1,7 @@
-Remove write permission from 'others' for all of them:
-find $SANDBOX/app -perm /o+w -type f -exec chmod o-w {} \;
+find can match a permission bit, whatever the other bits are:
+  find app -type f -perm -o+w      files where others have write
+  (-perm -002 is the same in octal)
+chmod in symbolic form changes one bit and leaves the rest alone:
+  chmod o-w FILE                   take write away from others only
+find's -exec CMD {} + runs CMD on all matches (spaces in names are safe).
+More: man find (-perm), man chmod

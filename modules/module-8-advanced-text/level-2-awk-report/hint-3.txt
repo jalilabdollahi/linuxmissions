@@ -1,2 +1,8 @@
-One valid pattern is:
-awk -F, 'NR>1 {totals[$1]+=$2} END {for (k in totals) print k, totals[k]}' expenses.csv | sort -k2,2nr > totals.txt
+awk -F, 'NR > 1 && $3 != "" { sum[$3] += $4 } END { for (c in sum) printf "%s %.2f\n", c, sum[c] }' expenses.csv | sort -k2,2nr > totals.txt
+
+- -F,                      fields are separated by commas
+- NR > 1 && $3 != ""       skip line 1 (header) and rows with an empty category (blank line, TOTAL row)
+- sum[$3] += $4            add the amount to that category's running total
+- END { for (c in sum) ... }  after the last line, print every category once
+- printf "%s %.2f\n"       name, space, total with exactly two decimals
+- sort -k2,2nr             order by the 2nd field, numerically, largest first

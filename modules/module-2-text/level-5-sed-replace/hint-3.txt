@@ -1,3 +1,6 @@
-Verify the result:
-cat $SANDBOX/config.prod.conf
-diff $SANDBOX/config.conf $SANDBOX/config.prod.conf
+  sed 's/staging\.internal/prod.internal/g' config.conf > config.prod.conf
+      s/old/new/ substitutes; \. makes the dot literal so staging-internal and
+      staging_internal are not touched; g replaces every match on a line;
+      > writes the result to the new file and leaves config.conf as it was
+  diff config.conf config.prod.conf
+      shows exactly which lines changed (7 of them)

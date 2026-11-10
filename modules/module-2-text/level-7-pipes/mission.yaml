@@ -1,11 +1,11 @@
 {
   "name": "Pipeline Master",
-  "description": "A multi-step data transformation: filter, transform, sort, and count — all in one pipeline.",
-  "objective": "From access.log, extract only POST requests, count how many came from each IP, save ranked result to post_ips.txt",
+  "description": "Someone is flooding the shop with fake orders. The API team wants to know which clients send the most POST requests (orders and cart writes) according to access.log. The docs pages have POST in their URLs, and crawlers read them all day.",
+  "objective": "Write post_ips.txt with one line '<count> <ip>' per client that sent at least one POST request (count = its number of POST requests), highest count first. Only requests whose HTTP method is POST count.",
   "xp": 200,
-  "difficulty": "intermediate",
+  "difficulty": "advanced",
   "expected_time": "12m",
-  "concepts": ["pipes", "grep", "awk", "sort", "uniq -c", "chaining"],
+  "concepts": ["pipes", "grep/awk filtering", "awk fields", "sort | uniq -c", "sort -rn"],
   "module": "module-2-text",
   "level": "level-7-pipes"
 }

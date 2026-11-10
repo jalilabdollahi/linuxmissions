@@ -1,2 +1,8 @@
-Save to top_ips.txt:
-awk '{print $1}' $SANDBOX/access.log | sort | uniq -c | sort -rn > $SANDBOX/top_ips.txt
+  awk '{print $1}' access.log | sort | uniq -c | sort -rn > top_ips.txt
+      awk prints field 1 (the IP) of every line
+      sort groups identical IPs together
+      uniq -c turns each group into one "count IP" line
+      sort -rn ranks those lines by the number, highest first
+      > writes the result to top_ips.txt
+  head -5 top_ips.txt
+      the top 5 talkers

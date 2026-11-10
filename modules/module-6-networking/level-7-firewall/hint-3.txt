@@ -1,2 +1,12 @@
-One valid command is:
-grep DROP firewall.rules | awk '{for (i=1; i<=NF; i++) if ($i=="--dport") print $(i+1)}' > blocked_port.txt
+The 8443 ACCEPT rule has to move above the DROP for 8000-8999. Type these at the prompt:
+
+rule="$(grep -e '--dport 8443' firewall.rules)"
+grep -v -e '--dport 8443' firewall.rules | awk -v r="$rule" '/--dports 8000:8999/ { print r } { print }' > firewall.new && mv firewall.new firewall.rules
+
+- rule="$(grep -e '--dport 8443' ...)"   remember the office-only 8443 rule (-e because the pattern starts with -)
+- grep -v -e '--dport 8443'              the file without that rule
+- awk ... /--dports 8000:8999/ {print r} print the saved rule just before the range DROP, then every line as it was
+- > firewall.new && mv ... firewall.rules write a new file and replace the old one
+
+Or: `edit firewall.rules` and move the "admin UI, office only" line one line up.
+Check it: grep -n -e '^-A' firewall.rules

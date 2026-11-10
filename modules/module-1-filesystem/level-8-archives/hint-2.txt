@@ -1,2 +1,6 @@
-To create a .tar.gz from all .log files:
-tar -czf $SANDBOX/archive.tar.gz -C $SANDBOX/logs .
+tar's main letters:  c = create, x = extract, t = list, z = gzip, f FILE = archive file name
+  tar -tzf backup.tar.gz                 list what is inside
+  tar -xzf backup.tar.gz -C DIR          extract into DIR (DIR must exist: mkdir it first)
+  tar -czf NEW.tar.gz FILE...            create a compressed archive from these files
+A glob like logs/*.log picks only names that end in .log.
+More: man tar  (or tar --help)

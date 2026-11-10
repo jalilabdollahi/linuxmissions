@@ -1,2 +1,4 @@
-The sudoers line starts with the user name:
-devuser ...
+Read deploy.sh: which commands does it run through sudo, with exactly which arguments?
+sudo compares the command *and its arguments* against the rule, so the rule should list
+those commands exactly, not "all of systemctl".
+Then read sudoers.d/README: it tells you how files in this directory must look.

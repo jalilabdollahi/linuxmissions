@@ -1,2 +1,4 @@
-Use extended regex:
-grep -E ...
+An address is four groups of 1-3 digits separated by dots. You need only the matching text,
+not whole lines, and some lines contain two addresses.
+Watch the "build 2024.04.08.1" lines: a pattern that looks for "digits.digits.digits.digits"
+anywhere could grab part of that build number. What should be on either side of a real address?

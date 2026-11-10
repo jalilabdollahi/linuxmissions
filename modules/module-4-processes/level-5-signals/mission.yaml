@@ -1,11 +1,11 @@
 {
   "name": "Signal Relay",
-  "description": "A long-running listener reloads its configuration when it receives SIGHUP. Trigger that behavior without killing the service.",
-  "objective": "Send SIGHUP to listener.sh so it writes 'reloaded' to reload.log",
-  "xp": 200,
+  "description": "Support needs debug logs from the listener service, which is running right now. Like most daemons, it re-reads its config file when it receives SIGHUP. Restarting it would drop every connected client.",
+  "objective": "Change log_level in listener.conf from info to debug, then make the running listener load the new config without stopping or restarting it. listener.status shows what the running service is using",
+  "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "8m",
-  "concepts": ["kill -HUP", "signals", "SIGHUP", "trap", "kill -l"],
+  "concepts": ["kill -HUP", "SIGHUP", "signals", "PID file", "trap", "kill -l"],
   "module": "module-4-processes",
   "level": "level-5-signals"
 }

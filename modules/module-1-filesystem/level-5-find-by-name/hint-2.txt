@@ -1,2 +1,4 @@
-Redirect the output to a file using >:
-find $SANDBOX -name "*.py" > $SANDBOX/found.txt
+  find . -name '*.py'           every name below . that ends in .py (quote the pattern)
+  -type f                       only regular files (skips directories with that name)
+  command > found.txt           save the output to a file instead of the screen
+find includes hidden folders by default.  More: man find

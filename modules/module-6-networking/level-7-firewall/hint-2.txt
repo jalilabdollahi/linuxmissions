@@ -1,1 +1,7 @@
-Search for `DROP` in firewall.rules.
+- In a chain, rules are checked from top to bottom and the FIRST matching rule with ACCEPT, DROP or REJECT decides. Only when nothing matches does the policy (`:INPUT DROP`) apply.
+- `-m multiport --dports 8000:8999` matches every port from 8000 to 8999, and 8443 is one of them.
+- So the "office may use 8443" rule has to come BEFORE the rule that drops the whole range. Don't delete the DROP rule or move the "internal networks" rule up: either would open 8000-8999 to every 10.20.x.x host.
+- Edit the file with `edit firewall.rules` (move one line up), or rebuild it with grep -v and awk.
+- On a live system you would insert at a position instead: `iptables -I INPUT 7 ...`, and `iptables -L INPUT -n --line-numbers` shows the positions.
+
+Read more: `man iptables` (-A, -I, TARGETS), `man iptables-extensions` (multiport).

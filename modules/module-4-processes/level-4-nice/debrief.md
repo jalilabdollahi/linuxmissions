@@ -1,15 +1,21 @@
 # Play Nice
 
-## What you practiced
-Niceness controls how politely a CPU-bound process shares time with the rest of the system. Higher niceness means lower scheduling priority.
+## Why it works
+Niceness runs from **-20** (highest priority) to **19** (lowest). When the CPU
+is busy, the scheduler gives a niceness-15 process a much smaller share than a
+niceness-0 one, so the batch job still finishes, but only with the time
+the important services leave free. `renice` changes it on the live process,
+so none of the work done so far is lost.
 
-## Niceness scale
-The scale runs from `-20` (highest priority) to `19` (lowest priority). Regular users can usually increase niceness, but only root can assign negative values.
+## Common mistakes
+- Using `nice` on a running job: `nice` only *starts* a new command at a lower
+  priority. For a process that already runs, it's `renice`.
+- Trying to go back: a normal user can raise niceness but not lower it again
+  (`renice 0` gives "Permission denied"); only root can raise priority.
+- `renice -n 15` means "add 15" on some systems and "set to 15" on others; the
+  plain form `renice 15 -p PID` sets it everywhere.
 
-## Commands to remember
-```bash
-nice -n 15 ./heavy.sh            # start a new low-priority process
-ps -o pid,ni,cmd -p 12345        # inspect niceness for one PID
-renice 10 -p 12345               # change niceness of an existing process
-top                              # view process priority live
-```
+## Learn next
+`nice -n 15 ./heavy.sh &` starts a job at low priority from the beginning. For
+disk-heavy jobs, `ionice -c3 -p PID` (Linux) does the same for disk I/O.
+In `top`, press `r` to renice a process interactively.

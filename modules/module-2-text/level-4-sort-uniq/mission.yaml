@@ -1,11 +1,11 @@
 {
   "name": "Top Talkers",
-  "description": "Security wants to know which IPs made the most requests — a classic log analysis task.",
-  "objective": "Produce a ranked list of IPs by request count (highest first) and save to top_ips.txt",
+  "description": "The shop's API slowed down this morning and security suspects a few clients are hammering it. They want a ranking of client IPs by number of requests in access.log.",
+  "objective": "Write top_ips.txt with one line per client IP in the form '<count> <ip>' (the format uniq -c prints), every IP from access.log listed exactly once, highest count first",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "10m",
-  "concepts": ["sort", "uniq -c", "pipes", "awk"],
+  "concepts": ["sort", "uniq -c", "sort -rn", "awk '{print $1}'", "pipes"],
   "module": "module-2-text",
   "level": "level-4-sort-uniq"
 }

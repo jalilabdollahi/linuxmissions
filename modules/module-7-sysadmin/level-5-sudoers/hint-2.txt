@@ -1,1 +1,11 @@
-Use the `NOPASSWD:` tag before the allowed command.
+A sudoers rule has this shape:
+  USER  HOST=(RUN_AS)  TAG: /full/path/cmd args, /full/path/cmd args
+- HOST is usually ALL; (root) means "run the commands as root"
+- NOPASSWD: before the command list means no password prompt
+- commands need absolute paths; separate several with commas
+- a command with no arguments allows it with ANY arguments
+Write the file with `edit sudoers.d/deploy` or a heredoc, then:
+  chmod 440 sudoers.d/deploy        read-only for owner and group, nothing for others
+                                    (to change the file again later: chmod 640 first)
+  visudo -cf sudoers.d/deploy       syntax check ("parsed OK")
+Read more: man sudoers (section "User specification"), man visudo

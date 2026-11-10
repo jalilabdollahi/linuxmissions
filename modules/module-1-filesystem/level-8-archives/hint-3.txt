@@ -1,2 +1,8 @@
-Verify contents of an archive without extracting:
-tar -tzf $SANDBOX/archive.tar.gz
+  mkdir extracted
+      the target folder has to exist before tar -C can use it
+  tar -xzf backup.tar.gz -C extracted
+      x = extract, z = gunzip, f = this file, -C = change into extracted/ first
+  tar -czf archive.tar.gz logs/*.log
+      c = create a new gzip archive from the 4 files the glob matches
+  tar -tzf archive.tar.gz
+      list it to check: only logs/*.log, no app.log.1 or README.txt

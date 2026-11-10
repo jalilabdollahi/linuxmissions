@@ -1,11 +1,11 @@
 {
-  "name": "Wrong Owner",
-  "description": "Files were created as root but the app runs as 'nobody'. The app can't read its own config.",
-  "objective": "Change ownership of all files in config/ so the current user owns them (use your actual username)",
+  "name": "Who Owns This?",
+  "description": "A deploy failed with 'Operation not permitted' while changing permissions on a list of paths. Before asking an admin for help, work out who owns each path and which ones you are allowed to change yourself.",
+  "objective": "For every path in paths.txt write a line '<path> <owner> <group>' to owners.txt. Then write to fixable.txt (one per line) only the paths from paths.txt that you own, because only a file's owner (or root) can chmod, chgrp or chown it",
   "xp": 150,
-  "difficulty": "beginner",
-  "expected_time": "8m",
-  "concepts": ["chown", "ls -la", "whoami", "ownership"],
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["ownership", "ls -l", "stat", "id", "whoami", "find -user", "chown"],
   "module": "module-3-permissions",
   "level": "level-3-chown"
 }

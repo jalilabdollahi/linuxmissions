@@ -1,2 +1,8 @@
-One valid solution is:
-find files -type f | xargs -P 4 grep -l 'NEBULA_KEY' | xargs -I{} basename {} > match.txt
+grep -rl --null 'NEBULA_KEY' files | xargs -0 -I{} mv {} quarantine/
+ls quarantine
+
+- grep -r -l 'NEBULA_KEY' files   search all files under files/, print only names of files that match
+- --null                          end each name with a NUL byte (no file name can contain one)
+- xargs -0                        read NUL-separated names, so "meeting notes 12.txt" and
+                                  "dana's export.txt" stay whole
+- -I{} mv {} quarantine/          run mv once per file, with the name in place of {}

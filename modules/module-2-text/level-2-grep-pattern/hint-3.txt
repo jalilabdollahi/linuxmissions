@@ -1,2 +1,4 @@
-Save to errors.txt:
-grep -E "ERROR|FATAL" $SANDBOX/app.log > $SANDBOX/errors.txt
+  grep -E 'ERROR|FATAL' app.log > errors.txt
+      -E lets | mean "or"; matches keep their original order; > saves them
+  wc -l errors.txt
+      check the count (it should equal grep -c -E 'ERROR|FATAL' app.log)

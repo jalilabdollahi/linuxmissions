@@ -1,2 +1,8 @@
-The pattern to match is:
-# EXTRA CONFIG
+sed can limit commands to a range of lines:
+  /start/,/end/{ ... }    run the commands in { } only from a line matching start to the next line matching end
+  /pattern/a\             append the text on the next line after each line matching pattern
+  ^}                      a regex anchored to column 0: matches the server's "}" but not the
+                          indented "    }" of the location block
+Write the result to a new file and move it over the old one (or use sed -i on Linux;
+on macOS it is sed -i ''). Check with: grep -n -B2 -A2 include app.conf
+Read more: man sed (Addresses, the "a" command), info sed "Range Addresses"

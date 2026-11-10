@@ -1,5 +1,4 @@
-umask works by subtracting from defaults:
-Files:  666 - umask = result
-Dirs:   777 - umask = result
-
-We want files=640, dirs=750.
+New files start from a base mode (666 for files, 777 for directories) and the
+umask says which bits to take away. Which bits must go to get from 666 to 640,
+and from 777 to 750? Open start_app.sh and find the line that sets the umask.
+Second question: does changing the umask do anything to files that already exist?

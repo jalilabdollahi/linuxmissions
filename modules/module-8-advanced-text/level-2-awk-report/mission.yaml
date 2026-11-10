@@ -1,11 +1,11 @@
 {
   "name": "Expense Report",
-  "description": "A CSV export lists individual expenses. Summarize the totals per category and sort them for the finance team.",
-  "objective": "Sum the amounts by category from expenses.csv and save sorted totals to totals.txt",
-  "xp": 220,
-  "difficulty": "intermediate",
-  "expected_time": "9m",
-  "concepts": ["awk", "arrays", "CSV", "sort"],
+  "description": "Finance exported last month's 200 expenses as expenses.csv and needs the spend per category for the budget meeting, biggest first. The export has a header row and a TOTAL footer row.",
+  "objective": "Write totals.txt with one line per category: the category name, a space, and the sum of its amounts with exactly two decimals (e.g. `meals 123.40`). Sort the lines by total, largest first.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": ["awk -F", "awk associative arrays", "printf %.2f", "NR", "sort -k -n -r"],
   "module": "module-8-advanced-text",
   "level": "level-2-awk-report"
 }

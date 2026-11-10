@@ -1,2 +1,6 @@
-Use -l to show only filenames (not lines):
-grep -rl "password=" $SANDBOX
+grep searches file contents:
+  grep 'password=' FILE      print the matching lines of one file
+  -r                         search every file below a directory (e.g. .)
+  -l                         print only the names of matching files, once each
+  > leak.txt                 save the output
+More: man grep  (or grep --help)

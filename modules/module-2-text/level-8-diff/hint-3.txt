@@ -1,2 +1,5 @@
-Save to changes.diff:
-diff -u $SANDBOX/v1.conf $SANDBOX/v2.conf > $SANDBOX/changes.diff
+  diff -u v1.conf v2.conf > changes.diff
+      compares old (v1.conf) with new (v2.conf) and writes a unified diff
+      (diff exits with status 1 because the files differ; that is normal)
+  cat changes.diff
+      3 hunks: '-' lines are from v1.conf, '+' lines are in v2.conf

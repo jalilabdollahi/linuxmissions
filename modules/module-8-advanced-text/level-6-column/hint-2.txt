@@ -1,1 +1,7 @@
-Redirect the formatted output into table.txt.
+`column -t` turns its input into a table: it pads every column to the width of its
+longest value and separates columns with spaces.
+By default it splits fields on whitespace; -s CHARS tells it which character(s)
+separate the input fields instead.
+Alternative: awk -F, with printf "%-10s ..." gives every column a fixed width
+(%-10s = left-aligned, at least 10 characters wide).
+Read more: man column, man awk (printf)

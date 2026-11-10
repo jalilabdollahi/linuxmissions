@@ -1,17 +1,17 @@
 # Lost in the Maze
 
-## What you practiced
-- **`find`** is your best friend for locating files in deep trees: `find / -name "filename"`
-- Use `-type f` to restrict to files, `-type d` for directories
-- `ls -la` shows hidden files; `tree` gives a visual hierarchy
+## Why it works
+`find . -name secret.conf` walks every folder below `.` and prints each path whose
+file name matches exactly. That is far faster than `cd` + `ls` in each folder, and
+it ignores the look-alikes (`secret.conf.example`, `secret.conf.bak`) because
+`-name` matches the whole name, not part of it.
 
-## Key takeaway
-When you don't know where a file is, `find` beats `ls` every time.
-Add `-maxdepth N` to limit depth and speed up searches on large filesystems.
+## Common mistakes
+- Writing `answer.txt` while you are still `cd`'d deep in the tree: the file lands
+  in that folder. Check with `pwd`, and `cd "$SANDBOX"` (or `cd -`) to go back.
+- Using `-name *.conf` without quotes: the shell expands the `*` before `find`
+  sees it. Quote patterns: `find . -name '*.conf'`.
 
-## Commands to remember
-```bash
-find /path -name "*.conf"          # find by name pattern
-find /path -type f -name "secret*" # files only
-find /path -newer /tmp/marker      # modified recently
-```
+## Learn next
+`find . -type f -iname 'secret*'`: `-type f` keeps only regular files and `-iname`
+ignores upper/lower case. `tree -L 2` (if installed) draws the folder layout.

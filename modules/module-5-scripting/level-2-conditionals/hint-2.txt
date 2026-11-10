@@ -1,3 +1,9 @@
-Print one word in each branch:
-echo "EXISTS"
-echo "MISSING"
+- `[ -f "$1" ]` is true when $1 is a regular file, `[ -d "$1" ]` when it is a directory. The spaces inside `[ ` and ` ]` are required.
+- Shape of the block:
+    if [ test ]; then ... elif [ test ]; then ... else ... fi
+- `exit 1` ends the script with status 1. Check it after a run with `echo $?`.
+- Always write "$1" in double quotes. Without them, `my notes.txt` becomes two words and the test fails with "binary operator expected".
+
+Write the file with `edit check_file.sh`, or overwrite it with a heredoc (`cat > check_file.sh <<'EOF'`, the lines, then a line with just EOF).
+
+Read more: `help test` and `help if`.

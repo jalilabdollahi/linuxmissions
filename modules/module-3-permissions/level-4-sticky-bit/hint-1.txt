@@ -1,3 +1,5 @@
-The sticky bit shows as 't' in ls -ld output.
-Check the current state:
-ls -ld $SANDBOX/shared
+Deleting or renaming a file is not controlled by the file's own permissions but
+by the directory's: whoever can write to shared/ can remove entries from it.
+There is a special extra permission bit for directories that adds the rule
+"only the file's owner may delete it". Which system directory, writable by every
+user, must already use it? Look at it with ls -ld.

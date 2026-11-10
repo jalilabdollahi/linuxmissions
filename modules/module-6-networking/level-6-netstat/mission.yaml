@@ -1,11 +1,11 @@
 {
   "name": "Connection Map",
-  "description": "A saved TCP snapshot shows active sessions. Count how many unique remote IPs have ESTABLISHED connections.",
-  "objective": "Count the unique remote IPs from ESTAB rows in connections.txt and save the number to unique_ips.txt",
-  "xp": 220,
+  "description": "web-03 (10.20.4.17) slowed down during the lunch peak and the on-call engineer suspects a single client is hogging connections. They saved `ss -tan` from that moment to connections.txt.",
+  "objective": "Find the remote address with the most ESTABLISHED connections to this server's HTTPS port (local port 443) and write `IP COUNT` on one line to top_talker.txt, for example `192.0.2.10 12`.",
+  "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["ss -tn", "ESTAB", "awk", "sort", "uniq"],
+  "expected_time": "15m",
+  "concepts": ["ss -tan", "TCP states", "awk", "sort | uniq -c | sort -nr"],
   "module": "module-6-networking",
   "level": "level-6-netstat"
 }

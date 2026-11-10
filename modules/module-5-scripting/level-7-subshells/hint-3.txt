@@ -1,5 +1,23 @@
-One valid script is:
-./task-a.sh &
-./task-b.sh &
-./task-c.sh &
-wait
+Type this at the prompt. It replaces run_all.sh with a working script:
+
+cat > run_all.sh <<'EOF'
+#!/bin/bash
+pids=()
+for task in ./task-a.sh ./task-b.sh ./task-c.sh; do
+  "$task" &
+  pids+=("$!")
+done
+
+failed=0
+for pid in "${pids[@]}"; do
+  wait "$pid" || failed=1
+done
+exit "$failed"
+EOF
+
+- "$task" &                 start the task in the background and move on at once
+- pids+=("$!")              remember its process ID ($! = PID of the last background job)
+- wait "$pid" || failed=1   wait for that one task; its exit status tells whether it failed
+- exit "$failed"            0 if every task succeeded, 1 otherwise
+
+Try it: time bash run_all.sh; echo "status: $?"     (about 2 seconds, status 1 because task-b fails)

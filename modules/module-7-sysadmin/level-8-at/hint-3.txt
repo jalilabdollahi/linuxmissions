@@ -1,2 +1,10 @@
-You can inspect the queue with:
 ./atq
+./atrm 3
+echo './cleanup.sh' | ./at 23:30
+./atq
+
+- ./atq                            shows job 3 = cleanup at Tue 03:30, job 2 = certificates
+- ./atrm 3                         removes the badly timed cleanup job
+- echo './cleanup.sh' | ./at 23:30 at reads the command from stdin; 23:30 is still ahead today,
+                                   so it means tonight
+- ./atq                            confirm: one cleanup job at Mon Apr  8 23:30, job 2 untouched

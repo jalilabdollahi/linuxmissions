@@ -1,2 +1,5 @@
-Look for zombie processes by process state:
-ps aux | grep defunct
+A zombie is a process that has already exited but still has an entry in the
+process table, because its parent never asked for its exit status. ps marks
+them with a special state letter and often shows them as <defunct>.
+You can't kill a zombie (it's already dead). What you need is its PARENT:
+which column tells you the parent's PID?

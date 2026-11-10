@@ -1,18 +1,23 @@
 # The Audit Trail
 
-## What you practiced
-- **SUID (4000)**: Execute as the file's owner, not the calling user — used by `passwd`, `sudo`
-- **SGID (2000)**: Execute as the file's group; on directories, new files inherit group
-- `find -perm /6000` uses `/` (any of these bits set) vs `-perm 6000` (exact match)
+## Why it works
+- **SUID (4000)**: the program runs with the *file owner's* rights, not yours.
+  That is how `passwd` (owned by root) can write `/etc/shadow`.
+- **SGID (2000)**: the program runs with the file's *group*. On a directory it
+  means something else: new files inherit the directory's group.
 
-## Security note
-SUID/SGID files are a classic privilege escalation vector. Security audits always check for unexpected ones.
+`find -perm -4000` matches files where *at least* that bit is set, whatever the
+rest of the mode is, so one command covers 4755, 4750 and 6755 alike. Because
+`find` reads modes, not names, it also catches the hidden `.dbus-helper` and
+`run backup` with its space, which an `ls | grep s` approach misses.
 
-## Commands to remember
-```bash
-find / -perm /4000 2>/dev/null          # all SUID files (system-wide)
-find / -perm /6000 2>/dev/null          # SUID or SGID
-find / -perm /4000 -user root           # SUID owned by root (highest risk)
-ls -la /usr/bin/passwd                  # see -rwsr-xr-x (s = SUID)
-stat -c "%a %n" /usr/bin/passwd        # shows 4755
-```
+## Common mistakes
+- `-perm 4000` without the dash means "mode is exactly 4000", so it finds nothing.
+- Forgetting `-type f`: SGID team directories are normal and would flood the report.
+- Trusting names: `suid_audit_notes.txt` is harmless; `libcrypt.so.1` is not.
+
+## Learn next
+On a real server: `find / -xdev -type f -perm -4000 -user root 2>/dev/null`.
+`-xdev` stays on one filesystem and `2>/dev/null` hides "Permission denied" noise.
+Compare the list with your distribution's package files (`dpkg -S path`) to spot
+anything that doesn't belong.

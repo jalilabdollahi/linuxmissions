@@ -1,11 +1,11 @@
 {
   "name": "Controlled Power",
-  "description": "The ops team wants one narrowly scoped sudo permission. Write the rule into the sandbox's sudoers include file.",
-  "objective": "Write a rule in sudoers.d/devuser that allows devuser to run /usr/bin/systemctl without a password",
-  "xp": 240,
+  "description": "The CI pipeline logs in as the user deploy and runs deploy.sh, which fails at its sudo lines because sudo asks for a password nobody can type. Security will only sign off on the narrowest possible rule.",
+  "objective": "Create sudoers.d/deploy (the sandbox's /etc/sudoers.d) with a rule that lets deploy run, as root and without a password, exactly the two sudo commands in deploy.sh and nothing else. The file must pass `visudo -cf` and have the mode sudo expects for drop-in files (0440).",
+  "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "9m",
-  "concepts": ["sudoers", "NOPASSWD", "/etc/sudoers.d", "visudo"],
+  "expected_time": "10m",
+  "concepts": ["sudoers syntax", "NOPASSWD", "/etc/sudoers.d", "visudo -c", "least privilege"],
   "module": "module-7-sysadmin",
   "level": "level-5-sudoers"
 }

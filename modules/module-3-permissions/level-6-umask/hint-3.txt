@@ -1,2 +1,9 @@
-The answer is 027. Write it to the file:
-echo "027" > $SANDBOX/umask_answer.txt
+  sed -i.bak 's/^umask 000$/umask 027/' start_app.sh
+      replace the bad umask line (0 = owner keeps all, 2 = group loses write,
+      7 = others lose everything); -i.bak edits in place on Linux and macOS
+  rm -rf data
+      the old files keep their old modes; a umask never changes existing files
+  ./start_app.sh
+      recreate the reports with the new umask
+  ls -lR data
+      files should be -rw-r-----, directories drwxr-x---

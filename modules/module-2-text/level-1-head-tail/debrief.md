@@ -1,15 +1,17 @@
 # Log Triage
 
-## What you practiced
-- `head -n N` prints the first N lines (default 10)
-- `tail -n N` prints the last N lines
-- `tail -f` **follows** a file — essential for live log monitoring
+## Why it works
+`head` and `tail` read only as much of the file as they need, so they stay fast
+even on gigabyte logs. `-n 5` sets the number of lines, and `>` sends the output
+to a file. The last lines of a crashed service's log usually tell you why it
+died: here a lost database connection led to the FATAL shutdown.
 
-## Commands to remember
-```bash
-head -n 20 file.log              # first 20 lines
-tail -n 50 file.log              # last 50 lines
-tail -f /var/log/syslog          # follow live
-tail -n +100 file.log            # everything FROM line 100 onwards
-head -c 1024 file.bin            # first 1024 bytes
-```
+## Common mistakes
+- `tail -5` and `head -5` are old shorthands that still work, but `-n 5` is the
+  standard form that works everywhere.
+- Using `>>` instead of `>`: if you run the command twice, the file gets 10 lines.
+
+## Learn next
+`tail -f app.log` keeps the file open and prints new lines as they are written,
+which is how you watch a live service. `tail -n +100 app.log` prints everything
+from line 100 on, and `sed -n '100,110p' app.log` prints a range in the middle.

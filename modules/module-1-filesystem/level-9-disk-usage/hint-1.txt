@@ -1,2 +1,3 @@
-Find and sort files by size:
-find $SANDBOX -type f -exec du -h {} + | sort -rh | head -5
+du -sh * shows which folder is biggest, but a folder can be big because it holds
+many medium files. You need the size of every individual file, in every folder
+(hidden ones included), sorted so the largest one stands out.

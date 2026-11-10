@@ -1,3 +1,6 @@
-Save results:
-find $SANDBOX -perm /6000 > $SANDBOX/suid_files.txt
-cat $SANDBOX/suid_files.txt
+  find . -type f \( -perm -4000 -o -perm -2000 \) > suid_files.txt
+      .              search from the sandbox root, hidden files included
+      -type f        skip directories (srv/team is SGID, but it's a folder)
+      -perm -4000    SUID bit set, -o: or, -perm -2000: SGID bit set
+  cat suid_files.txt
+      you should see 5 paths, including "./opt/backup/run backup"

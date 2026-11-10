@@ -1,11 +1,11 @@
 {
   "name": "Log Hunt",
-  "description": "A mock `journalctl` command in the sandbox can show recent logs. Find the error entries from the last hour and save them.",
-  "objective": "Use the provided journalctl helper and save the recent `error` entries to errors.txt",
-  "xp": 180,
-  "difficulty": "beginner",
-  "expected_time": "7m",
-  "concepts": ["journalctl", "--since", "grep", "logs"],
+  "description": "myapp misbehaved after the 14:00 deploy. The on-call engineer wants every serious message it logged since then, and nothing else.",
+  "objective": "Save to errors.txt all journal entries of myapp.service with priority err or worse (err, crit, alert, emerg) logged since 14:00 today, oldest first, one per line as journalctl prints them. `./journalctl` is a mock of the real tool; its clock is frozen at 2024-04-08 14:30.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["journalctl -u", "journalctl -p", "--since", "syslog priorities"],
   "module": "module-7-sysadmin",
   "level": "level-2-journald"
 }

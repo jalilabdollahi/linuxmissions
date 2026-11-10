@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-08T16:03:44.281745+00:00",
+  "generated_at": "2026-11-10T11:37:57.934863+00:00",
   "level_count": 500,
   "modules": [
     {
@@ -11,17 +11,17 @@
           "path": "modules/module-1-filesystem/level-1-navigate",
           "mission": {
             "name": "Lost in the Maze",
-            "description": "A configuration file is buried somewhere inside a nested directory tree inside the sandbox.",
-            "objective": "Find the file named 'secret.conf' and print its contents",
+            "description": "The billing service needs its vault access code, but nobody remembers where the old admin left secret.conf. The sandbox is a copy of the server's directory tree.",
+            "objective": "Find the file named exactly secret.conf and write the value of its access_code setting (only the value, without 'access_code=') to answer.txt in the sandbox root",
             "xp": 100,
             "difficulty": "beginner",
             "expected_time": "5m",
             "concepts": [
+              "find",
               "ls",
               "cd",
-              "find",
-              "cat",
-              "pwd"
+              "pwd",
+              "cat"
             ],
             "module": "module-1-filesystem",
             "level": "level-1-navigate"
@@ -33,16 +33,16 @@
           "path": "modules/module-1-filesystem/level-2-create-dirs",
           "mission": {
             "name": "Build the Scaffold",
-            "description": "A web app expects a specific directory layout to exist before it starts. Without it, it crashes.",
-            "objective": "Create the directory tree: logs/app, logs/nginx, data/uploads, data/cache inside the sandbox",
+            "description": "A web app refuses to start because the directories it writes to do not exist yet. Someone already created data/ by hand and put customer notes in it.",
+            "objective": "Create the directories logs/app, logs/nginx, data/uploads, data/cache/thumbnails and tmp/sessions inside the sandbox. The existing data/README must stay untouched.",
             "xp": 100,
             "difficulty": "beginner",
             "expected_time": "5m",
             "concepts": [
               "mkdir",
               "mkdir -p",
-              "tree",
-              "ls"
+              "brace expansion",
+              "ls -R"
             ],
             "module": "module-1-filesystem",
             "level": "level-2-create-dirs"
@@ -54,17 +54,17 @@
           "path": "modules/module-1-filesystem/level-3-find-delete",
           "mission": {
             "name": "Spring Cleaning",
-            "description": "The disk is filling up with leftover .tmp files scattered across the sandbox.",
-            "objective": "Delete all files ending in .tmp from the sandbox (leave everything else intact)",
-            "xp": 120,
+            "description": "A crashed batch job left temporary .tmp files all over the build server. Some sit in hidden folders, some have spaces in their names, and the templates folder holds .tmpl files that are still in use.",
+            "objective": "Delete every file whose name ends in .tmp anywhere in the sandbox, and nothing else",
+            "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
               "find",
+              "-name",
+              "-type f",
               "-delete",
-              "rm",
-              "glob",
-              "xargs"
+              "quoting"
             ],
             "module": "module-1-filesystem",
             "level": "level-3-find-delete"
@@ -76,14 +76,14 @@
           "path": "modules/module-1-filesystem/level-4-copy-move",
           "mission": {
             "name": "The Great Migration",
-            "description": "A deployment script dropped all config files into the wrong directory. They need to be moved to their correct locations.",
-            "objective": "Move all .conf files from staging/ into production/ and rename app.conf.bak to app.conf",
-            "xp": 120,
-            "difficulty": "beginner",
+            "description": "Release 4.2 was unpacked into staging/ instead of production/. Before installing it you must keep a copy of the live app config, so you can roll back.",
+            "objective": "1) Copy production/app.conf to production/app.conf.old. 2) Move every .conf file from staging/ into production/. 3) Move staging/app.conf.new to production/app.conf. Afterwards only notes.txt may remain in staging/.",
+            "xp": 150,
+            "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
-              "mv",
               "cp",
+              "mv",
               "rename",
               "glob"
             ],
@@ -97,16 +97,16 @@
           "path": "modules/module-1-filesystem/level-5-find-by-name",
           "mission": {
             "name": "Needle in a Haystack",
-            "description": "A developer lost track of all Python files they created across several project directories.",
-            "objective": "Find every file ending in .py under the sandbox and write their paths to found.txt in the sandbox root",
-            "xp": 130,
+            "description": "A developer is moving to a new laptop and needs a list of every Python file they wrote, spread over three projects and a hidden virtualenv.",
+            "objective": "Write the path of every regular file whose name ends in .py, one per line, to found.txt in the sandbox root (relative paths like ./project-a/x.py or absolute paths are both fine)",
+            "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "8m",
+            "expected_time": "6m",
             "concepts": [
               "find",
-              "output redirection",
-              ">",
-              "glob"
+              "-name",
+              "-type f",
+              "output redirection"
             ],
             "module": "module-1-filesystem",
             "level": "level-5-find-by-name"
@@ -118,11 +118,11 @@
           "path": "modules/module-1-filesystem/level-6-find-by-content",
           "mission": {
             "name": "The Password Leak",
-            "description": "Someone hardcoded a password in one of the config files. Security needs you to find which file contains the string 'password='.",
-            "objective": "Find the file containing 'password=' and write its path to leak.txt in the sandbox root",
-            "xp": 150,
+            "description": "A security scan flagged this repository: someone hardcoded passwords in plain text. Security needs the full list of affected files before anyone rotates credentials.",
+            "objective": "Write the path of every file that contains the text password= (lowercase, exactly that), one per line, to leak.txt in the sandbox root",
+            "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "8m",
+            "expected_time": "6m",
             "concepts": [
               "grep",
               "-r",
@@ -139,14 +139,15 @@
           "path": "modules/module-1-filesystem/level-7-symlinks",
           "mission": {
             "name": "The Shortcut",
-            "description": "An app always reads its config from /etc/myapp/active.conf but configs are versioned. You need to point active.conf at the correct version.",
-            "objective": "Create a symlink at $SANDBOX/etc/myapp/active.conf pointing to $SANDBOX/etc/myapp/v2/config.conf",
+            "description": "myapp always reads etc/myapp/active.conf, which is a symlink to the config version in use. Version 2 is approved, but the link still points at version 1. The myapp folder gets copied to other servers, so absolute links would break there.",
+            "objective": "Make etc/myapp/active.conf a relative symlink that points to v2/config.conf in the same folder. Do not copy, move or edit the config files.",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
               "ln -s",
-              "symlinks",
+              "ln -sf",
+              "relative symlinks",
               "readlink",
               "ls -l"
             ],
@@ -160,17 +161,17 @@
           "path": "modules/module-1-filesystem/level-8-archives",
           "mission": {
             "name": "Pack and Unpack",
-            "description": "A backup archive arrived but the files need to be extracted. Then you must archive the results directory.",
-            "objective": "Extract backup.tar.gz into extracted/, then create archive.tar.gz containing all .log files from logs/",
+            "description": "The website backup arrived as backup.tar.gz and has to be restored for inspection. Support also wants the current log files, compressed, but not the rotated or non-log files in that folder.",
+            "objective": "Extract backup.tar.gz into a new extracted/ directory (so extracted/site/index.html exists), then create a gzip-compressed archive.tar.gz in the sandbox root that contains exactly the files in logs/ whose names end in .log",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "10m",
             "concepts": [
-              "tar",
-              "-xzf",
-              "-czf",
-              "gzip",
-              "compression"
+              "tar -xzf",
+              "tar -czf",
+              "tar -tzf",
+              "-C",
+              "glob"
             ],
             "module": "module-1-filesystem",
             "level": "level-8-archives"
@@ -182,18 +183,17 @@
           "path": "modules/module-1-filesystem/level-9-disk-usage",
           "mission": {
             "name": "Disk Hog",
-            "description": "The server disk is nearly full. You need to identify the largest files and directories.",
-            "objective": "Find the single largest file in the sandbox and write its path to biggest.txt in the sandbox root",
+            "description": "The server disk is 97% full. Before deleting anything, the team lead wants to know which single file takes the most space; the biggest folder is not necessarily where it is.",
+            "objective": "Write the path of the single largest file in the sandbox (one line, relative like ./dir/file or absolute) to biggest.txt in the sandbox root",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
               "du",
-              "df",
-              "sort",
-              "-h",
-              "-S",
-              "find -size"
+              "find -type f",
+              "sort -n",
+              "tail",
+              "ls -lS"
             ],
             "module": "module-1-filesystem",
             "level": "level-9-disk-usage"
@@ -205,15 +205,15 @@
           "path": "modules/module-1-filesystem/level-10-hidden-files",
           "mission": {
             "name": "Secrets in Plain Sight",
-            "description": "Hidden dotfiles are used to configure many Linux tools. A token file is hiding in the sandbox \u2014 but ls alone won't show it.",
-            "objective": "Find the hidden file (starting with .) containing 'AUTH_TOKEN', read its value, and copy it to token.txt in the sandbox root",
-            "xp": 150,
+            "description": "The deploy pipeline needs the app's AUTH_TOKEN. The app keeps it in a hidden file under a hidden config folder, so a plain ls shows nothing useful.",
+            "objective": "Find the hidden file that holds the real AUTH_TOKEN and write only its value (the text after AUTH_TOKEN=) to token.txt in the sandbox root. .env.example is a template with a placeholder, not the real token.",
+            "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "8m",
+            "expected_time": "6m",
             "concepts": [
               "ls -a",
               "dotfiles",
-              "hidden files",
+              "hidden directories",
               "cat"
             ],
             "module": "module-1-filesystem",
@@ -231,15 +231,14 @@
           "path": "modules/module-2-text/level-1-head-tail",
           "mission": {
             "name": "Log Triage",
-            "description": "A service crashed and left a huge log file. You need to see the first and last entries quickly.",
-            "objective": "Write the first 5 lines of app.log to first5.txt and the last 5 lines to last5.txt",
+            "description": "The payment service crashed overnight and left a 3,000-line app.log. The on-call engineer wants to see how it started up and how it died, without scrolling through all of it.",
+            "objective": "Write exactly the first 5 lines of app.log to first5.txt and exactly the last 5 lines to last5.txt",
             "xp": 100,
             "difficulty": "beginner",
             "expected_time": "5m",
             "concepts": [
-              "head",
-              "tail",
-              "-n",
+              "head -n",
+              "tail -n",
               "output redirection"
             ],
             "module": "module-2-text",
@@ -252,17 +251,16 @@
           "path": "modules/module-2-text/level-2-grep-pattern",
           "mission": {
             "name": "Error Extraction",
-            "description": "Ops needs a report of all ERROR and FATAL lines from the log for the post-mortem.",
-            "objective": "Extract all lines containing ERROR or FATAL from app.log and save to errors.txt",
-            "xp": 120,
+            "description": "Ops is writing the post-mortem for last night's outage. They need every ERROR and FATAL line from a 2,500-line app.log, in their original order, and nothing else.",
+            "objective": "Save all lines of app.log that contain ERROR or FATAL (uppercase, as the log level is written) to errors.txt, in the same order as in app.log",
+            "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "8m",
+            "expected_time": "6m",
             "concepts": [
               "grep",
-              "-E",
-              "regex",
+              "grep -E",
               "alternation",
-              "|"
+              "case sensitivity"
             ],
             "module": "module-2-text",
             "level": "level-2-grep-pattern"
@@ -274,17 +272,17 @@
           "path": "modules/module-2-text/level-3-count-wc",
           "mission": {
             "name": "By the Numbers",
-            "description": "The product team wants a quick report on the access log: total requests, unique IPs, and total bytes served.",
-            "objective": "Write a report.txt with 3 lines: total request count, unique IP count, and total bytes (sum of field 3)",
+            "description": "The product team wants three numbers from yesterday's web server log (access.log, nginx combined format): how many requests, from how many different clients, and how much data was sent.",
+            "objective": "Create report.txt with exactly these three lines: requests=<number of requests>, unique_ips=<number of distinct client IPs>, bytes=<total response bytes>. The response size is the number right after the status code; '-' means 0 bytes.",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "10m",
             "concepts": [
-              "wc",
-              "awk",
-              "sort",
-              "uniq",
-              "pipes"
+              "wc -l",
+              "awk fields",
+              "awk sum",
+              "sort -u",
+              "command substitution"
             ],
             "module": "module-2-text",
             "level": "level-3-count-wc"
@@ -296,16 +294,17 @@
           "path": "modules/module-2-text/level-4-sort-uniq",
           "mission": {
             "name": "Top Talkers",
-            "description": "Security wants to know which IPs made the most requests \u2014 a classic log analysis task.",
-            "objective": "Produce a ranked list of IPs by request count (highest first) and save to top_ips.txt",
+            "description": "The shop's API slowed down this morning and security suspects a few clients are hammering it. They want a ranking of client IPs by number of requests in access.log.",
+            "objective": "Write top_ips.txt with one line per client IP in the form '<count> <ip>' (the format uniq -c prints), every IP from access.log listed exactly once, highest count first",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "10m",
             "concepts": [
               "sort",
               "uniq -c",
-              "pipes",
-              "awk"
+              "sort -rn",
+              "awk '{print $1}'",
+              "pipes"
             ],
             "module": "module-2-text",
             "level": "level-4-sort-uniq"
@@ -317,16 +316,17 @@
           "path": "modules/module-2-text/level-5-sed-replace",
           "mission": {
             "name": "Find and Replace",
-            "description": "The staging config file still has old hostname references that need to be updated for production.",
-            "objective": "Replace all occurrences of 'staging.internal' with 'prod.internal' in config.conf and save to config.prod.conf",
+            "description": "The app is moving from staging to production. Its config.conf still points at hosts in the staging.internal domain; production uses prod.internal. The staging file itself must stay as it is.",
+            "objective": "Create config.prod.conf: a copy of config.conf in which every occurrence of staging.internal is replaced by prod.internal and nothing else changes. config.conf must stay unchanged.",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
               "sed",
               "s/old/new/g",
-              "-i",
-              "substitution"
+              "escaping .",
+              "output redirection",
+              "diff"
             ],
             "module": "module-2-text",
             "level": "level-5-sed-replace"
@@ -338,17 +338,16 @@
           "path": "modules/module-2-text/level-6-cut-awk",
           "mission": {
             "name": "Column Harvest",
-            "description": "A CSV export contains many columns but the billing system only needs usernames and email addresses.",
-            "objective": "Extract only the username (field 1) and email (field 3) from users.csv, save to extract.csv (comma-separated)",
+            "description": "Billing needs a contact list for invoices. The user export users.csv has a header row and five columns (username,age,email,role,status), but billing only charges users whose status is active.",
+            "objective": "Create extract.csv with one line 'username,email' for every user whose status is exactly active, in the same order as users.csv, with no header line",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "10m",
             "concepts": [
-              "cut",
-              "awk",
-              "-F",
-              "-d",
-              "field extraction"
+              "awk -F",
+              "field comparison",
+              "cut -d -f",
+              "grep anchors"
             ],
             "module": "module-2-text",
             "level": "level-6-cut-awk"
@@ -360,18 +359,17 @@
           "path": "modules/module-2-text/level-7-pipes",
           "mission": {
             "name": "Pipeline Master",
-            "description": "A multi-step data transformation: filter, transform, sort, and count \u2014 all in one pipeline.",
-            "objective": "From access.log, extract only POST requests, count how many came from each IP, save ranked result to post_ips.txt",
+            "description": "Someone is flooding the shop with fake orders. The API team wants to know which clients send the most POST requests (orders and cart writes) according to access.log. The docs pages have POST in their URLs, and crawlers read them all day.",
+            "objective": "Write post_ips.txt with one line '<count> <ip>' per client that sent at least one POST request (count = its number of POST requests), highest count first. Only requests whose HTTP method is POST count.",
             "xp": 200,
-            "difficulty": "intermediate",
+            "difficulty": "advanced",
             "expected_time": "12m",
             "concepts": [
               "pipes",
-              "grep",
-              "awk",
-              "sort",
-              "uniq -c",
-              "chaining"
+              "grep/awk filtering",
+              "awk fields",
+              "sort | uniq -c",
+              "sort -rn"
             ],
             "module": "module-2-text",
             "level": "level-7-pipes"
@@ -383,16 +381,16 @@
           "path": "modules/module-2-text/level-8-diff",
           "mission": {
             "name": "Spot the Difference",
-            "description": "Two versions of a config file exist. You need to see what changed between them and document the differences.",
-            "objective": "Compare v1.conf and v2.conf using diff and save the output to changes.diff",
-            "xp": 120,
+            "description": "Release 4.2 changes the shop-api config. Before the change goes out, the reviewers want it as a patch they can read and apply with the patch tool on the servers that still run v1.conf.",
+            "objective": "Save the differences from v1.conf (old) to v2.conf (new) as a unified diff in changes.diff, so that applying changes.diff to v1.conf produces v2.conf. Leave v1.conf and v2.conf unchanged.",
+            "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
               "diff",
-              "patch",
-              "-u",
-              "unified format"
+              "diff -u",
+              "unified format",
+              "patch"
             ],
             "module": "module-2-text",
             "level": "level-8-diff"
@@ -409,16 +407,16 @@
           "path": "modules/module-3-permissions/level-1-chmod-exec",
           "mission": {
             "name": "Script Won't Run",
-            "description": "A deployment script was uploaded but it refuses to run \u2014 permission denied.",
-            "objective": "Make deploy.sh executable by the owner, then run it to generate output.txt",
+            "description": "A teammate uploaded deploy.sh to the release folder, but running ./deploy.sh fails with 'Permission denied'.",
+            "objective": "Make deploy.sh executable for its owner (without making it writable by group or others), then run it as ./deploy.sh so it writes output.txt",
             "xp": 100,
             "difficulty": "beginner",
             "expected_time": "5m",
             "concepts": [
               "chmod",
-              "+x",
+              "u+x",
               "execute permission",
-              "bash"
+              "ls -l"
             ],
             "module": "module-3-permissions",
             "level": "level-1-chmod-exec"
@@ -430,18 +428,18 @@
           "path": "modules/module-3-permissions/level-2-chmod-numeric",
           "mission": {
             "name": "Octal Surgery",
-            "description": "Three files need exact permission settings for a web server to function securely.",
-            "objective": "Set permissions: index.html\u2192644, app.py\u2192755, secrets.conf\u2192600",
-            "xp": 150,
+            "description": "Someone 'fixed' a web app by running chmod 777 on everything. Now anyone on the server can rewrite the code and read the database password.",
+            "objective": "Using numeric (octal) modes: index.html readable by everyone but writable only by you; app.py readable and runnable by everyone but writable only by you; secrets.conf readable and writable by you and nobody else",
+            "xp": 100,
             "difficulty": "beginner",
             "expected_time": "8m",
             "concepts": [
               "chmod",
-              "octal",
-              "numeric permissions",
+              "octal permissions",
               "644",
               "755",
-              "600"
+              "600",
+              "stat"
             ],
             "module": "module-3-permissions",
             "level": "level-2-chmod-numeric"
@@ -452,17 +450,20 @@
           "name": "level-3-chown",
           "path": "modules/module-3-permissions/level-3-chown",
           "mission": {
-            "name": "Wrong Owner",
-            "description": "Files were created as root but the app runs as 'nobody'. The app can't read its own config.",
-            "objective": "Change ownership of all files in config/ so the current user owns them (use your actual username)",
+            "name": "Who Owns This?",
+            "description": "A deploy failed with 'Operation not permitted' while changing permissions on a list of paths. Before asking an admin for help, work out who owns each path and which ones you are allowed to change yourself.",
+            "objective": "For every path in paths.txt write a line '<path> <owner> <group>' to owners.txt. Then write to fixable.txt (one per line) only the paths from paths.txt that you own, because only a file's owner (or root) can chmod, chgrp or chown it",
             "xp": 150,
-            "difficulty": "beginner",
-            "expected_time": "8m",
+            "difficulty": "intermediate",
+            "expected_time": "10m",
             "concepts": [
-              "chown",
-              "ls -la",
+              "ownership",
+              "ls -l",
+              "stat",
+              "id",
               "whoami",
-              "ownership"
+              "find -user",
+              "chown"
             ],
             "module": "module-3-permissions",
             "level": "level-3-chown"
@@ -474,16 +475,17 @@
           "path": "modules/module-3-permissions/level-4-sticky-bit",
           "mission": {
             "name": "Shared Space",
-            "description": "A shared uploads directory lets any user write files \u2014 but users are deleting each other's work!",
-            "objective": "Set the sticky bit on the shared/ directory so only file owners can delete their own files",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "description": "The team's shared/ upload folder is writable by everyone, which is intended. The problem: anyone can also delete or rename everyone else's uploads, and files keep disappearing.",
+            "objective": "Keep shared/ readable, writable and enterable by everyone (rwx for all), but make it so users can only delete or rename their own files in it. Don't remove any of the uploads",
+            "xp": 100,
+            "difficulty": "beginner",
+            "expected_time": "6m",
             "concepts": [
               "sticky bit",
               "chmod +t",
               "chmod 1777",
-              "shared directories"
+              "shared directories",
+              "/tmp"
             ],
             "module": "module-3-permissions",
             "level": "level-4-sticky-bit"
@@ -495,19 +497,19 @@
           "path": "modules/module-3-permissions/level-5-setuid",
           "mission": {
             "name": "The Audit Trail",
-            "description": "A shell script logs who runs it. You must identify which files in the sandbox have SUID or SGID bits set \u2014 a common security audit task.",
-            "objective": "Find all files with SUID or SGID bits set and save their paths to suid_files.txt",
+            "description": "After a break-in, the security team suspects the attacker planted programs with the SUID or SGID bit so they can regain higher privileges later. The copied server tree is in this sandbox.",
+            "objective": "Find every regular file in the sandbox that has the SUID or SGID bit set and write their paths to suid_files.txt, one per line (./bin/x or full paths both work). Directories don't count, and nothing else may be listed",
             "xp": 200,
-            "difficulty": "intermediate",
-            "expected_time": "10m",
+            "difficulty": "advanced",
+            "expected_time": "12m",
             "concepts": [
-              "find",
-              "-perm",
+              "find -perm",
               "SUID",
               "SGID",
               "4000",
               "2000",
-              "security"
+              "-type f",
+              "security audit"
             ],
             "module": "module-3-permissions",
             "level": "level-5-setuid"
@@ -519,16 +521,17 @@
           "path": "modules/module-3-permissions/level-6-umask",
           "mission": {
             "name": "Default Lockdown",
-            "description": "New files created by an app have world-writable permissions. The default umask is too permissive.",
-            "objective": "Understand what umask value produces 640 for files and 750 for dirs. Write the answer to umask_answer.txt",
+            "description": "The report app's start script sets a umask that makes every file it creates world-writable, and the reports it has already written are exposed too.",
+            "objective": "Fix the umask in start_app.sh so everything it creates from now on is 640 (files) and 750 (directories). Then make sure the existing data/ tree has those same modes",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "10m",
             "concepts": [
               "umask",
               "default permissions",
-              "022",
-              "027"
+              "027",
+              "640",
+              "750"
             ],
             "module": "module-3-permissions",
             "level": "level-6-umask"
@@ -540,16 +543,16 @@
           "path": "modules/module-3-permissions/level-7-fix-webserver",
           "mission": {
             "name": "Web Server 403",
-            "description": "Nginx returns 403 Forbidden on every request. The web root directory and files have wrong permissions.",
-            "objective": "Fix the web root: directories need 755, HTML files need 644, and the webroot itself must be readable",
-            "xp": 200,
+            "description": "After a site was restored from a backup, nginx answers 403 Forbidden for every page. The web server runs as a different user, and the restore left webroot/ private to you.",
+            "objective": "In webroot/ (including webroot itself and every subfolder): all directories must be 755 and all files 644. Hidden files and names with spaces count too, and no file may be deleted",
+            "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "12m",
             "concepts": [
               "chmod",
-              "-R",
+              "find -type",
               "find -exec",
-              "web server permissions",
+              "directory execute bit",
               "644",
               "755"
             ],
@@ -563,15 +566,15 @@
           "path": "modules/module-3-permissions/level-8-audit",
           "mission": {
             "name": "World Writable Files",
-            "description": "Security scan flagged world-writable files in the app directory. These are a security risk \u2014 any user can modify them.",
-            "objective": "Find all world-writable files and remove write permission from 'others' for each one",
-            "xp": 200,
+            "description": "A security scan flagged world-writable files in the app/ directory: any user on the server could change them. The team relies on the other permission bits (some files are group-writable or executable on purpose).",
+            "objective": "Remove write permission for 'others' from every world-writable file under app/, and change nothing else: owner and group bits must stay as they are, and no file may be deleted",
+            "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "10m",
             "concepts": [
               "find -perm",
-              "-o-w",
               "chmod o-w",
+              "find -exec",
               "security hardening"
             ],
             "module": "module-3-permissions",
@@ -589,17 +592,17 @@
           "path": "modules/module-4-processes/level-1-ps-find",
           "mission": {
             "name": "Process Detective",
-            "description": "Something is consuming CPU. You need to identify the top CPU-consuming processes and document them.",
-            "objective": "List the top 5 CPU-consuming processes and save the output to top_procs.txt",
+            "description": "The server feels slow and the fans are loud. One of the jobs started from this sandbox is burning CPU, hidden among the other processes.",
+            "objective": "Save the 5 processes using the most CPU (ps output with PID, %CPU and command, highest first) to top_procs.txt, and the PID of the runaway sandbox job to culprit.txt",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
-              "ps",
-              "aux",
-              "top",
-              "--sort",
-              "head"
+              "ps aux",
+              "%CPU",
+              "sort",
+              "head",
+              "PID"
             ],
             "module": "module-4-processes",
             "level": "level-1-ps-find"
@@ -611,18 +614,18 @@
           "path": "modules/module-4-processes/level-2-kill",
           "mission": {
             "name": "Runaway Process",
-            "description": "A background script is running in an infinite loop and wasting resources. It needs to be stopped.",
-            "objective": "Find the 'sleep_loop.sh' process and kill it",
-            "xp": 120,
+            "description": "Someone left debug_logger.sh running: it appends to debug.log every second and is slowly filling the disk. web_server.sh, started from the same folder, is serving customers and must stay up.",
+            "objective": "Stop the debug_logger.sh process. web_server.sh must keep running",
+            "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "8m",
+            "expected_time": "6m",
             "concepts": [
               "pgrep",
-              "pkill",
               "kill",
+              "pkill -f",
               "SIGTERM",
               "SIGKILL",
-              "ps"
+              "PID"
             ],
             "module": "module-4-processes",
             "level": "level-2-kill"
@@ -634,18 +637,17 @@
           "path": "modules/module-4-processes/level-3-background-jobs",
           "mission": {
             "name": "The Background Worker",
-            "description": "A data processing script takes a while to finish. You need to start it without blocking your terminal, inspect the job list, and let it complete.",
-            "objective": "Run process.sh in the background and wait for it to finish so result.txt contains the finished output",
+            "description": "process.sh crunches today's data and takes a while. You don't want your terminal blocked while it runs, and the team lead wants proof that it was running as a job of your shell.",
+            "objective": "Start process.sh as a background job. While it is still running, save your shell's job list, with PIDs, to jobs.txt. Then wait for the job to finish so it writes result.txt",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
               "&",
-              "jobs",
+              "jobs -l",
+              "wait",
               "fg",
-              "bg",
-              "Ctrl+Z",
-              "disown"
+              "job control"
             ],
             "module": "module-4-processes",
             "level": "level-3-background-jobs"
@@ -657,15 +659,17 @@
           "path": "modules/module-4-processes/level-4-nice",
           "mission": {
             "name": "Play Nice",
-            "description": "A CPU-heavy batch task is competing with other services. Launch it with a lower priority so it stays out of the way.",
-            "objective": "Run heavy.sh with niceness 15, save its PID to pid.txt, and confirm the process has the adjusted niceness",
+            "description": "A CPU-heavy batch job, heavy.sh, is already running and competing with the services users depend on. It has done half its work, so restarting it is not an option.",
+            "objective": "Lower the priority of the running heavy.sh process to niceness 15, without stopping or restarting it",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
-              "nice",
               "renice",
+              "nice",
+              "niceness",
               "ps -o ni",
+              "pgrep",
               "priority"
             ],
             "module": "module-4-processes",
@@ -678,15 +682,16 @@
           "path": "modules/module-4-processes/level-5-signals",
           "mission": {
             "name": "Signal Relay",
-            "description": "A long-running listener reloads its configuration when it receives SIGHUP. Trigger that behavior without killing the service.",
-            "objective": "Send SIGHUP to listener.sh so it writes 'reloaded' to reload.log",
-            "xp": 200,
+            "description": "Support needs debug logs from the listener service, which is running right now. Like most daemons, it re-reads its config file when it receives SIGHUP. Restarting it would drop every connected client.",
+            "objective": "Change log_level in listener.conf from info to debug, then make the running listener load the new config without stopping or restarting it. listener.status shows what the running service is using",
+            "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
               "kill -HUP",
-              "signals",
               "SIGHUP",
+              "signals",
+              "PID file",
               "trap",
               "kill -l"
             ],
@@ -700,18 +705,18 @@
           "path": "modules/module-4-processes/level-6-zombie",
           "mission": {
             "name": "Zombie Apocalypse",
-            "description": "A buggy parent process left behind zombie children. Identify them, document what you found, and stop the parent so the zombies can be reaped.",
-            "objective": "Find the zombie processes, save their PIDs and names to zombies.txt, then kill the parent process",
+            "description": "Monitoring reports defunct (zombie) processes piling up. A buggy program in this sandbox starts workers and never collects their exit status. Another sandbox program, metrics_agent.py, is healthy and must keep running.",
+            "objective": "Save the PIDs of the zombie processes to zombies.txt (one per line; extra columns like PPID or name are fine). Then stop the parent process that is failing to reap them, and only that one",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "10m",
+            "expected_time": "12m",
             "concepts": [
-              "ps",
               "zombie",
-              "Z state",
+              "STAT Z",
               "PPID",
+              "ps -o",
               "kill parent",
-              "wait"
+              "wait()"
             ],
             "module": "module-4-processes",
             "level": "level-6-zombie"
@@ -728,16 +733,16 @@
           "path": "modules/module-5-scripting/level-1-variables",
           "mission": {
             "name": "Speak Variable",
-            "description": "Your onboarding script should greet whoever runs it, but the dynamic name support was never written.",
-            "objective": "Write greet.sh so running `bash greet.sh World` prints `Hello, World!`",
-            "xp": 150,
+            "description": "The onboarding script greet.sh is supposed to greet whoever runs it, but nobody ever got past the TODO comment.",
+            "objective": "Make `bash greet.sh NAME` print `Hello, NAME!` (also for a quoted name with a space, like \"Ada Lovelace\"), and make `bash greet.sh` with no name print `Hello, stranger!`. Tip: `edit greet.sh` opens the file in an editor.",
+            "xp": 100,
             "difficulty": "beginner",
             "expected_time": "5m",
             "concepts": [
-              "bash",
               "$1",
-              "echo",
-              "variables"
+              "variables",
+              "${var:-default}",
+              "quoting"
             ],
             "module": "module-5-scripting",
             "level": "level-1-variables"
@@ -749,17 +754,16 @@
           "path": "modules/module-5-scripting/level-2-conditionals",
           "mission": {
             "name": "The Gatekeeper",
-            "description": "An automation script should tell you whether a target file exists, but the conditional logic is missing.",
-            "objective": "Write check_file.sh so it prints `EXISTS` when the path exists and `MISSING` when it does not",
-            "xp": 160,
+            "description": "The nightly backup job has to know what a path is before it touches it: it crashed last night because a 'file' it was given turned out to be a directory.",
+            "objective": "Make `bash check_file.sh PATH` print `FILE` when PATH is a regular file, `DIR` when it is a directory, and `MISSING` when nothing exists there. In the MISSING case the script must exit with status 1. Paths may contain spaces (try `my notes.txt` and `old reports`).",
+            "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "6m",
+            "expected_time": "7m",
             "concepts": [
-              "if",
-              "else",
-              "test",
-              "-f",
-              "-e"
+              "if / elif / else",
+              "test -f / -d",
+              "quoting",
+              "exit status"
             ],
             "module": "module-5-scripting",
             "level": "level-2-conditionals"
@@ -771,16 +775,17 @@
           "path": "modules/module-5-scripting/level-3-loops",
           "mission": {
             "name": "Bulk Renamer",
-            "description": "A batch of text files needs to be archived with a new extension, and doing them one by one is not an option.",
-            "objective": "Write rename.sh so it renames every `.txt` file in the target directory to `.bak`",
-            "xp": 180,
+            "description": "Every evening the reports in a drop folder must be marked as processed by renaming them from .txt to .bak. Somebody has been doing it by hand, one file at a time.",
+            "objective": "Make `bash rename.sh DIR` rename every file ending in `.txt` directly inside DIR to the same name ending in `.bak` (`q3 report.txt` becomes `q3 report.bak`). Other files and subdirectories stay as they are, and running it on a folder with no .txt files must change nothing and print no errors. incoming/ is there to try it on.",
+            "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "for",
+              "for loop",
               "glob",
+              "${var%suffix}",
               "mv",
-              "basename"
+              "quoting"
             ],
             "module": "module-5-scripting",
             "level": "level-3-loops"
@@ -792,16 +797,16 @@
           "path": "modules/module-5-scripting/level-4-functions",
           "mission": {
             "name": "DRY Deploy",
-            "description": "A repetitive deploy script works, but it is painful to maintain. Refactor it so one function handles each service.",
-            "objective": "Rewrite deploy.sh to use a function that deploys `api`, `web`, and `worker`",
-            "xp": 190,
+            "description": "deploy.sh ships three services with three copy-pasted blocks. Next week a fourth service arrives, and nobody wants a fourth copy of the same lines.",
+            "objective": "Refactor deploy.sh so the steps for one service live in a single function `deploy_service NAME`, and the script calls it for api, web and worker. `bash deploy.sh` must print and copy exactly what it does now, and `deploy_service` must work for any service that has a build/NAME.tar.",
+            "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
               "functions",
+              "function arguments",
               "local",
-              "return",
-              "$?"
+              "refactoring"
             ],
             "module": "module-5-scripting",
             "level": "level-4-functions"
@@ -813,14 +818,15 @@
           "path": "modules/module-5-scripting/level-5-input",
           "mission": {
             "name": "Config Parser",
-            "description": "Your app stores environment variables in a `key=value` file. You need a loader script that turns those lines into exported shell variables.",
-            "objective": "Write load_env.sh so sourcing it with app.env exports APP_NAME, APP_ENV, and APP_PORT",
-            "xp": 210,
-            "difficulty": "intermediate",
-            "expected_time": "10m",
+            "description": "The deploy pipeline keeps its settings in app.env, a KEY=value file filled in from a web form. Running `source app.env` broke on the first value with a space, and it would also run any $(command) somebody typed into the form.",
+            "objective": "Write load_env.sh so that `source load_env.sh FILE` exports every KEY=value line of FILE as an environment variable, with the value taken literally (spaces, `=` and `$(...)` kept as text, never run). Skip blank lines and lines starting with `#`, include the last line even if it has no newline, and print no errors. Try it with app.env.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
             "concepts": [
               "while read",
               "IFS",
+              "read -r",
               "export",
               "source"
             ],
@@ -834,16 +840,17 @@
           "path": "modules/module-5-scripting/level-6-error-handling",
           "mission": {
             "name": "Fail Loudly",
-            "description": "A fragile script crashes in confusing ways. Harden it so failures stop early and missing input gets a clear error message.",
-            "objective": "Fix safe_copy.sh so it uses strict mode and prints `SOURCE_FILE is required` when no source path is passed",
-            "xp": 220,
+            "description": "safe_copy.sh puts a config into deploy/ without its comment lines. Yesterday it was given a file name with a typo: it printed `copy complete`, exited 0 and shipped an empty config. Last night someone ran it with no argument and it just sat there until the job timed out.",
+            "objective": "Harden safe_copy.sh: turn on bash strict mode (`set -euo pipefail`). With no argument it must print `SOURCE_FILE is required` to stderr and exit with status 1. A missing or unreadable source must make it fail (non-zero exit, no `copy complete`). A good source, even one with spaces in its name, must still be copied to deploy/app.conf without its comment lines.",
+            "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "10m",
+            "expected_time": "12m",
             "concepts": [
               "set -euo pipefail",
-              "trap",
+              "exit status",
               "stderr",
-              "exit 1"
+              "${1:-}",
+              "argument checks"
             ],
             "module": "module-5-scripting",
             "level": "level-6-error-handling"
@@ -855,16 +862,17 @@
           "path": "modules/module-5-scripting/level-7-subshells",
           "mission": {
             "name": "Parallel Launch",
-            "description": "Three independent tasks take too long one after another. Launch them in parallel and wait for all of them to finish.",
-            "objective": "Write run_all.sh so it runs task-a.sh, task-b.sh, and task-c.sh in parallel and waits until all three finish",
-            "xp": 230,
+            "description": "The nightly maintenance runs three independent jobs one after another and takes three times longer than it needs to. Worse, when one job fails, nobody notices: the wrapper always reports success.",
+            "objective": "Write run_all.sh so that, run from its own folder, it starts ./task-a.sh, ./task-b.sh and ./task-c.sh at the same time, returns only after all three have finished, and exits with status 1 if any of them failed (0 if all succeeded). Right now one of the tasks fails, so try it and check `echo $?`.",
+            "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "10m",
+            "expected_time": "12m",
             "concepts": [
-              "subshells",
-              "&",
-              "wait",
-              "parallel jobs"
+              "background jobs &",
+              "$!",
+              "wait PID",
+              "exit status",
+              "arrays"
             ],
             "module": "module-5-scripting",
             "level": "level-7-subshells"
@@ -876,16 +884,16 @@
           "path": "modules/module-5-scripting/level-8-heredoc",
           "mission": {
             "name": "Template Engine",
-            "description": "A config file should be generated from environment values, but the template logic was never written.",
-            "objective": "Write generate.sh so it reads vars.env and writes app.conf using a heredoc with the configured values",
-            "xp": 250,
+            "description": "Every environment needs its own app.conf, and people keep editing copies by hand and forgetting a port. The values live in vars.env; the config should be generated from them.",
+            "objective": "Write generate.sh so that, run in a folder containing vars.env, it creates app.conf there that looks exactly like app.conf.example but is filled in from whatever values vars.env holds. Build the file with a heredoc. Note the [logging] line: its `$` signs must stay as they are.",
+            "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
               "heredoc",
-              "<<EOF",
-              "source",
-              "variables"
+              "<<EOF vs <<'EOF'",
+              "escaping \\$",
+              "source"
             ],
             "module": "module-5-scripting",
             "level": "level-8-heredoc"
@@ -902,16 +910,16 @@
           "path": "modules/module-6-networking/level-1-ip-addr",
           "mission": {
             "name": "What's My IP?",
-            "description": "You were given a saved `ip addr` capture and need to summarize which interfaces have which addresses.",
-            "objective": "Extract each interface and IPv4 address from ip_addr.txt and save them to interfaces.txt",
+            "description": "A support ticket for the server app-07 came with the output of `ip addr` pasted in, and the network team wants a plain list of which IPv4 address sits on which interface.",
+            "objective": "From ip_addr.txt, write interfaces.txt with one line `INTERFACE ADDRESS` for every IPv4 address in the capture (address without the /prefix, interfaces with two addresses get two lines), in the order they appear. Interfaces without an IPv4 address are left out, and IPv6 addresses are ignored.",
             "xp": 150,
-            "difficulty": "beginner",
-            "expected_time": "6m",
+            "difficulty": "intermediate",
+            "expected_time": "10m",
             "concepts": [
               "ip addr",
-              "grep",
+              "inet vs inet6",
               "awk",
-              "interfaces"
+              "secondary addresses"
             ],
             "module": "module-6-networking",
             "level": "level-1-ip-addr"
@@ -923,15 +931,15 @@
           "path": "modules/module-6-networking/level-2-ping",
           "mission": {
             "name": "Can You Hear Me?",
-            "description": "Your sandbox includes a mock ping helper that simulates which hosts respond. Use it to document reachability.",
-            "objective": "Check every host in hosts.txt and save only the reachable hostnames to reachable.txt",
-            "xp": 160,
-            "difficulty": "beginner",
-            "expected_time": "7m",
+            "description": "Before tonight's maintenance window you have to confirm which machines from the inventory are up. This sandbox has no network, so `./ping` stands in for ping: same output, same exit codes (0 = reply, 1 = no reply, 2 = unknown name).",
+            "objective": "Ping every host listed in hosts.txt with ./ping and write the names of the hosts that answer to reachable.txt, one per line (order does not matter). Comment and blank lines in hosts.txt are not hosts.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
             "concepts": [
-              "ping",
-              "exit codes",
-              "loops",
+              "ping -c",
+              "exit status",
+              "while read",
               "if"
             ],
             "module": "module-6-networking",
@@ -944,16 +952,17 @@
           "path": "modules/module-6-networking/level-3-ports",
           "mission": {
             "name": "What's Listening?",
-            "description": "You have a saved socket listing from a host and need to document which TCP ports are listening.",
-            "objective": "Extract the listening TCP port numbers from ss-output.txt and save them to listening.txt",
-            "xp": 180,
+            "description": "A security review asks which TCP ports on web-03 can be reached from other machines. Someone ran `ss -tan` on it and saved the output to ss-output.txt.",
+            "objective": "Write exposed.txt: the TCP port numbers that web-03 is LISTENing on from other machines, one per line, each port once, sorted from low to high. A socket bound only to a loopback address (127.x.x.x or [::1]) is not reachable from outside and does not count; `0.0.0.0`, `[::]`, `*` and the server's own addresses do.",
+            "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
               "ss -tln",
-              "netstat",
-              "ports",
-              "awk"
+              "LISTEN",
+              "bind address vs loopback",
+              "awk",
+              "sort -nu"
             ],
             "module": "module-6-networking",
             "level": "level-3-ports"
@@ -965,16 +974,16 @@
           "path": "modules/module-6-networking/level-4-curl",
           "mission": {
             "name": "API Call",
-            "description": "The API response is stored locally, but you still need to fetch it with curl and extract one field from the JSON.",
-            "objective": "Use curl on response.json and save the value of `service.status` to status.txt",
-            "xp": 190,
+            "description": "The dashboards say metrics-api is unhealthy and you want the API's own opinion. It is running locally in this sandbox (its base URL is in api_url.txt, no internet needed), and the /health endpoint only answers clients that send the key from api.key.",
+            "objective": "Call the API's /health endpoint with curl, sending the key in an `X-API-Key` header, and save the value of `service.status` from the JSON reply to status.txt (just the word, without quotes).",
+            "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "curl",
-              "file://",
-              "json",
-              "pipes"
+              "curl -s",
+              "curl -H",
+              "HTTP status codes",
+              "jq"
             ],
             "module": "module-6-networking",
             "level": "level-4-curl"
@@ -986,15 +995,16 @@
           "path": "modules/module-6-networking/level-5-dns",
           "mission": {
             "name": "Name Resolution",
-            "description": "DNS lookups are mocked in this sandbox. Resolve the provided hostnames and record the answers.",
-            "objective": "Resolve each hostname in hosts.txt with mock_dig.sh and save `host ip` pairs to resolved.txt",
-            "xp": 210,
-            "difficulty": "intermediate",
-            "expected_time": "9m",
+            "description": "Before moving the internal services to a new network, the team needs every name in hosts.txt mapped to its current addresses. This sandbox has no DNS server, so `./dig` stands in for dig: same options and output format, answering from the internal zone.",
+            "objective": "Look up each name in hosts.txt with ./dig and write resolved.txt with one line `NAME ADDRESS` per IPv4 address (A record) the name finally resolves to. Follow CNAMEs to the address, give a name with two addresses two lines, and write `NAME NXDOMAIN` for a name that does not exist. Order does not matter.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
             "concepts": [
               "dig",
-              "dns",
-              "hostnames",
+              "dig +short",
+              "A and CNAME records",
+              "NXDOMAIN",
               "loops"
             ],
             "module": "module-6-networking",
@@ -1007,17 +1017,16 @@
           "path": "modules/module-6-networking/level-6-netstat",
           "mission": {
             "name": "Connection Map",
-            "description": "A saved TCP snapshot shows active sessions. Count how many unique remote IPs have ESTABLISHED connections.",
-            "objective": "Count the unique remote IPs from ESTAB rows in connections.txt and save the number to unique_ips.txt",
-            "xp": 220,
+            "description": "web-03 (10.20.4.17) slowed down during the lunch peak and the on-call engineer suspects a single client is hogging connections. They saved `ss -tan` from that moment to connections.txt.",
+            "objective": "Find the remote address with the most ESTABLISHED connections to this server's HTTPS port (local port 443) and write `IP COUNT` on one line to top_talker.txt, for example `192.0.2.10 12`.",
+            "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "10m",
+            "expected_time": "15m",
             "concepts": [
-              "ss -tn",
-              "ESTAB",
+              "ss -tan",
+              "TCP states",
               "awk",
-              "sort",
-              "uniq"
+              "sort | uniq -c | sort -nr"
             ],
             "module": "module-6-networking",
             "level": "level-6-netstat"
@@ -1029,16 +1038,16 @@
           "path": "modules/module-6-networking/level-7-firewall",
           "mission": {
             "name": "Open Sesame",
-            "description": "A firewall ruleset was exported from a host. Read it and figure out which application port is being denied.",
-            "objective": "Find the blocked destination port in firewall.rules and write it to blocked_port.txt",
-            "xp": 230,
+            "description": "TICKET.txt: the office can't reach the new admin UI on app-07 (tcp/8443), although someone already added a rule that allows it. The firewall is loaded at boot from firewall.rules, the output of `iptables-save`. (No root here, so you fix the file; iptables-restore would load it.)",
+            "objective": "Fix firewall.rules so that new connections from the office network 10.20.4.0/24 to tcp/8443 are accepted, while every other packet (8443 from anywhere else, the rest of 8000-8999, SSH, MySQL ...) is handled exactly as before. Keep the file loadable by iptables-restore (*filter ... COMMIT).",
+            "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "10m",
+            "expected_time": "15m",
             "concepts": [
-              "iptables",
-              "firewall rules",
-              "analysis",
-              "ports"
+              "iptables-save format",
+              "rule order (first match wins)",
+              "chain policy",
+              "multiport"
             ],
             "module": "module-6-networking",
             "level": "level-7-firewall"
@@ -1050,16 +1059,18 @@
           "path": "modules/module-6-networking/level-8-tcpdump",
           "mission": {
             "name": "Packet Sniff",
-            "description": "A packet capture summary was exported from tcpdump. Identify which protocol the captured traffic belongs to.",
-            "objective": "Inspect capture.txt and write the protocol name to protocol.txt",
-            "xp": 250,
-            "difficulty": "advanced",
-            "expected_time": "10m",
+            "description": "The IDS on web-03 (10.20.4.17) raised a 'possible port scan' alert, and someone left a 30-second packet capture of that moment in capture.pcap. Reading a saved capture with tcpdump needs no root.",
+            "objective": "Find the IP address that sent connection attempts (TCP SYN) to many different ports of web-03 and write it to scanner.txt. Then write the ports on web-03 that answered that address with SYN-ACK (meaning: open) to open_ports.txt, one per line, sorted from low to high.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "20m",
             "concepts": [
-              "tcpdump",
-              "capture analysis",
-              "dns",
-              "protocols"
+              "tcpdump -r",
+              "-nn",
+              "TCP flags (S, S., R.)",
+              "BPF filters tcp[tcpflags]",
+              "awk",
+              "uniq -c"
             ],
             "module": "module-6-networking",
             "level": "level-8-tcpdump"
@@ -1076,17 +1087,18 @@
           "path": "modules/module-7-sysadmin/level-1-systemd",
           "mission": {
             "name": "Service Down",
-            "description": "A dummy service is packaged in the sandbox along with a mock `systemctl` helper. Use it to enable and start the service.",
-            "objective": "Use the provided mock systemctl to enable and start myapp.service",
-            "xp": 170,
-            "difficulty": "beginner",
-            "expected_time": "6m",
+            "description": "After last night's release myapp.service is down: it fails to start, and `systemctl enable` refuses to make it start at boot.",
+            "objective": "Fix etc/systemd/system/myapp.service so that myapp.service is enabled for multi-user.target and running (active). `./systemctl` is a mock that treats the sandbox as `/`: /etc/... means ./etc/... and /opt/... means ./opt/...",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
             "concepts": [
-              "systemctl",
-              "enable",
-              "start",
-              "status",
-              "unit files"
+              "systemctl status",
+              "unit files",
+              "ExecStart",
+              "[Install] WantedBy",
+              "daemon-reload",
+              "enable --now"
             ],
             "module": "module-7-sysadmin",
             "level": "level-1-systemd"
@@ -1098,16 +1110,16 @@
           "path": "modules/module-7-sysadmin/level-2-journald",
           "mission": {
             "name": "Log Hunt",
-            "description": "A mock `journalctl` command in the sandbox can show recent logs. Find the error entries from the last hour and save them.",
-            "objective": "Use the provided journalctl helper and save the recent `error` entries to errors.txt",
-            "xp": 180,
-            "difficulty": "beginner",
-            "expected_time": "7m",
+            "description": "myapp misbehaved after the 14:00 deploy. The on-call engineer wants every serious message it logged since then, and nothing else.",
+            "objective": "Save to errors.txt all journal entries of myapp.service with priority err or worse (err, crit, alert, emerg) logged since 14:00 today, oldest first, one per line as journalctl prints them. `./journalctl` is a mock of the real tool; its clock is frozen at 2024-04-08 14:30.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
             "concepts": [
-              "journalctl",
+              "journalctl -u",
+              "journalctl -p",
               "--since",
-              "grep",
-              "logs"
+              "syslog priorities"
             ],
             "module": "module-7-sysadmin",
             "level": "level-2-journald"
@@ -1119,16 +1131,16 @@
           "path": "modules/module-7-sysadmin/level-3-cron",
           "mission": {
             "name": "Scheduled Sweep",
-            "description": "A daily cleanup task needs to run automatically. Write the cron entry in the sandbox's crontab file.",
-            "objective": "Write a crontab entry in crontab.txt that runs cleanup.sh every day at 3am",
-            "xp": 190,
+            "description": "Upload temp files pile up on the app server. cleanup.sh deletes them, but nobody has scheduled it yet.",
+            "objective": "Add one job to crontab.txt that runs cleanup.sh (from this sandbox, by its absolute path) at 03:00 every weekday, Monday to Friday. Keep the existing lines of crontab.txt unchanged. crontab.txt is the file you would install with `crontab crontab.txt`.",
+            "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "7m",
+            "expected_time": "8m",
             "concepts": [
-              "cron",
               "crontab",
-              "scheduling",
-              "cron syntax"
+              "cron time fields",
+              "day-of-week",
+              "absolute paths in cron"
             ],
             "module": "module-7-sysadmin",
             "level": "level-3-cron"
@@ -1140,15 +1152,16 @@
           "path": "modules/module-7-sysadmin/level-4-users",
           "mission": {
             "name": "New Hire",
-            "description": "A mock user database in the sandbox needs a new developer account. Use the provided helpers to add the user and put them in the docker group.",
-            "objective": "Use the sandbox helpers to create `devuser` and add them to the `docker` group",
-            "xp": 220,
+            "description": "Dana Kim joins the platform team today and needs a login on the build server. Sam, already on the team, now also needs to run containers.",
+            "objective": "Create the user dana with a home directory /home/dana built from /etc/skel, login shell /bin/bash, full name \"Dana Kim\" and supplementary groups dev and docker. Add the existing user sam to docker without removing any of his current groups. The sandbox has real-format etc/passwd and etc/group files and mock ./useradd, ./usermod, ./userdel, ./id and ./groups tools that edit them like the real ones (no root needed).",
+            "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "9m",
+            "expected_time": "10m",
             "concepts": [
-              "useradd",
+              "useradd -m -s -c -G",
               "usermod -aG",
-              "groups",
+              "/etc/passwd",
+              "/etc/group",
               "id"
             ],
             "module": "module-7-sysadmin",
@@ -1161,16 +1174,17 @@
           "path": "modules/module-7-sysadmin/level-5-sudoers",
           "mission": {
             "name": "Controlled Power",
-            "description": "The ops team wants one narrowly scoped sudo permission. Write the rule into the sandbox's sudoers include file.",
-            "objective": "Write a rule in sudoers.d/devuser that allows devuser to run /usr/bin/systemctl without a password",
-            "xp": 240,
+            "description": "The CI pipeline logs in as the user deploy and runs deploy.sh, which fails at its sudo lines because sudo asks for a password nobody can type. Security will only sign off on the narrowest possible rule.",
+            "objective": "Create sudoers.d/deploy (the sandbox's /etc/sudoers.d) with a rule that lets deploy run, as root and without a password, exactly the two sudo commands in deploy.sh and nothing else. The file must pass `visudo -cf` and have the mode sudo expects for drop-in files (0440).",
+            "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "9m",
+            "expected_time": "10m",
             "concepts": [
-              "sudoers",
+              "sudoers syntax",
               "NOPASSWD",
               "/etc/sudoers.d",
-              "visudo"
+              "visudo -c",
+              "least privilege"
             ],
             "module": "module-7-sysadmin",
             "level": "level-5-sudoers"
@@ -1182,16 +1196,17 @@
           "path": "modules/module-7-sysadmin/level-6-logrotate",
           "mission": {
             "name": "Log Discipline",
-            "description": "An application is filling disk with old logs. Write a logrotate config so the logs are rotated daily and compressed.",
-            "objective": "Create myapp.logrotate for `/var/log/myapp/*.log` with `daily`, `rotate 7`, and `compress`",
-            "xp": 250,
-            "difficulty": "advanced",
+            "description": "The disk on the app server is 94% full: worker.log alone is 11G. A logrotate rule for myapp exists, but it only covers app.log and keeps everything uncompressed.",
+            "objective": "Fix logrotate.d/myapp (the sandbox's /etc/logrotate.d/myapp) so that one block covers every .log file in /var/log/myapp, rotates daily, keeps 14 old copies, compresses them, does not fail when a log is missing, and works for an app that never reopens its log files (see var/log/myapp/LISTING.txt).",
+            "xp": 150,
+            "difficulty": "intermediate",
             "expected_time": "10m",
             "concepts": [
               "logrotate",
-              "daily",
-              "rotate",
-              "compress"
+              "glob patterns",
+              "rotate / daily / compress",
+              "missingok",
+              "copytruncate"
             ],
             "module": "module-7-sysadmin",
             "level": "level-6-logrotate"
@@ -1203,16 +1218,17 @@
           "path": "modules/module-7-sysadmin/level-7-env",
           "mission": {
             "name": "Env Surgery",
-            "description": "A startup script expects environment variables from a `.env` file, but the file is incomplete.",
-            "objective": "Fill in `.env` so sourcing it sets APP_MODE=production and APP_PORT=8080, then run app.sh successfully",
-            "xp": 260,
-            "difficulty": "advanced",
+            "description": "myapp will not start: start.sh loads its settings from .env, but app.sh keeps complaining about missing environment variables, and the shell prints strange 'command not found' errors.",
+            "objective": "Fix .env (leave start.sh and app.sh unchanged) so that sourcing it raises no errors and app.sh, started by ./start.sh, receives APP_MODE=production, APP_PORT=8080 and APP_NAME=My Shop.",
+            "xp": 150,
+            "difficulty": "intermediate",
             "expected_time": "10m",
             "concepts": [
+              "shell variable assignment",
+              "quoting",
               "export",
-              "source",
-              ".env",
-              "printenv"
+              "source / .",
+              "child process environment"
             ],
             "module": "module-7-sysadmin",
             "level": "level-7-env"
@@ -1224,16 +1240,17 @@
           "path": "modules/module-7-sysadmin/level-8-at",
           "mission": {
             "name": "One-Shot Task",
-            "description": "A one-time cleanup command should be queued with a sandbox-safe mock `at` helper.",
-            "objective": "Use the provided at helper to schedule `./cleanup.sh` to run in 1 minute",
-            "xp": 280,
-            "difficulty": "advanced",
-            "expected_time": "10m",
+            "description": "A colleague queued the one-off cleanup.sh run for 03:30 tomorrow, right in the middle of the nightly backup. Change management approved tonight, 23:30, instead.",
+            "objective": "Leave the at queue with cleanup.sh (from this sandbox) queued exactly once, for tonight at 23:30, and no cleanup job at any other time. The unrelated certificate job must stay. ./at, ./atq and ./atrm are mocks of the real tools; their clock is frozen at Mon 2024-04-08 14:30.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "8m",
             "concepts": [
               "at",
               "atq",
-              "one-time scheduling",
-              "stdin"
+              "atrm",
+              "at -c",
+              "at time specs"
             ],
             "module": "module-7-sysadmin",
             "level": "level-8-at"
@@ -1250,16 +1267,17 @@
           "path": "modules/module-8-advanced-text/level-1-regex-grep",
           "mission": {
             "name": "Pattern Mastery",
-            "description": "A log file mixes text, usernames, and IP addresses. Pull out just the IPv4 addresses into a clean report.",
-            "objective": "Extract all IPv4 addresses from app.log and save them to ips.txt",
-            "xp": 200,
-            "difficulty": "beginner",
-            "expected_time": "7m",
+            "description": "Security wants to know every host that touched the app today. The addresses are buried in app.log: after client=, with a :port, in [brackets], two on one line, next to version and build numbers that look a lot like IPs.",
+            "objective": "Write every distinct IPv4 address that appears in app.log to ips.txt, one address per line, each listed once (any order).",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
             "concepts": [
               "grep -E",
-              "regex",
-              "IPv4",
-              "patterns"
+              "grep -o",
+              "grep -w",
+              "regex quantifiers {n,m}",
+              "sort -u"
             ],
             "module": "module-8-advanced-text",
             "level": "level-1-regex-grep"
@@ -1271,16 +1289,17 @@
           "path": "modules/module-8-advanced-text/level-2-awk-report",
           "mission": {
             "name": "Expense Report",
-            "description": "A CSV export lists individual expenses. Summarize the totals per category and sort them for the finance team.",
-            "objective": "Sum the amounts by category from expenses.csv and save sorted totals to totals.txt",
-            "xp": 220,
-            "difficulty": "intermediate",
-            "expected_time": "9m",
+            "description": "Finance exported last month's 200 expenses as expenses.csv and needs the spend per category for the budget meeting, biggest first. The export has a header row and a TOTAL footer row.",
+            "objective": "Write totals.txt with one line per category: the category name, a space, and the sum of its amounts with exactly two decimals (e.g. `meals 123.40`). Sort the lines by total, largest first.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "12m",
             "concepts": [
-              "awk",
-              "arrays",
-              "CSV",
-              "sort"
+              "awk -F",
+              "awk associative arrays",
+              "printf %.2f",
+              "NR",
+              "sort -k -n -r"
             ],
             "module": "module-8-advanced-text",
             "level": "level-2-awk-report"
@@ -1292,16 +1311,16 @@
           "path": "modules/module-8-advanced-text/level-3-sed-multiline",
           "mission": {
             "name": "Config Injector",
-            "description": "A config file is missing one include line in exactly the right place. Insert it after the marker block.",
-            "objective": "Insert `include /etc/myapp/extra.conf` after the line `# EXTRA CONFIG` in app.conf",
-            "xp": 230,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "description": "The HTTPS site needs extra settings from /etc/myapp/extra.conf. app.conf has three server blocks, and each has a `# EXTRA CONFIG` placeholder, but only the HTTPS one (port 8443) may get the include.",
+            "objective": "In app.conf, add the line `include /etc/myapp/extra.conf;` directly after the `# EXTRA CONFIG` line of the `listen 8443` server block, and nowhere else. Every other line must stay as it is. Indent the new line however you like.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "12m",
             "concepts": [
-              "sed",
-              "append",
-              "multiline edits",
-              "config files"
+              "sed address ranges",
+              "sed a (append)",
+              "regex anchors",
+              "editing files with sed safely"
             ],
             "module": "module-8-advanced-text",
             "level": "level-3-sed-multiline"
@@ -1313,16 +1332,17 @@
           "path": "modules/module-8-advanced-text/level-4-jq",
           "mission": {
             "name": "JSON Surgeon",
-            "description": "A nested JSON file describes an owner and a set of services. Extract the owner email and the active services into a short report.",
-            "objective": "Read data.json and write report.txt with `owner=...` and `active=...`",
-            "xp": 250,
+            "description": "The inventory API dumped its view of the platform to data.json: 30 services with nested status objects, and an owner with several contact entries. The incident template needs two facts from it.",
+            "objective": "Write report.txt with exactly two lines: `owner=<the owner's e-mail address>` and `active=<names of the services whose status.active is true, comma-separated, no spaces, in the order they appear in data.json>`.",
+            "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "9m",
+            "expected_time": "10m",
             "concepts": [
-              "jq",
-              "json",
-              "arrays",
-              "select"
+              "jq paths",
+              "jq select",
+              "jq -r",
+              "join",
+              "command substitution"
             ],
             "module": "module-8-advanced-text",
             "level": "level-4-jq"
@@ -1333,17 +1353,18 @@
           "name": "level-5-xargs",
           "path": "modules/module-8-advanced-text/level-5-xargs",
           "mission": {
-            "name": "Parallel Grep",
-            "description": "A keyword is hidden somewhere across a pile of files. Search in parallel and identify which file contains it.",
-            "objective": "Find the file containing `NEBULA_KEY` and write just the filename to match.txt",
-            "xp": 270,
+            "name": "Quarantine Sweep",
+            "description": "A live API key (NEBULA_KEY) leaked into some of the 200 text files under files/. They must be moved out of the shared folders before the nightly sync, and some file names contain spaces and apostrophes.",
+            "objective": "Move every file under files/ that contains the exact text NEBULA_KEY into quarantine/ (directly, no subfolders), unchanged. Every other file stays where it is.",
+            "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "10m",
+            "expected_time": "12m",
             "concepts": [
               "xargs",
-              "-P",
-              "grep",
-              "parallel search"
+              "xargs -0",
+              "grep -l --null",
+              "find -print0",
+              "file names with spaces"
             ],
             "module": "module-8-advanced-text",
             "level": "level-5-xargs"
@@ -1355,16 +1376,16 @@
           "path": "modules/module-8-advanced-text/level-6-column",
           "mission": {
             "name": "Pretty Table",
-            "description": "A report file is hard to read because the columns are uneven. Reformat it into aligned output.",
-            "objective": "Format report.txt into aligned columns and save the result to table.txt",
-            "xp": 300,
-            "difficulty": "advanced",
-            "expected_time": "10m",
+            "description": "The on-call handbook needs a readable inventory of services, but services.csv is a wall of commas, and its description column contains spaces.",
+            "objective": "Turn services.csv into table.txt: the same 15 lines (header included) with commas replaced by left-aligned columns separated by spaces (no tabs), each column starting at the same position on every line, and every value, including descriptions with spaces, kept whole.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "8m",
             "concepts": [
-              "column",
-              "printf",
-              "awk printf",
-              "formatting"
+              "column -t",
+              "column -s",
+              "printf / awk printf field widths",
+              "delimiters"
             ],
             "module": "module-8-advanced-text",
             "level": "level-6-column"

@@ -1,4 +1,11 @@
-Inside the block, include:
-daily
-rotate 7
-compress
+A logrotate block is: one or more file patterns (globs like *.log work), then { directives }.
+Directives you need, one per line:
+  daily | weekly | monthly     how often to rotate
+  rotate N                     how many old copies to keep
+  compress                     gzip the old copies
+  missingok                    no error when a matching file is missing
+  copytruncate                 copy the log, then empty it in place (for apps that never reopen the file)
+A file must be matched by only one block, so replace the old app.log pattern instead of
+adding a second block. Edit with `edit logrotate.d/myapp`.
+If logrotate is installed, dry-run it: logrotate -d -s /dev/null logrotate.d/myapp
+Read more: man logrotate (section CONFIGURATION FILE DIRECTIVES)

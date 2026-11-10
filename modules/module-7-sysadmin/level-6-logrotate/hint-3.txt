@@ -1,6 +1,17 @@
-A minimal valid file is:
+cat > logrotate.d/myapp <<'CONF'
 /var/log/myapp/*.log {
-  daily
-  rotate 7
-  compress
+    daily
+    rotate 14
+    compress
+    missingok
+    copytruncate
 }
+CONF
+
+- /var/log/myapp/*.log {   one block for app.log, access.log and worker.log
+- daily                    rotate once a day
+- rotate 14                keep 14 old copies, delete older ones
+- compress                 gzip rotated copies (worker.log.2.gz ...)
+- missingok                skip quietly if a log does not exist
+- copytruncate             copy the file and empty the original, because myapp keeps writing
+                           to the file it opened and never reopens it

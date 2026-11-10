@@ -1,1 +1,3 @@
-Try: find $SANDBOX -name "secret.conf"
+You know the file's name but not its folder, and there are dozens of folders.
+Instead of opening them one by one, can you ask the system to search the whole
+tree for that name? Careful: some files only look like the one you want.

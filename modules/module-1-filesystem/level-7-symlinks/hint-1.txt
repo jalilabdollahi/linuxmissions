@@ -1,2 +1,3 @@
-Use ln -s to create a symbolic link:
-ln -s TARGET LINK_NAME
+Run ls -l in etc/myapp: the arrow shows where active.conf points now. You are not
+creating a new link next to it, you are replacing it. And for a relative link,
+ask yourself: relative to which folder will the target be looked up later?

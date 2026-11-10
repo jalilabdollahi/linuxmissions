@@ -1,1 +1,5 @@
-Pipe the JSON to a text tool that extracts the `status` value.
+- `curl -s URL` fetches a URL quietly (no progress bar). `curl -i URL` also shows the status line and headers, e.g. "HTTP/1.1 401 Unauthorized".
+- `curl -H "Name: value" URL` adds a request header. `$(cat api.key)` inserts the key, and `"$(cat api_url.txt)/health"` builds the URL.
+- jq reads JSON: `jq '.service'` shows one object, `jq -r '.service.status'` prints one field as raw text (no quotes).
+
+Read more: `man curl` (-s, -i, -H), `man jq`.

@@ -1,1 +1,3 @@
-If jq is available, it is perfect for this job.
+Pretty-print the file and explore it: where is the e-mail stored, and how is it told apart
+from the pager number and the chat channel? Look at the "status" of several services too.
+Some say active true, some false, and some have no active field at all.

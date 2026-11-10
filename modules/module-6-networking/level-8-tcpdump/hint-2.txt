@@ -1,1 +1,6 @@
-Queries like `A? example.com` and `AAAA? example.com` are strong hints.
+- `tcpdump -nn -r capture.pcap` reads the file; -nn prints numeric addresses and ports. Add a filter in quotes at the end; `2>/dev/null` hides the "reading from file" line.
+- Filters: `'tcp[tcpflags] == tcp-syn'` (only SYN set), `'tcp[tcpflags] == (tcp-syn|tcp-ack)'` (SYN-ACK), `'src host A and dst host B'`.
+- Output fields: $3 is SOURCE.PORT, $5 is DEST.PORT: (e.g. `10.20.4.17.443:`). The port is after the last dot; the IP is the first four dot-separated parts.
+- Distinct ports per source: print "IP PORT" pairs, `sort -u` to drop repeats, keep the IP column, then `uniq -c | sort -nr`.
+
+Read more: `man tcpdump`, `man pcap-filter` (tcp[tcpflags], host, port).

@@ -1,2 +1,4 @@
-Use mkdir with the -p flag to create parent directories in one go.
-Example: mkdir -p logs/app
+Read STARTUP_ERROR.txt for the list. Most of these paths are two or three levels
+deep and their parent folders do not exist yet; one parent (data/) does. Is there
+a way to create a whole path, parents included, without complaining about the
+parts that already exist?

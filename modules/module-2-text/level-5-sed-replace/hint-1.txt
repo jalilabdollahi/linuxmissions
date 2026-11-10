@@ -1,3 +1,4 @@
-sed uses: sed 's/old/new/g' to replace all occurrences on each line.
-Preview first:
-sed 's/staging.internal/prod.internal/g' $SANDBOX/config.conf
+Look at the file first. Some lines have the hostname more than once, and two
+lines contain names that are similar but are NOT the hostname (staging-internal,
+staging_internal); those must stay. Also, the original file has to survive, so
+write the result to a new file.

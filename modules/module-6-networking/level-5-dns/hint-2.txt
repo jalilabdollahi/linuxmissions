@@ -1,1 +1,7 @@
-Loop through hosts.txt and print both the hostname and the resolved IP.
+- `dig NAME` shows the whole reply. `status: NXDOMAIN` means the name does not exist.
+- `dig +short NAME` prints only the answer data, one record per line. For a CNAME it prints the target name first (e.g. `app-lb.internal.`) and then the address(es).
+- Keep only the address lines: `grep -E '^[0-9.]+$'`
+- Loop over the names: `while read -r host; do ... done < hosts.txt > resolved.txt`
+- In the loop, if no address came back (`[ -z "$ips" ]`) print `$host NXDOMAIN`, otherwise print one line per address with a `for ip in $ips` loop.
+
+Read more: `man dig` (+short, +noall +answer, -t).

@@ -1,2 +1,5 @@
-Set the sticky bit symbolically:
-chmod +t $SANDBOX/shared
+The sticky bit. In ls -ld it replaces the last x with a t: drwxrwxrwt.
+Set it with chmod, either symbolically (+t) or as a 4th octal digit in front:
+  1 = sticky, 2 = setgid, 4 = setuid      e.g. chmod 1755 dir
+Compare with: ls -ld /tmp
+More: man chmod (look for "restricted deletion flag or sticky bit")

@@ -1,11 +1,11 @@
 {
   "name": "The Background Worker",
-  "description": "A data processing script takes a while to finish. You need to start it without blocking your terminal, inspect the job list, and let it complete.",
-  "objective": "Run process.sh in the background and wait for it to finish so result.txt contains the finished output",
+  "description": "process.sh crunches today's data and takes a while. You don't want your terminal blocked while it runs, and the team lead wants proof that it was running as a job of your shell.",
+  "objective": "Start process.sh as a background job. While it is still running, save your shell's job list, with PIDs, to jobs.txt. Then wait for the job to finish so it writes result.txt",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "8m",
-  "concepts": ["&", "jobs", "fg", "bg", "Ctrl+Z", "disown"],
+  "concepts": ["&", "jobs -l", "wait", "fg", "job control"],
   "module": "module-4-processes",
   "level": "level-3-background-jobs"
 }

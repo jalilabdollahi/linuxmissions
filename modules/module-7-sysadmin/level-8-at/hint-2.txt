@@ -1,2 +1,9 @@
-Use a pipe into the helper:
-echo './cleanup.sh' | ./at now + 1 minute
+The at family:
+  atq                 list queued jobs: number, run time, queue, owner
+  at -c N             show the full script job N will run
+  atrm N              remove job N
+  at TIME             queue the commands it reads from standard input (or from -f FILE)
+TIME can be 23:30, 11:30pm, "now + 9 hours", "noon tomorrow", ...
+at remembers the directory you are in when you queue the job and runs it from there,
+so a relative ./cleanup.sh works if you queue it from the sandbox.
+Read more: man at (and /usr/share/doc/at/timespec on Debian/Ubuntu)

@@ -1,2 +1,3 @@
-Move all .conf files in one command using a glob:
-mv $SANDBOX/staging/*.conf $SANDBOX/production/
+Order matters. If you install the new app.conf first, the live one is gone and
+there is nothing left to back up. Which files in staging/ really end in .conf,
+and which one only has .conf in the middle of its name?

@@ -1,1 +1,4 @@
-Skip the CSV header first.
+Look at the first and last lines of expenses.csv (head and tail). Which column holds the category
+and which holds the amount? Which lines are not expenses at all and must not be summed?
+Then think about the output: what does awk print for a number like 19450.06 if you
+just `print` it? Check how many digits you get.

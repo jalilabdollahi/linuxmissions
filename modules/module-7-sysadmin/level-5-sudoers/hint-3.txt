@@ -1,2 +1,11 @@
-Write this exact rule:
-devuser ALL=(ALL) NOPASSWD: /usr/bin/systemctl
+echo 'deploy ALL=(root) NOPASSWD: /usr/bin/systemctl restart myapp.service, /usr/bin/systemctl status myapp.service' > sudoers.d/deploy
+chmod 440 sudoers.d/deploy
+visudo -cf sudoers.d/deploy
+
+- deploy ALL=          the user, on any host
+- (root)               the commands run as root
+- NOPASSWD:            no password prompt for the commands that follow
+- /usr/bin/systemctl restart myapp.service, ...status myapp.service
+                       exactly the two commands from deploy.sh, with their arguments
+- chmod 440            the mode sudo expects for files in sudoers.d
+- visudo -cf           checks the syntax before sudo ever reads the file

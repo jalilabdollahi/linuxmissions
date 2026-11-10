@@ -1,15 +1,23 @@
 #!/bin/bash
 SANDBOX="$1"
-mkdir -p "$SANDBOX/app/"{config,data,scripts}
-# Normal files
-echo "safe" > "$SANDBOX/app/config/db.conf"
-chmod 644 "$SANDBOX/app/config/db.conf"
-echo "safe" > "$SANDBOX/app/scripts/start.sh"
-chmod 755 "$SANDBOX/app/scripts/start.sh"
-# World-writable files (bad!)
-echo "bad" > "$SANDBOX/app/config/app.conf"
-chmod 666 "$SANDBOX/app/config/app.conf"
-echo "bad" > "$SANDBOX/app/data/cache.dat"
-chmod 777 "$SANDBOX/app/data/cache.dat"
-echo "bad" > "$SANDBOX/app/data/session.dat"
-chmod 666 "$SANDBOX/app/data/session.dat"
+A="$SANDBOX/app"
+mkdir -p "$A/config" "$A/data" "$A/scripts"
+
+put() {  # put MODE PATH CONTENT
+  printf '%s\n' "$3" > "$A/$2"
+  chmod "$1" "$A/$2"
+}
+
+# fine as they are
+put 644 config/db.conf        "host=db1"
+put 755 scripts/start.sh      "#!/bin/sh"
+put 664 data/shared.csv       "id,owner"        # group-writable on purpose
+put 640 config/secrets.env    "TOKEN=abc"
+
+# world-writable (others have w)
+put 666 config/app.conf       "debug=false"
+put 777 data/cache.dat        "cache"
+put 666 data/session.dat      "sessions"
+put 646 data/.lock            "1234"            # hidden
+put 777 "scripts/run backup.sh" "#!/bin/sh"     # space in the name
+put 662 config/feature_flags  "beta=on"         # group read+write, others write only

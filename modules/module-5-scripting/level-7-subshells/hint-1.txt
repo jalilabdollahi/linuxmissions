@@ -1,4 +1,8 @@
-Run each task in the background:
-./task-a.sh &
-./task-b.sh &
-./task-c.sh &
+Three questions:
+- How do you start a command without waiting for it to finish, so the next one can start right away?
+- Once all three are running, how does the script pause until they are done?
+- How can it find out afterwards whether EACH of them succeeded? (The command that waits for "everything" only tells you that waiting worked.)
+
+Look at the tasks first: they each take two seconds, and task-b.sh fails.
+
+Game tip: `edit run_all.sh` opens the script in an editor.

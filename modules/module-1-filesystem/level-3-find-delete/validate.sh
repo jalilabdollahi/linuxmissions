@@ -1,14 +1,32 @@
 #!/bin/bash
+# $1 = sandbox path
 SANDBOX="$1"
-REMAINING=$(find "$SANDBOX" -name "*.tmp" 2>/dev/null | wc -l)
-if [ "$REMAINING" -eq 0 ]; then
-  # Also check keeper files survived
-  if [ -f "$SANDBOX/a/important.log" ] && [ -f "$SANDBOX/b/c/config.yaml" ]; then
-    echo "✅ PASS: All .tmp files removed and other files intact"
-    exit 0
+cd "$SANDBOX" || exit 1
+
+# Every file that does not end in .tmp must still be there, unchanged.
+check() {  # path expected-content
+  if [ ! -f "$1" ]; then
+    echo "❌ $1 was deleted, but its name does not end in .tmp; type 'reset' and try again"
+    exit 1
   fi
-  echo "❌ FAIL: .tmp files gone but keeper files were also deleted!"
+  if [ "$(cat "$1")" != "$2" ]; then
+    echo "❌ $1 was modified; type 'reset' and try again"
+    exit 1
+  fi
+}
+check build/obj/main.o 'int main(void) { return 0; }'
+check "build/page cache/index.html" '<html>cached page</html>'
+check templates/invoice.tmpl 'Dear {{name}}, your invoice is attached.'
+check templates/welcome.tmpl 'Hello {{name}}!'
+check jobs/2024/q1/summary.csv $'job,status\n0107,failed\n0213,failed'
+check jobs/2024/q2/README 'q2 jobs are archived monthly'
+check reports/notes.tmp.txt 'Remember: .tmp files are safe to delete.'
+check home/alice/.cache/editor/settings 'set number'
+
+left=$(find . -type f -name '*.tmp' | wc -l | tr -d ' ')
+if [ "$left" -gt 0 ]; then
+  echo "❌ $left .tmp file(s) are still somewhere in the tree"
   exit 1
 fi
-echo "❌ FAIL: $REMAINING .tmp file(s) still exist"
-exit 1
+echo "✅ all .tmp files are gone and every other file is intact"
+exit 0

@@ -1,3 +1,4 @@
-Octal permissions: each digit = owner/group/others
-4=read, 2=write, 1=execute (add them up)
-644 = rw-r--r--  (owner rw, group r, others r)
+Translate each requirement into three groups of permissions: what the owner
+(you) may do, what the file's group may do, what everyone else may do.
+For example "readable by everyone, writable only by you" is rw- for you and
+r-- for the other two. Then turn each group into one digit.

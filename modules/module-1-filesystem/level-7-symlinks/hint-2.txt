@@ -1,2 +1,7 @@
-Point active.conf at the v2 config:
-ln -s $SANDBOX/etc/myapp/v2/config.conf $SANDBOX/etc/myapp/active.conf
+  ln -s TARGET LINKNAME     create a symbolic link LINKNAME that points to TARGET
+  -f                        replace LINKNAME if it already exists
+  readlink LINKNAME         print the target stored in the link
+  ls -l                     shows links as  name -> target
+A relative TARGET is stored as text and resolved from the folder that contains
+the link, not from the folder you were in when you ran ln.
+More: man ln

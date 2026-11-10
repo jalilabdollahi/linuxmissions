@@ -1,2 +1,7 @@
-Send the HUP signal:
-kill -HUP $(cat $SANDBOX/listener.pid)
+Edit the file:  edit listener.conf   (or sed -i.bak 's/old/new/' file)
+Send a signal:  kill -SIGNAL PID
+  kill -HUP PID          SIGHUP: "reload your config" for most daemons
+  kill -l                list all signal names and numbers
+  cat listener.pid       the listener's PID (pgrep -f listener.sh works too)
+Plain kill (SIGTERM) or kill -9 would stop the service instead.
+More: man kill, man 7 signal

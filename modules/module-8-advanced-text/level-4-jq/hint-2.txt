@@ -1,1 +1,9 @@
-You need one value from `.owner.email` and a filtered list from `.services`.
+jq building blocks:
+  jq . data.json                         pretty-print
+  .meta.owner.contacts[]                 iterate over an array's elements
+  select(.type == "email")               keep only elements where the condition is true
+  .status.active == true                 false for false, missing and null
+  [ ... | .name ] | join(",")            collect results into an array, then one string
+  -r                                     print raw strings, without JSON quotes
+Put each result into its line with echo "owner=$(jq -r '...' data.json)".
+Read more: man jq (sections "select", "join"), or https://jqlang.github.io/jq/manual/

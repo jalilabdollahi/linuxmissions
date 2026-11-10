@@ -1,2 +1,7 @@
-Shell scripts read positional arguments as:
-$1, $2, $3, ...
+greet.sh contains only comments, so it prints nothing.
+
+Two questions to answer:
+- Inside a script, which special variable holds the first word typed after the script name?
+- What should the script use when that variable is empty?
+
+Game tip: `edit greet.sh` opens the file in an editor so you can type the script.

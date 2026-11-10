@@ -1,1 +1,8 @@
-Pipe the file list into grep with xargs.
+Tools:
+  grep -r -l PATTERN DIR       list (only) the names of files that contain PATTERN
+  grep --null                  end each listed name with a NUL byte instead of a newline
+  xargs -0                     split its input on NUL bytes only, so spaces and quotes are safe
+  xargs -I{} CMD {} ...        run CMD once per input item, with {} replaced by the item
+  find ... -print0             the same NUL-terminated output for find
+mv's destination comes last, so use -I{} to place each name before quarantine/.
+Read more: man xargs (-0, -I), man grep (-l, --null)

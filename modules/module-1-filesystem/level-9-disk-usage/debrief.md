@@ -1,15 +1,18 @@
 # Disk Hog
 
-## What you practiced
-- `du -sh *` — disk usage of each item in human-readable form
-- `sort -rh` sorts human-readable sizes (K, M, G) in reverse
-- `find -printf "%s %p\n"` prints byte size + path — easy to sort numerically
+## Why it works
+`find . -type f` lists every regular file, hidden ones included, and `du -k`
+reports how much disk each one uses. `sort -n` orders those numbers, so the last
+line is the largest file. The biggest *folder* was `var/log/journal` (thirty
+medium files), but the biggest *file* was a forgotten VM image in bob's Trash.
 
-## Commands to remember
-```bash
-df -h                              # filesystem usage overview
-du -sh /var/*                      # size of each item in /var
-du -ah / | sort -rh | head -20    # top 20 largest files/dirs
-find / -type f -size +100M         # files bigger than 100 MB
-ncdu /                             # interactive disk usage (needs ncdu)
-```
+## Common mistakes
+- Stopping at `du -sh *`: it answers "which folder?", not "which file?".
+- Sorting sizes like `1.5M` and `980K` with plain `sort -n`: use `sort -h` for
+  human-readable sizes, or keep raw numbers (`du -k`) as here.
+- `ls -lS` only sorts one folder and skips hidden files without `-a`.
+
+## Learn next
+`du -ah . | sort -rh | head` mixes files and folders in one ranking, and
+`find . -type f -size +1M` lists every file over 1 MB. On a real server,
+`df -h` first tells you which filesystem is full, and `ncdu` lets you browse interactively.

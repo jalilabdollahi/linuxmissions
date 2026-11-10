@@ -1,2 +1,11 @@
-You can verify with:
-./id devuser
+./useradd -m -s /bin/bash -c "Dana Kim" -G dev,docker dana
+./usermod -aG docker sam
+./id dana
+./id sam
+
+- useradd -m              create /home/dana and copy .bashrc/.profile from /etc/skel
+- -s /bin/bash            login shell (Ubuntu's default would be /bin/sh)
+- -c "Dana Kim"           full name, stored in the 5th field of etc/passwd
+- -G dev,docker           supplementary groups; dana also gets her own private group "dana"
+- usermod -aG docker sam  -a appends docker; without -a, sam would lose sudo, adm and dev
+- ./id USER               shows uid, primary group and all groups to confirm

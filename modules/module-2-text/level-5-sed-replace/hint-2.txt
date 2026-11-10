@@ -1,2 +1,7 @@
-Redirect the output to config.prod.conf:
-sed 's/staging.internal/prod.internal/g' $SANDBOX/config.conf > $SANDBOX/config.prod.conf
+  sed 's/OLD/NEW/' FILE      replace the first OLD on each line, print the result
+  s/OLD/NEW/g                g = replace every OLD on the line, not just the first
+  \.                         OLD is a regular expression: . matches ANY character,
+                             \. matches only a real dot
+  > NEWFILE                  save the output; do not use sed -i here (it edits the original)
+Check your result with diff config.conf config.prod.conf.
+More: man sed

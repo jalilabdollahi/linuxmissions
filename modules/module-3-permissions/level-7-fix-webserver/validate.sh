@@ -1,27 +1,31 @@
 #!/bin/bash
 SANDBOX="$1"
-FAIL=0
+W="$SANDBOX/webroot"
 
-# Check dirs are 755
+mode_of() {
+  stat -c '%a' "$1" 2>/dev/null || stat -f '%Lp' "$1"
+}
+
+for f in index.html pages/about.html pages/contact.html "pages/blog/launch day.html" \
+         static/css/style.css static/js/app.js "static/img/team photo.jpg" .htaccess; do
+  if [ ! -f "$W/$f" ]; then
+    echo "❌ webroot/$f is missing; fix permissions, don't delete files (type reset to start over)"
+    exit 1
+  fi
+done
+
+bad_dirs=0
 while IFS= read -r -d '' d; do
-  PERM=$(stat -c "%a" "$d")
-  if [ "$PERM" != "755" ]; then
-    echo "❌ Directory $(basename $d): $PERM (expected 755)"
-    FAIL=1
-  fi
-done < <(find "$SANDBOX/webroot" -type d -print0)
-
-# Check files are 644
+  [ "$(mode_of "$d")" != "755" ] && bad_dirs=$((bad_dirs + 1))
+done < <(find "$W" -type d -print0)
+bad_files=0
 while IFS= read -r -d '' f; do
-  PERM=$(stat -c "%a" "$f")
-  if [ "$PERM" != "644" ]; then
-    echo "❌ File $(basename $f): $PERM (expected 644)"
-    FAIL=1
-  fi
-done < <(find "$SANDBOX/webroot" -type f -print0)
+  [ "$(mode_of "$f")" != "644" ] && bad_files=$((bad_files + 1))
+done < <(find "$W" -type f -print0)
 
-if [ "$FAIL" -eq 0 ]; then
-  echo "✅ PASS: All web files are 644 and directories are 755"
-  exit 0
+if [ "$bad_dirs" -gt 0 ] || [ "$bad_files" -gt 0 ]; then
+  echo "❌ Still wrong: $bad_dirs director(y/ies) not 755, $bad_files file(s) not 644"
+  exit 1
 fi
-exit 1
+echo "✅ webroot/: every directory is 755 and every file is 644"
+exit 0

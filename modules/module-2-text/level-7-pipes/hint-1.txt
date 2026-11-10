@@ -1,2 +1,4 @@
-Filter POST lines first:
-grep " POST " $SANDBOX/access.log
+Build it one stage at a time and look at the output after each step. First get
+only the POST requests. Check what you got: is any of those lines actually a GET
+whose URL happens to contain the word POST? Where exactly in the line does the
+method appear, and what character comes right before it?

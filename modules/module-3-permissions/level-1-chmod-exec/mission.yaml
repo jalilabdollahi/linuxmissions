@@ -1,11 +1,11 @@
 {
   "name": "Script Won't Run",
-  "description": "A deployment script was uploaded but it refuses to run — permission denied.",
-  "objective": "Make deploy.sh executable by the owner, then run it to generate output.txt",
+  "description": "A teammate uploaded deploy.sh to the release folder, but running ./deploy.sh fails with 'Permission denied'.",
+  "objective": "Make deploy.sh executable for its owner (without making it writable by group or others), then run it as ./deploy.sh so it writes output.txt",
   "xp": 100,
   "difficulty": "beginner",
   "expected_time": "5m",
-  "concepts": ["chmod", "+x", "execute permission", "bash"],
+  "concepts": ["chmod", "u+x", "execute permission", "ls -l"],
   "module": "module-3-permissions",
   "level": "level-1-chmod-exec"
 }

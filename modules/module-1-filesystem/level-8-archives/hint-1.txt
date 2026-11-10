@@ -1,3 +1,3 @@
-To extract a .tar.gz:
-mkdir -p $SANDBOX/extracted
-tar -xzf $SANDBOX/backup.tar.gz -C $SANDBOX/extracted
+Two jobs. First: look inside backup.tar.gz before extracting, so you know what
+folder it creates and where it should land. Second: which files in logs/ really
+end in .log? app.log.1 and README.txt must not go in the new archive.

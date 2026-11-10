@@ -1,1 +1,6 @@
-The port is at the end of the `Local Address:Port` field.
+- awk fields: $1 is the State, $4 is Local Address:Port.
+- Filter rows: `$1 == "LISTEN" && $4 !~ /^(127\.|\[::1\])/` keeps listening sockets that are not loopback-only.
+- `n = split($4, a, ":")` splits at every colon and returns how many parts there are; a[n] is the last part, the port. That also works for "[::]:22".
+- `sort -nu` sorts numerically and removes duplicates (22 is listed for IPv4 and IPv6).
+
+Read more: `man awk` (split, ~ and !~), `man sort` (-n, -u). On a live system: `ss -tln` (TCP, listening, numeric).

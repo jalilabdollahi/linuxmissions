@@ -1,3 +1,4 @@
-head shows the beginning; tail shows the end:
-head -n 5 $SANDBOX/app.log
-tail -n 5 $SANDBOX/app.log
+app.log has 3,000 lines, so cat floods the screen and copying lines by hand is
+hopeless. There are two small tools: one prints the start of a file and one prints
+the end. How do you tell them how many lines you want, and send the result to a
+file instead of the screen?

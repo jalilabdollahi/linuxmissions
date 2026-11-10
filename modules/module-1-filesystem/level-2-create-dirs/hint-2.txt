@@ -1,2 +1,5 @@
-You can create multiple directories at once with brace expansion:
-mkdir -p logs/{app,nginx} data/{uploads,cache}
+mkdir creates directories; plain mkdir fails if the parent is missing.
+  mkdir -p a/b/c     creates a, a/b and a/b/c as needed, and is silent if they exist
+You can give mkdir several paths at once, and bash brace expansion saves typing:
+  logs/{app,nginx}   expands to   logs/app logs/nginx      (no quotes around it!)
+Check the result with ls -R.  More: man mkdir

@@ -1,2 +1,3 @@
-Use find to list all .py files:
-find $SANDBOX -name "*.py"
+The files are several folders deep in three projects, and some live in a hidden
+folder that ls does not show. Also look closely: is everything whose name ends
+in .py actually a file?

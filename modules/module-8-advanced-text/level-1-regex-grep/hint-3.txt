@@ -1,2 +1,8 @@
-One valid solution is:
-grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' app.log > ips.txt
+grep -Eow '([0-9]{1,3}\.){3}[0-9]{1,3}' app.log | sort -u > ips.txt
+
+- grep -E                    extended regex syntax
+- -o                         print each match on its own line (two per line on forwarded-for lines)
+- -w                         reject matches glued to other digits, so 2024.04.08.1 is skipped
+- ([0-9]{1,3}\.){3}[0-9]{1,3}   three "1-3 digits + dot" groups, then a last group of 1-3 digits
+- sort -u                    sort and drop duplicates
+- > ips.txt                  save; check with: wc -l ips.txt

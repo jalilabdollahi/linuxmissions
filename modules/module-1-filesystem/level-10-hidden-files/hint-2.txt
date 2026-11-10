@@ -1,2 +1,6 @@
-Use find to search including hidden files:
-find $SANDBOX -name ".*" -type f
+  ls -a            show all entries, including names that start with .
+  ls -la DIR       same, with details, for another folder
+  find . -name '.*' -type f     list every hidden file in the tree
+  cat FILE         print a file
+Then save only the token value; cut -d= -f2 keeps what comes after the '='.
+More: man ls

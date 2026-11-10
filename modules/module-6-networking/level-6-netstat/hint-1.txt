@@ -1,1 +1,4 @@
-Only count the `ESTAB` rows.
+connections.txt has almost 400 rows, so you will need a pipeline, not your eyes. Before counting, decide which rows matter:
+- Which State means the connection is open right now? (TIME-WAIT, CLOSE-WAIT and SYN-RECV are not.)
+- Which column is this server's side? Some rows are connections web-03 opened itself to other machines.
+- The peer column is IP:port and every connection has its own port. What do you need to cut off so that connections from the same client look the same? (Mind the IPv6 client, whose address has colons in it.)

@@ -1,5 +1,12 @@
-With jq, one approach is:
 {
-  echo "owner=$(jq -r '.owner.email' data.json)"
-  echo "active=$(jq -r '[.services[] | select(.active) | .name] | join(\",\")' data.json)"
+  echo "owner=$(jq -r '.meta.owner.contacts[] | select(.type == "email") | .value' data.json)"
+  echo "active=$(jq -r '[.services[] | select(.status.active == true) | .name] | join(",")' data.json)"
 } > report.txt
+
+- .meta.owner.contacts[] | select(.type == "email") | .value
+                      walk into the contacts, keep the email entry, take its value
+- [.services[] | select(.status.active == true) | .name]
+                      names of services whose nested active flag is true, in file order
+- join(",")           one comma-separated string
+- jq -r               raw output, no quotes
+- { ...; } > report.txt   both echo lines go into the file; check with: cat report.txt

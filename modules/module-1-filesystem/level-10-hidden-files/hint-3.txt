@@ -1,2 +1,8 @@
-Copy the credentials file to token.txt:
-cp $SANDBOX/.config/app/.credentials $SANDBOX/token.txt
+  ls -a
+      reveals .config, .cache, .local and .env.example
+  ls -a .config/app
+      the hidden file .credentials is in there
+  cat .config/app/.credentials
+      shows the AUTH_TOKEN=tk_... line
+  grep '^AUTH_TOKEN=' .config/app/.credentials | cut -d= -f2 > token.txt
+      take that line, keep the part after '=', save it to token.txt

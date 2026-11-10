@@ -1,2 +1,3 @@
-grep can search for a literal string:
-grep "ERROR" $SANDBOX/app.log
+You need lines that match one word OR another, in one pass, so the order stays
+as in the log. Watch out: some harmless INFO and WARN lines contain the word
+"error" in lowercase. Does your search care about upper and lower case?

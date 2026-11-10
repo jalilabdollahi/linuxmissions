@@ -1,17 +1,20 @@
 # Spot the Difference
 
-## What you practiced
-- `diff file1 file2` shows what needs to change to make file1 look like file2
-- `-u` gives unified format: `---` old, `+++` new, `-` removed, `+` added
-- A `.diff` or `.patch` file can be applied with `patch`
+## Why it works
+`diff -u old new` prints only the changed lines with a few lines of context
+around each change, grouped into hunks that start with `@@`. That context lets
+`patch` find the right place even if the target file has shifted a little, which
+is why unified diffs are the format of code review, `git diff` and mailing-list
+patches. Your `changes.diff` turns any copy of v1.conf into v2.conf with
+`patch v1.conf < changes.diff`.
 
-## Commands to remember
-```bash
-diff file1 file2                     # basic diff
-diff -u file1 file2                  # unified format (git-style)
-diff -r dir1 dir2                    # recursive directory diff
-diff --color file1 file2             # colorized output
-patch file < changes.diff            # apply a patch
-patch -R file < changes.diff         # reverse a patch
-vimdiff file1 file2                  # side-by-side in vim
-```
+## Common mistakes
+- Plain `diff` (no `-u`) uses the old `<` / `>` format: hard to review, and fragile to apply.
+- Swapping the files (`diff -u v2.conf v1.conf`) produces the reverse patch,
+  which undoes the release instead of applying it.
+- Reading diff's exit status 1 as an error: it just means "the files differ"
+  (0 = identical, 2 = trouble).
+
+## Learn next
+`patch -R` reverses a patch (rollback), `diff -ru dir1 dir2` compares whole
+directory trees, and `diff -y` (or `sdiff`) shows two files side by side.

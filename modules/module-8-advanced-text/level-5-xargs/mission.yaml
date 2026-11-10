@@ -1,11 +1,11 @@
 {
-  "name": "Parallel Grep",
-  "description": "A keyword is hidden somewhere across a pile of files. Search in parallel and identify which file contains it.",
-  "objective": "Find the file containing `NEBULA_KEY` and write just the filename to match.txt",
-  "xp": 270,
+  "name": "Quarantine Sweep",
+  "description": "A live API key (NEBULA_KEY) leaked into some of the 200 text files under files/. They must be moved out of the shared folders before the nightly sync, and some file names contain spaces and apostrophes.",
+  "objective": "Move every file under files/ that contains the exact text NEBULA_KEY into quarantine/ (directly, no subfolders), unchanged. Every other file stays where it is.",
+  "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "10m",
-  "concepts": ["xargs", "-P", "grep", "parallel search"],
+  "expected_time": "12m",
+  "concepts": ["xargs", "xargs -0", "grep -l --null", "find -print0", "file names with spaces"],
   "module": "module-8-advanced-text",
   "level": "level-5-xargs"
 }

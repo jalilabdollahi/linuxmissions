@@ -1,18 +1,18 @@
 # Secrets in Plain Sight
 
-## What you practiced
-- Files and directories starting with `.` are hidden from plain `ls` but not from `ls -a`
-- `find` shows hidden files by default — it doesn't skip dotfiles
-- Dotfiles like `.bashrc`, `.gitconfig`, `.ssh/config` are standard Linux config locations
+## Why it works
+A leading dot is the only thing that makes a file "hidden": `ls` skips those
+names unless you add `-a`. Programs use this to keep their settings out of the
+way (`.bashrc`, `.ssh/`, `.config/`). `find` and `grep -r` do not skip dotfiles,
+so `find . -name '.*' -type f` would have listed `.credentials` directly.
 
-## Important note
-Never store real secrets in dotfiles tracked by git (`.env`, `.credentials`). Use `.gitignore` and proper secrets management.
+## Common mistakes
+- Taking the value from `.env.example`: example files ship with placeholders.
+- Copying the whole file or line into token.txt: tools that read the token expect
+  only the value, and the rest leaks extra data.
+- `ls -a *` does not help: the `*` glob itself skips dotfiles.
 
-## Commands to remember
-```bash
-ls -la                          # show all including hidden
-ls -la ~/.config/               # inspect config dotfiles
-find ~ -name ".*" -type f       # find all hidden files in home
-cat ~/.bashrc                   # shell config
-cat ~/.gitconfig                # git config
-```
+## Learn next
+`ls -A` shows hidden entries but not `.` and `..`. In bash, `shopt -s dotglob`
+makes `*` match dotfiles too. Never commit files like `.credentials` or `.env`:
+add them to `.gitignore`.

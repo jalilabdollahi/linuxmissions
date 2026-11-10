@@ -1,2 +1,5 @@
-Find world-writable files (others have write permission):
-find $SANDBOX/app -perm /o+w -type f
+"World-writable" means the last w in the mode (the 'others' part) is set, e.g.
+-rw-rw-rw-. Some of these files are hidden, one has a space in its name, and
+the others have different modes, so a single fixed number like 644 for all of
+them would break the files that are group-writable or executable on purpose.
+Can you select files by "others can write" and remove only that one bit?

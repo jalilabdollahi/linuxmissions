@@ -1,23 +1,19 @@
 # Script Won't Run
 
-## What you practiced
-- Linux has three permission types: **read (r)**, **write (w)**, **execute (x)**
-- Three entities: **user/owner (u)**, **group (g)**, **others (o)**
-- `chmod u+x` adds execute for owner; `chmod +x` adds for all
+## Why it works
+Every file has three sets of permission bits: owner (`u`), group (`g`) and
+others (`o`), each with read (`r`), write (`w`) and execute (`x`). The kernel only
+starts a file as a program if the `x` bit is set for you. `chmod u+x deploy.sh`
+flips exactly that one bit and leaves everything else alone. The `#!/bin/bash`
+first line (the "shebang") then tells the kernel which interpreter runs it.
 
-## Permission notation
-`-rwxr-xr--` means:
-- `-` = regular file (d = directory)
-- `rwx` = owner: read, write, execute
-- `r-x` = group: read, execute
-- `r--` = others: read only
+## Common mistakes
+- `chmod 777 deploy.sh` "to make it work": it also lets every user on the machine
+  rewrite your deploy script. Add only the bit you need.
+- Typing `deploy.sh` instead of `./deploy.sh`: the shell only searches the
+  folders in `$PATH`, not the current directory, so you get "command not found".
 
-## Commands to remember
-```bash
-chmod +x script.sh              # add execute for everyone
-chmod u+x script.sh             # add execute for owner only
-chmod 755 script.sh             # rwxr-xr-x
-chmod 644 file.txt              # rw-r--r--
-ls -la                          # show permissions
-stat file                       # detailed file metadata
-```
+## Learn next
+`bash deploy.sh` runs a script without the `x` bit (bash reads it as a file),
+which is why `noexec` on a mount is not a real security boundary. And
+`ls -l` vs `stat deploy.sh`: `stat` shows the mode in both forms, e.g. `(0744/-rwxr--r--)`.

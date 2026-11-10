@@ -1,11 +1,11 @@
 {
   "name": "Octal Surgery",
-  "description": "Three files need exact permission settings for a web server to function securely.",
-  "objective": "Set permissions: index.html→644, app.py→755, secrets.conf→600",
-  "xp": 150,
+  "description": "Someone 'fixed' a web app by running chmod 777 on everything. Now anyone on the server can rewrite the code and read the database password.",
+  "objective": "Using numeric (octal) modes: index.html readable by everyone but writable only by you; app.py readable and runnable by everyone but writable only by you; secrets.conf readable and writable by you and nobody else",
+  "xp": 100,
   "difficulty": "beginner",
   "expected_time": "8m",
-  "concepts": ["chmod", "octal", "numeric permissions", "644", "755", "600"],
+  "concepts": ["chmod", "octal permissions", "644", "755", "600", "stat"],
   "module": "module-3-permissions",
   "level": "level-2-chmod-numeric"
 }

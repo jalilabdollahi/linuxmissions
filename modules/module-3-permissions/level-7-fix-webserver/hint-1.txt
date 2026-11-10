@@ -1,2 +1,4 @@
-Inspect the current state:
-find $SANDBOX/webroot -exec ls -ld {} \;
+Directories and files need different modes here, so one recursive chmod on
+everything can't be right: a directory without x can't be entered, and a web
+page with x is a needless risk. How can you select only the directories, then
+only the files, anywhere under webroot/ (hidden ones too)?

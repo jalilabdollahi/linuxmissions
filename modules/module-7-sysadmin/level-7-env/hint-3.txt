@@ -1,2 +1,13 @@
-After editing `.env`, test with:
-set -a; source .env; set +a; ./app.sh
+cat > .env <<'ENV'
+# myapp settings -- read by start.sh
+export APP_MODE=production
+export APP_PORT=8080
+export APP_NAME="My Shop"
+ENV
+./start.sh
+
+- APP_MODE=production   no spaces around = (with spaces, bash runs a command named APP_MODE)
+- "My Shop"             quotes keep the space inside the value (without them, bash runs "Shop")
+- export                marks each variable for the environment of child processes, so app.sh,
+                        which start.sh runs with exec, inherits it
+- ./start.sh            should now print: My Shop ready on :8080 in production mode

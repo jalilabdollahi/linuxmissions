@@ -1,11 +1,11 @@
 {
   "name": "What's Listening?",
-  "description": "You have a saved socket listing from a host and need to document which TCP ports are listening.",
-  "objective": "Extract the listening TCP port numbers from ss-output.txt and save them to listening.txt",
-  "xp": 180,
+  "description": "A security review asks which TCP ports on web-03 can be reached from other machines. Someone ran `ss -tan` on it and saved the output to ss-output.txt.",
+  "objective": "Write exposed.txt: the TCP port numbers that web-03 is LISTENing on from other machines, one per line, each port once, sorted from low to high. A socket bound only to a loopback address (127.x.x.x or [::1]) is not reachable from outside and does not count; `0.0.0.0`, `[::]`, `*` and the server's own addresses do.",
+  "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": ["ss -tln", "netstat", "ports", "awk"],
+  "expected_time": "12m",
+  "concepts": ["ss -tln", "LISTEN", "bind address vs loopback", "awk", "sort -nu"],
   "module": "module-6-networking",
   "level": "level-3-ports"
 }

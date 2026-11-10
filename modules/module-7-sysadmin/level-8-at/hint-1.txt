@@ -1,1 +1,3 @@
-The provided helper reads the command from standard input.
+First look at what is already queued: which job number is the cleanup, and when would
+it run? Make sure you know which job is the certificate rotation, so you leave it alone.
+Queued jobs cannot be moved to another time. You remove the wrong one and queue a new one.

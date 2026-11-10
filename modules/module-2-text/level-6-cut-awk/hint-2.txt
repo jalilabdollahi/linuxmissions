@@ -1,2 +1,7 @@
-That gives field 1 and 3 but keeps the comma. Save it:
-cut -d, -f1,3 $SANDBOX/users.csv > $SANDBOX/extract.csv
+awk can test a column and print columns in one command:
+  awk -F, '...' FILE            -F, splits each line on commas
+  $5 == "active"                a condition: run the action only when field 5 is exactly active
+  {print $1 "," $3}             print field 1, a comma, field 3
+Or with two tools: grep ',active$' (the $ anchors the match to the end of the
+line) piped into cut -d, -f1,3.
+More: man awk, man cut

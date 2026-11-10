@@ -1,1 +1,4 @@
-Use sed's append command on the matching line.
+The marker appears three times, so "after # EXTRA CONFIG" alone is not enough. You need
+"after # EXTRA CONFIG, but only between `listen 8443` and the end of that server block".
+Look at the block closely: how does the closing brace of the whole server block differ
+from the closing brace of the location block inside it?

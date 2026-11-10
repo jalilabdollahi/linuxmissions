@@ -1,23 +1,25 @@
 # The Background Worker
 
-## What you practiced
-Running a command with `&` starts it in the background so the shell prompt comes back right away. The shell still tracks that process as a job, which is why `jobs`, `fg`, and `bg` work together.
+## Why it works
+A trailing `&` makes the shell start the command without waiting for it. The
+shell remembers it as a **job** (`[1]`), with its own PID: that's why `jobs -l`
+showed the same PID that `process.sh` wrote into `result.txt` as `$$`. `wait`
+(or `fg %1`) then blocks until the job ends, so you know the result is complete.
 
-## Job control commands
 | Command | What it does |
-|---------|---------------|
-| `cmd &` | Start a command in the background |
-| `jobs` | Show current jobs in this shell |
-| `fg %1` | Bring job 1 to the foreground |
-| `bg %1` | Resume a stopped job in the background |
-| `Ctrl+Z` | Suspend the foreground process |
-| `disown %1` | Detach a job from this shell |
+|---------|--------------|
+| `cmd &` | start in the background |
+| `jobs -l` | list jobs with PIDs |
+| `fg %1` / `bg %1` | foreground / resume in background |
+| `Ctrl+Z` | (in a normal terminal) suspend the foreground job |
+| `wait %1` | wait for one job |
+| `kill %1` | signal a job by its job number |
 
-## Commands to remember
-```bash
-./process.sh &     # start in background
-jobs               # list shell jobs
-fg %1              # bring job 1 forward
-bg %1              # resume a stopped job in background
-disown %1          # detach job from shell
-```
+## Common mistakes
+- Reading `result.txt` right after `&`: the job hasn't finished yet. Use `wait`.
+- Expecting jobs to survive closing the terminal. Background jobs still belong to
+  the shell and get SIGHUP when it exits; use `nohup cmd &` or `disown` for that.
+
+## Learn next
+`nohup ./process.sh > process.out 2>&1 &` keeps a job alive after you log out,
+and `setsid` or a `tmux` session do it more robustly.

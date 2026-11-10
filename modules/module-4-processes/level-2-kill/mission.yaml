@@ -1,11 +1,11 @@
 {
   "name": "Runaway Process",
-  "description": "A background script is running in an infinite loop and wasting resources. It needs to be stopped.",
-  "objective": "Find the 'sleep_loop.sh' process and kill it",
-  "xp": 120,
+  "description": "Someone left debug_logger.sh running: it appends to debug.log every second and is slowly filling the disk. web_server.sh, started from the same folder, is serving customers and must stay up.",
+  "objective": "Stop the debug_logger.sh process. web_server.sh must keep running",
+  "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "8m",
-  "concepts": ["pgrep", "pkill", "kill", "SIGTERM", "SIGKILL", "ps"],
+  "expected_time": "6m",
+  "concepts": ["pgrep", "kill", "pkill -f", "SIGTERM", "SIGKILL", "PID"],
   "module": "module-4-processes",
   "level": "level-2-kill"
 }

@@ -1,11 +1,11 @@
 {
   "name": "Log Discipline",
-  "description": "An application is filling disk with old logs. Write a logrotate config so the logs are rotated daily and compressed.",
-  "objective": "Create myapp.logrotate for `/var/log/myapp/*.log` with `daily`, `rotate 7`, and `compress`",
-  "xp": 250,
-  "difficulty": "advanced",
+  "description": "The disk on the app server is 94% full: worker.log alone is 11G. A logrotate rule for myapp exists, but it only covers app.log and keeps everything uncompressed.",
+  "objective": "Fix logrotate.d/myapp (the sandbox's /etc/logrotate.d/myapp) so that one block covers every .log file in /var/log/myapp, rotates daily, keeps 14 old copies, compresses them, does not fail when a log is missing, and works for an app that never reopens its log files (see var/log/myapp/LISTING.txt).",
+  "xp": 150,
+  "difficulty": "intermediate",
   "expected_time": "10m",
-  "concepts": ["logrotate", "daily", "rotate", "compress"],
+  "concepts": ["logrotate", "glob patterns", "rotate / daily / compress", "missingok", "copytruncate"],
   "module": "module-7-sysadmin",
   "level": "level-6-logrotate"
 }

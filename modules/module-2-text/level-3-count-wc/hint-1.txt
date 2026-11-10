@@ -1,5 +1,4 @@
-Total lines = total requests:
-wc -l < $SANDBOX/access.log
-
-Unique IPs (field 1):
-awk '{print $1}' $SANDBOX/access.log | sort -u | wc -l
+Look at a few lines first (head -3 access.log). One line = one request. The client
+IP is the first thing on each line, and the same IP shows up many times. Count the
+words on a line to find which position holds the byte count: it comes right after
+the status code (200, 304, 404), before the quoted user agent.

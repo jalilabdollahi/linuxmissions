@@ -1,11 +1,11 @@
 {
   "name": "Can You Hear Me?",
-  "description": "Your sandbox includes a mock ping helper that simulates which hosts respond. Use it to document reachability.",
-  "objective": "Check every host in hosts.txt and save only the reachable hostnames to reachable.txt",
-  "xp": 160,
-  "difficulty": "beginner",
-  "expected_time": "7m",
-  "concepts": ["ping", "exit codes", "loops", "if"],
+  "description": "Before tonight's maintenance window you have to confirm which machines from the inventory are up. This sandbox has no network, so `./ping` stands in for ping: same output, same exit codes (0 = reply, 1 = no reply, 2 = unknown name).",
+  "objective": "Ping every host listed in hosts.txt with ./ping and write the names of the hosts that answer to reachable.txt, one per line (order does not matter). Comment and blank lines in hosts.txt are not hosts.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["ping -c", "exit status", "while read", "if"],
   "module": "module-6-networking",
   "level": "level-2-ping"
 }

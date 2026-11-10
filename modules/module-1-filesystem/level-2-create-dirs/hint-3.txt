@@ -1,2 +1,5 @@
-Run these inside the sandbox (replace $SANDBOX with the actual path shown above):
-cd $SANDBOX && mkdir -p logs/{app,nginx} data/{uploads,cache}
+  mkdir -p logs/{app,nginx} data/uploads data/cache/thumbnails tmp/sessions
+      -p creates every missing parent and leaves the existing data/ (and its README) alone;
+      logs/{app,nginx} is expanded by bash into logs/app logs/nginx
+  ls -R logs data tmp
+      lists the new tree so you can check it

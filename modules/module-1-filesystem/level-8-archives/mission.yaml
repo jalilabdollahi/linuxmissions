@@ -1,11 +1,11 @@
 {
   "name": "Pack and Unpack",
-  "description": "A backup archive arrived but the files need to be extracted. Then you must archive the results directory.",
-  "objective": "Extract backup.tar.gz into extracted/, then create archive.tar.gz containing all .log files from logs/",
+  "description": "The website backup arrived as backup.tar.gz and has to be restored for inspection. Support also wants the current log files, compressed, but not the rotated or non-log files in that folder.",
+  "objective": "Extract backup.tar.gz into a new extracted/ directory (so extracted/site/index.html exists), then create a gzip-compressed archive.tar.gz in the sandbox root that contains exactly the files in logs/ whose names end in .log",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "10m",
-  "concepts": ["tar", "-xzf", "-czf", "gzip", "compression"],
+  "concepts": ["tar -xzf", "tar -czf", "tar -tzf", "-C", "glob"],
   "module": "module-1-filesystem",
   "level": "level-8-archives"
 }

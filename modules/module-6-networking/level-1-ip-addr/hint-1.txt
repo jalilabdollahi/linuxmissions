@@ -1,2 +1,3 @@
-This level uses the saved file:
-cat ip_addr.txt
+Open ip_addr.txt and look at how the blocks are built: a numbered header line per interface, then indented lines for its link and addresses.
+
+Which lines carry IPv4 addresses, and how do they differ from the IPv6 ones? Look at the END of those lines too: does an address line already tell you which interface it belongs to? Check eno1 (two addresses), eno1.120@eno1 and eno2 (none).

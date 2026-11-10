@@ -1,2 +1,6 @@
-Sort by count in reverse (highest first):
-awk '{print $1}' $SANDBOX/access.log | sort | uniq -c | sort -rn
+  awk '{print $1}' access.log    just the IP of each request
+  sort                           puts identical lines next to each other
+  uniq -c                        collapses adjacent identical lines, prefixing a count
+  sort -rn                       sort numerically (-n), largest first (-r)
+Connect them with | so each tool reads the previous one's output.
+More: man uniq, man sort

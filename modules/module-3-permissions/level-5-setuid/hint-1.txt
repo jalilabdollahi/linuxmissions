@@ -1,3 +1,5 @@
-find can search by permission bits.
-Find SUID files (4000 bit set):
-find $SANDBOX -perm /4000
+SUID and SGID are extra permission bits. In ls -l they replace an x with an s
+(or an S when x is not set): -rwsr-xr-x. Checking every folder by eye is slow
+and easy to get wrong: hidden files and names with spaces are hiding in here.
+Can you ask find to match files by their permission bits instead of their name?
+And remember the objective only wants regular files.

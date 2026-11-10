@@ -1,11 +1,11 @@
 {
   "name": "API Call",
-  "description": "The API response is stored locally, but you still need to fetch it with curl and extract one field from the JSON.",
-  "objective": "Use curl on response.json and save the value of `service.status` to status.txt",
-  "xp": 190,
+  "description": "The dashboards say metrics-api is unhealthy and you want the API's own opinion. It is running locally in this sandbox (its base URL is in api_url.txt, no internet needed), and the /health endpoint only answers clients that send the key from api.key.",
+  "objective": "Call the API's /health endpoint with curl, sending the key in an `X-API-Key` header, and save the value of `service.status` from the JSON reply to status.txt (just the word, without quotes).",
+  "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": ["curl", "file://", "json", "pipes"],
+  "expected_time": "10m",
+  "concepts": ["curl -s", "curl -H", "HTTP status codes", "jq"],
   "module": "module-6-networking",
   "level": "level-4-curl"
 }

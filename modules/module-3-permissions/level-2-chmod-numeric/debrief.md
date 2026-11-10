@@ -1,22 +1,24 @@
 # Octal Surgery
 
-## What you practiced
-Octal notation: three digits for owner / group / others.
-Each digit = sum of r(4) + w(2) + x(1).
+## Why it works
+An octal mode is three digits, owner / group / others, and each digit is the sum
+of read (4), write (2) and execute (1). `chmod 644` *sets* all nine bits at once,
+so it removes the dangerous `w` for group/others that `777` had added, in one step.
 
-| Octal | Symbolic | Common use |
-|-------|----------|------------|
-| 644   | rw-r--r-- | Web content, config files |
-| 755   | rwxr-xr-x | Executables, directories |
-| 600   | rw------- | Private keys, secrets |
-| 700   | rwx------ | Private scripts |
-| 777   | rwxrwxrwx | Never use this in production |
+| Octal | Symbolic    | Typical use                    |
+|-------|-------------|--------------------------------|
+| 644   | rw-r--r--   | web pages, normal config files |
+| 755   | rwxr-xr-x   | programs, scripts, directories |
+| 600   | rw-------   | passwords, SSH private keys    |
+| 777   | rwxrwxrwx   | almost never correct           |
 
-## Commands to remember
-```bash
-chmod 644 file          # standard file
-chmod 755 script.sh     # executable
-chmod 600 ~/.ssh/id_rsa # SSH private key (required by ssh)
-chmod -R 755 dir/       # recursive
-stat -c "%a %n" file    # show octal permission
-```
+## Common mistakes
+- Mixing up the order: the first digit is the **owner**, the last is **others**.
+  `chmod 006` gives strangers access and locks you out.
+- Using `chmod +x` on secrets or config files "just in case". Data files never
+  need execute.
+
+## Learn next
+`stat -c '%a %A %n' *` (GNU) prints both forms side by side. `ssh` refuses to use a
+private key that is not `600`; try `chmod 644 ~/.ssh/id_ed25519` on a test key and
+read the warning.

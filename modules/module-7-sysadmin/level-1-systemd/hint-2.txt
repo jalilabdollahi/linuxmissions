@@ -1,2 +1,9 @@
-Enable the service first:
-./systemctl enable myapp.service
+Useful commands (the mock behaves like the real systemctl):
+  ./systemctl status myapp       why it failed, and whether it is enabled
+  ./systemctl cat myapp          the unit file systemd is using
+  ls -l opt/myapp/               where the binary lives now (note the symlink)
+Fix the unit file with `edit etc/systemd/system/myapp.service`:
+  - ExecStart must be an absolute path to an existing executable
+  - an [Install] section with WantedBy=multi-user.target makes `enable` possible
+After editing a unit run `./systemctl daemon-reload`; `enable --now` enables and starts in one step.
+Read more: man systemd.service, man systemd.unit (section [Install]), man systemctl

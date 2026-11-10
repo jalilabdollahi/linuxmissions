@@ -1,2 +1,3 @@
-If `column` is available, it is made for this:
-column -t report.txt
+You need two things: split each line into fields correctly, then pad every field to its
+column's width. Which character really separates the fields in services.csv?
+Look at the description column: what would happen if the line were split on spaces?

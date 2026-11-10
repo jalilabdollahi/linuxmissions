@@ -1,3 +1,4 @@
-Redirect each to a file:
-head -n 5 $SANDBOX/app.log > $SANDBOX/first5.txt
-tail -n 5 $SANDBOX/app.log > $SANDBOX/last5.txt
+  head -n N FILE     print the first N lines (default 10)
+  tail -n N FILE     print the last N lines (default 10)
+  command > FILE     write the output to FILE (replacing what was there)
+More: man head, man tail

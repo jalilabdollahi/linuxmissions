@@ -1,11 +1,11 @@
 {
   "name": "Service Down",
-  "description": "A dummy service is packaged in the sandbox along with a mock `systemctl` helper. Use it to enable and start the service.",
-  "objective": "Use the provided mock systemctl to enable and start myapp.service",
-  "xp": 170,
-  "difficulty": "beginner",
-  "expected_time": "6m",
-  "concepts": ["systemctl", "enable", "start", "status", "unit files"],
+  "description": "After last night's release myapp.service is down: it fails to start, and `systemctl enable` refuses to make it start at boot.",
+  "objective": "Fix etc/systemd/system/myapp.service so that myapp.service is enabled for multi-user.target and running (active). `./systemctl` is a mock that treats the sandbox as `/`: /etc/... means ./etc/... and /opt/... means ./opt/...",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["systemctl status", "unit files", "ExecStart", "[Install] WantedBy", "daemon-reload", "enable --now"],
   "module": "module-7-sysadmin",
   "level": "level-1-systemd"
 }

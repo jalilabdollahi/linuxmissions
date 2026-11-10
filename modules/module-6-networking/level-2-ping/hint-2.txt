@@ -1,4 +1,7 @@
-Loop through hosts.txt and check the exit code:
-if ./mock_ping.sh "$host"; then
-  ...
-fi
+- `ping -c 1 HOST` sends one packet and stops. `-W 1` waits at most one second for the reply.
+- `if COMMAND; then ... fi` runs the branch when COMMAND exits with 0. You don't need to read ping's text: the exit status says it all. Add `>/dev/null 2>&1` to hide the output.
+- `while read -r host; do ... done < hosts.txt` loops over the lines of the file.
+- Skip comment and blank lines: `case "$host" in ''|'#'*) continue ;; esac`
+- Redirect the whole loop once: `done < hosts.txt > reachable.txt`
+
+Read more: `man ping` (-c, -W, EXIT STATUS), `help while`.

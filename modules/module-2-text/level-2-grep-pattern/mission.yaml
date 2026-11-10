@@ -1,11 +1,11 @@
 {
   "name": "Error Extraction",
-  "description": "Ops needs a report of all ERROR and FATAL lines from the log for the post-mortem.",
-  "objective": "Extract all lines containing ERROR or FATAL from app.log and save to errors.txt",
-  "xp": 120,
+  "description": "Ops is writing the post-mortem for last night's outage. They need every ERROR and FATAL line from a 2,500-line app.log, in their original order, and nothing else.",
+  "objective": "Save all lines of app.log that contain ERROR or FATAL (uppercase, as the log level is written) to errors.txt, in the same order as in app.log",
+  "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "8m",
-  "concepts": ["grep", "-E", "regex", "alternation", "|"],
+  "expected_time": "6m",
+  "concepts": ["grep", "grep -E", "alternation", "case sensitivity"],
   "module": "module-2-text",
   "level": "level-2-grep-pattern"
 }

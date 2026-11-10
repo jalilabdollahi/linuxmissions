@@ -1,2 +1,6 @@
-Sum of field 4 (bytes) using awk:
-awk '{sum += $4} END {print sum}' $SANDBOX/access.log
+  wc -l < FILE                       number of lines
+  awk '{print $1}' FILE              print field 1 of every line (fields are split on spaces)
+  sort -u                            sort and drop duplicates; pipe into wc -l to count them
+  awk '{sum += $10} END {print sum}' FILE    add up field 10; '-' counts as 0 in awk
+  echo "requests=$(command)"         $( ) puts a command's output inside a string
+More: man wc, man awk (or the gawk manual), man sort

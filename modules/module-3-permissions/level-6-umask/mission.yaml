@@ -1,11 +1,11 @@
 {
   "name": "Default Lockdown",
-  "description": "New files created by an app have world-writable permissions. The default umask is too permissive.",
-  "objective": "Understand what umask value produces 640 for files and 750 for dirs. Write the answer to umask_answer.txt",
+  "description": "The report app's start script sets a umask that makes every file it creates world-writable, and the reports it has already written are exposed too.",
+  "objective": "Fix the umask in start_app.sh so everything it creates from now on is 640 (files) and 750 (directories). Then make sure the existing data/ tree has those same modes",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "10m",
-  "concepts": ["umask", "default permissions", "022", "027"],
+  "concepts": ["umask", "default permissions", "027", "640", "750"],
   "module": "module-3-permissions",
   "level": "level-6-umask"
 }

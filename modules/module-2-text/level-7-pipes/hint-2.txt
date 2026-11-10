@@ -1,2 +1,7 @@
-Extract the IP (field 1) and count:
-grep " POST " $SANDBOX/access.log | awk '{print $1}' | sort | uniq -c | sort -rn
+Stages, joined with |:
+  filter:   grep '"POST ' access.log      the method follows a double quote and is followed by a space
+            or: awk '$6 == "\"POST"'       field 6 is "POST (with the quote) on POST lines
+  extract:  awk '{print $1}'              the client IP
+  count:    sort | uniq -c                group identical IPs, then count each group
+  rank:     sort -rn                      numeric, highest first
+More: man grep, man awk, man uniq

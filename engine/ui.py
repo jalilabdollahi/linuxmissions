@@ -43,7 +43,7 @@ def show_welcome(player_name: str) -> None:
 
 
 def show_mission_briefing(mission: dict, level_num: int, total_levels: int) -> None:
-    diff_color = {"beginner": "green", "intermediate": "yellow", "advanced": "red"}.get(
+    diff_color = {"beginner": "green", "intermediate": "yellow", "advanced": "red", "expert": "magenta"}.get(
         mission.get("difficulty", "beginner"), "white"
     )
     concepts = ", ".join(mission.get("concepts", []))
@@ -78,11 +78,12 @@ def show_status(progress: dict, module_name: str, total_module_levels: int) -> N
     console.print(Panel(table, title="[bold bright_cyan]Progress[/bold bright_cyan]", border_style="bright_cyan", box=box.ROUNDED))
 
 
-def show_guidance(hint_text: str, hint_num: int) -> None:
+def show_guidance(hint_text: str, hint_num: int, xp_percent: int | None = None) -> None:
+    cost = f"  [dim]XP for this level: {xp_percent}%[/dim]" if xp_percent is not None else ""
     console.print(
         Panel(
-            f"[yellow]{hint_text.strip()}[/yellow]",
-            title=f"[bold yellow]Hint {hint_num}[/bold yellow]",
+            Text(hint_text.strip(), style="yellow"),
+            title=f"[bold yellow]Hint {hint_num}[/bold yellow]{cost}",
             border_style="yellow",
         )
     )
@@ -94,7 +95,10 @@ def show_help() -> None:
     table.add_column("Description")
     rows = [
         ("Tab", "Autocomplete commands and sandbox file names"),
-        ("hint", "Get the next hint (up to 3)"),
+        ("hint", "Get the next hint (up to 3; each one lowers the level's XP)"),
+        ("hints", "Show the hints you already revealed"),
+        ("validate", "Check your work and show what is still missing"),
+        ("edit <file>", "Open a file in a real editor ($EDITOR, else nano/vim)"),
         ("status", "Show your XP and module progress"),
         ("objective", "Re-display the mission objective"),
         ("reset", "Tear down and rebuild this level's sandbox"),
@@ -102,6 +106,8 @@ def show_help() -> None:
         ("quit / exit", "Save progress and exit"),
         ("help", "Show this help"),
         ("<any shell cmd>", "Run a command in the level sandbox"),
+        ("multi-line input", "Heredocs, if/for/while, and lines ending in | or \\ continue on a ...> prompt"),
+        ("Ctrl-C", "Stop a running command (e.g. tail -f, sleep)"),
     ]
     for cmd, desc in rows:
         table.add_row(f"[bold]{cmd}[/bold]", desc)
@@ -113,7 +119,9 @@ def show_command_bar() -> None:
     table.add_column("Action", style="bold bright_cyan")
     table.add_column("What It Does", style="white")
     rows = [
-        ("hint", "Show the next hint"),
+        ("hint", "Show the next hint (costs XP)"),
+        ("validate", "Check your work, see what's missing"),
+        ("edit <file>", "Open a file in an editor"),
         ("help", "Show full command list"),
         ("status", "Show progress details"),
         ("objective", "Repeat the mission objective"),

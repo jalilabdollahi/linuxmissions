@@ -95,7 +95,10 @@ These are available directly inside the game:
 
 | Command | Description |
 |---------|-------------|
-| `hint` | Reveal the next hint for the current level |
+| `hint` | Reveal the next hint. Each hint lowers the XP for the level (90%, 75%, 50%) |
+| `hints` | Show the hints you already revealed |
+| `validate` | Check your work and see what is still missing |
+| `edit <file>` | Open a file in a real editor (`$EDITOR`, else nano or vim); `nano`, `vim`, `less`, `man`, `top` also work directly |
 | `help` | Show the full command list |
 | `status` | Show progress and XP |
 | `objective` | Re-display the current objective |
@@ -103,7 +106,11 @@ These are available directly inside the game:
 | `skip` | Skip the current level with no XP |
 | `quit` / `exit` | Save progress and leave the game |
 | `Tab` | Autocomplete commands and sandbox file names |
+| `Ctrl-C` | Stop a running command such as `tail -f` or `sleep` |
 | `<any shell cmd>` | Run a real command inside the current sandbox |
+
+Multi-line input works: heredocs (`cat > script.sh <<'EOF'`), `if`/`for`/`while`
+blocks and lines ending in `|` or `\` continue on a `...>` prompt.
 
 Examples:
 
@@ -234,22 +241,21 @@ The game auto-saves as you play.
 
 ---
 
-## Content Generation
+## Writing And Testing Levels
 
-The project now includes both handcrafted levels and generated curriculum.
+How to write a level (file contract, validator rules, hint standard):
+[docs/LEVEL_AUTHORING.md](docs/LEVEL_AUTHORING.md).
 
-Useful scripts:
+Every level ships a reference `solution.sh`. The test runner checks that each
+level sets up cleanly, does **not** pass before any work is done, and **does**
+pass after its solution:
 
 ```bash
-python3 scripts/generate_expanded_curriculum.py
-python3 scripts/generate_levels.py
+scripts/test-levels-docker.sh                 # all levels, Ubuntu container, non-root
+scripts/test-levels-docker.sh module-4 -v     # one module, verbose
+scripts/test-levels-docker.sh --unit          # engine unit tests
+python3 scripts/generate_levels.py            # rebuild levels.json after adding levels
 ```
-
-Use these when:
-
-- regenerating the large module set
-- rebuilding `levels.json`
-- iterating on generated mission templates
 
 ---
 
@@ -271,11 +277,10 @@ It works well for:
 If you want to improve the game:
 
 - add handcrafted levels
-- refine generated templates
 - improve validators and debriefs
 - tighten the UI and mission flow
 
-Start with [SPEC.md](SPEC.md), then inspect `modules/`, `engine/`, and `scripts/`.
+Start with [docs/LEVEL_AUTHORING.md](docs/LEVEL_AUTHORING.md), then inspect `modules/`, `engine/`, and `scripts/`.
 
 ---
 

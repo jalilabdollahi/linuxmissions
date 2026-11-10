@@ -9,6 +9,7 @@ import readline  # noqa: F401 — arrow keys & history in prompts
 import re
 import select
 import shlex
+import shutil
 import subprocess
 import sys
 import termios
@@ -20,6 +21,7 @@ try:
     from engine.certificate import generate_certificate, save_certificate
     from engine.player import prompt_player_name
     from engine.reset import prepare_level, get_sandbox
+    from engine.runner import kill_sandbox_processes, run_validate
     from engine.safety import validate_command, warn_command, print_safety_info
     from engine.ui import (
         console,
@@ -40,6 +42,7 @@ except ModuleNotFoundError:
     from certificate import generate_certificate, save_certificate
     from player import prompt_player_name
     from reset import prepare_level, get_sandbox
+    from runner import kill_sandbox_processes, run_validate
     from safety import validate_command, warn_command, print_safety_info
     from ui import (
         console,
@@ -61,7 +64,78 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 PROGRESS_FILE = REPO_ROOT / "progress.json"
 LEVELS_REGISTRY = REPO_ROOT / "levels.json"
 BRACKETED_PASTE_RE = re.compile(r"\x1b\[\?2004[hl]|\[\?2004[hl]")
-META_COMMANDS = ("help", "hint", "status", "objective", "reset", "skip", "quit", "exit", "validate")
+META_COMMANDS = ("help", "hint", "hints", "status", "objective", "reset", "skip", "quit", "exit", "validate", "edit")
+COMMAND_TIMEOUT = 300
+HEREDOC_RE = re.compile(r"(?<!<)<<(-?)\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\2")
+
+# Full-screen / interactive programs that need the real terminal.
+INTERACTIVE_PROGRAMS = {
+    "edit", "nano", "pico", "vi", "vim", "nvim", "view", "emacs", "micro", "mcedit",
+    "less", "more", "most", "man", "info", "top", "htop", "btop", "watch",
+    "visudo", "vipw", "vigr", "tmux", "screen", "mc", "ncdu", "nmtui",
+}
+# Programs that start an interactive prompt only when given no arguments.
+REPL_PROGRAMS = {"python", "python3", "bash", "sh", "zsh", "sqlite3", "bc", "node", "irb"}
+
+# Hint i (1-based) multiplies the level's XP by HINT_XP_FACTOR[i] once revealed.
+HINT_XP_FACTOR = {0: 1.0, 1: 0.9, 2: 0.75, 3: 0.5}
+
+
+def xp_percent(hints_revealed: int) -> int:
+    return int(HINT_XP_FACTOR.get(hints_revealed, 0.5) * 100)
+
+
+def default_editor() -> str:
+    for name in ("nano", "vim", "vi"):
+        if shutil.which(name):
+            return name
+    return "vi"
+
+
+def is_interactive_command(cmd: str) -> bool:
+    """True for a plain call to a full-screen program, e.g. `nano notes.txt` or `crontab -e`."""
+    if re.search(r"[|;&<>`]|\$\(", cmd):
+        return False
+    try:
+        tokens = shlex.split(cmd)
+    except ValueError:
+        return False
+    while tokens and tokens[0] in ("sudo", "command"):
+        tokens = tokens[1:]
+    if not tokens:
+        return False
+    prog = tokens[0].rsplit("/", 1)[-1]
+    if prog in INTERACTIVE_PROGRAMS:
+        return True
+    if prog in REPL_PROGRAMS and len(tokens) == 1:
+        return True
+    if prog == "crontab" and "-e" in tokens:
+        return True
+    if prog == "systemctl" and "edit" in tokens:
+        return True
+    return False
+
+
+def needs_more_input(text: str) -> bool:
+    """True when `text` is an unfinished shell command (open heredoc, quote, if/for, trailing | or \\)."""
+    if text.rstrip().endswith("\\") and not text.rstrip().endswith("\\\\"):
+        return True
+    # Open heredocs: checked by hand because old bash (macOS 3.2) does not report them.
+    lines = text.split("\n")
+    pending: list[tuple[str, bool]] = []
+    for line in lines:
+        if pending:
+            delim, strip_tabs = pending[0]
+            if (line.lstrip("\t") if strip_tabs else line) == delim:
+                pending.pop(0)
+            continue
+        for m in HEREDOC_RE.finditer(line):
+            pending.append((m.group(3), m.group(1) == "-"))
+    if pending:
+        return True
+    result = subprocess.run(["bash", "-n"], input=text + "\n", capture_output=True, text=True)
+    err = result.stderr
+    return any(msg in err for msg in ("unexpected end of file", "unexpected EOF", "delimited by end-of-file"))
 
 
 class SandboxCompleter:
@@ -181,10 +255,10 @@ class ShellSession:
         attrs[3] &= ~termios.ECHO
         termios.tcsetattr(self.fd, termios.TCSANOW, attrs)
         self._drain_output()
-        self.run(
-            "export PS1='' PROMPT_COMMAND='' HISTFILE=/dev/null\n"
+        self.capture(
+            "export PS1='' PS2='' PROMPT_COMMAND='' HISTFILE=/dev/null\n"
             "set +o history\n"
-            "bind 'set enable-bracketed-paste off' >/dev/null 2>&1 || true\n"
+            "bind 'set enable-bracketed-paste off' >/dev/null 2>&1 || true"
         )
 
     def _read_available(self, timeout: float = 0.1) -> str:
@@ -213,11 +287,55 @@ class ShellSession:
     def _clean_terminal_output(text: str) -> str:
         return BRACKETED_PASTE_RE.sub("", text)
 
-    def run(self, cmd: str) -> int:
+    def _wait_for(self, sentinel: str, deadline: float) -> str:
+        output = ""
+        while sentinel not in output and time.time() < deadline:
+            output += self._read_available(timeout=0.5)
+        return output
+
+    def _execute(self, cmd: str) -> tuple[int, str]:
+        """Send cmd to the shell, wait for it to finish, return (exit code, output).
+
+        Ctrl-C while waiting interrupts the running command (not the game).
+        """
         if self.fd is None:
             self.start()
         assert self.fd is not None
 
+        sentinel = f"__LM_DONE_{uuid.uuid4().hex}__"
+        os.write(self.fd, f"{cmd}\nprintf '{sentinel}:%s\\n' $?\n".encode("utf-8"))
+
+        output = ""
+        deadline = time.time() + COMMAND_TIMEOUT
+        try:
+            output = self._wait_for(sentinel, deadline)
+        except KeyboardInterrupt:
+            # SIGINT to the foreground job; the tty may flush the queued sentinel
+            # line, so send a fresh one and wait for that instead.
+            os.write(self.fd, b"\x03")
+            time.sleep(0.2)
+            sentinel = f"__LM_DONE_{uuid.uuid4().hex}__"
+            os.write(self.fd, f"printf '{sentinel}:%s\\n' 130\n".encode("utf-8"))
+            output += self._wait_for(sentinel, time.time() + 10)
+
+        match = re.search(rf"{re.escape(sentinel)}:(\d+)", output)
+        code = int(match.group(1)) if match else 1
+        clean = re.sub(r"\r?\n?__LM_DONE_[0-9a-f]{32}__:\d+\r?\n?", "", output)
+        clean = self._clean_terminal_output(clean).replace("\r\n", "\n").strip("\r\n")
+        if not match:
+            clean += f"\n[command still running after {COMMAND_TIMEOUT}s — press Ctrl-C next time to stop it]"
+        return code, clean
+
+    def capture(self, cmd: str) -> str:
+        """Run a helper command silently and return its output."""
+        return self._execute(cmd)[1]
+
+    def cwd(self) -> Path:
+        out = self.capture("pwd").strip().splitlines()
+        path = Path(out[-1]) if out else self.sandbox
+        return path if path.is_dir() else self.sandbox
+
+    def run(self, cmd: str) -> int:
         allowed, reason = validate_command(cmd)
         if not allowed:
             console.print(f"[red]{reason}[/red]")
@@ -225,25 +343,37 @@ class ShellSession:
 
         warn_command(cmd)
 
-        sentinel = f"__LM_DONE_{uuid.uuid4().hex}__"
-        wrapped = f"{cmd}\nprintf '{sentinel}:%s\\n' $?\n"
-        os.write(self.fd, wrapped.encode("utf-8"))
+        if is_interactive_command(cmd):
+            return self.run_in_terminal(cmd)
 
-        output = ""
-        deadline = time.time() + 300
-        while sentinel not in output and time.time() < deadline:
-            output += self._read_available(timeout=0.5)
-
-        clean = output
-        clean = clean.replace(wrapped, "")
-        clean = re.sub(rf"\r?\n?{re.escape(sentinel)}:\d+\r?\n?", "", clean)
-        clean = self._clean_terminal_output(clean)
-        clean = clean.strip("\r\n")
+        code, clean = self._execute(cmd)
         if clean:
-            console.print(clean, end="" if clean.endswith("\n") else "\n")
+            console.print(clean, end="" if clean.endswith("\n") else "\n", markup=False, highlight=False)
+        return code
 
-        match = re.search(rf"{re.escape(sentinel)}:(\d+)", output)
-        return int(match.group(1)) if match else 1
+    def run_in_terminal(self, cmd: str) -> int:
+        """Run a full-screen program (editor, pager, man, top) on the real terminal.
+
+        The persistent shell talks through a pipe-like pty that full-screen
+        programs cannot use, so they run here instead, in the shell's current
+        directory and with its exported variables.
+        """
+        cwd = self.cwd()
+        env_dump = self.capture("env")
+        env = dict(os.environ)
+        for line in env_dump.splitlines():
+            key, sep, value = line.partition("=")
+            if sep and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
+                env[key] = value
+        env["SANDBOX"] = str(self.sandbox)
+        tokens = cmd.split(None, 1)
+        if tokens[0] == "edit":
+            editor = os.environ.get("VISUAL") or os.environ.get("EDITOR") or default_editor()
+            cmd = f"{editor} {tokens[1] if len(tokens) > 1 else ''}"
+        try:
+            return subprocess.call(["bash", "-c", cmd], cwd=str(cwd), env=env)
+        except KeyboardInterrupt:
+            return 130
 
     def close(self) -> None:
         if self.fd is None:
@@ -320,12 +450,22 @@ def configure_readline(sandbox: Path) -> None:
 
 
 def prompt_command() -> str:
-    try:
-        return input("linuxmissions> ").strip()
-    except EOFError:
-        raise
-    except KeyboardInterrupt:
-        raise
+    """Read one command. Unfinished input (heredoc, if/for, open quote, trailing |) continues on `...> ` lines."""
+    first = input("linuxmissions> ")
+    if not first.strip():
+        return ""
+    if first.strip().lower() in META_COMMANDS or first.strip().split()[0].lower() in ("edit",):
+        return first.strip()
+    lines = [first]
+    while needs_more_input("\n".join(lines)):
+        try:
+            lines.append(input("...> "))
+        except KeyboardInterrupt:
+            console.print("\n[dim]Input cancelled.[/dim]")
+            return ""
+        except EOFError:
+            break
+    return "\n".join(lines).strip()
 
 
 def clear_screen() -> None:
@@ -357,18 +497,12 @@ def render_level_screen(progress: dict, mission: dict, level_num: int, total_lev
 
 # ─── Validation ───────────────────────────────────────────────────────────────
 
-def validate_level(level_path: Path, sandbox: Path) -> bool:
-    script = level_path / "validate.sh"
-    if not script.exists():
-        console.print("[red]No validate.sh found for this level.[/red]")
-        return False
-    result = subprocess.run(
-        ["bash", str(script), str(sandbox)],
-        capture_output=False,
-        text=True,
-        env={**os.environ, "SANDBOX": str(sandbox)},
-    )
-    return result.returncode == 0
+def validate_level(level_path: Path, sandbox: Path, verbose: bool = False) -> bool:
+    """Run validate.sh. Auto-validation after each command is silent; `validate` shows why."""
+    ok, message = run_validate(level_path, sandbox)
+    if verbose and message:
+        console.print(message, markup=False, highlight=False)
+    return ok
 
 
 # ─── Elapsed time formatter ───────────────────────────────────────────────────
@@ -445,8 +579,8 @@ def play_level(
     configure_readline(sandbox)
     render_level_screen(progress, mission, level_num, total_levels, module_levels, sandbox)
 
-    hint_index = 0
-    hints = [level_path / f"hint-{i}.txt" for i in range(1, 4)]
+    hints = [h for h in (level_path / f"hint-{i}.txt" for i in range(1, 4)) if h.exists()]
+    hints_used = progress.setdefault("hints_used", {})
 
     progress["level_start_time"] = time.time()
     save_progress(progress)
@@ -483,12 +617,33 @@ def play_level(
             continue
 
         if cmd_lower == "hint":
-            available = [h for h in hints if h.exists()]
-            if hint_index < len(available):
-                show_guidance(available[hint_index].read_text(encoding="utf-8"), hint_index + 1)
-                hint_index += 1
-            else:
-                console.print("[dim]No more hints for this level.[/dim]")
+            used = hints_used.get(level_id, 0)
+            if used >= len(hints):
+                console.print("[dim]No more hints for this level. Type [bold]hints[/bold] to see them again.[/dim]")
+                continue
+            nxt = used + 1
+            if nxt == len(hints) and nxt >= 3:
+                console.print(
+                    f"[yellow]Hint {nxt} shows most of the solution. "
+                    f"Your XP for this level drops to {int(HINT_XP_FACTOR[nxt] * 100)}%.[/yellow]"
+                )
+                try:
+                    answer = input("Show it? [y/N] ").strip().lower()
+                except (EOFError, KeyboardInterrupt):
+                    answer = ""
+                if answer not in ("y", "yes"):
+                    continue
+            hints_used[level_id] = nxt
+            save_progress(progress)
+            show_guidance(hints[nxt - 1].read_text(encoding="utf-8"), nxt, xp_percent(nxt))
+            continue
+
+        if cmd_lower == "hints":
+            used = hints_used.get(level_id, 0)
+            if not used:
+                console.print("[dim]No hints revealed yet. Type [bold]hint[/bold] for the first one.[/dim]")
+            for n in range(1, used + 1):
+                show_guidance(hints[n - 1].read_text(encoding="utf-8"), n, xp_percent(n))
             continue
 
         if cmd_lower == "reset":
@@ -499,25 +654,22 @@ def play_level(
             shell_session.start()
             configure_readline(sandbox)
             render_level_screen(progress, mission, level_num, total_levels, module_levels, sandbox)
-            hint_index = 0
             continue
 
         if cmd_lower == "skip":
             console.print("[yellow]Level skipped (no XP awarded).[/yellow]")
             shell_session.close()
+            kill_sandbox_processes(sandbox)
             return True
 
-        if cmd_lower == "validate":
-            # Explicit validation trigger
-            pass
-        else:
-            # Run the shell command in sandbox
+        explicit = cmd_lower == "validate"
+        if not explicit:
             run_in_sandbox(raw, shell_session)
 
-        # ── Auto-validate after every command ─────────────────────────────
-        if validate_level(level_path, sandbox):
+        # ── Auto-validate after every command (silent unless asked) ────────
+        if validate_level(level_path, sandbox, verbose=explicit):
             elapsed = fmt_elapsed(time.time() - (progress.get("level_start_time") or time.time()))
-            xp = mission.get("xp", 100)
+            xp = int(mission.get("xp", 100) * HINT_XP_FACTOR.get(hints_used.get(level_id, 0), 0.5))
             progress["total_xp"] = progress.get("total_xp", 0) + xp
             progress["completed_levels"] = list(
                 set(progress.get("completed_levels", []) + [level_id])
@@ -528,6 +680,7 @@ def play_level(
 
             debrief = level_path / "debrief.md"
             shell_session.close()
+            kill_sandbox_processes(sandbox)
             clear_screen()
             show_post_level_debrief(debrief, xp, elapsed)
             wait_for_enter()

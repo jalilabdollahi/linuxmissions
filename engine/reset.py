@@ -1,11 +1,14 @@
 """Level sandbox setup/teardown for LinuxMissions."""
 from __future__ import annotations
 
-import shutil
-import subprocess
 from pathlib import Path
 
-from .ui import console
+try:
+    from .runner import reset_sandbox, run_setup
+    from .ui import console
+except ImportError:
+    from runner import reset_sandbox, run_setup
+    from ui import console
 
 SANDBOX_ROOT = Path("/tmp/linuxmissions")
 
@@ -16,24 +19,15 @@ def get_sandbox(level_id: str) -> Path:
 
 
 def prepare_level(level_path: Path, level_id: str) -> Path:
-    """Tear down any existing sandbox and run the level's setup.sh."""
+    """Tear down any existing sandbox (and its processes) and run the level's setup.sh."""
     sandbox = get_sandbox(level_id)
+    reset_sandbox(sandbox)
 
-    # Clean old sandbox
-    if sandbox.exists():
-        shutil.rmtree(sandbox)
-    sandbox.mkdir(parents=True, exist_ok=True)
+    if not (level_path / "setup.sh").exists():
+        console.print("[dim]No setup.sh for this level — sandbox is empty.[/dim]")
+        return sandbox
 
-    setup_script = level_path / "setup.sh"
-    if setup_script.exists():
-        result = subprocess.run(
-            ["bash", str(setup_script), str(sandbox)],
-            capture_output=True,
-            text=True,
-        )
-        if result.returncode != 0:
-            console.print(f"[red]setup.sh error:[/red] {result.stderr.strip()}")
-    else:
-        console.print(f"[dim]No setup.sh for this level — sandbox is empty.[/dim]")
-
+    code, output = run_setup(level_path, sandbox)
+    if code != 0:
+        console.print(f"[red]setup.sh failed ({code}):[/red] {output[-500:]}")
     return sandbox

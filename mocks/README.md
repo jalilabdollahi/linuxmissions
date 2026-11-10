@@ -726,6 +726,8 @@ whose `signed-by` names the wrong file gets apt's real
 - Curriculum note (module 20): the curriculum's mock `sapt` is not needed. The real
   `apt-get install` works in the sandbox. A `-y` install that downgrades needs
   `--allow-downgrades`, exactly as on a server.
+- Several repositories may share one mirror directory (one `path`, several suites).
+  Details and recipes: `packages/NOTES.md`.
 
 ## cron/ — crontab, cron-run, cron-expand, run-parts, OnCalendar
 
@@ -912,3 +914,10 @@ level that needs both could call `oncalendar.py` from a level-specific wrapper.
 Curriculum note (module 15 level 7): real systemd accepts `Mon-Fri` as an old spelling of
 `Mon..Fri` (both normalize to `Mon..Fri *-*-* 02:30:00`). Only `daily` (which drops the
 weekdays) is actually wrong there.
+
+## security/ — sshd
+
+`security/sshd` is a stand-in for OpenSSH's `sshd -T` / `-t` / `-f` / `-C user=,host=,addr=`:
+first value wins, `Include` is expanded in place, `Match` blocks apply only with `-C`,
+and output, defaults and exit codes follow Ubuntu's sshd. Full documentation, including
+how to ship it from setup.sh: `security/README.md`. Used by module 16 (8, 22, 24).

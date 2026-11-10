@@ -1,1 +1,5 @@
-Measure directory sizes before deciding which one is largest.
+Look at a few lookups in dnsmasq.log. Which lines are the lookups themselves,
+and which only repeat the name? Find a name that shows up in several
+spellings (grep -i for it): which variants does uniq treat as different
+lines? And uniq only compares each line with the one right before it: what
+must happen to the list of names before uniq sees it?

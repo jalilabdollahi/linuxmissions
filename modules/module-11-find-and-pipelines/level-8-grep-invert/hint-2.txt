@@ -1,1 +1,9 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+  grep -v PATTERN FILE       print the lines that do NOT match
+  grep -E                    extended regex: allows ( ) and | without backslashes
+  ^                          start of the line;  $  end of the line
+  [[:space:]]*               any number of spaces and tabs, including none
+  (A|B)                      A or B
+cat -A FILE (macOS: cat -vet FILE) shows tabs as ^I and line ends as $.
+So one pattern can describe "start, maybe some blanks, then either # or the end
+of the line".
+More: man grep (-v, -E), man 7 regex

@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+Start with the header line and number the columns: which field numbers are
+serial, hostname, rack and owner_email? Two things to watch: the order ops
+asked for is not the order of the columns in the file, and fields are
+separated by tabs, while some values (PowerEdge R650, Hall B) contain spaces.
+A tool that splits on any whitespace will cut those values in half.

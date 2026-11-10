@@ -1,16 +1,11 @@
 {
-  "name": "Awk Patterns: Path Realignment",
-  "description": "In the search and pipelines lab, a task related to Awk Patterns needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/awk-patterns.txt to organized/awk-patterns/awk-patterns-notes.txt",
+  "name": "Who Is Eating The Web Server?",
+  "description": "The shop's web server swapped all night and the load average stays high even though traffic is low. Before rebooting, the on-call engineer saved a snapshot of `ps aux` in ps-aux.txt (about 900 processes). Two questions: which web workers (user www-data) use too much memory, and which processes are stuck (state D, uninterruptible I/O) or dead but not reaped (state Z, zombie)?",
+  "objective": "Write heavy.txt with one line 'PID COMMAND' for every process of user www-data whose %MEM is more than 5, and stuck.txt with one line 'PID COMMAND' for every process whose state (STAT) is D or Z, whatever flags follow the letter. COMMAND is the complete command line with all its arguments. Keep the order of ps-aux.txt.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Awk Patterns",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "15m",
+  "concepts": ["awk patterns", "NR > 1", "== vs ~ /^.../", "&& in conditions", "printing $11 to $NF"],
   "module": "module-11-find-and-pipelines",
   "level": "level-21-awk-patterns"
 }

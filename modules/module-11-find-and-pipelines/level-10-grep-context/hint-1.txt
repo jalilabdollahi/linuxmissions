@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+A FATAL line alone tells you nothing; you need the line just before it. grep
+can print lines around each match. Look at what that output looks like: what
+does grep put between the groups, what is "the line before" when two FATALs
+follow each other, and how many req-like fields does a line carry? Only the
+req= field is the request; parent_req= is a different one.

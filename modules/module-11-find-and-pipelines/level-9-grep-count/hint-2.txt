@@ -1,1 +1,6 @@
-Use `ln -s` so current.conf points at the release file.
+  grep -c PATTERN FILES...     print FILE:COUNT for every file: the number of matching LINES
+  grep -w WORD                 match WORD only as a whole word (NOERROR does not count)
+  awk -F: '$2 > 50'            keep lines whose second :-separated field is above 50
+  sort -t: -k2,2nr             sort by field 2 (separator :), numerically, reversed
+  sed 's/:/ /'                 turn the first : into a space
+More: man grep (-c, -w), man sort (-k, -n, -r)

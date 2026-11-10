@@ -1,15 +1,11 @@
 {
-  "name": "Find Type: Alert Filter",
-  "description": "In the search and pipelines lab, a task related to Find Type needs cleanup before the handoff.",
-  "objective": "Write every alert line from find-type.log into alerts.txt",
+  "name": "After the Failed Deploy",
+  "description": "Last night's deploy died halfway through. Before anyone cleans up releases/, the on-call engineer wants two lists for the incident ticket: every symbolic link under releases/ (some point at shared folders, one may point at nothing) and every directory the deploy left completely empty.",
+  "objective": "Write links.txt with the path of every symbolic link under releases/, and empty-dirs.txt with the path of every empty directory under releases/ (one path per line, like releases/x or ./releases/x). A directory that holds anything, even a hidden file, is not empty. Do not change releases/.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Find Type",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["find -type l", "find -type d", "-empty", "symlinks to directories"],
   "module": "module-11-find-and-pipelines",
   "level": "level-2-find-type"
 }

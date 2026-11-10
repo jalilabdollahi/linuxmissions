@@ -1,1 +1,5 @@
-A short for-loop is the cleanest option here.
+comm compares two files line by line, so first make the lines comparable.
+Look at both dumps: what is on a line besides the package name? Is
+libc6:amd64 on one host a different package from libc6 on the other? Are
+there names that appear twice in one file? And comm walks both files once,
+top to bottom: in what order must they be?

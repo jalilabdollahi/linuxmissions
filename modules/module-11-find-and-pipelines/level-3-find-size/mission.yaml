@@ -1,16 +1,11 @@
 {
-  "name": "Find Size: Event Counter",
-  "description": "In the search and pipelines lab, a task related to Find Size needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in find-size-events.txt and write the number to ok-count.txt",
+  "name": "Too Big to Send",
+  "description": "The mail relay rejects every attachment larger than 10 MiB (10 x 1024 x 1024 bytes), and a crashed upload left zero-byte attachments behind. Messages in outbox/ keep bouncing, and support wants to tell each sender which file to fix.",
+  "objective": "Write oversize.txt with the path of every file under outbox/ that is larger than 10 MiB, and empty.txt with the path of every file under outbox/ that is 0 bytes (one path per line, like outbox/x or ./outbox/x). Files of exactly 10 MiB are still allowed. Do not change outbox/.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Find Size",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["find -size", "size units (c, k, M)", "MB vs MiB", "-empty", "-type f"],
   "module": "module-11-find-and-pipelines",
   "level": "level-3-find-size"
 }

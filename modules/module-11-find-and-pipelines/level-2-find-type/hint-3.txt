@@ -1,1 +1,6 @@
-Example: `grep 'ALERT' find-type.log > alerts.txt`
+  find releases -type l > links.txt
+      every symbolic link, whatever it points to (11 of them)
+  find releases -type d -empty > empty-dirs.txt
+      only directories (-type d) that contain nothing at all (-empty): 7 of them
+  cat links.txt empty-dirs.txt
+      check both lists

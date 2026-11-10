@@ -1,1 +1,10 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  for (i = 1; i <= NF; i++) { ... }    visit every blank-separated field
+  p = index($i, "=")                   position of the first = in the field
+  k = substr($i, 1, p - 1)             the key (or: split($i, kv, "=") then kv[1])
+  v = substr($i, p + 1)                the value
+  if (k == "dur") ...                  == compares the whole key, so db_dur is not dur
+  v ~ /ms$/                            does the value end in ms?
+  v + 0                                awk reads the leading number: "850ms" + 0 = 850
+  printf "%s,%s,%.0f\n", ...           %.0f rounds; %d and int() cut off
+  BEGIN { print "ts,svc,dur_ms" }      runs once, before the first line
+Reset ts, svc and dur at the start of every line. More: man awk

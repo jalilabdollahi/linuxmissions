@@ -1,15 +1,11 @@
 {
-  "name": "Find Exec: Field Extract",
-  "description": "In the search and pipelines lab, a task related to Find Exec needs cleanup before the handoff.",
-  "objective": "Extract the second column from find-exec-report.csv into owners.txt",
+  "name": "Compress the Old Logs",
+  "description": "app/logs fills the disk every few weeks because nobody configured rotation. Until logrotate is set up, ops wants the old logs compressed in place, with a single find command that can later go into cron.",
+  "objective": "Compress (gzip, in place, so x.log becomes x.log.gz with the same content) every file under app/logs whose name ends in .log and that was last modified more than 7 days ago. Logs modified within the last 7 days stay as they are, and no other file is compressed or changed.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Find Exec",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "10m",
+  "concepts": ["find -exec {} +", "find -mtime +N", "find -mmin", "gzip", "preview with -print"],
   "module": "module-11-find-and-pipelines",
   "level": "level-5-find-exec"
 }

@@ -1,1 +1,6 @@
-Example: `chmod 640 paste-columns.sh`
+  tr -d '\r' < cpu.txt | paste hosts.txt - mem.txt > report.tsv
+      remove the Windows \r from cpu.txt; paste reads it from stdin (-) as the middle column
+  awk -F'\t' '$2 >= 90 { print $1 }' report.tsv | paste -s -d, - > limit.txt
+      host names with cpu >= 90, then -s joins them into one line with commas
+  head -3 report.tsv; cat limit.txt
+      check both

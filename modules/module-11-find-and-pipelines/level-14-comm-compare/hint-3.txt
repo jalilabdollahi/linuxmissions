@@ -1,1 +1,9 @@
-Example: `for n in 1 2 3; do printf 'comm-compare item %s\n' "$n" > generated/comm-compare-$n.txt; done`
+  cut -f1 web1.pkgs | sed 's/:.*//' | sort -u > web1.names
+      names only (drop the version and the :arch), sorted, each once
+  cut -f1 web2.pkgs | sed 's/:.*//' | sort -u > web2.names
+      the same for web-2
+  comm -23 web1.names web2.names > only-web1.txt
+      names that are only in the first list
+  comm -13 web1.names web2.names > only-web2.txt
+      names that are only in the second list
+  cat only-web1.txt only-web2.txt

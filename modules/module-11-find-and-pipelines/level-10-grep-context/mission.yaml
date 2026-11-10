@@ -1,15 +1,11 @@
 {
-  "name": "Grep Context: Backup Bundle",
-  "description": "In the search and pipelines lab, a task related to Grep Context needs cleanup before the handoff.",
-  "objective": "Create grep-context-backup.tar.gz containing the files under bundle/grep-context",
+  "name": "Who Killed the Worker",
+  "description": "The image worker crashed 15 times overnight. A FATAL line never names the request it was working on, but the line just before each crash always carries that request's req=<id>. The developers want the ids so they can replay those requests.",
+  "objective": "Write fatal-reqs.txt with the request id (only the id, without req=) from the line directly before each FATAL in worker.log, one per line, in the order they occur in the log. When several FATAL lines follow each other, they belong to the request on the line before the first of them, which is listed once. Do not change worker.log.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Grep Context",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "12m",
+  "concepts": ["grep -B", "context lines and -- separators", "grep -o", "grep -w", "cut"],
   "module": "module-11-find-and-pipelines",
   "level": "level-10-grep-context"
 }

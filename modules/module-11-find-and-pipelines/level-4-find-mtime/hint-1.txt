@@ -1,1 +1,5 @@
-This is a sorting task followed by deduplication.
+Every file has three timestamps: when its content was last modified (mtime),
+when it was last read (atime) and when its metadata changed (ctime). Only one of
+them answers "who changed this config?". ls -l shows it, but with 35 files in
+nested folders you want find to do the comparison against "24 hours ago".
+Directories have timestamps too; they don't belong in the list.

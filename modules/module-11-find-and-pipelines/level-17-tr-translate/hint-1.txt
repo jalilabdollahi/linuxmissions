@@ -1,1 +1,6 @@
-This mission is about cron field order and exact syntax.
+Look at the file with its invisible characters shown (cat -A on Linux,
+cat -vet on macOS): ^I is a tab, ^M is a carriage return, $ is the end of the
+line. Every change here is "this character becomes that character" or "this
+character goes away", which is exactly what tr does. What happens to
+"Emeka D. <TAB>Nowak" if every space, dot and tab becomes _ ? What is left
+to clean up after that?

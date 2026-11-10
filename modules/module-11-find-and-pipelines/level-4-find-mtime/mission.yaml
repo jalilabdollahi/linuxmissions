@@ -1,15 +1,11 @@
 {
-  "name": "Find Mtime: Noise Dedup",
-  "description": "In the search and pipelines lab, a task related to Find Mtime needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from find-mtime-raw.txt with sorted unique values",
+  "name": "What Changed Last Night",
+  "description": "The shop went down an hour ago and the first question in the incident channel is the usual one: which configs were touched recently? etc/ is a copy of the server's /etc with the original timestamps.",
+  "objective": "Write recent.txt with the path of every file under etc/ whose content was modified during the last 24 hours (one path per line, like etc/x or ./etc/x). Only files, not directories. Do not change anything in etc/.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Find Mtime",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "8m",
+  "concepts": ["find -mtime", "find -mmin", "mtime vs atime vs ctime", "-type f"],
   "module": "module-11-find-and-pipelines",
   "level": "level-4-find-mtime"
 }

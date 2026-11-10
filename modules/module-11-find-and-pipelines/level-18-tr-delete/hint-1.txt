@@ -1,1 +1,7 @@
-Look for a filtering command that keeps only the alert lines in tr-delete.log.
+First see what is really in the file: cat shows garbage, but
+od -c console.raw | head and cat -A console.raw (cat -v on macOS) name every
+byte: \r and ^M are carriage returns, \0 and ^@ NUL bytes, \a and ^G bells,
+033 and ^[ the ESC that starts a colour code like ESC[0;32m.
+Single junk bytes can simply be deleted. A colour code is several bytes, and
+only the first one is a control character: what happens to the rest if you
+delete only the ESC?

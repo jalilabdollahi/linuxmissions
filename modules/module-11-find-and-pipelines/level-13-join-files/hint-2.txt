@@ -1,1 +1,11 @@
-Use `chmod +x jobs/join-files.sh` and then execute it.
+  tail -n +2 FILE            everything except the header line
+  tr 'A-Z-' 'a-z:'           maps characters one to one: upper to lower case, - to :
+  sort -k2,2 FILE            sort on field 2 only
+  join -1 2 -2 1 A B         pair lines: field 2 of A against field 1 of B
+                             (both files must be sorted on those fields and use
+                             the same separator: blanks by default, or -t)
+       -a1                   also print lines of A that have no partner in B
+       -e UNKNOWN            text to print for a missing field
+       -o 1.3,1.2,2.2        which fields to print, as file.field
+  sort -t. -k3,3n -k4,4n     sort IPs octet by octet, as numbers
+More: man join, man tr

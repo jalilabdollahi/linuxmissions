@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-10T12:19:16.671842+00:00",
-  "level_count": 494,
+  "generated_at": "2026-11-10T12:31:31.388656+00:00",
+  "level_count": 483,
   "modules": [
     {
       "name": "module-1-filesystem",
@@ -2856,6 +2856,141 @@
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-18-tr-delete"
+          }
+        },
+        {
+          "id": "module-11-find-and-pipelines/level-19-sed-print",
+          "name": "level-19-sed-print",
+          "path": "modules/module-11-find-and-pipelines/level-19-sed-print",
+          "mission": {
+            "name": "Vendor Ticket",
+            "description": "The vendor of the orders API asks for two things for their support ticket: the database settings from app.ini and the part of trace.log their crash tool pointed at, lines 1200 to 1260. app.ini has several sections, including a [database-replica] section that is not the one they want.",
+            "objective": "Write db-section.txt with the [database] section of app.ini: from its [database] header line up to, but not including, the next section header, every line unchanged. Write excerpt.txt with lines 1200 to 1260 of trace.log (both included), unchanged.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "12m",
+            "concepts": [
+              "sed -n with p",
+              "sed address ranges /re/,/re/",
+              "line ranges M,N",
+              "q to stop early",
+              "escaping [ ] in regexes"
+            ],
+            "module": "module-11-find-and-pipelines",
+            "level": "level-19-sed-print"
+          }
+        },
+        {
+          "id": "module-11-find-and-pipelines/level-20-sed-substitute",
+          "name": "level-20-sed-substitute",
+          "path": "modules/module-11-find-and-pipelines/level-20-sed-substitute",
+          "mission": {
+            "name": "CDN Cutover",
+            "description": "Marketing moves its static files to a new CDN tonight and wants ISO dates on the site at the same time. The 40 HTML templates in templates/ (and templates/emails/) still load everything from http://old-cdn.example.com/ and print dates as DD/MM/YYYY. Some templates also link to our print partner, whose domain is old-cdn-example.com; those links must stay.",
+            "objective": "Edit the templates in place: every http://old-cdn.example.com/<path> becomes https://cdn.example.net/v2/<path>, and every date written DD/MM/YYYY becomes YYYY-MM-DD. Nothing else may change (old-cdn-example.com links included), and no backup files may be left in templates/.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
+            "concepts": [
+              "sed -E",
+              "capture groups \\1 \\2 \\3",
+              "custom delimiters s###",
+              "escaping . in regexes",
+              "the g flag",
+              "sed -i (GNU vs BSD)"
+            ],
+            "module": "module-11-find-and-pipelines",
+            "level": "level-20-sed-substitute"
+          }
+        },
+        {
+          "id": "module-11-find-and-pipelines/level-21-awk-patterns",
+          "name": "level-21-awk-patterns",
+          "path": "modules/module-11-find-and-pipelines/level-21-awk-patterns",
+          "mission": {
+            "name": "Who Is Eating The Web Server?",
+            "description": "The shop's web server swapped all night and the load average stays high even though traffic is low. Before rebooting, the on-call engineer saved a snapshot of `ps aux` in ps-aux.txt (about 900 processes). Two questions: which web workers (user www-data) use too much memory, and which processes are stuck (state D, uninterruptible I/O) or dead but not reaped (state Z, zombie)?",
+            "objective": "Write heavy.txt with one line 'PID COMMAND' for every process of user www-data whose %MEM is more than 5, and stuck.txt with one line 'PID COMMAND' for every process whose state (STAT) is D or Z, whatever flags follow the letter. COMMAND is the complete command line with all its arguments. Keep the order of ps-aux.txt.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
+            "concepts": [
+              "awk patterns",
+              "NR > 1",
+              "== vs ~ /^.../",
+              "&& in conditions",
+              "printing $11 to $NF"
+            ],
+            "module": "module-11-find-and-pipelines",
+            "level": "level-21-awk-patterns"
+          }
+        },
+        {
+          "id": "module-11-find-and-pipelines/level-22-awk-fields",
+          "name": "level-22-awk-fields",
+          "path": "modules/module-11-find-and-pipelines/level-22-awk-fields",
+          "mission": {
+            "name": "Logfmt To CSV",
+            "description": "The new tracing dashboard imports CSV, but the shop's services log in logfmt: app.log has lines of key=value pairs such as ts=... level=info svc=api msg=\"request done\" dur=850ms, with the keys in any order. Durations are written in microseconds (us), milliseconds (ms) or seconds (s), and some lines have no dur at all.",
+            "objective": "Write slow.csv: the header line ts,svc,dur_ms, then one line ts,svc,dur_ms for every log line whose dur= value is more than 500 milliseconds, in the order of app.log. ts and svc are copied from the ts= and svc= keys; dur_ms is the duration in milliseconds as a whole number, rounded (1.2s becomes 1200). Other keys that merely contain those names (db_dur, upstream_svc) are not the ones you want.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "20m",
+            "concepts": [
+              "awk for loop over NF",
+              "split / index + substr",
+              "exact key matching",
+              "unit conversion",
+              "printf %.0f rounding"
+            ],
+            "module": "module-11-find-and-pipelines",
+            "level": "level-22-awk-fields"
+          }
+        },
+        {
+          "id": "module-11-find-and-pipelines/level-23-awk-sum",
+          "name": "level-23-awk-sum",
+          "path": "modules/module-11-find-and-pipelines/level-23-awk-sum",
+          "mission": {
+            "name": "NAS Storage Bill",
+            "description": "The NAS is 92% full and management wants to charge storage back to its users. Someone already ran find /nas -printf '%p\\t%u\\t%s\\t%TY-%Tm-%Td\\n' > files.lst 2>&1, so files.lst has one line per file: path, owner, size in bytes and last-modified date, separated by tabs. Paths contain spaces, a few files are tens of GiB, and the find errors went into the file too.",
+            "objective": "Write usage.txt with one line per user: the user name, the total size of their files in GiB (1 GiB = 1024^3 bytes), and the size of their files last modified before 2025-01-01 in GiB, separated by tabs, both numbers with exactly two decimals (e.g. amira<TAB>812.34<TAB>401.20). Sort the lines by total GiB, largest first.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
+            "concepts": [
+              "awk -F'\\t'",
+              "associative arrays",
+              "END and for (k in a)",
+              "printf %.2f",
+              "string comparison of ISO dates",
+              "sort -t -k -n -r"
+            ],
+            "module": "module-11-find-and-pipelines",
+            "level": "level-23-awk-sum"
+          }
+        },
+        {
+          "id": "module-11-find-and-pipelines/level-24-pipeline-report",
+          "name": "level-24-pipeline-report",
+          "path": "modules/module-11-find-and-pipelines/level-24-pipeline-report",
+          "mission": {
+            "name": "Weekly Bounce Report",
+            "description": "Every Monday the mail team asks which customers' mailings bounce the most, so they can warn them before the relays land on a blocklist. The logs of both relays are under var/log/ (rotated daily, older ones gzipped). Postfix writes the sender of a message (from=) and its delivery result (status=) on different lines, linked by the queue ID. Some bounces come from the empty sender <> (bounce notices that bounced themselves).",
+            "objective": "From every mail.log* file under var/log/ (any depth, plain or .gz) modified in the last 7 days, count the bounced messages (status=bounced) per sender domain: the part after @ in the message's from=<...>, in lowercase; messages from the empty sender <> don't count. Write report.txt with the top 5 as lines 'rank domain count' (e.g. '1 example.org 17'): highest count first, equal counts ordered by domain name. Don't change or unpack the logs.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "30m",
+            "concepts": [
+              "find -name -mtime",
+              "zcat -f / gzip -cdf",
+              "awk arrays as a join on a key",
+              "sort | uniq -c",
+              "sort -k1,1nr -k2,2",
+              "head"
+            ],
+            "module": "module-11-find-and-pipelines",
+            "level": "level-24-pipeline-report"
           }
         }
       ]
@@ -6291,17 +6426,18 @@
           "name": "level-1-ip-addr",
           "path": "modules/module-19-network-troubleshooting/level-1-ip-addr",
           "mission": {
-            "name": "Ip Addr: Path Realignment",
-            "description": "In the network troubleshooting lab, a task related to Ip Addr needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/ip-addr.txt to organized/ip-addr/ip-addr-notes.txt",
+            "name": "Which Leg Is the Database?",
+            "description": "The billing app on app-07 must bind to the host's own address in the database subnet 10.20.0.0/22, or the DB firewall drops its connections. Nobody remembers which interface that is; TICKET.txt has the details and ip-addr.txt is `ip addr` from the host.",
+            "objective": "Write db-iface.env with three lines: IFACE=<the interface the address in 10.20.0.0/22 is configured on>, ADDR=<that address without the /prefix> and STATE=<that interface's state as ip prints it>.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Ip Addr",
-              "mkdir",
-              "mv",
-              "cp"
+              "ip addr",
+              "CIDR /22",
+              "several addresses per interface",
+              "VLAN interface@parent",
+              "state UP / LOWERLAYERDOWN"
             ],
             "module": "module-19-network-troubleshooting",
             "level": "level-1-ip-addr"
@@ -6312,16 +6448,19 @@
           "name": "level-2-ip-route",
           "path": "modules/module-19-network-troubleshooting/level-2-ip-route",
           "mission": {
-            "name": "Ip Route: Alert Filter",
-            "description": "In the network troubleshooting lab, a task related to Ip Route needs cleanup before the handoff.",
-            "objective": "Write every alert line from ip-route.log into alerts.txt",
+            "name": "Which Way Out?",
+            "description": "Before a firewall change, the network team needs to know how the jump host jh-02 reaches nine addresses. TICKET.txt has the request; routes.txt is `ip route` from jh-02 and destinations.txt lists the addresses.",
+            "objective": "Write answers.tsv with one line per address in destinations.txt, in the same order: `DESTINATION GATEWAY INTERFACE`, where GATEWAY is the next-hop address the kernel would use, or `direct` when no gateway is involved.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "12m",
             "concepts": [
-              "Ip Route",
-              "grep",
-              "output redirection"
+              "ip route",
+              "longest-prefix match",
+              "via / dev",
+              "scope link",
+              "default route",
+              "host routes"
             ],
             "module": "module-19-network-troubleshooting",
             "level": "level-2-ip-route"
@@ -6332,17 +6471,18 @@
           "name": "level-3-ping-host",
           "path": "modules/module-19-network-troubleshooting/level-3-ping-host",
           "mission": {
-            "name": "Ping Host: Event Counter",
-            "description": "In the network troubleshooting lab, a task related to Ping Host needs cleanup before the handoff.",
-            "objective": "Count how many times `ok` appears in ping-host-events.txt and write the number to ok-count.txt",
+            "name": "Laggy VPN",
+            "description": "Users at several sites say the VPN is laggy. The NOC pinged the VPN gateway of each site 50 times and saved the outputs in pings/; the provider wants to know which sites lose packets and which have jitter (TICKET.txt).",
+            "objective": "Write lossy.txt with the sites (file names in pings/ without .txt) that have more than 2 % packet loss, and jittery.txt with the sites whose rtt mdev is above 20 ms. One site per line, any order.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "12m",
             "concepts": [
-              "Ping Host",
-              "grep",
-              "wc",
-              "redirection"
+              "ping statistics",
+              "packet loss",
+              "rtt min/avg/max/mdev",
+              "awk fields",
+              "duplicates and errors"
             ],
             "module": "module-19-network-troubleshooting",
             "level": "level-3-ping-host"
@@ -6353,16 +6493,18 @@
           "name": "level-4-traceroute-notes",
           "path": "modules/module-19-network-troubleshooting/level-4-traceroute-notes",
           "mission": {
-            "name": "Traceroute Notes: Noise Dedup",
-            "description": "In the network troubleshooting lab, a task related to Traceroute Notes needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from traceroute-notes-raw.txt with sorted unique values",
+            "name": "Where Does the Path Break?",
+            "description": "app-07 can't reach the payment provider and the ISP wants evidence before they open a case. You have a traceroute and an mtr report taken a minute apart (TICKET.txt explains what the ISP asks for).",
+            "objective": "Write path.env with LAST_HOP=<the address of the last hop on the path that still replies> and JUMP_HOP=<the hop number where the mtr Avg first rises by more than 50 ms over the previous hop that answered>.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "10m",
             "concepts": [
-              "Traceroute Notes",
-              "sort",
-              "uniq"
+              "traceroute output",
+              "* * *",
+              "mtr --report",
+              "Loss% and Avg",
+              "ICMP rate limiting"
             ],
             "module": "module-19-network-troubleshooting",
             "level": "level-4-traceroute-notes"
@@ -6373,16 +6515,18 @@
           "name": "level-5-dig-records",
           "path": "modules/module-19-network-troubleshooting/level-5-dig-records",
           "mission": {
-            "name": "Dig Records: Field Extract",
-            "description": "In the network troubleshooting lab, a task related to Dig Records needs cleanup before the handoff.",
-            "objective": "Extract the second column from dig-records-report.csv into owners.txt",
+            "name": "Where Does the Mail Go?",
+            "description": "Partners say mail to @shop.example bounces. A test DNS server with the production zone runs on 127.0.0.1 (port in dns.port), and TICKET.txt asks where mail for shop.example is supposed to go first.",
+            "objective": "Query the local DNS server and write mx.env with MX_HOST=<the primary mail exchanger of shop.example, the name in its MX record> and MX_IP=<the IPv4 address that name finally resolves to>.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "10m",
             "concepts": [
-              "Dig Records",
-              "cut",
-              "awk"
+              "dig @server -p",
+              "MX preference",
+              "CNAME chains",
+              "dig +short",
+              "sort -n"
             ],
             "module": "module-19-network-troubleshooting",
             "level": "level-5-dig-records"
@@ -6393,16 +6537,18 @@
           "name": "level-6-nslookup",
           "path": "modules/module-19-network-troubleshooting/level-6-nslookup",
           "mission": {
-            "name": "Nslookup: Config Rewrite",
-            "description": "In the network troubleshooting lab, a task related to Nslookup needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in nslookup.conf and save the fixed result to fixed.conf",
+            "name": "Failed How, Exactly?",
+            "description": "The monitoring script reports every DNS problem as \"lookup failed\", so on-call can't tell a typo from a broken zone or a dead server. A test resolver runs on 127.0.0.1 (port in dns.port); TICKET.txt has the details.",
+            "objective": "For every name in names.txt, ask the local resolver and write results.tsv with one line `NAME<TAB>STATUS`, where STATUS is OK (resolves to an address), NXDOMAIN, SERVFAIL or TIMEOUT (the server never answers).",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "12m",
             "concepts": [
-              "Nslookup",
-              "sed",
-              "redirection"
+              "nslookup -port",
+              "NXDOMAIN vs SERVFAIL",
+              "timeouts",
+              "-timeout / -retry",
+              "while read loop"
             ],
             "module": "module-19-network-troubleshooting",
             "level": "level-6-nslookup"
@@ -6533,16 +6679,19 @@
           "name": "level-13-arp-cache",
           "path": "modules/module-19-network-troubleshooting/level-13-arp-cache",
           "mission": {
-            "name": "Arp Cache: Script Kickoff",
-            "description": "In the network troubleshooting lab, a task related to Arp Cache needs cleanup before the handoff.",
-            "objective": "Make jobs/arp-cache.sh executable, run it, and create the token file it writes",
+            "name": "Who Else Is Answering?",
+            "description": "TICKET.txt: hosts on VLAN 30 drop off the network for a minute at a time, then come back. Someone grabbed the neighbour (ARP) table of app-jump-02 three times, five minutes apart (captures/), along with the VLAN inventory and an excerpt of the IEEE OUI list.",
+            "objective": "Write conflict.env with four lines: IP= the VLAN 30 IPv4 address whose MAC address keeps changing between captures, KNOWN_MAC= its MAC from vlan30-inventory.csv, ROGUE_MAC= the other MAC seen for it, and ROGUE_VENDOR= the organisation that oui.txt lists for the rogue MAC's first three bytes (exactly as written there).",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "15m",
             "concepts": [
-              "Arp Cache",
-              "chmod",
-              "bash"
+              "ip neigh",
+              "neighbour states (REACHABLE, STALE, FAILED)",
+              "ARP conflicts",
+              "MAC OUI",
+              "awk",
+              "tolower"
             ],
             "module": "module-19-network-troubleshooting",
             "level": "level-13-arp-cache"
@@ -6654,16 +6803,19 @@
           "name": "level-19-interface-state",
           "path": "modules/module-19-network-troubleshooting/level-19-interface-state",
           "mission": {
-            "name": "Interface State: Config Rewrite",
-            "description": "In the network troubleshooting lab, a task related to Interface State needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in interface-state.conf and save the fixed result to fixed.conf",
+            "name": "Deltas, Not Totals",
+            "description": "TICKET.txt: clients of the storage node stor-04 keep losing their sessions and the backup network crawls. You have two `ip -s -s link` captures taken 60 seconds apart and the /sys/class/net attributes of every interface. Every error counter looks big; which ones are actually moving?",
+            "objective": "Write link.env with FLAPPING= the interface whose link went down and up between the two captures, DUPLEX_MISMATCH= the interface running at the wrong duplex, and CRC_DELTA= the number of CRC errors the flapping interface received between the two captures.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "20m",
             "concepts": [
-              "Interface State",
-              "sed",
-              "redirection"
+              "ip -s -s link",
+              "carrier transitions (transns)",
+              "/sys/class/net",
+              "speed and duplex",
+              "counter deltas",
+              "awk getline"
             ],
             "module": "module-19-network-troubleshooting",
             "level": "level-19-interface-state"
@@ -7269,17 +7421,18 @@
           "name": "level-1-shebang",
           "path": "modules/module-21-shell-automation/level-1-shebang",
           "mission": {
-            "name": "Shebang: Path Realignment",
-            "description": "In the shell automation lab, a task related to Shebang needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/shebang.txt to organized/shebang/shebang-notes.txt",
+            "name": "Works On My Shell",
+            "description": "The ops crontab runs three helpers as ./bin/<name>. Every one of them works when you type `bash bin/disk_report data/df.txt` or `python3 bin/queue_stats data/queue.txt`, yet cron keeps mailing errors (cron-mail.txt) and none of them has produced a report in weeks.",
+            "objective": "Fix bin/disk_report, bin/queue_stats and bin/backup_age so that each one runs correctly when started directly as ./bin/<name> FILE, the way cron starts it (see crontab.txt), without printing any error. Keep what the programs do; they are tested on data you have not seen.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Shebang",
-              "mkdir",
-              "mv",
-              "cp"
+              "#! shebang line",
+              "#!/usr/bin/env python3",
+              "/bin/sh is dash, not bash",
+              "execve vs `bash script`",
+              "head -1 / cat -A"
             ],
             "module": "module-21-shell-automation",
             "level": "level-1-shebang"
@@ -7290,16 +7443,17 @@
           "name": "level-2-exit-codes",
           "path": "modules/module-21-shell-automation/level-2-exit-codes",
           "mission": {
-            "name": "Exit Codes: Alert Filter",
-            "description": "In the shell automation lab, a task related to Exit Codes needs cleanup before the handoff.",
-            "objective": "Write every alert line from exit-codes.log into alerts.txt",
+            "name": "Green Dashboard",
+            "description": "The monitoring dashboard has shown all four mail queues as healthy for a week, while mx3 had almost 2000 stuck messages and mx4 stopped writing stats altogether. Monitoring only looks at the exit status of check_queue.sh (monitoring.log).",
+            "objective": "Fix check_queue.sh so that `./check_queue.sh STATS_FILE` prints exactly one line and exits with the code its header asks for: 0 OK, 1 WARNING, 2 CRITICAL, and 3 UNKNOWN (with the line `UNKNOWN - no queue data in STATS_FILE`) when the file is missing, unreadable or has no numeric deferred= value. It is tested with stats files you have not seen.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "10m",
             "concepts": [
-              "Exit Codes",
-              "grep",
-              "output redirection"
+              "exit N",
+              "$? is the status of the last command",
+              "Nagios exit codes 0/1/2/3",
+              "validating input before using it"
             ],
             "module": "module-21-shell-automation",
             "level": "level-2-exit-codes"
@@ -7310,17 +7464,18 @@
           "name": "level-3-positional-params",
           "path": "modules/module-21-shell-automation/level-3-positional-params",
           "mission": {
-            "name": "Positional Params: Event Counter",
-            "description": "In the shell automation lab, a task related to Positional Params needs cleanup before the handoff.",
-            "objective": "Count how many times `ok` appears in positional-params-events.txt and write the number to ok-count.txt",
+            "name": "Lost in Transit",
+            "description": "The month-end job calls archive.sh to store finance reports in the object store. Files with spaces in their names arrive as several broken uploads or not at all (TICKET.txt), and a call without arguments silently succeeds.",
+            "objective": "Fix archive.sh so that `./archive.sh BUCKET FILE...` calls `./tools/upload --bucket BUCKET FILE...` once, passing BUCKET and every FILE as exactly the argument it received (spaces, empty strings and characters like * included), and keeps printing `archiving N file(s) to BUCKET` first. With fewer than 2 arguments it must print a usage line to stderr, exit 2 and upload nothing. upload.log shows how upload was called.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "10m",
             "concepts": [
-              "Positional Params",
-              "grep",
-              "wc",
-              "redirection"
+              "\"$@\" vs $*",
+              "$#",
+              "shift",
+              "usage errors on stderr",
+              "exit 2"
             ],
             "module": "module-21-shell-automation",
             "level": "level-3-positional-params"
@@ -7331,16 +7486,19 @@
           "name": "level-4-getopts",
           "path": "modules/module-21-shell-automation/level-4-getopts",
           "mission": {
-            "name": "Getopts: Noise Dedup",
-            "description": "In the shell automation lab, a task related to Getopts needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from getopts-raw.txt with sorted unique values",
+            "name": "Option Parsing",
+            "description": "Ops wants to run rotate.sh from cron with options like `-vn3 -d /var/log/worker 'worker-*.log'` (crontab.txt). The rotation code at the bottom of the script works; the part that reads the options was never written.",
+            "objective": "Add option parsing to rotate.sh as its header describes: -n COUNT (default 7), -d DIR (required), -v, in any order, clustered (-vn3) or with attached values (-dlogs), with everything after the options (or after --) left in \"$@\" as patterns. An unknown option, an option missing its value, or no -d must print the usage line on stderr and exit 2 before anything is deleted. It is tested with many command lines on fresh directories.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "12m",
             "concepts": [
-              "Getopts",
-              "sort",
-              "uniq"
+              "getopts",
+              "OPTARG",
+              "OPTIND",
+              "shift $((OPTIND-1))",
+              "--",
+              "usage exit 2"
             ],
             "module": "module-21-shell-automation",
             "level": "level-4-getopts"
@@ -7351,159 +7509,20 @@
           "name": "level-5-functions",
           "path": "modules/module-21-shell-automation/level-5-functions",
           "mission": {
-            "name": "Functions: Field Extract",
-            "description": "In the shell automation lab, a task related to Functions needs cleanup before the handoff.",
-            "objective": "Extract the second column from functions-report.csv into owners.txt",
+            "name": "Return to Sender",
+            "description": "The upload scripts share lib/units.sh. Since someone added to_bytes, `./check_upload.sh 64K uploads/*` never reports anything as too big, and a script that sources the library found its own $size variable changed behind its back (NOTES.txt).",
+            "objective": "Fix to_bytes in lib/units.sh so that, as its comment says, it prints the size in bytes on stdout and returns 0, prints nothing and returns 1 for anything that is not a whole number with an optional K, M, G or T, and creates or changes no variable in the shell that calls it. check_upload.sh must then work unchanged. It is tested by sourcing the library and calling to_bytes with many inputs.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "12m",
             "concepts": [
-              "Functions",
-              "cut",
-              "awk"
+              "function output via echo + $(fn)",
+              "return is a status (0-255)",
+              "local",
+              "input validation with case"
             ],
             "module": "module-21-shell-automation",
             "level": "level-5-functions"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-6-arrays",
-          "name": "level-6-arrays",
-          "path": "modules/module-21-shell-automation/level-6-arrays",
-          "mission": {
-            "name": "Arrays: Config Rewrite",
-            "description": "In the shell automation lab, a task related to Arrays needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in arrays.conf and save the fixed result to fixed.conf",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
-            "concepts": [
-              "Arrays",
-              "sed",
-              "redirection"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-6-arrays"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-7-loops-for",
-          "name": "level-7-loops-for",
-          "path": "modules/module-21-shell-automation/level-7-loops-for",
-          "mission": {
-            "name": "Loops For: History Window",
-            "description": "In the shell automation lab, a task related to Loops For needs cleanup before the handoff.",
-            "objective": "Write the first 3 lines of loops-for-history.log to first3.txt and the last 3 lines to last3.txt",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
-            "concepts": [
-              "Loops For",
-              "head",
-              "tail"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-7-loops-for"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-8-loops-while",
-          "name": "level-8-loops-while",
-          "path": "modules/module-21-shell-automation/level-8-loops-while",
-          "mission": {
-            "name": "Loops While: Cleanup Sweep",
-            "description": "In the shell automation lab, a task related to Loops While needs cleanup before the handoff.",
-            "objective": "Delete only the `.tmp` files under cleanup/loops-while and leave the other files intact",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
-            "concepts": [
-              "Loops While",
-              "find",
-              "rm"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-8-loops-while"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-9-conditionals-if",
-          "name": "level-9-conditionals-if",
-          "path": "modules/module-21-shell-automation/level-9-conditionals-if",
-          "mission": {
-            "name": "Conditionals If: Link Repair",
-            "description": "In the shell automation lab, a task related to Conditionals If needs cleanup before the handoff.",
-            "objective": "Create current.conf as a symbolic link to releases/conditionals-if.conf",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Conditionals If",
-              "ln",
-              "symbolic links"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-9-conditionals-if"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-10-case-esac",
-          "name": "level-10-case-esac",
-          "path": "modules/module-21-shell-automation/level-10-case-esac",
-          "mission": {
-            "name": "Case Esac: Backup Bundle",
-            "description": "In the shell automation lab, a task related to Case Esac needs cleanup before the handoff.",
-            "objective": "Create case-esac-backup.tar.gz containing the files under bundle/case-esac",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Case Esac",
-              "tar",
-              "compression"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-10-case-esac"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-11-test-operators",
-          "name": "level-11-test-operators",
-          "path": "modules/module-21-shell-automation/level-11-test-operators",
-          "mission": {
-            "name": "Test Operators: Restore Drill",
-            "description": "In the shell automation lab, a task related to Test Operators needs cleanup before the handoff.",
-            "objective": "Extract test-operators-restore.tar.gz so the restored/test-operators directory appears in the sandbox",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Test Operators",
-              "tar",
-              "archive extraction"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-11-test-operators"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-12-string-ops",
-          "name": "level-12-string-ops",
-          "path": "modules/module-21-shell-automation/level-12-string-ops",
-          "mission": {
-            "name": "String Ops: Permission Fix",
-            "description": "In the shell automation lab, a task related to String Ops needs cleanup before the handoff.",
-            "objective": "Set the mode of string-ops.sh to 640",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "String Ops",
-              "chmod",
-              "permissions"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-12-string-ops"
           }
         },
         {
@@ -7511,16 +7530,18 @@
           "name": "level-13-arithmetic",
           "path": "modules/module-21-shell-automation/level-13-arithmetic",
           "mission": {
-            "name": "Arithmetic: Script Kickoff",
-            "description": "In the shell automation lab, a task related to Arithmetic needs cleanup before the handoff.",
-            "objective": "Make jobs/arithmetic.sh executable, run it, and create the token file it writes",
+            "name": "Quota Report",
+            "description": "The weekly disk quota mail comes from quota_report.sh. This week it printed `division by 0` and `value too great for base` errors and warned nobody. The storage export (usage.tsv) pads every size with zeros to 8 digits; NOTE.txt describes the format.",
+            "objective": "Fix quota_report.sh so that `bash quota_report.sh FILE` prints, in file order, `<user> <percent>%` for every user using at least 90 % of their quota (percent = used * 100 / quota, rounded down; a quota of 0 means unlimited and is never listed), then `TOTAL <n> MiB`, where n is all used KiB added up and divided by 1024, rounded down. Nothing else on stdout, no errors on stderr. It is also run on an export you have not seen.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Arithmetic",
-              "chmod",
-              "bash"
+              "$(( ))",
+              "(( ))",
+              "10#$n and octal",
+              "integer division order",
+              "skipping a header line"
             ],
             "module": "module-21-shell-automation",
             "level": "level-13-arithmetic"
@@ -7531,221 +7552,21 @@
           "name": "level-14-command-substitution",
           "path": "modules/module-21-shell-automation/level-14-command-substitution",
           "mission": {
-            "name": "Command Substitution: Loop Builder",
-            "description": "In the shell automation lab, a task related to Command Substitution needs cleanup before the handoff.",
-            "objective": "Create three files under generated/ named command-substitution-1.txt through command-substitution-3.txt with matching numbered content",
+            "name": "Tag Without a Hash",
+            "description": "Release 1.2.0 shipped tagged `app-1.2.0--20261110`: the CI runner had lost its .git directory, git failed, and make_tag.sh still exited 0 and wrote release.tag. INCIDENT.txt shows how to replay it with the stand-in bin/git.",
+            "objective": "Fix make_tag.sh so that, run in the checkout as `PATH=\"$PWD/bin:$PATH\" ./make_tag.sh`, it writes release.tag with exactly one line `app-<version>-<sha>-<date>`: version from VERSION (no CR or newline), sha from `git rev-parse --short HEAD`, date from $TAG_DATE or else today as YYYYMMDD. When git fails, or VERSION is missing or empty, it must exit non-zero with a message on stderr and leave release.tag as it was (or absent).",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Command Substitution",
-              "for",
-              "seq",
-              "printf"
+              "x=$(cmd) || exit",
+              "local x=$(...) hides the status",
+              "function return status",
+              "$(< file)",
+              "CRLF in input files"
             ],
             "module": "module-21-shell-automation",
             "level": "level-14-command-substitution"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-15-process-substitution",
-          "name": "level-15-process-substitution",
-          "path": "modules/module-21-shell-automation/level-15-process-substitution",
-          "mission": {
-            "name": "Process Substitution: Metric Sum",
-            "description": "In the shell automation lab, a task related to Process Substitution needs cleanup before the handoff.",
-            "objective": "Sum the numeric values in the second column of process-substitution-metrics.csv and write the total to total.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Process Substitution",
-              "awk",
-              "numeric aggregation"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-15-process-substitution"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-16-heredoc",
-          "name": "level-16-heredoc",
-          "path": "modules/module-21-shell-automation/level-16-heredoc",
-          "mission": {
-            "name": "Heredoc: Capacity Report",
-            "description": "In the shell automation lab, a task related to Heredoc needs cleanup before the handoff.",
-            "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Heredoc",
-              "du",
-              "sort"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-16-heredoc"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-17-traps",
-          "name": "level-17-traps",
-          "path": "modules/module-21-shell-automation/level-17-traps",
-          "mission": {
-            "name": "Traps: Schedule Entry",
-            "description": "In the shell automation lab, a task related to Traps needs cleanup before the handoff.",
-            "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Traps",
-              "cron",
-              "crontab syntax"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-17-traps"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-18-set-e",
-          "name": "level-18-set-e",
-          "path": "modules/module-21-shell-automation/level-18-set-e",
-          "mission": {
-            "name": "Set E: Alert Filter",
-            "description": "In the shell automation lab, a task related to Set E needs cleanup before the handoff.",
-            "objective": "Write every alert line from set-e.log into alerts.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Set E",
-              "grep",
-              "output redirection"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-18-set-e"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-19-set-u",
-          "name": "level-19-set-u",
-          "path": "modules/module-21-shell-automation/level-19-set-u",
-          "mission": {
-            "name": "Set U: Config Rewrite",
-            "description": "In the shell automation lab, a task related to Set U needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in set-u.conf and save the fixed result to fixed.conf",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Set U",
-              "sed",
-              "redirection"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-19-set-u"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-20-pipefail",
-          "name": "level-20-pipefail",
-          "path": "modules/module-21-shell-automation/level-20-pipefail",
-          "mission": {
-            "name": "Pipefail: Noise Dedup",
-            "description": "In the shell automation lab, a task related to Pipefail needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from pipefail-raw.txt with sorted unique values",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Pipefail",
-              "sort",
-              "uniq"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-20-pipefail"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-21-debug-xtrace",
-          "name": "level-21-debug-xtrace",
-          "path": "modules/module-21-shell-automation/level-21-debug-xtrace",
-          "mission": {
-            "name": "Debug Xtrace: Path Realignment",
-            "description": "In the shell automation lab, a task related to Debug Xtrace needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/debug-xtrace.txt to organized/debug-xtrace/debug-xtrace-notes.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Debug Xtrace",
-              "mkdir",
-              "mv",
-              "cp"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-21-debug-xtrace"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-22-modules-source",
-          "name": "level-22-modules-source",
-          "path": "modules/module-21-shell-automation/level-22-modules-source",
-          "mission": {
-            "name": "Modules Source: Field Extract",
-            "description": "In the shell automation lab, a task related to Modules Source needs cleanup before the handoff.",
-            "objective": "Extract the second column from modules-source-report.csv into owners.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Modules Source",
-              "cut",
-              "awk"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-22-modules-source"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-23-reusable-scripts",
-          "name": "level-23-reusable-scripts",
-          "path": "modules/module-21-shell-automation/level-23-reusable-scripts",
-          "mission": {
-            "name": "Reusable Scripts: Backup Bundle",
-            "description": "In the shell automation lab, a task related to Reusable Scripts needs cleanup before the handoff.",
-            "objective": "Create reusable-scripts-backup.tar.gz containing the files under bundle/reusable-scripts",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Reusable Scripts",
-              "tar",
-              "compression"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-23-reusable-scripts"
-          }
-        },
-        {
-          "id": "module-21-shell-automation/level-24-automation-summary",
-          "name": "level-24-automation-summary",
-          "path": "modules/module-21-shell-automation/level-24-automation-summary",
-          "mission": {
-            "name": "Automation Summary: Permission Fix",
-            "description": "In the shell automation lab, a task related to Automation Summary needs cleanup before the handoff.",
-            "objective": "Set the mode of automation-summary.sh to 640",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Automation Summary",
-              "chmod",
-              "permissions"
-            ],
-            "module": "module-21-shell-automation",
-            "level": "level-24-automation-summary"
           }
         }
       ]

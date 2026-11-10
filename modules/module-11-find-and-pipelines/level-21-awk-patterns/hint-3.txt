@@ -1,1 +1,6 @@
-Example: `mkdir -p organized/awk-patterns && mv inbox/awk-patterns.txt organized/awk-patterns/awk-patterns-notes.txt`
+  awk 'NR > 1 && $1 == "www-data" && $4 > 5 { out = $2; for (i = 11; i <= NF; i++) out = out " " $i; print out }' ps-aux.txt > heavy.txt
+      skip the header, user exactly www-data, %MEM above 5; print the PID and
+      every field from 11 (COMMAND) to the last one
+  awk 'NR > 1 && $8 ~ /^[DZ]/ { out = $2; for (i = 11; i <= NF; i++) out = out " " $i; print out }' ps-aux.txt > stuck.txt
+      STAT begins with D or Z, whatever flags follow
+  cat stuck.txt

@@ -1,1 +1,6 @@
-Example: `cut -d, -f2 find-exec-report.csv > owners.txt`
+  find app/logs -type f -name '*.log' -mmin +10080 -print
+      dry run: the .log files modified more than 7 x 24 x 60 minutes ago (5 of them)
+  find app/logs -type f -name '*.log' -mmin +10080 -exec gzip {} +
+      the same files, now compressed in place; {} + passes the names safely, spaces included
+  ls -lR app/logs
+      check: old logs end in .gz, recent ones and other files are unchanged

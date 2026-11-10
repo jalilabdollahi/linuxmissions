@@ -1,1 +1,8 @@
-Inspect the current mode first if you want to verify the change.
+Three separate problems; solve and check them one at a time.
+1. Which files? ls -laR var/log shows more than one directory, and dates that
+   are older than a week. Which tool lists files by name AND age, at any depth?
+2. How to read them all as one stream, whether gzipped or not?
+3. Pick one bounced line and copy its queue ID (the field before the second
+   colon), then grep that ID: on which line is the sender? How can a program
+   remember the sender of every ID until it knows which IDs bounced, even if
+   the two lines are in different files?

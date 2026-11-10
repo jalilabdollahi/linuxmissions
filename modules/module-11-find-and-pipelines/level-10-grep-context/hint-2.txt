@@ -1,1 +1,8 @@
-Archive the directory contents without leaving anything out.
+  grep -B1 PATTERN FILE     also print 1 line Before each match (-A after, -C both);
+                            groups are separated by a line '--' (GNU grep
+                            --no-group-separator drops it)
+  grep -o PATTERN           print only the matching part, one per line
+  grep -w PATTERN           the match must start and end at a word boundary, so
+                            'req=...' does not match inside parent_req=...
+  cut -d= -f2               keep what comes after the first =
+More: man grep (-A, -B, -C, -o, -w)

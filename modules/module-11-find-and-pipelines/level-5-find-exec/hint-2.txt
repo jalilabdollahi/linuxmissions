@@ -1,1 +1,9 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  find DIR -name '*.log'          names ending in .log
+  find DIR -mtime +N              modified MORE than N whole days ago: find drops the
+                                  fraction of the age first, so 7.5 days counts as 7
+                                  and -mtime +7 skips it
+  find DIR -mmin +N               the same in minutes (7 days = 10080 minutes)
+  -print                          show the matches (put it first, as a dry run)
+  -exec CMD {} +                  run CMD once with all matches as arguments;
+                                  {} stands for the file names, + ends the command
+gzip FILE... replaces each FILE with FILE.gz.  More: man find (-mtime, -exec)

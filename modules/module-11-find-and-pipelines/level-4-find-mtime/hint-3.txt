@@ -1,1 +1,6 @@
-Example: `sort find-mtime-raw.txt | uniq > unique-sorted.txt`
+  find etc -type f -mtime -1 > recent.txt
+      regular files whose content changed less than 24 h ago (-mmin -1440 gives the same list)
+  cat recent.txt
+      check the list
+  ls -l etc/nginx/conf.d
+      the times shown by ls -l are modification times

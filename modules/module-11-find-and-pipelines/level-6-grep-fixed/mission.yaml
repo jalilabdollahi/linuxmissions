@@ -1,15 +1,11 @@
 {
-  "name": "Grep Fixed: Config Rewrite",
-  "description": "In the search and pipelines lab, a task related to Grep Fixed needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in grep-fixed.conf and save the fixed result to fixed.conf",
+  "name": "Leaked Keys",
+  "description": "Security found a paste with 40 of our API keys and saved them in leaked.txt, one per line. Before rotating them, they need to know which requests in logs/ were made with any of those keys. The keys contain characters like . + * and $.",
+  "objective": "Write hits.txt with every log line under logs/ that contains any of the keys from leaked.txt exactly as written, each prefixed with its file name the way grep prints it with several files (logs/dir/file.log:the whole line). No line numbers, no other lines. Do not change logs/.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Grep Fixed",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["grep -F", "grep -f patternfile", "grep -r", "grep -H", "regex metacharacters"],
   "module": "module-11-find-and-pipelines",
   "level": "level-6-grep-fixed"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Grep Invert: Cleanup Sweep",
-  "description": "In the search and pipelines lab, a task related to Grep Invert needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/grep-invert and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Grep Invert",
-    "find",
-    "rm"
-  ],
+  "name": "What Is Actually Set",
+  "description": "A database is slow and the vendor asks for 'your effective postgresql.conf, without the comments'. Ours is the stock file of about 600 lines, edited over the years: commented defaults, indented comment lines, blank lines with stray spaces and tabs, and a few dozen real settings, some with a comment after the value.",
+  "objective": "Create effective.conf containing exactly the lines of postgresql.conf that are settings: drop every line that is empty, contains only spaces/tabs, or whose first non-blank character is #. Keep the remaining lines unchanged (including any # comment after a value) and in their original order. postgresql.conf itself must stay unchanged.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "10m",
+  "concepts": ["grep -v", "grep -E", "anchors", "[[:space:]]", "alternation (a|b)"],
   "module": "module-11-find-and-pipelines",
   "level": "level-8-grep-invert"
 }

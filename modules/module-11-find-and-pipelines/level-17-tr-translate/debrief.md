@@ -1,17 +1,25 @@
-# Tr Translate: Schedule Entry
+# Usernames From HR
 
-## What you practiced
-- This level focused on **Tr Translate** in a safe sandbox.
-- The shortest path usually combines `crontab` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`tr` works on characters, not words: its two sets are lined up position by
+position, so `tr 'A-Z' 'a-z'` maps A to a, B to b, and so on. In
+`tr -s ' \t.' '_'` the second set is shorter, so it is padded with its last
+character: space, tab and dot all become `_`, and `-s` then squeezes every
+run of `_` into one. That turns "Emeka D. <TAB>Nowak" (space, dot, space, tab)
+into `emeka_d_nowak`. `tr -d '\r'` deleted the carriage return that Windows puts
+before every newline.
 
-## Commands to remember
-```bash
-crontab -l
-printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt
-cat crontab.txt
-```
+## Common mistakes
+- Forgetting the `\r`: the file looks fine in the terminal, but every
+  username ends in an invisible character and `id emeka_d_nowak` finds nothing.
+- Expecting tr to replace strings: `tr 'Mr. ' ''` does not remove the title
+  "Mr.", it works character by character (and GNU tr refuses an empty SET2).
+  For words, use `sed 's/Mr\. //'`.
+- `tr '[A-Z]' '[a-z]'`: the brackets are taken literally (they map to
+  themselves, so it happens to work), but in other sets they cause surprises.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This mission is about cron field order and exact syntax.
+## Learn next
+`tr -c` complements a set: `tr -c 'a-z0-9_\n' '_'` would turn every other
+character (an apostrophe in O'Brien, an accented letter) into `_` too. Note that
+GNU tr works on bytes, so it cannot lowercase "Ö"; for UTF-8 names use
+`sed 's/.*/\L&/'` (GNU) or awk's `tolower()`.

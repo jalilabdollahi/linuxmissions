@@ -1,1 +1,9 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  grep -f FILE           read the patterns from FILE, one per line (a line matches if
+                         ANY pattern matches); an empty pattern line matches everything
+  grep -F                treat patterns as fixed strings, not regular expressions
+  grep -r PATTERN DIR    search every file below DIR
+  grep -H                print the file name before each line (the default when
+                         grep searches several files)
+To drop empty lines from a file: grep -v '^$' FILE > NEWFILE
+To see hidden characters and line ends: cat -A FILE (macOS: cat -vet FILE)
+More: man grep (look for -F, -f)

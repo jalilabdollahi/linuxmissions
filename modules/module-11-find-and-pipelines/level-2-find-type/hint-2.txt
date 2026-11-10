@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  find DIR -type l          symbolic links (find does not follow them, so a link to
+                            a directory or to a missing file still shows up as a link)
+  find DIR -type d          directories
+  find DIR -empty           empty directories AND empty (zero-byte) files
+Combine tests by writing them one after another: both must be true.
+`ls -la` or `ls -l` shows links as `name -> target`.
+More: man find (look for -type and -empty)

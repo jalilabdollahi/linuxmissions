@@ -1,1 +1,6 @@
-This is a delimiter-based column extraction task.
+Compare three or four lines of app.log: is dur ever in the same field
+position twice? So "print $7" can't work; you have to look at every field
+of a line and recognise it by its key. Which keys only look like ts, svc or
+dur? Then the numbers: what is 1.2s in ms, what is 730us, and what do you do
+with exactly 500 ms? Watch out for 2.05s: compute 2.05 * 1000 in awk with
+printf "%d" and look closely.

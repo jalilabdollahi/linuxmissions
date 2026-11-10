@@ -1,1 +1,5 @@
-Example: `find cleanup/grep-invert -name '*.tmp' -delete`
+  grep -v -E '^[[:space:]]*(#|$)' postgresql.conf > effective.conf
+      -v keeps the lines that do NOT match; the pattern means: from the start of the
+      line, optional spaces/tabs, then a # (a comment) or the end of the line (blank)
+  cat effective.conf
+      check: only settings, trailing comments included

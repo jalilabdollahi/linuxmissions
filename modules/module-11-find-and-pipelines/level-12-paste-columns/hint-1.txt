@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+The three exports line up: line 5 of each file belongs to the same host, so
+the table is just the files glued side by side. Before you trust the result,
+look at the bytes of each export, not just the text: a file from Windows ends
+every line with \r\n, and that \r would end up in the middle of each row. For
+limit.txt you need the opposite move: many lines joined into one.

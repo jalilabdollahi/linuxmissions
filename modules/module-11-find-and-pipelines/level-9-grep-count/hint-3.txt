@@ -1,1 +1,6 @@
-Example: `ln -s releases/grep-count.conf current.conf`
+  grep -c -w ERROR logs/*.log
+      one line per file: logs/<name>.log:<number of lines with the word ERROR>
+  grep -c -w ERROR logs/*.log | awk -F: '$2 > 50 { sub(/^logs\//, "", $1); print $1, $2 }' | sort -k2,2nr > noisy.txt
+      keep counts above 50, strip logs/, print "file count", sort by count, highest first
+  cat noisy.txt
+      check the ranking

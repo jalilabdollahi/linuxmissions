@@ -1,15 +1,11 @@
 {
-  "name": "Sort Keys: Metric Sum",
-  "description": "In the search and pipelines lab, a task related to Sort Keys needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of sort-keys-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Sort Keys",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Capacity Review",
+  "description": "For the quarterly capacity review, the team wants the host inventory grouped by datacenter, busiest hosts first. inventory.txt (host dc rack load mem, with a header line) comes from a metrics exporter that writes some loads in scientific notation, like 1e-02 or 1.2e+01.",
+  "objective": "Write sorted.txt: the header line first, then every row of inventory.txt unchanged, ordered by datacenter (alphabetically), then by load as a number (highest first), then by host name in natural order (web9 before web10).",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["sort -k N,N", "sort -g", "sort -V", "per-key options (-k4,4gr)", "keeping a header out of sort"],
   "module": "module-11-find-and-pipelines",
   "level": "level-15-sort-keys"
 }

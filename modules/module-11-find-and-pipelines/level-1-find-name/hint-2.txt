@@ -1,1 +1,8 @@
-`mkdir -p organized/find-name` followed by `mv inbox/find-name.txt organized/find-name/find-name-notes.txt` is enough.
+  find DIR -name 'PATTERN'      match the file name against a wildcard pattern (case-sensitive)
+  find DIR -iname 'PATTERN'     the same, ignoring upper/lower case
+  -type f                       only regular files
+  *                             in the pattern: any text, including nothing
+Always quote the pattern. Unquoted, the shell expands *invoice*.pdf against the
+files in your current folder (there is request-invoice-copies.pdf right here),
+and find receives that one file name instead of the pattern.
+More: man find (look for -iname)

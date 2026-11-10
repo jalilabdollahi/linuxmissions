@@ -1,1 +1,10 @@
-Use chmod with octal mode 640.
+  find var/log -name 'mail.log*' -mtime -7      by name, modified less than 7 days ago
+  find ... -exec gzip -cdf {} +                 decompress to stdout; -f passes plain
+                                                files through unchanged (zcat -f on Linux)
+In awk the queue ID is $6 and the from=<...> part is $7 on the from= lines:
+  $7 ~ /^from=<.*@/ { ...; from[$6] = tolower(domain) }   remember the sender domain per ID
+  /status=bounced/ { bounced[$6] = 1 }                    remember which IDs bounced
+  END { for (q in bounced) if (q in from) print from[q] } one line per bounced message
+sub(/.*@/, "", d) and sub(/>.*/, "", d) cut the domain out of $7.
+Then: sort | uniq -c | sort -k1,1nr -k2,2 | head -5, and awk '{ print NR, $2, $1 }'.
+More: man find, man gzip, man awk

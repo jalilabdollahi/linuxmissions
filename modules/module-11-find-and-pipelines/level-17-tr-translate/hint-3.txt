@@ -1,1 +1,5 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+  tr -d '\r' < newhires.txt | tr 'A-Z' 'a-z' | tr -s ' \t.' '_' > usernames.txt
+      tr -d '\r'            remove the Windows carriage returns
+      tr 'A-Z' 'a-z'        lowercase every letter
+      tr -s ' \t.' '_'      space, tab and dot become _, and runs of _ shrink to one
+  head usernames.txt

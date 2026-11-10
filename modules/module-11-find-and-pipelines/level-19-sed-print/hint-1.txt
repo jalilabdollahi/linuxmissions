@@ -1,1 +1,7 @@
-You need a stream editor or another text replacement tool.
+Both parts are "print only some lines": a range that starts at one line and
+ends at another. Run grep -n '^\[' app.ini to see where every section starts.
+Three questions: a range from the [database] header to "the next line that
+starts with [" includes that next header, so how do you lose it? Which other
+lines of app.ini mention database between brackets? And in a regex, what
+does [database] mean when the brackets are not escaped?
+For the trace: how many lines are "1200 to 1260", counting both ends?

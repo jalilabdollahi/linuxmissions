@@ -1,15 +1,11 @@
 {
-  "name": "Pipeline Report: Permission Fix",
-  "description": "In the search and pipelines lab, a task related to Pipeline Report needs cleanup before the handoff.",
-  "objective": "Set the mode of pipeline-report.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Pipeline Report",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Weekly Bounce Report",
+  "description": "Every Monday the mail team asks which customers' mailings bounce the most, so they can warn them before the relays land on a blocklist. The logs of both relays are under var/log/ (rotated daily, older ones gzipped). Postfix writes the sender of a message (from=) and its delivery result (status=) on different lines, linked by the queue ID. Some bounces come from the empty sender <> (bounce notices that bounced themselves).",
+  "objective": "From every mail.log* file under var/log/ (any depth, plain or .gz) modified in the last 7 days, count the bounced messages (status=bounced) per sender domain: the part after @ in the message's from=<...>, in lowercase; messages from the empty sender <> don't count. Write report.txt with the top 5 as lines 'rank domain count' (e.g. '1 example.org 17'): highest count first, equal counts ordered by domain name. Don't change or unpack the logs.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["find -name -mtime", "zcat -f / gzip -cdf", "awk arrays as a join on a key", "sort | uniq -c", "sort -k1,1nr -k2,2", "head"],
   "module": "module-11-find-and-pipelines",
   "level": "level-24-pipeline-report"
 }

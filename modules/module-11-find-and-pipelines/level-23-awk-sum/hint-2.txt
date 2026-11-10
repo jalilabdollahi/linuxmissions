@@ -1,1 +1,9 @@
-Archive the directory contents without leaving anything out.
+  awk -F'\t' '...' files.lst    split on tabs only: $1 path, $2 user, $3 bytes, $4 date
+  NF == 4                       a pattern that skips lines without four fields
+  total[$2] += $3               one running total per user (an array indexed by name)
+  $4 < "2025-01-01"             ISO dates sort like text, so a string comparison works
+  END { for (u in total) ... }  after the last line, visit every user once
+  printf "%s\t%.2f\t%.2f\n", u, total[u] / 1024^3, ...
+  sort -t "$(printf '\t')" -k2,2nr     sort on column 2 (tab-separated), numeric, largest
+                                first (in bash also -t $'\t')
+More: man awk, man sort

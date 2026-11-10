@@ -1,1 +1,7 @@
-Example: `sort sed-substitute-raw.txt | uniq > unique-sorted.txt`
+  find templates -name '*.html' -exec sed -i -E -e 's#http://old-cdn\.example\.com/#https://cdn.example.net/v2/#g' -e 's#([0-9]{2})/([0-9]{2})/([0-9]{4})#\3-\2-\1#g' {} +
+      find ... -exec ... {} +   run sed once on all templates, emails/ included
+      -i -E                     edit in place, extended regex (macOS: sed -i '' -E)
+      s#...#...#g               # as delimiter, \. for literal dots, every URL on the line
+      ([0-9]{2})/([0-9]{2})/([0-9]{4})  day, month, year as groups 1, 2, 3
+      \3-\2-\1                  written back as year-month-day
+  grep -rn 'cdn\|Published' templates/index.html

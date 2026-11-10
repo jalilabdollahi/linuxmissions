@@ -1,1 +1,6 @@
-Example: `grep 'ALERT' tr-delete.log > alerts.txt`
+  sed $'s/\e\\[[0-9;]*m//g' console.raw | tr -d '\r\000\007' > console.txt
+      $'...'        bash turns \e into a real ESC byte (and \\ into \)
+      s/ESC\[[0-9;]*m//g   delete every colour sequence, all of them on a line
+      tr -d '\r\000\007'   delete carriage returns, NUL bytes and bells
+  cat -A console.txt | head -30
+      check: no ^M, ^@, ^G or ^[ left; tabs show as ^I

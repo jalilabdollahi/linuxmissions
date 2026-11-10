@@ -1,1 +1,8 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+  cut -f1 FILE          the first tab-separated field: the name (with any :arch)
+  sed 's/:.*//'         delete from the first colon to the end of the line
+  sort -u               sort and drop duplicate lines
+  comm A B              three columns: only in A | only in B | in both
+  comm -23 A B          hide columns 2 and 3: lines only in A
+  comm -13 A B          hide columns 1 and 3: lines only in B
+Both inputs of comm must be sorted the same way (same sort, same locale).
+More: man comm

@@ -1,1 +1,5 @@
-Use one command for the beginning of the file and another for the end.
+grep PermitRootLogin finds far too much: every file has the stock comment
+#PermitRootLogin prohibit-password. Only lines that start with the keyword
+(maybe after spaces or tabs) count, sshd reads keywords in any letter case, and
+when a keyword appears twice sshd uses the FIRST value it reads and ignores the
+rest. So for each host: what does its first real PermitRootLogin line say?

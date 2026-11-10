@@ -1,15 +1,11 @@
 {
-  "name": "Join Files: Script Kickoff",
-  "description": "In the search and pipelines lab, a task related to Join Files needs cleanup before the handoff.",
-  "objective": "Make jobs/join-files.sh executable, run it, and create the token file it writes",
+  "name": "Whose Laptop Is That?",
+  "description": "The office network has devices nobody recognises. The DHCP server's lease file dnsmasq.leases (expiry mac ip hostname client-id) says which MAC got which IP; the asset inventory inventory.csv (MAC,owner,team, with a header) says who owns which MAC. The two systems write MAC addresses differently.",
+  "objective": "Write owners.txt with one line 'ip mac owner' for every lease in dnsmasq.leases: the MAC as the lease file writes it, the owner from inventory.csv, or UNKNOWN when the inventory has no entry for that MAC. Sort the lines by IP address numerically (10.20.0.9 before 10.20.0.10).",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Join Files",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "15m",
+  "concepts": ["join -1 -2", "join -a1 -e -o", "sorting on the join key", "tr to normalise keys", "sort -t. -n"],
   "module": "module-11-find-and-pipelines",
   "level": "level-13-join-files"
 }

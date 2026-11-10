@@ -1,15 +1,11 @@
 {
-  "name": "Sed Substitute: Noise Dedup",
-  "description": "In the search and pipelines lab, a task related to Sed Substitute needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from sed-substitute-raw.txt with sorted unique values",
+  "name": "CDN Cutover",
+  "description": "Marketing moves its static files to a new CDN tonight and wants ISO dates on the site at the same time. The 40 HTML templates in templates/ (and templates/emails/) still load everything from http://old-cdn.example.com/ and print dates as DD/MM/YYYY. Some templates also link to our print partner, whose domain is old-cdn-example.com; those links must stay.",
+  "objective": "Edit the templates in place: every http://old-cdn.example.com/<path> becomes https://cdn.example.net/v2/<path>, and every date written DD/MM/YYYY becomes YYYY-MM-DD. Nothing else may change (old-cdn-example.com links included), and no backup files may be left in templates/.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Sed Substitute",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "15m",
+  "concepts": ["sed -E", "capture groups \\1 \\2 \\3", "custom delimiters s###", "escaping . in regexes", "the g flag", "sed -i (GNU vs BSD)"],
   "module": "module-11-find-and-pipelines",
   "level": "level-20-sed-substitute"
 }

@@ -1,1 +1,8 @@
-A grep count or grep piped into wc can produce the number you need.
+  find DIR -size +N[ckMG]     larger than N units; -N = smaller, N = exactly
+                              c = bytes, k = KiB (1024), M = MiB, G = GiB
+  find DIR -empty             zero-byte files and empty directories
+  -type f                     only regular files
+Before comparing, find rounds every size UP to whole units. -size +10M means
+"rounds up to more than 10 MiB". If in doubt, count bytes: -size +10485760c.
+Check a file with ls -l (bytes) or ls -lh.
+More: man find (look for -size)

@@ -1,1 +1,6 @@
-Look for a filtering command that keeps only the alert lines in find-type.log.
+ls shows releases/current and node_modules like ordinary folders, but they are
+links to somewhere else. find can test what kind of thing each entry is
+(regular file, directory, symbolic link) without following links.
+For the second list: which directories hold nothing at all? A folder that only
+contains .gitkeep, or only another empty folder, is not empty, and an empty
+file such as deploy.lock is not a directory.

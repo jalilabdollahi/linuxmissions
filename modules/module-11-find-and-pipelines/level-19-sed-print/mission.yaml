@@ -1,15 +1,11 @@
 {
-  "name": "Sed Print: Config Rewrite",
-  "description": "In the search and pipelines lab, a task related to Sed Print needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in sed-print.conf and save the fixed result to fixed.conf",
+  "name": "Vendor Ticket",
+  "description": "The vendor of the orders API asks for two things for their support ticket: the database settings from app.ini and the part of trace.log their crash tool pointed at, lines 1200 to 1260. app.ini has several sections, including a [database-replica] section that is not the one they want.",
+  "objective": "Write db-section.txt with the [database] section of app.ini: from its [database] header line up to, but not including, the next section header, every line unchanged. Write excerpt.txt with lines 1200 to 1260 of trace.log (both included), unchanged.",
   "xp": 200,
   "difficulty": "advanced",
   "expected_time": "12m",
-  "concepts": [
-    "Sed Print",
-    "sed",
-    "redirection"
-  ],
+  "concepts": ["sed -n with p", "sed address ranges /re/,/re/", "line ranges M,N", "q to stop early", "escaping [ ] in regexes"],
   "module": "module-11-find-and-pipelines",
   "level": "level-19-sed-print"
 }

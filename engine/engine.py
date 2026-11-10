@@ -370,7 +370,13 @@ class ShellSession:
         assert self.fd is not None
 
         sentinel = f"__LM_DONE_{uuid.uuid4().hex}__"
-        os.write(self.fd, f"{cmd}\nprintf '{sentinel}:%s\\n' $?\n".encode("utf-8"))
+        # The command and the sentinel line are queued on the pty together. A
+        # command that reads stdin (`cat`, `read`, `script`, a password prompt)
+        # would swallow the sentinel line and the game would wait until the
+        # timeout. Keystrokes are never forwarded to a running command, so give
+        # it /dev/null instead; the group runs in the current shell, so cd,
+        # variables and jobs still persist.
+        os.write(self.fd, f"{{ {cmd}\n}} </dev/null\nprintf '{sentinel}:%s\\n' $?\n".encode("utf-8"))
 
         output = ""
         deadline = time.time() + COMMAND_TIMEOUT

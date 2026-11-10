@@ -111,6 +111,26 @@ class ShellSessionTests(unittest.TestCase):
         out = self.shell.capture("bash -c 'for i in $(seq 1 20000); do echo $i; done' | head -1")
         self.assertEqual(out, "1")
 
+    def test_stdin_readers_do_not_swallow_the_sentinel(self):
+        for cmd in ("cat", "read x", "head -1"):
+            start = time.time()
+            code, _ = self.shell._execute(cmd)
+            self.assertLess(time.time() - start, 10, cmd)
+        self.assertEqual(self.shell.capture("echo alive"), "alive")
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "util-linux script syntax")
+    def test_script_does_not_hang(self):
+        start = time.time()
+        code, _ = self.shell._execute("script -q -c 'echo recorded' session.log")
+        self.assertLess(time.time() - start, 10)
+        self.assertEqual(code, 0)
+        self.assertIn("recorded", (self.sandbox / "session.log").read_text())
+
+    def test_background_jobs_stay_in_job_table(self):
+        self.shell.capture("sleep 30 &")
+        self.assertIn("sleep 30", self.shell.capture("jobs"))
+        self.shell.capture("kill %1")
+
     def test_exit_code(self):
         self.assertEqual(self.shell._execute("false")[0], 1)
         self.assertEqual(self.shell._execute("true")[0], 0)

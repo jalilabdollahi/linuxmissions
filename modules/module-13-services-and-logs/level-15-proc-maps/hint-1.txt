@@ -1,1 +1,6 @@
-This is a numeric aggregation task.
+A package upgrade replaces a library file; a process that already loaded the
+old one keeps using it even though its name is gone from the directory.
+Where does the kernel list the files a process has loaded into memory? And
+how do you get from a process ID back to a service name?
+Not every process that touched the old file loaded it: think about what is
+different between "mapped" and "opened".

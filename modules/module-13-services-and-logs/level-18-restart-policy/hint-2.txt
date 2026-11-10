@@ -1,1 +1,9 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+- journalctl -u queue-consumer shows the failures, "Scheduled restart job" lines
+  and the final "Start request repeated too quickly".
+- systemctl show -p Restart -p RestartUSec -p StartLimitBurst -p StartLimitIntervalUSec queue-consumer
+- man systemd.service (Restart=, RestartSec=) and man systemd.unit
+  (StartLimitIntervalSec=, StartLimitBurst= belong in the [Unit] section).
+- Restart=on-failure restarts after a non-zero exit, a signal or a timeout,
+  not after a clean exit 0; always restarts after everything.
+- After editing: systemctl daemon-reload. A unit that hit the limit stays
+  failed until systemctl reset-failed (or a restart that clears it).

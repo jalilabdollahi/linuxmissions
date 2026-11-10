@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in systemctl-enable.log.
+systemd says the agent is enabled, and still the boot skipped it. So the question is not
+"is it enabled?" but "enabled for what?". Enabling a unit means linking it into some target's
+.wants/ directory. Which target is that here, and which target does this server boot into?
+Also: enabling only matters for the next boot. The agent has to run now as well.

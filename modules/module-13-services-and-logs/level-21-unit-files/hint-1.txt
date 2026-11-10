@@ -1,1 +1,6 @@
-Inspect the sandbox, then create the missing path for organized/unit-files/unit-files-notes.txt.
+Start from what the tmux history shows: which directory did Karim run it
+from, with which command, and what happened when it started?
+A process supervisor wants the main process to stay alive in the foreground.
+Does this program do that by default? What does its own usage text offer?
+Then think about the three sections of a unit file: what runs, what it needs
+to find at start, and when it should be started.

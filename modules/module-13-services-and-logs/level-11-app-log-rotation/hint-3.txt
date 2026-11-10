@@ -1,1 +1,24 @@
-Example: `tar -xzf app-log-rotation-restore.tar.gz`
+Add sharedscripts and a postrotate that reloads the app, then force a rotation to check:
+
+cat > etc/logrotate.d/app <<CONF
+$SANDBOX/var/log/app/*.log {
+    daily
+    rotate 7
+    missingok
+    compress
+    delaycompress
+    create 0640
+    sharedscripts
+    postrotate
+        systemctl reload app.service
+    endscript
+}
+CONF
+logrotate -s logrotate.state -f etc/logrotate.d/app
+ls -l /proc/$(systemctl show -P MainPID app)/fd
+
+- create 0640          logrotate renames app.log to app.log.1 and creates an empty app.log
+- postrotate           after renaming, `systemctl reload app` sends SIGHUP: the app reopens by name
+- sharedscripts        the pattern matches app.log and audit.log; reload once, not twice
+- $SANDBOX/...         the shell fills in the sandbox path, as the old config had it
+- logrotate -s ... -f  force a rotation now; fd 3 and 4 should now point at the new files

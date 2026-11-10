@@ -1,1 +1,9 @@
-Use tar extraction flags and point at the archive file.
+logrotate directives (man logrotate):
+  create MODE        rename the log, create a new empty one (the app must then reopen it)
+  copytruncate       copy and truncate in place: no reopen needed, but lines can be lost (forbidden here)
+  postrotate ... endscript   shell commands run after rotating, e.g. systemctl reload app.service
+  sharedscripts      run postrotate once for all files the pattern matched, not once per file
+Try your config without waiting for the night (as non-root you need your own state file):
+  logrotate -d -s logrotate.state etc/logrotate.d/app      dry run, shows what it would do
+  logrotate -v -s logrotate.state -f etc/logrotate.d/app   force a real rotation
+systemctl is the mock; `systemctl reload app` runs the unit's ExecReload= (SIGHUP).

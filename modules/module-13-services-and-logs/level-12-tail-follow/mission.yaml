@@ -1,15 +1,11 @@
 {
-  "name": "Tail Follow: Permission Fix",
-  "description": "In the services and logs lab, a task related to Tail Follow needs cleanup before the handoff.",
-  "objective": "Set the mode of tail-follow.sh to 640",
+  "name": "Printed Once",
+  "description": "The deploy agent prints a one-time admin token into var/log/deploy/deploy.log during each deploy: right after it rotates the log, into the new file, and it scrubs the log again a few seconds later. Last time nobody caught it and the deploy had to be redone. ./trigger-deploy.sh starts a deploy and waits until it has finished.",
+  "objective": "Run a deploy and save its one-time admin token (adm_ followed by 24 letters and digits) in token.txt. Tip: in the game shell a command ending in & runs in the background (`wait` waits for it, Ctrl-C stops a foreground command).",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Tail Follow",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "10m",
+  "concepts": ["tail -f vs tail -F", "log rotation and inodes", "tail -n0", "grep -m1 / -o", "background jobs & and wait", "timeout"],
   "module": "module-13-services-and-logs",
   "level": "level-12-tail-follow"
 }

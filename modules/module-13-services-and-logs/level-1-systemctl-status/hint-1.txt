@@ -1,1 +1,4 @@
-Inspect the sandbox, then create the missing path for organized/systemctl-status/systemctl-status-notes.txt.
+Start with the overview: which services exist on app-02, and what state is each one in?
+Not every broken unit is "failed". A unit that systemd keeps restarting spends most of its
+time waiting for the next attempt, so a list of failed units can be empty while something is down.
+And not every unit that isn't running is broken: a job that ran once and finished is supposed to be stopped.

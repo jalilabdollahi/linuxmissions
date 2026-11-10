@@ -1,17 +1,26 @@
-# Hostnamectl: Alert Filter
+# Restart Storm
 
-## What you practiced
-- This level focused on **Hostnamectl** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`Restart=` decides which exits trigger a restart, `RestartSec=` how long
+systemd waits before it tries again, and `StartLimitBurst=` /
+`StartLimitIntervalSec=` how many starts it allows inside a time window
+before it gives up with `start-limit-hit`. The default is 5 starts in 10
+seconds with a pause of only 100 ms, so a service that fails instantly runs
+out of attempts in half a second, long before a broker comes back. A pause of a few
+seconds and a bigger burst stretch the same number of attempts over minutes.
+`Restart=on-failure` leaves a deliberate exit 0, such as an operator's
+drain, alone.
 
-## Commands to remember
-```bash
-grep 'ALERT' file.log
-grep -n PATTERN file.log
-grep -v PATTERN file.log
-```
+## Common mistakes
+- `Restart=always`: it fixes the crashes, and it also resurrects a service
+  someone stopped on purpose by letting it exit.
+- Putting `StartLimitIntervalSec=` in `[Service]` or forgetting
+  `daemon-reload`, then wondering why `systemctl show` still prints the old
+  values.
+- Only raising `StartLimitBurst` and leaving the 100 ms pause: the attempts are
+  still gone before the broker is back.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Look for a filtering command that keeps only the alert lines in hostnamectl.log.
+## Next step
+`systemctl show -p NRestarts UNIT` counts the automatic restarts.
+`SuccessExitStatus=` and `RestartPreventExitStatus=` fine-tune which exit
+codes count as success or never restart.

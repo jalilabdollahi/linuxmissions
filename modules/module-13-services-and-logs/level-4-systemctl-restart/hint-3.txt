@@ -1,1 +1,12 @@
-Example: `sort systemctl-restart-raw.txt | uniq > unique-sorted.txt`
+Add an ExecReload= that sends SIGHUP, let systemd re-read the unit, then reload the api:
+
+sed -i 's/^ExecStart=.*/&\nExecReload=\/bin\/kill -HUP $MAINPID/' etc/systemd/system/api.service
+systemctl daemon-reload
+systemctl reload api
+systemctl status api
+tail -n 3 var/log/api/api.log
+
+- sed ... ExecReload=/bin/kill -HUP $MAINPID   adds the line under ExecStart= (or use: edit etc/systemd/system/api.service)
+- daemon-reload    systemd loads the edited unit; the api process is not touched
+- reload api       systemd runs ExecReload=: the api gets SIGHUP and re-reads api.conf, same PID
+- tail api.log     "config revision ... loaded" with the new revision, jobs still running

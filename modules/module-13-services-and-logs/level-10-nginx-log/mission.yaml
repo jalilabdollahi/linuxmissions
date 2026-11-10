@@ -1,15 +1,11 @@
 {
-  "name": "Nginx Log: Backup Bundle",
-  "description": "In the services and logs lab, a task related to Nginx Log needs cleanup before the handoff.",
-  "objective": "Create nginx-log-backup.tar.gz containing the files under bundle/nginx-log",
+  "name": "Since the Deploy",
+  "description": "Since the 14:00 deploy of the shop API, customers have been reporting error pages. Before rolling back, the team lead wants to know which endpoint is hit hardest and how slow its backend got when it failed. The nginx access log is var/log/nginx/access.log; its format is defined in etc/nginx/nginx.conf.",
+  "objective": "Write worst.txt with one line 'path count max_upstream': among requests logged at 14:00:00 or later, the endpoint path (without the query string) with the most 5xx responses, the number of those 5xx responses, and the highest upstream response time among them in seconds as logged (e.g. '/api/v2/example 12 1.234'). Don't change the log.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Nginx Log",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "15m",
+  "concepts": ["nginx combined log format", "log_format / $upstream_response_time", "awk $NF", "stripping query strings", "time-window filtering", "awk max per key"],
   "module": "module-13-services-and-logs",
   "level": "level-10-nginx-log"
 }

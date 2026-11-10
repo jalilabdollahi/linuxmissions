@@ -1,1 +1,8 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+- timedatectl (status) shows "Time zone: Zone/Name (ABBR, +hhmm)";
+  timedatectl show prints Timezone=Zone/Name for scripts.
+- GNU date converts for you: TZ=<that zone> date -d '<the UTC time from kernel-oom.txt>' '+%F %T'
+  prints that moment as the zone's local time (date reads the +00:00 in the input).
+  Or do it by hand: date -u -d '2026-11-09 22:47:13 UTC + 3 hours 30 minutes' '+%F %T'
+- grep '^YYYY-MM-DD HH:MM:SS ' app.log finds the line of that second. The date can
+  change at midnight!
+More: man timedatectl, man date (DATE STRING), info date 'Date input formats'

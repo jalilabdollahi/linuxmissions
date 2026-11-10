@@ -1,1 +1,11 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+- systemctl cat billing                    the unit as systemd sees it
+- systemctl show -p Environment -p EnvironmentFiles billing
+                                           ignore_errors=yes means the line starts with "-":
+                                           a missing file is skipped without any message
+- Order: Environment= first, then each EnvironmentFile= in order; a later
+  assignment wins. So a file always beats Environment= in the unit.
+- Env files are KEY=value lines; # starts a comment only at the beginning of
+  a line. Anything after the value is part of the value.
+- After editing the unit: systemctl daemon-reload; then systemctl restart billing.
+- journalctl -u billing shows what billing-server printed.
+More: man systemd.exec (Environment=, EnvironmentFile=)

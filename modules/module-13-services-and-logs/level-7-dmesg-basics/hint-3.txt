@@ -1,1 +1,12 @@
-Example: `head -n 3 dmesg-basics-history.log > first3.txt` and `tail -n 3 dmesg-basics-history.log > last3.txt`
+Get the boot time, extract seconds/binary/library from every segfault line, convert:
+
+bt=$(awk '$1 == "btime" { print $2 }' captures/proc-stat.txt)
+sed -nE 's/^\[ *([0-9]+)\.[0-9]+\] ([^[]+)\[[0-9]+\]: segfault at .* in ([^[]+)\[.*/\1 \2 \3/p' captures/dmesg.txt |
+while read -r up bin lib; do echo "$(date -u -d "@$((bt + up))" +%Y-%m-%dT%H:%M:%SZ) $bin $lib"; done > crash.txt
+cat crash.txt
+
+- btime                    when the kernel booted, in epoch seconds
+- \[ *([0-9]+)\.[0-9]+\]   the whole seconds since boot, with or without padding spaces
+- ([^[]+)\[[0-9]+\]        the program name, without its [pid]
+- in ([^[]+)\[             the library file, without [address+size]
+- date -u -d @N            boot time + seconds since boot, printed in UTC

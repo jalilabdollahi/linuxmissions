@@ -1,15 +1,11 @@
 {
-  "name": "Proc Cpuinfo: Capacity Report",
-  "description": "In the services and logs lab, a task related to Proc Cpuinfo needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Proc Cpuinfo",
-    "du",
-    "sort"
-  ],
+  "name": "One Worker per Core",
+  "description": "render-07 got new hardware this morning, but render-worker still runs with the sizing of the old box. Nobody can log in to look at the CPU right now; the hardware team left a capture of the new box's /proc/cpuinfo in capture/cpuinfo.",
+  "objective": "Set etc/default/render-worker to the new box: WORKERS = the number of physical CPU cores (hyperthreads don't count), BUILD = avx2 if the CPU supports AVX2, otherwise generic. The file must set only these two (comments are fine). Then make the running render-worker.service use the new values. `systemctl` is a mock that treats the sandbox as /, so /etc/default/... is ./etc/default/...",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["/proc/cpuinfo", "physical id / core id / siblings / cpu cores", "hyperthreads vs physical cores", "flags (grep -w)", "EnvironmentFile=", "systemctl restart"],
   "module": "module-13-services-and-logs",
   "level": "level-16-proc-cpuinfo"
 }

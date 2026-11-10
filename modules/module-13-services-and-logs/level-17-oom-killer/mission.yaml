@@ -1,15 +1,11 @@
 {
-  "name": "Proc Meminfo: Schedule Entry",
-  "description": "In the services and logs lab, a task related to Proc Meminfo needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Killed in the Night",
+  "description": "reports.service died overnight and didn't come back. The on-call note says \"OOM?\". The runbook (POLICY.md) says how to size the memory limit of a service that the kernel OOM-killed.",
+  "objective": "Following POLICY.md, set reports.service's MemoryMax to 1.5 × the largest anon-rss of the processes the kernel OOM-killed in reports.service's own cgroup (from the journal), rounded up to the next multiple of 256M, so that `systemctl show -p MemoryMax reports.service` reports it. Then start reports.service again. `systemctl` and `journalctl` are mocks (the journal is in var/log/journal).",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Proc Meminfo",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "15m",
+  "concepts": ["kernel OOM killer messages", "journalctl -k -g", "task_memcg / cgroups", "anon-rss in KiB", "MemoryMax=", "systemctl set-property", "systemctl show -p"],
   "module": "module-13-services-and-logs",
-  "level": "level-17-proc-meminfo"
+  "level": "level-17-oom-killer"
 }

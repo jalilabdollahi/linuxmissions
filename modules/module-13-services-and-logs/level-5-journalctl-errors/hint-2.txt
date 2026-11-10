@@ -1,1 +1,7 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+journalctl (a mock, real options) filters on the entry's fields:
+  -p err                 priority err (3) and everything more serious: crit (2), alert (1), emerg (0)
+  -p warning..err        a range, if you ever need one
+  --since "YYYY-MM-DD HH:MM"   a full date and time (local server time); "HH:MM" alone means today
+  --list-boots, -b       boots in the journal; -b limits the output to the current boot (not wanted here)
+  -o short-iso           timestamps like 2026-11-10T01:02:03+01:00
+Read more: man journalctl (-p, -S, -b, -o), man systemd.time (time formats)

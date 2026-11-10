@@ -1,1 +1,5 @@
-This task usually takes two steps: fix execute permission, then run the script.
+This is a question about position, not just content: "the first X after the
+second Y". Open the file in a pager that can search forward from where you
+are, and show line numbers so you can count lines.
+Look closely at every "deploy finished" marker you land on: one of them is a
+dry run. And the first match for "panic" after a deploy may not be a panic at all.

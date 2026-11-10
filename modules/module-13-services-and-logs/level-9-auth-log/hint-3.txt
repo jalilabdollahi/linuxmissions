@@ -1,1 +1,18 @@
-Example: `ln -s releases/auth-log.conf current.conf`
+One pass over the log, counting failures per IP and checking the count at each login:
+
+awk '/sshd\[/ && /Failed password for/ {
+       ip = $0; sub(/.* from /, "", ip); sub(/ .*/, "", ip)
+       n = ($6 == "message" && $7 == "repeated") ? $8 : 1
+       fails[ip] += n
+     }
+     /sshd\[/ && /Accepted / {
+       ip = $0; sub(/.* from /, "", ip); sub(/ .*/, "", ip)
+       user = $0; sub(/.*Accepted [a-z]+ for /, "", user); sub(/ .*/, "", user)
+       if (fails[ip] >= 5) print ip, user
+     }' var/log/auth.log | sort -u > compromised.txt
+cat compromised.txt
+
+- sub(/.* from /, ...)        the IP is the word after "from", whatever comes before it
+- n = ... $8 : 1              "message repeated N times" stands for N failed attempts
+- fails[ip] >= 5 at Accepted  only failures logged before this login count
+- user from the Accepted line the account that actually got in, not the one they tried first

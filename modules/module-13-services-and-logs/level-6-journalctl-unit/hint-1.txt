@@ -1,1 +1,4 @@
-You need a stream editor or another text replacement tool.
+The ticket names one unit and a time window. A text search for "payment" can't tell
+payment.service apart from payment-sync.service or payment@eu.service, but the journal records
+which unit wrote every line. Be careful not to filter by the process name either: one unit can
+run several programs, and systemd itself logs lines about the unit (stopping, starting it).

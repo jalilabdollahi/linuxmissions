@@ -1,1 +1,11 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- systemctl mock-boot prints what is started, in order; failures and ordering
+  cycles show up there and in journalctl.
+- systemctl cat app db-proxy, and systemctl list-dependencies app
+- Wants=/Requires= pull another unit in; they do not order. Without After=
+  (or Before=) systemd starts unordered units at the same time.
+- Requires= also makes a stop (or failed start) of the dependency stop the unit
+  that requires it. BindsTo= is the stricter form and PartOf= only
+  propagates stops and restarts.
+- A is After=B and B is After=A can never be satisfied: that is an ordering
+  cycle, and systemd breaks it by dropping a job.
+- man systemd.unit (Requires=, After=, Wants=); daemon-reload after editing.

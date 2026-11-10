@@ -1,1 +1,8 @@
-Write the schedule into crontab.txt using the standard five time fields.
+- journalctl -k                       kernel messages only; -g PATTERN filters them (a regex)
+- Each kill has an "oom-kill:...,task_memcg=/system.slice/UNIT,task=NAME,pid=N" line
+  and a "Killed process N (NAME) ... anon-rss:XkB" line with the same pid.
+- The kernel's kB are KiB (1024 bytes); MemoryMax=3072M means 3072 MiB.
+  1.5 x X kB in MiB = X * 3 / 2048, rounded up; then round up to a multiple of 256.
+- systemctl set-property UNIT MemoryMax=NNNM   writes a control drop-in and applies it
+- systemctl show -p MemoryMax UNIT              the value in effect, in bytes
+More: man systemd.resource-control (MemoryMax=), man journalctl (-k, -g)

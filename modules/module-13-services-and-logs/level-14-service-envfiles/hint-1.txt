@@ -1,1 +1,6 @@
-A short for-loop is the cleanest option here.
+Start with what billing says (systemctl status billing) and then ask systemd
+where billing's environment comes from: which variables does the unit set
+itself, and which files does it read, in which order?
+Does every one of those files exist? Would systemd tell you if one didn't?
+If you change something and billing fails to start, read its journal: the
+error quotes the exact value it got.

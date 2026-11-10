@@ -1,1 +1,9 @@
-Use `chmod +x jobs/less-navigation.sh` and then execute it.
+less -N huge.log         line numbers on the left (also: type -N inside less)
+  /deploy finished:      search forward; n = next match, N = previous match
+  /panic:                search for a panic from where you are now
+  &panic:                show only matching lines (& alone shows everything again)
+  g / G                  top / bottom of the file;  q quits
+Searching for "deploy finished:" with the colon skips "deploy finished (dry-run):".
+Without less: grep -n 'deploy finished: ' huge.log gives the line numbers, and
+sed -n 'FROM,TOp' huge.log prints a range of lines.
+More: man less (SEARCHING), man grep

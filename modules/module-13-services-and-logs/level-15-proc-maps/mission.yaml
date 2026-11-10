@@ -1,15 +1,11 @@
 {
-  "name": "Proc Maps: Metric Sum",
-  "description": "In the services and logs lab, a task related to Proc Maps needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of proc-maps-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Proc Maps",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Stale Library",
+  "description": "libssl3 was patched on app-03 an hour ago, but the package never restarts anything. Some of the running services are still using the old, deleted copy of the library from memory (TICKET.md).",
+  "objective": "Find the services whose process still maps the deleted old libssl and restart exactly those. Write their unit names, one per line (for example api.service), to needs-restart.txt. Restarting services that never used the deleted library is a failure. `systemctl` is a mock (the sandbox is /); the processes are real.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["/proc/PID/maps", "(deleted) mappings", "mapped files vs open file descriptors", "systemctl show -P MainPID", "grep over /proc", "needrestart-style audits"],
   "module": "module-13-services-and-logs",
   "level": "level-15-proc-maps"
 }

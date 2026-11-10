@@ -1,15 +1,11 @@
 {
-  "name": "Systemctl Enable: Alert Filter",
-  "description": "In the services and logs lab, a task related to Systemctl Enable needs cleanup before the handoff.",
-  "objective": "Write every alert line from systemctl-enable.log into alerts.txt",
+  "name": "Back After Reboot",
+  "description": "During last night's reboot drill on mon-07, every service came back except metrics-agent, and the dashboards have been blank since. The odd part: `systemctl is-enabled metrics-agent` says \"enabled\".",
+  "objective": "Make metrics-agent.service start at every boot of this server and get it running now. Don't change the server's default target. `systemctl` and `journalctl` are mocks that treat the sandbox as `/` (/etc/systemd/system is ./etc/systemd/system); they behave like the real tools, including enable's symlinks.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Systemctl Enable",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["systemctl enable", "[Install] WantedBy=", ".wants/ symlinks", "systemctl get-default", "systemctl reenable", "enable --now"],
   "module": "module-13-services-and-logs",
   "level": "level-2-systemctl-enable"
 }

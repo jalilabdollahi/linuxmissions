@@ -1,1 +1,10 @@
-`mkdir -p organized/unit-files` followed by `mv inbox/unit-files.txt organized/unit-files/unit-files-notes.txt` is enough.
+- [Unit] describes it (Description=, After=), [Service] says how to run it,
+  [Install] says what enables it (WantedBy=multi-user.target).
+- ExecStart= needs an absolute path; there is no shell, no cd, no "&".
+- WorkingDirectory= replaces the "cd" step: the program reads ./report-api.conf.
+- Type=simple means "the process you start IS the service". A program that
+  detaches into the background and exits looks like a service that stopped.
+- systemd-analyze verify FILE checks a unit file; man systemd.service.
+- systemctl daemon-reload, then systemctl enable --now report-api
+  (enable creates the link for boot, --now also starts it).
+- systemctl status report-api and journalctl -u report-api show why it stopped.

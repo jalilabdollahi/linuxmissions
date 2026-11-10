@@ -1,1 +1,8 @@
-A grep count or grep piped into wc can produce the number you need.
+systemctl is a mock with the real verbs:
+  systemctl stop UNIT                        stop it now
+  systemctl disable UNIT                     remove the [Install] links (add --now to also stop it)
+  systemctl list-dependencies --reverse UNIT which units pull this one in (Wants=, Requires=)
+  systemctl mask UNIT                        link /etc/systemd/system/UNIT to /dev/null: nothing,
+                                             not even a Wants= of another unit, can start it
+Check the result with systemctl status UNIT (Loaded: masked) and ls -l etc/systemd/system/.
+Read more: man systemctl (disable, mask), man systemd.unit (Wants=)

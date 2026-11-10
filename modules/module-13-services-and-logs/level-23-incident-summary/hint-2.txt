@@ -1,1 +1,12 @@
-Archive the directory contents without leaving anything out.
+- journalctl --file=export/journal.json -p err --utc -n all   errors of every unit,
+  oldest first; add -o short-unix or -o short-iso. -u UNIT narrows to one unit.
+- df-snapshot.txt and dmesg.txt: what filled up, and which directory is the biggest.
+  ls -lS var/log/*/ shows sizes (files are sparse; use ls -l, not du).
+- Why did that unit write so much? journalctl --file=export/journal.json -u UNIT, and
+  who or what touched its settings (sudo lines, deploy lines) just before?
+- Fix: the unit's EnvironmentFile (systemctl cat UNIT), then empty the debug log,
+  restart the unit (new settings only reach a new process), and give api
+  another try (systemctl reset-failed api, then start).
+- nginx log: field 9 is the status, field 4 and 5 the local time and offset
+  ([10/Nov/2026:03:04:05 +0100]). Convert with date -u -d, or compare in local time.
+- The trigger values are listed in INCIDENT.md.

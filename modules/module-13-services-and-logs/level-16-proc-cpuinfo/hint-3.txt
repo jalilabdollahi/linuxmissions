@@ -1,1 +1,12 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+cores=$(grep -E '^(physical id|core id)' capture/cpuinfo | paste - - | sort -u | wc -l)
+if grep '^flags' capture/cpuinfo | grep -qw avx2; then build=avx2; else build=generic; fi
+echo "$cores $build"
+sed -i "s/^WORKERS=.*/WORKERS=$cores/; s/^BUILD=.*/BUILD=$build/" etc/default/render-worker
+systemctl restart render-worker.service
+systemctl status render-worker.service
+
+- grep ... | paste - -          puts "physical id" and "core id" of each CPU on one line
+- sort -u | wc -l               distinct (socket, core) pairs = physical cores
+- grep -qw avx2                 the whole word avx2 in the flags; otherwise generic
+- sed -i "s/^WORKERS=.*/.../"   replace the two settings, keep the comments
+- systemctl restart             the service reads EnvironmentFile= only at start

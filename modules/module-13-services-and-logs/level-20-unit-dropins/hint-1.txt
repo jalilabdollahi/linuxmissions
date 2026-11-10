@@ -1,1 +1,8 @@
-This is a sorting task followed by deduplication.
+Read TICKET.md, then look at how systemd sees the unit today: which file
+is it, and which command line does it run?
+A vendor file you edit gets overwritten on the next upgrade. systemd has a
+way to layer your own settings on top of a unit without touching the
+original: where does it look for them, and what do the file names have to
+look like?
+Think about settings that can be given several times (Environment=) and
+settings that cannot (the one command a simple service runs).

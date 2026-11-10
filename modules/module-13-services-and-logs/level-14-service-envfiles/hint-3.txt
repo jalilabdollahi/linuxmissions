@@ -1,1 +1,12 @@
-Example: `for n in 1 2 3; do printf 'service-envfiles item %s\n' "$n" > generated/service-envfiles-$n.txt; done`
+systemctl show -p Environment -p EnvironmentFiles billing
+sed -i 's|^EnvironmentFile=-/etc/biling/env$|EnvironmentFile=-/etc/billing/env|' etc/systemd/system/billing.service
+sed -i 's|^\(DB_PORT=[0-9]*\)[[:space:]]*#.*$|\1|' etc/billing/env
+systemctl daemon-reload
+systemctl restart billing
+systemctl status billing
+
+- EnvironmentFiles= shows /etc/biling/env: a typo, and the "-" made systemd skip it silently
+- sed on the unit         fix the path, so the site file is read after /etc/default/billing
+- sed on etc/billing/env  "6432   # via pgbouncer" would be the whole value: drop the comment
+- daemon-reload           systemd re-reads the edited unit
+- restart                 billing gets its environment only when it starts

@@ -1,1 +1,10 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- systemctl cat vendor-agent shows the unit file and every drop-in, in order.
+- A drop-in is a .conf file in /etc/systemd/system/<unit>.service.d/, here
+  etc/systemd/system/vendor-agent.service.d/ (mkdir it; any name ending in
+  .conf, override.conf is the usual one). It only needs the sections and keys
+  it changes.
+- Environment= lines add to the unit's. ExecStart= lines also ADD, and a
+  Type=simple service may have only one: assign an empty "ExecStart=" first
+  to clear the vendor's, then write yours.
+- man systemd.unit (Drop-in section), man systemd.service (ExecStart=).
+- daemon-reload to re-read, restart to run it with the new settings.

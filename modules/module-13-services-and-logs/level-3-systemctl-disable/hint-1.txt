@@ -1,1 +1,4 @@
-Count matching lines instead of copying them out by hand.
+There are three ways legacy-sync can run: someone starts it now, the boot starts it because
+it is enabled, or another unit pulls it in as a dependency. Stopping and disabling cover the
+first two. For the third, ask systemd which units depend on legacy-sync. Don't edit those units:
+report.service stays as it is.

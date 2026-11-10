@@ -1,1 +1,9 @@
-A du pipeline sorted numerically is a strong fit here.
+- A physical core is a unique pair (physical id, core id).
+    grep -E '^(physical id|core id)' capture/cpuinfo | paste - -   one pair per line
+    ... | sort -u | wc -l                                           count distinct pairs
+  Cross-check: number of sockets x the "cpu cores" value.
+- grep -w avx2 matches avx2 as a whole word only (not avx, not avx512f).
+- Edit the file with `edit etc/default/render-worker` or sed -i.
+- systemctl restart render-worker.service makes it read the file again;
+  systemctl status shows the new start.
+More: man 5 proc (search for cpuinfo), man grep (-w), man paste

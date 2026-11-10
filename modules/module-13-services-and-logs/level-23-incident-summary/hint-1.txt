@@ -1,1 +1,8 @@
-Use tar with create, gzip, and file flags.
+Start with the pager text in INCIDENT.md, then look at the five sources
+side by side. Which one tells you the machine's problem, and which only
+the customers' problem? The unit that complains the most may be a victim:
+find the very first error in the journal, in any unit, and ask what it
+was complaining about. Then see which of the other sources confirms that
+(kernel messages, the df snapshot) and which unit's files are the reason.
+Watch the clocks: the journal export, the nginx log and your answer do not
+use the same time zone.

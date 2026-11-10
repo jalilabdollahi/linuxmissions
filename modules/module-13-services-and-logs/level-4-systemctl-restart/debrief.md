@@ -1,17 +1,26 @@
-# Systemctl Restart: Noise Dedup
+# Reload, Don't Restart
 
-## What you practiced
-- This level focused on **Systemctl Restart** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+- `systemctl restart` stops the main process (SIGTERM) and starts a new one, so you get
+  a new PID and every job in memory is lost.
+- `systemctl reload` runs the unit's `ExecReload=` command instead. For most daemons
+  that means sending SIGHUP to the main process (`/bin/kill -HUP $MAINPID`). The process
+  re-reads its config and keeps running with the same PID.
+- Without `ExecReload=`, systemd has no idea how to reload the service and says "Job type
+  reload is not applicable".
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+Two different reloads were needed here:
+- `systemctl daemon-reload` makes **systemd** re-read unit files. It's how the new
+  `ExecReload=` line became known. It does nothing to the api.
+- `systemctl reload api` makes the **api** re-read *its* config.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Common mistakes
+- `reload-or-restart`: it reloads when the unit supports it and restarts otherwise.
+  Before the fix it restarted.
+- Thinking `daemon-reload` applies an app's config change. It only concerns unit files.
+- Assuming every program reloads on SIGHUP. Some exit on it. Check the docs.
+
+## Next step
+`systemctl show -p ExecMainStartTimestamp,MainPID api` proves a process wasn't
+restarted. Many packaged units ship `ExecReload=` already (nginx, sshd, rsyslog), and
+`nginx -t && systemctl reload nginx` is the classic safe way to apply a web server config.

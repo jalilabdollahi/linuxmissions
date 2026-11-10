@@ -1,1 +1,6 @@
-This task wants a symbolic link, not a copy.
+Only two kinds of sshd lines decide this: failed password attempts and accepted logins. The
+order matters: the failures have to come *before* the login from the same IP. Read the log from
+top to bottom, keep a running count of failures per IP, and look at that count each time a login
+succeeds.
+Look closely at a few failure lines: they don't all have the same number of words, and some of
+them stand for more than one attempt.

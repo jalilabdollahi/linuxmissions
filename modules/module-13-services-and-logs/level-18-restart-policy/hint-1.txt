@@ -1,1 +1,5 @@
-Look for a filtering command that keeps only the alert lines in hostnamectl.log.
+Read TICKET.md, then the journal of the unit: how many times, and how fast,
+was it started this morning, and what did systemd say at the end?
+Then ask systemd what the unit is configured to do today: the restart
+policy, the delay and the start limit are all properties you can print.
+Think about which exit codes should restart it, and which should not.

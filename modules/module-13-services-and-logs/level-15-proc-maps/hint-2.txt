@@ -1,1 +1,10 @@
-An awk one-liner can skip the header and add the second field.
+- /proc/<PID>/maps lists a process's memory mappings; a file removed from
+  disk but still mapped ends with "(deleted)".
+- grep can read many maps files at once: grep -l PATTERN /proc/[0-9]*/maps
+  (add 2>/dev/null; some PIDs are not yours or vanish).
+- systemctl show -P MainPID UNIT turns a unit into a PID; systemctl status
+  UNIT shows it too.
+- Compare with ls -l /proc/<PID>/fd: a process that only holds the old file
+  open (not mapped) is a different case. Does it need the restart?
+- systemctl restart UNIT starts a new process, which maps the file now at
+  that path.

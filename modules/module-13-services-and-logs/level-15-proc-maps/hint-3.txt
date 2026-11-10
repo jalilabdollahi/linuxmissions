@@ -1,1 +1,12 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' proc-maps-metrics.csv > total.txt`
+for u in $(ls etc/systemd/system/*.service | xargs -n1 basename); do
+  pid=$(systemctl show -P MainPID $u)
+  grep -q 'libssl.*(deleted)' /proc/$pid/maps 2>/dev/null && echo $u
+done > needs-restart.txt
+cat needs-restart.txt
+xargs -n1 systemctl restart < needs-restart.txt
+
+- the for loop       every unit file name (api.service, ...)
+- systemctl show -P  the unit's main PID
+- grep -q ... maps   true only if that process maps a deleted libssl; 2>/dev/null hides units with PID 0
+- echo $u            keeps the unit name; the loop output becomes needs-restart.txt
+- xargs -n1 ...      restarts each listed unit, one at a time

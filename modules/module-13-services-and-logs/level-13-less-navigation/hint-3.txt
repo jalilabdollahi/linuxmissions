@@ -1,1 +1,16 @@
-Example: `chmod +x jobs/less-navigation.sh && jobs/less-navigation.sh`
+In less (interactive):
+  less -N huge.log
+  type /deploy finished:  then Enter, then n once more   -> the 2nd real deploy
+  type /panic:  then Enter                               -> the first panic after it
+  read trace=... two lines above it, q to quit, then:  echo THE_ID > trace.txt
+
+Or the same with line numbers on the command line:
+m=$(grep -n 'deploy finished: ' huge.log | sed -n 2p | cut -d: -f1)
+p=$(awk -v m="$m" 'NR > m && / panic: / { print NR; exit }' huge.log)
+sed -n "$((p - 2))p" huge.log | grep -o 'trace=[0-9a-f]*' | cut -d= -f2 > trace.txt
+cat trace.txt
+
+- grep -n ... | sed -n 2p     line number of the 2nd real marker (the colon skips dry runs)
+- awk 'NR > m && / panic: /'  the first panic line after it; exit stops at the first
+- sed -n "$((p - 2))p"        the line two above the panic
+- grep -o | cut -d= -f2       just the 16 hex digits after trace=

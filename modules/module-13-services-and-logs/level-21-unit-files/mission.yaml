@@ -1,16 +1,11 @@
 {
-  "name": "Unit Files: Path Realignment",
-  "description": "In the services and logs lab, a task related to Unit Files needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/unit-files.txt to organized/unit-files/unit-files-notes.txt",
+  "name": "From tmux to systemd",
+  "description": "report-api has been running in a tmux pane that dies every few days. OPS-3318 (TICKET.md) asks for a proper service; notes/tmux-history.txt shows how it is started by hand today.",
+  "objective": "Write /etc/systemd/system/report-api.service (etc/systemd/system/ here) so that the ticket's requirements hold: it runs report-api on the ticket's port, is enabled for boot, restarts on failure, passes systemd-analyze verify, and is running now under systemd. Don't change /opt/report-api. `systemctl`, `journalctl` and `systemd-analyze` are mocks (the sandbox is /).",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Unit Files",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "20m",
+  "concepts": ["[Unit] / [Service] / [Install] sections", "absolute ExecStart=", "WorkingDirectory=", "Type=simple vs a self-daemonizing program", "Restart=on-failure", "systemd-analyze verify", "systemctl enable --now"],
   "module": "module-13-services-and-logs",
   "level": "level-21-unit-files"
 }

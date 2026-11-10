@@ -1,16 +1,11 @@
 {
-  "name": "Systemctl Disable: Event Counter",
-  "description": "In the services and logs lab, a task related to Systemctl Disable needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in systemctl-disable-events.txt and write the number to ok-count.txt",
+  "name": "Decommission",
+  "description": "legacy-sync mirrors the file share to the old NAS, and that NAS is being switched off today. The package can't be removed yet (the report team still reads its config), so the change ticket says: legacy-sync must not run now, must not start at boot, and must not be started by anything else.",
+  "objective": "legacy-sync.service is stopped, not enabled, and masked, so that nothing can start it. Leave the packaged unit file and report.service unchanged, and keep report.service enabled and running. `systemctl` and `journalctl` are mocks that treat the sandbox as `/` (packaged units are in ./usr/lib/systemd/system, local ones in ./etc/systemd/system) and behave like the real tools.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Systemctl Disable",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["systemctl stop", "systemctl disable --now", "systemctl mask", "list-dependencies --reverse", "Wants=", "/etc vs /usr/lib units"],
   "module": "module-13-services-and-logs",
   "level": "level-3-systemctl-disable"
 }

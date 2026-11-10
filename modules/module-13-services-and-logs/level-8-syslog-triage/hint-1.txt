@@ -1,1 +1,6 @@
-Use a targeted file search so you do not remove the wrong files.
+Every syslog line is: month, day, time, host, then the program tag ("prog[pid]:" or just "prog:"),
+then the message. Three things will mislead a quick count:
+- only one hour counts, and the file covers more than that;
+- rsyslog doesn't write identical messages again and again: look for lines that say how many
+  times the previous message was repeated;
+- is "orders-api[2231]:" a different program from "orders-api:"?

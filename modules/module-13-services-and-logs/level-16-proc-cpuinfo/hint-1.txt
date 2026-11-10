@@ -1,1 +1,7 @@
-Measure directory sizes before deciding which one is largest.
+Look at capture/cpuinfo: one block per logical CPU. Which fields tell you the
+socket, the core, and how many threads share a core? Compare `siblings` with
+`cpu cores`.
+Is the number of blocks the number of physical cores? Could two blocks on
+different sockets have the same core id?
+For AVX2: "avx" alone is a different, older instruction set.
+And remember that a running service read its settings file when it started.

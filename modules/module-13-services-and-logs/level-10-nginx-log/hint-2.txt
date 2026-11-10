@@ -1,1 +1,8 @@
-Archive the directory contents without leaving anything out.
+awk splits on spaces; from the left:
+  $4  [10/Nov/2026:14:03:05     split($4, t, ":") gives t[2]=14 t[3]=03 t[4]=05
+  $7  the URL                   path = $7; sub(/\?.*/, "", path) removes the query string
+  $9  the status                $9 ~ /^5/ is a 5xx
+From the right (user agents contain spaces, so count from the end for these):
+  $(NF-1)  $request_time        $NF  $upstream_response_time ("-" when no upstream answered)
+Collect n[path]++ and the max of $NF per path, print in END, then sort -k2,2nr | head -1.
+Read more: nginx docs "ngx_http_log_module" and "$upstream_response_time", man awk

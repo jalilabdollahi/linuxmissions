@@ -1,1 +1,15 @@
-Example: `tar -czf nginx-log-backup.tar.gz bundle/nginx-log`
+Filter time and status, strip the query string, count and track the max per path:
+
+awk '{ split($4, t, ":"); if (t[2] ":" t[3] ":" t[4] < "14:00:00") next
+       if ($9 !~ /^5/) next
+       path = $7; sub(/\?.*/, "", path)
+       n[path]++
+       if ($NF != "-" && $NF + 0 > max[path]) max[path] = $NF + 0 }
+     END { for (p in n) print p, n[p], max[p] }' var/log/nginx/access.log | sort -k2,2nr | head -1 > worst.txt
+cat worst.txt
+
+- split($4, t, ":")          the time of day from [10/Nov/2026:HH:MM:SS; before 14:00 -> skip
+- $9 !~ /^5/                 keep only 500-599
+- sub(/\?.*/, "", path)      /api/v2/orders?id=1 and ?id=2 are the same endpoint
+- $NF != "-" ... max[path]   highest upstream time; "-" means nginx answered itself (limit_req 503)
+- sort -k2,2nr | head -1     the path with the most errors

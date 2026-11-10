@@ -117,6 +117,43 @@ def is_interactive_command(cmd: str) -> bool:
     return False
 
 
+def _mask_quoted(line: str) -> str:
+    """Replace text inside quotes with spaces, keeping a heredoc's own quoted delimiter (<<'EOF')."""
+    out = []
+    quote = ""
+    i = 0
+    while i < len(line):
+        ch = line[i]
+        if quote:
+            if ch == quote:
+                quote = ""
+                out.append(ch)
+            elif ch == "\\" and quote == '"' and i + 1 < len(line):
+                out.append("  ")
+                i += 1
+            else:
+                out.append(" ")
+        elif ch == "\\" and i + 1 < len(line):
+            out.append("  ")
+            i += 1
+        elif ch in ("'", '"'):
+            # A quoted heredoc delimiter stays visible: <<'EOF', << "EOF", <<-'EOF'
+            if re.search(r"<<-?\s*$", "".join(out)):
+                end = line.find(ch, i + 1)
+                if end != -1:
+                    out.append(line[i:end + 1])
+                    i = end + 1
+                    continue
+            quote = ch
+            out.append(ch)
+        elif ch == "#" and (not out or out[-1] in " \t;|&("):
+            break  # comment
+        else:
+            out.append(ch)
+        i += 1
+    return "".join(out)
+
+
 def needs_more_input(text: str) -> bool:
     """True when `text` is an unfinished shell command (open heredoc, quote, if/for, trailing | or \\)."""
     if text.rstrip().endswith("\\") and not text.rstrip().endswith("\\\\"):
@@ -130,7 +167,7 @@ def needs_more_input(text: str) -> bool:
             if (line.lstrip("\t") if strip_tabs else line) == delim:
                 pending.pop(0)
             continue
-        for m in HEREDOC_RE.finditer(line):
+        for m in HEREDOC_RE.finditer(_mask_quoted(line)):
             pending.append((m.group(3), m.group(1) == "-"))
     if pending:
         return True
@@ -290,11 +327,34 @@ class ShellSession:
     def _clean_terminal_output(text: str) -> str:
         return BRACKETED_PASTE_RE.sub("", text)
 
+    def alive(self) -> bool:
+        if self.pid is None:
+            return False
+        try:
+            pid, _ = os.waitpid(self.pid, os.WNOHANG)
+        except ChildProcessError:
+            return False
+        return pid == 0
+
     def _wait_for(self, sentinel: str, deadline: float) -> str:
         output = ""
         while sentinel not in output and time.time() < deadline:
             output += self._read_available(timeout=0.5)
+            if sentinel not in output and not self.alive():
+                output += self._read_available(timeout=0.1)
+                break
         return output
+
+    def _restart(self) -> None:
+        """The player's shell exited (e.g. `exit`): start a fresh one in the sandbox."""
+        try:
+            if self.fd is not None:
+                os.close(self.fd)
+        except OSError:
+            pass
+        self.fd = None
+        self.pid = None
+        self.start()
 
     def _execute(self, cmd: str) -> tuple[int, str]:
         """Send cmd to the shell, wait for it to finish, return (exit code, output).
@@ -326,7 +386,12 @@ class ShellSession:
         clean = re.sub(r"\r?\n?__LM_DONE_[0-9a-f]{32}__:\d+\r?\n?", "", output)
         clean = self._clean_terminal_output(clean).replace("\r\n", "\n").strip("\r\n")
         if not match:
-            clean += f"\n[command still running after {COMMAND_TIMEOUT}s — press Ctrl-C next time to stop it]"
+            if not self.alive():
+                self._restart()
+                clean += ("\n[the shell exited — started a fresh shell in the sandbox; "
+                          "variables, aliases and the current directory were reset]")
+            else:
+                clean += f"\n[command still running after {COMMAND_TIMEOUT}s — press Ctrl-C next time to stop it]"
         return code, clean
 
     def capture(self, cmd: str) -> str:

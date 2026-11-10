@@ -63,6 +63,7 @@ class InputTests(unittest.TestCase):
                      "echo 'open", "ls |", "echo a \\", "while read l; do\necho $l"):
             self.assertTrue(needs_more_input(text), text)
         for text in ("ls -la", "cat > a <<EOF\nhi\nEOF", "if true; then echo y; fi",
+                     "sed \"s/<<'END'/x/\" f", "echo 'a << b'", "grep '<<EOF' notes  # <<X",
                      "for f in *; do\necho $f\ndone", "echo 'done'", "echo a \\\\"):
             self.assertFalse(needs_more_input(text), text)
 
@@ -91,6 +92,13 @@ class ShellSessionTests(unittest.TestCase):
     def test_multiline_block(self):
         out = self.shell.capture("for i in 1 2 3; do\n  echo n$i\ndone")
         self.assertEqual(out.split(), ["n1", "n2", "n3"])
+
+    def test_shell_exit_restarts(self):
+        start = time.time()
+        code, out = self.shell._execute("exit 3")
+        self.assertLess(time.time() - start, 10)
+        self.assertIn("fresh shell", out)
+        self.assertEqual(self.shell.capture("echo back"), "back")
 
     def test_sigpipe_is_default(self):
         out = self.shell.capture("bash -c 'for i in $(seq 1 20000); do echo $i; done' | head -1")

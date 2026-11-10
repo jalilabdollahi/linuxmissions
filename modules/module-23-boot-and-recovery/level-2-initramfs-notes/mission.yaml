@@ -1,15 +1,11 @@
 {
-  "name": "Initramfs Notes: Alert Filter",
-  "description": "In the boot and recovery lab, a task related to Initramfs Notes needs cleanup before the handoff.",
-  "objective": "Write every alert line from initramfs-notes.log into alerts.txt",
+  "name": "Which Initramfs Lacks NVMe?",
+  "description": "Since the system disk moved to an NVMe drive, one of the installed kernels drops to the (initramfs) prompt at boot. The three initrd images of the old server are in sysroot/boot/.",
+  "objective": "Find which of the sysroot/boot/initrd.img-* images does not contain the nvme driver module (nvme.ko, not just nvme-core.ko) and write its file name, for example initrd.img-6.8.0-45-generic, to bad_initrd.txt. Do not modify the images.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Initramfs Notes",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["initramfs", "file", "zcat / zstdcat", "cpio -t", "kernel modules"],
   "module": "module-23-boot-and-recovery",
   "level": "level-2-initramfs-notes"
 }

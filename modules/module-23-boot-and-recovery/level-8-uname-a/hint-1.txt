@@ -1,1 +1,5 @@
-Use a targeted file search so you do not remove the wrong files.
+For each server you need two facts: which kernel release it runs now, and which is the
+newest it has installed. Look at one host's two files to see where each fact lives. The
+running release is the third thing on the uname line; the installed list has more lines
+than kernels. Compare versions as versions, and think about what "older" means when the
+running kernel is not in the installed list at all.

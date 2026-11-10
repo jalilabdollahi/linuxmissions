@@ -1,1 +1,6 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  cat -v sysroot/var/log/boot.log | less      shows the escapes as ^[[0;1;31m
+  grep -A1 FAILED FILE                         each FAILED line plus the line after it
+  sed 's/\x1b\[[0-9;]*m//g'                    deletes the colour sequences (GNU sed)
+  sed -n 's/pattern\(group\)rest/\1/p'         prints only the captured group of matching lines
+  awk '!seen[$0]++'                            keeps the first occurrence of each line, in order
+"Dependency failed for" means a unit was skipped because something it needs failed.

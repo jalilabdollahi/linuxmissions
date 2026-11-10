@@ -1,1 +1,7 @@
-Example: `ln -s releases/lsmod-review.conf current.conf`
+comm -23 <(awk 'NR>1{print $1}' healthy.lsmod | sort) <(awk 'NR>1{print $1}' broken.lsmod | sort) > missing.txt
+grep -wFf missing.txt healthy.lsmod
+echo raid456 > load_first.txt
+
+- the first line: names that are in the healthy list and not in the broken one (comm -23 on sorted lists)
+- the grep shows the Used by column for the missing modules: raid456 is used by none of the others, while every other missing module lists raid456 or a sibling as its user
+- so raid456 depends on all the rest, and loading it with modprobe loads them first

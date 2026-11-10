@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+Read auth.log from the top and keep a list: each refusal is a different problem, and none of them
+fixes the others. Some messages name a file or a directory, some name an account. For each one ask
+which file of the server decides it. Then, when the log has no more complaints, do not stop: sshd checks
+the whole path to the key, and a problem can be hidden behind the one it reports, so check the modes of
+every directory from the key up to the home yourself.

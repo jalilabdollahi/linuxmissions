@@ -1,1 +1,6 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  e2fsck -fn data.img          -f check even if marked clean, -n answer "no" to every fix (read-only)
+  e2fsck -fy data.img          -y answer "yes" to every fix: this one writes
+  cmd > fsck.log 2>&1          capture both output streams
+  echo $?                      the exit code of the previous command; read it right after the run
+The exit code is a sum of bit flags (man e2fsck, section EXIT CODE): 0 no errors,
+1 errors corrected, 4 errors left uncorrected. A second run on a fixed image exits 0.

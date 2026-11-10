@@ -1,15 +1,11 @@
 {
-  "name": "Network Recovery: Capacity Report",
-  "description": "In the boot and recovery lab, a task related to Network Recovery needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Network Recovery",
-    "du",
-    "sort"
-  ],
+  "name": "Boots Without Network",
+  "description": "After a mainboard swap the server boots without network. The new board has new MAC addresses and the kernel names its NICs differently. The server's systemd-networkd files are in sysroot/etc/systemd/network/, the captured output of ip -o link from the rescue system is in ip-o-link.txt and the address plan is in ticket.txt.",
+  "objective": "Fix the .network files in sysroot/etc/systemd/network/ so each of the two new NICs is matched by exactly one file and gets the address and prefix from the ticket. The LAN interface must have the ticket's gateway, and that gateway must lie inside its subnet. The backup interface gets no gateway. Keep the DNS setting, and leave no file that still matches an old NIC name or the old board's MAC address.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
+  "concepts": ["systemd-networkd", ".network files", "[Match]", "MAC address", "subnet prefix"],
   "module": "module-23-boot-and-recovery",
   "level": "level-16-network-recovery"
 }

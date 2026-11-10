@@ -1,1 +1,6 @@
-Use chmod with octal mode 640.
+  ./efibootmgr -v          entries with device paths: HD(1,GPT,<PARTUUID>,...)
+  cat blkid.txt            the server's partitions and their PARTUUIDs
+  ./efibootmgr -o LIST     set BootOrder: comma separated entry numbers, first one boots first
+-o replaces the whole list, so name every entry you want to keep, in the order you want.
+Without options, ./efibootmgr prints the current state (it also prints it after a change).
+See man efibootmgr.

@@ -1,1 +1,6 @@
-Example: `sort single-user-raw.txt | uniq > unique-sorted.txt`
+ln -sfn /usr/lib/systemd/system/multi-user.target sysroot/etc/systemd/system/default.target
+readlink sysroot/etc/systemd/system/default.target
+
+- ln -s makes a symbolic link, -f replaces the existing graphical one, -n treats the link name as a file
+- the target is an absolute path as the booted server sees it, not a path inside sysroot/
+- readlink prints the stored text so you can check it

@@ -1,1 +1,6 @@
-Example: `chmod 640 boot-order.sh`
+./efibootmgr -v
+grep -i PARTUUID blkid.txt
+./efibootmgr -o 0003,0000,0004,0001,0002
+
+- -v shows Boot0003 (ubuntu) pointing at 7f3e2a10-..., the PARTUUID of /dev/nvme0n1p1 in blkid.txt; Boot0001 points at one blkid does not know
+- -o sets the new BootOrder: 0003 first, then the old order without it (0000, 0004, 0001, 0002)

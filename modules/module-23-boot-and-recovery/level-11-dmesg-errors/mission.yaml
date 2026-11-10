@@ -1,15 +1,11 @@
 {
-  "name": "Dmesg Errors: Restore Drill",
-  "description": "In the boot and recovery lab, a task related to Dmesg Errors needs cleanup before the handoff.",
-  "objective": "Extract dmesg-errors-restore.tar.gz so the restored/dmesg-errors directory appears in the sandbox",
+  "name": "Which Disk Is Failing?",
+  "description": "The server boots slowly and /srv is read-only afterwards. Someone saved the kernel ring buffer as dmesg.txt before powering it off. It has three SATA disks and an optical drive, and the kernel names the same disk differently in different places.",
+  "objective": "Find the disk that is failing and write one line, \"DEVICE SECONDS\", to failing_disk.txt: the sdX name of the disk and the timestamp (as printed in the brackets, without the brackets) of the earliest error message the kernel logged about it, for example \"sdz 12.345678\". Do not modify dmesg.txt.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Dmesg Errors",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "15m",
+  "concepts": ["dmesg", "ata ports vs sdX names", "grep -E", "storage errors", "correlating log lines"],
   "module": "module-23-boot-and-recovery",
   "level": "level-11-dmesg-errors"
 }

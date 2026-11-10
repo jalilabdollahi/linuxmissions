@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  gzip -t FILE.tar.gz                     tests the whole compressed stream; exit status 0 = intact
+  tar -tzf FILE.tar.gz | head              how the member paths start (./boot/efi/EFI/...)
+  tar -xzf FILE -C DIR MEMBER...           extract only the named members, below DIR
+  tar -xzf FILE --strip-components=N       drop N leading path parts from every member
+  cd sysroot/boot/efi && sha256sum -c ../../../EFI.SHA256SUMS      the paths in the list are relative to boot/efi
+A backup can be a valid archive and still contain a damaged file, so the checksum run decides.
+Member names must be given exactly as listed (with the leading ./). See man tar.

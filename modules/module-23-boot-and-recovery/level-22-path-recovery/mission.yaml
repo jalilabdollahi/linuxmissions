@@ -1,15 +1,11 @@
 {
-  "name": "Path Recovery: Field Extract",
-  "description": "In the boot and recovery lab, a task related to Path Recovery needs cleanup before the handoff.",
-  "objective": "Extract the second column from path-recovery-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Path Recovery",
-    "cut",
-    "awk"
-  ],
+  "name": "Command Not Found for Everything",
+  "description": "After a colleague edited the login files, user deploy on the broken server gets \"command not found\" for nearly everything. The server's disk is mounted at sysroot/; ./login-sim USER shows the PATH a login of that user gets, built from the captured login files the way the server reads them.",
+  "objective": "Fix the files under sysroot/etc (environment, profile.d) and the dotfiles in sysroot/home/deploy until ./login-sim deploy and ./login-sim ops both print the agreed PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin followed by the application's /opt/<app>/bin directory (its name is in the profile files). No empty components, no duplicates, and the application directory only after the system directories.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["PATH", "login shell startup files", "/etc/environment", "profile.d", ".bash_profile precedence"],
   "module": "module-23-boot-and-recovery",
   "level": "level-22-path-recovery"
 }

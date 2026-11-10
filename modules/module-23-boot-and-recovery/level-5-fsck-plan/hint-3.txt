@@ -1,1 +1,7 @@
-Example: `cut -d, -f2 fsck-plan-report.csv > owners.txt`
+e2fsck -fy data.img > fsck.log 2>&1; echo $? > fsck_exit.txt
+e2fsck -fn data.img
+
+- -f forces the check although the image is flagged clean; -y accepts every repair
+- > fsck.log 2>&1 keeps the whole output of this run (messages go to stdout and stderr)
+- echo $? right after the semicolon saves the exit code of that run, 1 = errors corrected
+- the last command is the read-only proof: it must exit 0 now

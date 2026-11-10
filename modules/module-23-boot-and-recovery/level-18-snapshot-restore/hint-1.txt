@@ -1,1 +1,5 @@
-Look for a filtering command that keeps only the alert lines in snapshot-restore.log.
+Do not assume the newest snapshot is the one to use: this one was taken after the upgrade.
+Check each snapshot with the checker, newest first, and read why a failing one fails: the
+reasons differ. Once you have chosen, think about what a restore must reproduce: the same set of
+files (so what about files that exist only in the live tree?), the same permissions on each
+file, the same symlink targets and the same timestamps.

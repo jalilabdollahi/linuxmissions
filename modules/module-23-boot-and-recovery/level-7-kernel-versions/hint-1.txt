@@ -1,1 +1,5 @@
-Use one command for the beginning of the file and another for the end.
+Two kernels must survive: the one the server is running (it is written down in
+uname-r.txt) and the newest one installed. They are not the same kernel. Work out the
+newest by version, not by how the names look in an alphabetical list. Each kernel
+leaves several files in boot/ and a directory under lib/modules/. What happens to the
+four links in boot/ when their targets disappear?

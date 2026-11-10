@@ -1,1 +1,12 @@
-Example: `cut -d, -f2 path-recovery-report.csv > owners.txt`
+APP=$(grep -ho '/opt/[a-z]*/bin' sysroot/etc/profile.d/*.sh | head -n1)
+echo 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' > sysroot/etc/environment
+rm sysroot/etc/profile.d/90-legacy.sh sysroot/home/deploy/.bash_profile
+echo "PATH=\$PATH:$APP" > sysroot/etc/profile.d/10-app.sh
+sed -i '/opt\//d' sysroot/home/deploy/.profile
+./login-sim deploy; ./login-sim ops
+
+- APP takes the application directory from the profile.d files
+- /etc/environment gets a literal list of the system directories (no $PATH inside)
+- the duplicate legacy file and deploy's stray .bash_profile (which hid .profile) are removed
+- profile.d/10-app.sh adds the application directory once, without a trailing colon; the sed drops the second addition from deploy's .profile
+- the last line checks both users

@@ -1,16 +1,11 @@
 {
-  "name": "Emergency Target: Loop Builder",
-  "description": "In the boot and recovery lab, a task related to Emergency Target needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named emergency-target-1.txt through emergency-target-3.txt with matching numbered content",
+  "name": "Every Boot Ends in Emergency Mode",
+  "description": "The disks are fine, yet every boot of this server ends in emergency mode. A colleague was debugging a boot hang last week and left an option behind. The server's disk is mounted at sysroot/; update-grub in this folder is a mock that regenerates sysroot/boot/grub/grub.cfg from the settings the way the real tool does.",
+  "objective": "Remove the debug option that forces emergency mode from the GRUB settings in sysroot/etc/default, wherever it is set, and regenerate sysroot/boot/grub/grub.cfg with ./update-grub. No linux line may contain it any more, and every other kernel argument must still be there. Editing grub.cfg directly does not count.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Emergency Target",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "20m",
+  "concepts": ["GRUB_CMDLINE_LINUX", "grub.d", "update-grub", "systemd.unit", "grep -r"],
   "module": "module-23-boot-and-recovery",
   "level": "level-14-emergency-target"
 }

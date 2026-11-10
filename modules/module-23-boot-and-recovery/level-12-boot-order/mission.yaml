@@ -1,15 +1,11 @@
 {
-  "name": "Boot Order: Permission Fix",
-  "description": "In the boot and recovery lab, a task related to Boot Order needs cleanup before the handoff.",
-  "objective": "Set the mode of boot-order.sh to 640",
+  "name": "Firmware Boots the Network",
+  "description": "After a firmware update the server tries a network (PXE) boot instead of Ubuntu. The rescue system cannot touch the real NVRAM, so ./efibootmgr here is a mock holding a captured copy of the boot entries, and blkid.txt is the captured partition list of the server's current disks.",
+  "objective": "Put the working Ubuntu entry first in the BootOrder stored by ./efibootmgr and keep all the other entries in their current relative order. The working entry is the one whose disk partition (PARTUUID) exists in blkid.txt. Do not delete or edit the entries themselves.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Boot Order",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "15m",
+  "concepts": ["UEFI boot entries", "efibootmgr", "BootOrder", "PARTUUID", "blkid"],
   "module": "module-23-boot-and-recovery",
   "level": "level-12-boot-order"
 }

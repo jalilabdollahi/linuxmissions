@@ -1,1 +1,7 @@
-Example: `tar -czf modprobe-notes-backup.tar.gz bundle/modprobe-notes`
+sed -i 's/^install ixgbe/# install ixgbe/' sysroot/etc/modprobe.d/50-nic-workarounds.conf
+./modprobe-sim -n -v ixgbe
+
+- grep -rn ixgbe sysroot/etc/modprobe.d/ finds four mentions; only "install ixgbe /bin/true" replaces the load with a no-op
+- the sed comments out exactly that line (the options line next to it must stay, it is part of the working setup)
+- blacklist.conf and the .disabled file are not the cause, so they stay untouched
+- the helper now prints the insmod chain, dependencies first, with the option

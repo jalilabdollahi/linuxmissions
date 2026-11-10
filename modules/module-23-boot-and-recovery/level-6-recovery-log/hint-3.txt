@@ -1,1 +1,7 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' recovery-log.conf > fixed.conf`
+sed 's/\x1b\[[0-9;]*m//g' sysroot/var/log/boot.log | sed -n "s/^ *See 'systemctl status \(.*\)' for details\./\1/p" | awk '!seen[$0]++' > failed_units.txt
+cat failed_units.txt
+
+- the first sed removes the colour escape sequences, so text matching works
+- the second sed keeps only the unit name from each "See 'systemctl status X' for details." line, which follows every [FAILED] line
+- awk '!seen[$0]++' drops repeats (nginx failed twice) and keeps boot order
+- DEPEND lines have no such line, so the consequences are not listed

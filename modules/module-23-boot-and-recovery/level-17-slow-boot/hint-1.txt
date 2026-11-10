@@ -1,1 +1,5 @@
-This mission is about cron field order and exact syntax.
+blame.txt lists how long each unit took, but a unit can be slow without anyone waiting for
+it. The critical chain is the sequence of units that really held up the boot target: read
+it from the bottom up, and look at the "@" (when the unit started or became active) and the
+"+" (how long it took to start) values. Which unit on the chain has a "+" that explains
+most of the delay? Then find that unit's file in sysroot/ and see what it runs.

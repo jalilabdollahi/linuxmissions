@@ -1,1 +1,6 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  ls -l sysroot/etc/systemd/system/default.target      where it points now
+  ls sysroot/usr/lib/systemd/system/*.target            the targets that exist
+  ln -sfn TARGET LINKNAME                                make/replace a symlink (-f force, -n do not descend)
+The text after "->" is stored as typed and read by the booted machine, from its own
+root. So write the path as the server sees it, starting with /usr/lib, even though it
+looks broken from here. Check with readlink LINK. More: man ln, man systemd.special

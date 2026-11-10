@@ -1,1 +1,9 @@
-Example: `head -n 3 kernel-versions-history.log > first3.txt` and `tail -n 3 kernel-versions-history.log > last3.txt`
+cd sysroot; for v in 5.15.0-100-generic 5.15.0-118-generic 6.5.0-28-generic 6.8.0-9-generic; do rm -v boot/*-$v; rm -rf lib/modules/$v; done
+ln -sfn vmlinuz-6.8.0-45-generic boot/vmlinuz; ln -sfn initrd.img-6.8.0-45-generic boot/initrd.img
+ln -sfn vmlinuz-6.8.0-31-generic boot/vmlinuz.old; ln -sfn initrd.img-6.8.0-31-generic boot/initrd.img.old
+ls -l boot; cd ..
+
+- the running kernel is 6.8.0-31, the newest by sort -V is 6.8.0-45; the other four versions go
+- boot/*-$v matches vmlinuz-, initrd.img-, config- and System.map- of one version (not the links: their names end differently)
+- lib/modules/$v is removed with rm -rf
+- ln -sfn re-points the four links (new kernel for vmlinuz and initrd.img, running one for the .old links)

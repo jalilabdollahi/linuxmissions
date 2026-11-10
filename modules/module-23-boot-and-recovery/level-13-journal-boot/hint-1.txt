@@ -1,1 +1,4 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Look at one line of journal.json first and see which fields it has. Every entry carries the
+boot it belongs to. A boot that shut down properly says so as its last words: which entries
+come from the shutdown, and which boot has none of them? The file is a merge of two exports,
+so do not trust the order of the lines: you need the timestamp field to order anything.

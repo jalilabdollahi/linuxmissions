@@ -1,15 +1,11 @@
 {
-  "name": "Snapshot Restore: Alert Filter",
-  "description": "In the boot and recovery lab, a task related to Snapshot Restore needs cleanup before the handoff.",
-  "objective": "Write every alert line from snapshot-restore.log into alerts.txt",
+  "name": "Roll Back /etc/app",
+  "description": "An upgrade broke the configuration in /etc/app, and the newest nightly snapshot was taken after the upgrade. snapshots/daily.N/ hold the server's earlier copies of etc/app (daily.0 is the newest), the live tree is sysroot/etc/app, and ./app --check-config [DIR] tells whether a configuration directory is valid.",
+  "objective": "Find the newest snapshot whose etc/app passes ./app --check-config and restore sysroot/etc/app from it: same files and nothing else (files added after the upgrade must be gone), with modes, symlink targets and modification times preserved. Nothing outside sysroot/etc/app may change, and the snapshots stay as they are.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Snapshot Restore",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "25m",
+  "concepts": ["snapshots", "cp -a", "rsync -a --delete", "file modes", "stat"],
   "module": "module-23-boot-and-recovery",
   "level": "level-18-snapshot-restore"
 }

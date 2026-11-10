@@ -1,1 +1,5 @@
-A short for-loop is the cleanest option here.
+Look at the kernel command line of the entries in grub.cfg first: what is on the linux
+lines that should not be there? Then ask where grub.cfg gets that text from: it is
+generated, so editing it is pointless. GRUB reads settings from more than one place; find
+every file under sysroot/etc/default that can contribute to the command line, not only
+the main one. Also check which of the variables applies to the recovery entries.

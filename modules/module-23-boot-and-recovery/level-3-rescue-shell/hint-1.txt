@@ -1,1 +1,4 @@
-Count matching lines instead of copying them out by hand.
+There are two sets of etc/ files here: the rescue system's, which is the folder you
+are in, and the broken server's, which hangs under sysroot/. sudo on the server looks
+up the server's own name in the server's own hosts file. What is the server's name
+now, and what name does its hosts file know?

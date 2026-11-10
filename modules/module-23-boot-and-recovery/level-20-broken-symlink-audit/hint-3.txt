@@ -1,1 +1,9 @@
-Example: `sort broken-symlink-audit-raw.txt | uniq > unique-sorted.txt`
+res() { p=$1; n=0; while [ -L "$p" ] && [ $n -lt 40 ]; do t=$(readlink "$p"); case $t in /*) p=sysroot$t;; *) p=$(dirname "$p")/$t;; esac; n=$((n+1)); done; [ $n -lt 40 ] && [ -e "$p" ]; }
+for l in $(find sysroot -type l); do res "$l" || echo "${l#sysroot/}"; done | sort > broken_links.txt; cat broken_links.txt
+ln -sfn /usr/bin/$(ls sysroot/usr/bin | grep '^python3\.' | head -n1) sysroot/etc/alternatives/python3
+ln -sfn /usr/bin/vim.tiny sysroot/etc/alternatives/editor
+ln -sfn /usr/bin/mawk sysroot/etc/alternatives/awk
+
+- res follows a link step by step: an absolute target is looked up under sysroot, a relative one next to the link, until it reaches a non-link (up to 40 steps, so loops fail) and tests that it exists
+- the loop prints the broken ones relative to sysroot and sort writes the file
+- the three ln -sfn commands re-point the alternatives at the installed python3.x, vim.tiny and mawk, written as the server sees them (no sysroot/ in the target)

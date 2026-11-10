@@ -1,1 +1,4 @@
-You need a stream editor or another text replacement tool.
+Every failure leaves a [FAILED] marker on the console, but the unit's real name is not
+on that line: look at what systemd prints under it. Colour is done with invisible
+escape characters, so a search may not behave as you expect (cat -v makes them visible).
+Not every red-ish line is a failure of its own, and a unit can fail more than once.

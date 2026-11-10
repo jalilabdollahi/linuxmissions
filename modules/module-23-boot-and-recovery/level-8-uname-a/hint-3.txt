@@ -1,1 +1,7 @@
-Example: `find cleanup/uname-a -name '*.tmp' -delete`
+for d in fleet/*/; do h=$(basename $d); run=$(awk '{print $3}' $d/uname.txt); new=$(awk '$1=="ii" && $2 ~ /^linux-image-[0-9]/ {sub("linux-image-","",$2); print $2}' $d/kernels.txt | sort -V | tail -n 1); [ "$run" != "$new" ] && [ "$(printf '%s\n%s\n' $run $new | sort -V | head -n 1)" = "$run" ] && echo $h; done | sort > reboot_needed.txt
+cat reboot_needed.txt
+
+- run: field 3 of uname -a is the kernel release
+- new: the highest version among installed (ii) linux-image-<version> packages; meta-packages, headers and removed (rc) lines are skipped
+- the test needs run != new and run sorting first with sort -V, so a custom kernel newer than the list is not flagged
+- the loop prints matching hostnames and sort writes them sorted

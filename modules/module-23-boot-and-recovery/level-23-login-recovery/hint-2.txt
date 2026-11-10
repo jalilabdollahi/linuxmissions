@@ -1,1 +1,7 @@
-Archive the directory contents without leaving anything out.
+  cat sysroot/var/log/auth.log
+  grep ops sysroot/etc/passwd sysroot/etc/shadow       the shell is field 7 of passwd, the expiry is field 8 of shadow
+  cat sysroot/etc/shells; ls sysroot/usr/bin           which shells exist and are allowed?
+  ls -ld sysroot/home/ops sysroot/home/ops/.ssh sysroot/home/ops/.ssh/authorized_keys
+bin/usermod -s SHELL ops and bin/chage -E -1 ops (no expiry) work on sysroot. With StrictModes sshd
+refuses keys when the file, .ssh or the home directory is writable by group or others, and wants
+.ssh and authorized_keys private. A file /etc/nologin blocks every login except root. See man sshd_config.

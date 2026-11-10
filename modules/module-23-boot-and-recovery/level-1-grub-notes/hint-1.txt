@@ -1,1 +1,4 @@
-Inspect the sandbox, then create the missing path for organized/grub-notes/grub-notes-notes.txt.
+GRUB does not boot "the newest kernel"; it boots whatever the setting at the top of
+grub.cfg says. Find that setting first. Then list every menu entry in the file and
+work out which one it points at. Entries are counted from 0, and the "Advanced
+options" item is not an ordinary entry. What does a value like "1>2" mean?

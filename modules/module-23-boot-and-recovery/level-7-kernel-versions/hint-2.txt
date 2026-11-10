@@ -1,1 +1,7 @@
-Save each result into its own file.
+  ls sysroot/lib/modules | sort -V          version-aware sort: 6.8.0-9 comes before 6.8.0-45
+  rm sysroot/boot/*-6.5.0-28-generic        a glob removes all the files of one version
+  rm -r sysroot/lib/modules/VERSION         the modules directory
+  ln -sfn vmlinuz-VERSION sysroot/boot/vmlinuz        retarget a link (-f replace, -n no dereference)
+Remove versions one at a time with a glob that ends in the full version, so
+"-6.8.0-9-generic" cannot also match another kernel. Check with ls -l sysroot/boot.
+Ubuntu keeps relative link targets in /boot. More: man sort, man ln

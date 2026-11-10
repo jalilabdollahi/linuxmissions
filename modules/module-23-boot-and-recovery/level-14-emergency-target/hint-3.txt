@@ -1,1 +1,8 @@
-Example: `for n in 1 2 3; do printf 'emergency-target item %s\n' "$n" > generated/emergency-target-$n.txt; done`
+grep -rn emergency sysroot/etc/default
+sed -i -E 's/ ?systemd\.unit=emergency\.target//; s/ ?emergency//' sysroot/etc/default/grub sysroot/etc/default/grub.d/99-debug.cfg
+./update-grub
+grep -n '^[[:space:]]*linux' sysroot/boot/grub/grub.cfg
+
+- grep -rn lists where the option is set: the main file and grub.d/99-debug.cfg
+- the first sed expression removes the systemd.unit=emergency.target spelling, the second the bare word, in both files (other arguments stay)
+- ./update-grub regenerates grub.cfg from the cleaned settings and the last grep shows the new linux lines

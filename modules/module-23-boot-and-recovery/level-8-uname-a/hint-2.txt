@@ -1,1 +1,6 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+  awk '{print $3}' fleet/HOST/uname.txt        the running release (field 3 from the START of the line)
+  awk '$1=="ii" && $2 ~ /^linux-image-[0-9]/' fleet/HOST/kernels.txt     installed kernel images only
+  sort -V | tail -n 1                           the highest version
+  printf '%s\n%s\n' A B | sort -V | head -n 1  the lower of two versions
+Loop over the hosts with for d in fleet/*/; do ...; done. Plain sort puts 6.8.0-9 after
+6.8.0-45, and the fields after the release have varying counts, so never count from the end.

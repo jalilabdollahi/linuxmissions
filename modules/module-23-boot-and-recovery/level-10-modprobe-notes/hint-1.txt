@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+Run the helper first and read what it says: it shows what modprobe would do. Then
+find every line in the modprobe.d directory that mentions ixgbe. There are several
+kinds of directive there, and they do different things: one of them only matters when
+the kernel loads modules automatically, another replaces the load itself. Also ask
+which files modprobe reads at all.

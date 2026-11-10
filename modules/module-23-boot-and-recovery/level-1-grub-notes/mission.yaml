@@ -1,16 +1,11 @@
 {
-  "name": "Grub Notes: Path Realignment",
-  "description": "In the boot and recovery lab, a task related to Grub Notes needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/grub-notes.txt to organized/grub-notes/grub-notes-notes.txt",
+  "name": "What Does GRUB Boot?",
+  "description": "After last night's update the server came back up on an older kernel, and the team wants to know what GRUB boots by default. The rescue system has the server's disk copied into sysroot/.",
+  "objective": "From sysroot/boot/grub/grub.cfg, find the menu entry GRUB boots by default. Write its exact title (the text between the quotes after menuentry) to default_entry.txt and the kernel version it loads (as in the vmlinuz file name) to default_kernel.txt. Leave grub.cfg alone.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Grub Notes",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "10m",
+  "concepts": ["grub.cfg", "menuentry", "submenu", "set default", "grep -n"],
   "module": "module-23-boot-and-recovery",
   "level": "level-1-grub-notes"
 }

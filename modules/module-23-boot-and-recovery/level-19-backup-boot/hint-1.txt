@@ -1,1 +1,6 @@
-You need a stream editor or another text replacement tool.
+Start with the backups, newest first: is each archive intact, and what do the paths inside
+look like? An archive that is cut off can often be listed partway, so a listing alone does not prove
+it is good. Find a way to test the whole file. Then think about where the files must end up:
+the members have a path prefix that does not match the place you want to extract into,
+and the live /boot has newer files than the backup, so do not unpack more than the EFI tree.
+The checksum file tells you if the result is right.

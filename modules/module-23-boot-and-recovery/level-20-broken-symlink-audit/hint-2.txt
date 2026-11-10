@@ -1,1 +1,7 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  find sysroot -type l            every symlink
+  readlink LINK                   its target, exactly as stored (readlink -f would use the host's /)
+A link is fine on the server when you can follow it to a real file or directory using sysroot as
+the root: an absolute target /x/y means sysroot/x/y, a relative one is relative to the link's
+own directory, and if the result is itself a link you repeat. Stop after about 40 steps: that is a loop.
+A shell function with `while [ -L "$p" ]; do ...; done` and `[ -e "$p" ]` does the job. For the
+alternatives, `ls` the real files in sysroot/usr/bin and use ln -sfn with a target as the server sees it.

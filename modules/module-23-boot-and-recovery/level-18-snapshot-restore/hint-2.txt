@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  ls -d snapshots/daily.*
+  ./app --check-config snapshots/daily.0/etc/app      exit status 0 means valid
+  stat -c '%a %y %n' ...                              mode and mtime of files, to compare
+  cp -a SRC DST      archive mode keeps modes, links and times, but does not delete extras
+  rsync -a --delete SRC/ DST/      makes DST identical to SRC (the trailing slashes matter)
+A loop with `for d in ...; do ...; done` plus `./app --check-config ... && break` finds the
+first good snapshot. See man rsync, man cp.

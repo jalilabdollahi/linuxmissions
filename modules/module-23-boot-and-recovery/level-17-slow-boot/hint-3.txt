@@ -1,1 +1,9 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+U=$(grep -E '\+[0-9]+min' critical-chain.txt | sed -E 's/^[^A-Za-z]*([^ ]+\.service).*/\1/'); echo "$U" > slow_unit.txt; cat slow_unit.txt
+mkdir -p sysroot/etc/systemd/system/$U.d
+CMD=$(grep -m1 '^ExecStart=' sysroot/usr/lib/systemd/system/$U | sed 's/^ExecStart=//; s/ --timeout=[0-9]*//')
+printf '[Service]\nExecStart=\nExecStart=%s --timeout=10\n' "$CMD" > sysroot/etc/systemd/system/$U.d/override.conf
+cat sysroot/etc/systemd/system/$U.d/override.conf
+
+- on the critical chain only one unit has a "+" time of whole minutes: that is the unit being waited for, and its name goes into slow_unit.txt
+- the drop-in directory is <unit>.d under etc/systemd/system, so the vendor file stays untouched
+- CMD takes the original command from the vendor unit (without an old --timeout), and printf writes the drop-in: [Service], an empty ExecStart= to clear the old command, then the original command with a 10 s limit

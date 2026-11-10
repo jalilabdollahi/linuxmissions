@@ -1,1 +1,6 @@
-Use tar extraction flags and point at the archive file.
+  grep -nE 'error|failed|exception' dmesg.txt     the complaints, with line numbers
+  grep -E 'ata3' dmesg.txt                         everything the kernel said about that port
+  grep -E '2:0:0:0' dmesg.txt                      the SCSI address, which shows the [sdX] name
+A SATA port ataN is host N-1 in the SCSI layer (host 2 is ata3), channel 0 target 0 lun 0,
+and the disk it carries gets its sdX name when it is attached. Compare the probe lines
+(first 3 seconds) with the error lines. The timestamp is the number in the brackets.

@@ -1,15 +1,11 @@
 {
-  "name": "Uname A: Cleanup Sweep",
-  "description": "In the boot and recovery lab, a task related to Uname A needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/uname-a and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Uname A",
-    "find",
-    "rm"
-  ],
+  "name": "Who Still Needs a Reboot?",
+  "description": "Patch night is over, and some servers installed a new kernel without rebooting into it. fleet/<host>/ holds each server's uname -a output and the dpkg listing of its linux-image packages.",
+  "objective": "Write reboot_needed.txt: the hostnames (one per line, sorted) of the servers whose running kernel is older than the newest kernel they have installed. Use the kernel release uname reports as the running one, and count only packages that are really installed (state ii) and are kernel images, not meta-packages or headers.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["uname -a", "dpkg -l", "sort -V", "awk", "shell loops"],
   "module": "module-23-boot-and-recovery",
   "level": "level-8-uname-a"
 }

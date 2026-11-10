@@ -1,1 +1,8 @@
-`mkdir -p organized/missing-library` followed by `mv inbox/missing-library.txt organized/missing-library/missing-library-notes.txt` is enough.
+  readelf -d FILE | grep NEEDED            the library names (SONAMEs) a binary or library asks for
+  readelf -d FILE | grep SONAME            the name a library file answers to
+  ls rescue/usr/lib/*/                     what the toolkit has
+  dpkg-deb -c PKG.deb                      list a package's files;  dpkg-deb -x PKG.deb DIR  unpack it
+  rescue/ld.so --library-path DIR PROGRAM  run a program with libraries taken from DIR first
+A library file is usually named libX.so.N.M.P with a link libX.so.N (its SONAME) next to
+it: the loader looks for the SONAME. The package here ships only the versioned file, so create the
+link yourself (ln -s) in the toolkit directory. Use an absolute --library-path.

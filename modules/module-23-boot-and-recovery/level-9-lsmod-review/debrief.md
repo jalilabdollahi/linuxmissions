@@ -1,17 +1,18 @@
-# Lsmod Review: Link Repair
+# Which Modules Went Missing?
 
-## What you practiced
-- This level focused on **Lsmod Review** in a safe sandbox.
-- The shortest path usually combines `ln` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`comm -23` prints the lines that appear only in the first of two sorted lists, which is
+exactly "loaded on the healthy host, absent on the broken one". For the second answer
+you have to read the `Used by` column correctly: it lists the modules that currently use
+(depend on) this one, with a count. `xor` shows `async_xor,raid456` because those two need
+it. A module that is used by none of the others is the top of the stack, here `raid456`, and
+`modprobe raid456` loads everything below it automatically through `modules.dep`.
 
-## Commands to remember
-```bash
-ln -s target linkname
-ls -l current.conf
-readlink current.conf
-```
+## Common mistakes
+- Using `diff` on the raw captures: sizes and order differ, so every line differs.
+- Reading `Used by` as "depends on" and picking `md_mod` or `raid6_pq`, which are at the bottom.
+- Listing modules that are loaded on both hosts (`md_mod` shows up in both).
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task wants a symbolic link, not a copy.
+## Next step
+`modinfo -F depends raid456` prints a module's real dependencies, and `modprobe -n -v raid456`
+shows the load order without loading anything. `/etc/modules-load.d/*.conf` loads modules at boot.

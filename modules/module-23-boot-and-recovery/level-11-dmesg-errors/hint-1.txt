@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+Start with the errors: what do the first ones talk about? It may not be a disk name
+you know. The kernel names the same device in several ways (a SATA port, a SCSI
+address, an sdX letter) and the boot probe lines near the top tie them together.
+Which line names the failing disk first, and is that the same as the first line that
+mentions its sdX name in an error?

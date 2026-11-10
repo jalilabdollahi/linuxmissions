@@ -1,15 +1,11 @@
 {
-  "name": "Journal Boot: Script Kickoff",
-  "description": "In the boot and recovery lab, a task related to Journal Boot needs cleanup before the handoff.",
-  "objective": "Make jobs/journal-boot.sh executable, run it, and create the token file it writes",
+  "name": "Which Boot Died?",
+  "description": "The previous on-call merged two journal exports into journal.json (one JSON object per line, several boots, so the file is not in time order). One of those boots ended without shutting down cleanly: nobody remembers which, and the post-mortem needs its errors.",
+  "objective": "Write the _BOOT_ID of the boot that has no final systemd-shutdown message (\"Powering off.\" or \"Rebooting.\") to crashed_boot.txt. Write that boot's messages of priority error or worse (journal PRIORITY 0 to 3), the MESSAGE text only, one per line in time order, to crash_errors.txt.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Journal Boot",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "20m",
+  "concepts": ["journal export", "jq", "_BOOT_ID", "PRIORITY", "sort"],
   "module": "module-23-boot-and-recovery",
   "level": "level-13-journal-boot"
 }

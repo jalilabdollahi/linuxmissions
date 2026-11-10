@@ -1,1 +1,7 @@
-Example: `grep 'ALERT' snapshot-restore.log > alerts.txt`
+for d in $(ls -d snapshots/daily.* | sort -t. -k2 -n); do ./app --check-config $d/etc/app >/dev/null 2>&1 && { GOOD=$d; break; }; done; echo "using $GOOD"
+rsync -a --delete $GOOD/etc/app/ sysroot/etc/app/
+./app --check-config
+
+- the loop walks the snapshots from daily.0 upwards (sort -n on the number) and stops at the first one the checker accepts
+- rsync -a copies modes, symlinks and times; --delete removes files that only exist in the live tree; the trailing slashes mean "the contents of"
+- the last line runs the checker on sysroot/etc/app itself

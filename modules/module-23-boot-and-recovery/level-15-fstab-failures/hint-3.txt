@@ -1,1 +1,7 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' fstab-failures-metrics.csv > total.txt`
+awk 'BEGIN{OFS="\t"} /^#/||NF==0 {print;next} $2=="/"{$1="LABEL=cloudimg-rootfs"} $2=="/boot/efi"{$1="LABEL=UEFI"} $2=="/home"{$1="LABEL=home"; sub(/noatme/,"noatime",$4)} $2=="/mnt/backup"{$1="LABEL=usb-backup"; $3="xfs"; $4="defaults,nofail"} {print}' sysroot/etc/fstab > fstab.new && cp fstab.new sysroot/etc/fstab && rm fstab.new
+mkdir -p sysroot/mnt/backup
+./fstab-lint
+
+- awk rewrites the source of each entry to the label of its volume (labels are unique here, unlike sizes), fixes the misspelled noatime, makes the backup entry xfs (blkid says so) and adds nofail
+- comments and blank lines are copied unchanged
+- mkdir creates the missing mount point and fstab-lint confirms the file is clean

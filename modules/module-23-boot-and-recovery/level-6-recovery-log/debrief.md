@@ -1,17 +1,19 @@
-# Recovery Log: Config Rewrite
+# What Failed on Boot?
 
-## What you practiced
-- This level focused on **Recovery Log** in a safe sandbox.
-- The shortest path usually combines `sed` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+The console log is plain text with ANSI colour codes wrapped around the status word:
+`[<esc>[0;1;31mFAILED<esc>[0m]`. systemd prints the description of a failed unit on the
+`[FAILED]` line, and on the next line the exact command that shows more, naming the unit.
+You removed the escapes, extracted the unit names from those follow-up lines and kept the
+first appearance of each. `Dependency failed for X` lines come from systemd cancelling
+jobs that needed a failed unit, so they are symptoms and the failed unit is the cause.
 
-## Commands to remember
-```bash
-sed 's/old/new/g' file.conf
-sed -n '1,20p' file.conf
-grep PATTERN file.conf
-```
+## Common mistakes
+- `grep FAILED` straight on the file: it works here, but `grep '\[FAILED\]'` does not,
+  because the escape codes sit between the bracket and the word.
+- Writing the description ("A high performance web server...") instead of the unit name.
+- Listing nginx twice because the restart attempt failed as well.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: You need a stream editor or another text replacement tool.
+## Next step
+`journalctl -b -p err` and `systemctl --failed` give the same answer on a live system, and
+`journalctl -b -1` reads the previous boot. `systemctl status UNIT` shows why it failed.

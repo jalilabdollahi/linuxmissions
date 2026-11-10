@@ -1,1 +1,4 @@
-This task wants a symbolic link, not a copy.
+The first column of lsmod is the module name; the rest of each line is size and usage.
+Comparing two lists of names is a job for a tool made for it, and it wants sorted input.
+For load_first.txt, read the "Used by" column carefully in the healthy capture: does it
+list what a module needs, or what needs the module?

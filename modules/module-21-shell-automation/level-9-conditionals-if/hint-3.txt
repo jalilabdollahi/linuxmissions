@@ -1,1 +1,41 @@
-Example: `ln -s releases/conditionals-if.conf current.conf`
+Type this at the prompt. It rewrites preflight.sh with the four checks fixed:
+
+cat > preflight.sh <<'EOF'
+#!/bin/bash
+# preflight.sh - decides whether a deploy may go ahead (see INCIDENT.txt).
+CONFIG=${CONFIG:-deploy.conf}
+DF_FILE=${DF_FILE:-df.txt}
+FREEZE_FILE=${FREEZE_FILE:-freeze.conf}
+TODAY=${TODAY:-$(date +%F)}
+
+stop() { echo "STOP: $*"; exit 1; }
+
+[ -s "$CONFIG" ] || stop "config $CONFIG is missing or empty"
+
+free=$(awk 'NR == 2 {print $4}' "$DF_FILE")
+if [ "$free" -lt 500 ]; then
+  stop "only $free MB free on /srv (need 500)"
+fi
+
+while read -r start end reason; do
+  case $start in '#'*|'') continue ;; esac
+  if [[ ! $TODAY < $start && ! $TODAY > $end ]]; then
+    stop "change freeze until $end ($reason)"
+  fi
+done < "$FREEZE_FILE"
+
+if [[ $BRANCH != main && $FORCE != 1 ]]; then
+  stop "branch $BRANCH is not main (set FORCE=1 to override)"
+fi
+
+echo "GO: deploying $BRANCH"
+EOF
+rm -f 500
+
+- [ -s "$CONFIG" ]                        exists AND is not empty
+- [ "$free" -lt 500 ]                     a numeric comparison (not a redirect, not text)
+- ! $TODAY < $start && ! $TODAY > $end    inside the window, both boundary days included
+- [[ $BRANCH != main && $FORCE != 1 ]]    no word splitting inside [[ ]], so unset FORCE is fine
+- rm -f 500                               remove the file the old bug created
+
+Check: BRANCH=feature/invoice-pdf ./preflight.sh; echo "exit $?"

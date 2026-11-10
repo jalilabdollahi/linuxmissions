@@ -1,1 +1,12 @@
-This is a numeric aggregation task.
+Run it and compare with AUDIT.txt: bash stale_accounts.sh users.export hr_roster.csv
+
+Three separate problems:
+- Why does TOTAL say 0 although lines were printed? In `cmd | while ...`,
+  which process runs the loop, and what happens to its variables when the
+  pipeline ends?
+- comm compares two sorted streams. Does it need them as files on disk, or is
+  there a way to hand it the output of a command as if it were a file?
+- What do the two inputs look like? `bkovacs` vs `BKOVACS`, `root:0`, and
+  HR's status column: which rows should count as "still employed"?
+
+Game tip: `edit stale_accounts.sh` opens the script in an editor.

@@ -1,1 +1,17 @@
-Use tar with create, gzip, and file flags.
+Read REQUEST.txt twice and turn it into a plan. The script needs four parts,
+in this order:
+
+1. Settings. Which value wins when the config file says keep=4, PRUNE_KEEP
+   says 2 and the command line says -k 6? If you apply the sources from the
+   weakest to the strongest, each one simply overwrites the one before.
+2. Options. getopts knows only short options. How do you walk through "$@"
+   by hand, one word at a time, and handle `--keep 3`, `--keep=3`, `--` and
+   an unknown `--bogus`?
+3. Picking the files. "Most recently modified" is about mtimes, not names:
+   compare `ls -1t backups` with `ls -1 backups`. And a name like
+   "manual before upgrade.tar.gz" must stay one name.
+4. Output. Who reads stdout? Try  ./prune.sh -n | wc -l : should "pruning
+   backups..." be counted?
+
+Make a test folder to play with: cp -Rp backups test-backups
+Game tip: `edit prune.sh` opens the script in an editor.

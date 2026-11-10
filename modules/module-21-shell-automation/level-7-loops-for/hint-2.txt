@@ -1,1 +1,13 @@
-Save each result into its own file.
+- GNU date does calendar arithmetic: date -d "2026-10-31 + 1 day" +%F
+  prints 2026-11-01. +%F is the YYYY-MM-DD format. (Linux only: on macOS
+  use date -j -v+1d -f %F 2026-10-31 +%F.)
+- A counting loop: for ((i = 0; ; i++)); do ... done, and `break` once the
+  day is after END.
+- Dates in YYYY-MM-DD order compare correctly as text:
+  [[ $day > $end ]] (inside [[ ]], > compares strings; it is not a redirect).
+- [ -s FILE ] is true when FILE exists and is not empty, so
+  [ ! -s "backups/db-$day.sql.gz" ] means missing or empty.
+- date -d fails on 2026-02-30: start=$(date -d "$1" +%F 2>/dev/null) || ...
+- Remember a "found something" flag and finish with exit "$status".
+
+Read more: man date (the DATE STRING section), help for, help test.

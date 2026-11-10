@@ -1,1 +1,35 @@
-Example: `tar -xzf test-operators-restore.tar.gz`
+Type this at the prompt. It rewrites needs_rebuild.sh with test operators only:
+
+cat > needs_rebuild.sh <<'EOF'
+#!/bin/bash
+# needs_rebuild.sh TARGET SRC...  - exit 0 rebuild, 1 up to date, 2 error
+if [ "$#" -lt 2 ]; then
+  echo "usage: needs_rebuild.sh TARGET SRC..." >&2
+  exit 2
+fi
+target=$1
+shift
+
+for src in "$@"; do
+  if [ -L "$src" ] && [ ! -e "$src" ]; then
+    echo "broken symlink: $src" >&2; exit 2
+  elif [ ! -e "$src" ]; then
+    echo "missing source: $src" >&2; exit 2
+  elif [ ! -r "$src" ]; then
+    echo "unreadable source: $src" >&2; exit 2
+  fi
+done
+
+[ -e "$target" ] || exit 0
+for src in "$@"; do
+  [ "$src" -nt "$target" ] && exit 0
+done
+exit 1
+EOF
+
+- -L "$src" && ! -e "$src"   a symlink whose target is gone
+- ! -e / ! -r                missing, or not readable: error, exit 2
+- [ -e "$target" ] || exit 0  no target (or a dangling link): rebuild
+- "$src" -nt "$target"       strictly newer; the same time does not count
+
+Check: ./build.sh   (every target should now be "up to date")

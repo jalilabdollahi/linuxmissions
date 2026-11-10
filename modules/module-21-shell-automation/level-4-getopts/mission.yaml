@@ -1,15 +1,11 @@
 {
-  "name": "Getopts: Noise Dedup",
-  "description": "In the shell automation lab, a task related to Getopts needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from getopts-raw.txt with sorted unique values",
+  "name": "Option Parsing",
+  "description": "Ops wants to run rotate.sh from cron with options like `-vn3 -d /var/log/worker 'worker-*.log'` (crontab.txt). The rotation code at the bottom of the script works; the part that reads the options was never written.",
+  "objective": "Add option parsing to rotate.sh as its header describes: -n COUNT (default 7), -d DIR (required), -v, in any order, clustered (-vn3) or with attached values (-dlogs), with everything after the options (or after --) left in \"$@\" as patterns. An unknown option, an option missing its value, or no -d must print the usage line on stderr and exit 2 before anything is deleted. It is tested with many command lines on fresh directories.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Getopts",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "12m",
+  "concepts": ["getopts", "OPTARG", "OPTIND", "shift $((OPTIND-1))", "--", "usage exit 2"],
   "module": "module-21-shell-automation",
   "level": "level-4-getopts"
 }

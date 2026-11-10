@@ -1,1 +1,14 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+set -e does NOT stop the script when the failing command is:
+- part of an && or || list (except the last command): `a && b` with a
+  failing a is just "false". Write the step on its own line instead.
+- anywhere inside a function (or block) that runs as the condition of
+  if/while/until, or before && / || / after `!`. set -e is switched off for
+  the whole call, so the function goes on and returns the status of its LAST
+  command. Inside such a function, check every step: `cmd || return 1`.
+- inside $( ) used as an argument: `log "$(cmd)"` has the status of log.
+  A plain assignment keeps it:  out=$(cmd)   (and set -e stops there).
+
+Each fix is local: adding `set -e` again, or `set -euo pipefail`, changes
+none of the three. Check with all three FAIL_STEP values and with none.
+
+Read more: `help set` (the -e paragraph lists the exceptions).

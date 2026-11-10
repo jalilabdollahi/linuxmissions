@@ -1,1 +1,14 @@
-Measure directory sizes before deciding which one is largest.
+Generate the example and compare it with what it should be:
+  ./gen_vhost.sh shop.example.com 8081
+  diff examples/shop.example.com.conf sites/shop.example.com.conf
+  diff examples/shop.example.com-healthcheck.sh sites/shop.example.com-healthcheck.sh
+
+For every $ in the two heredocs, ask WHEN it should become a value:
+- now, while gen_vhost.sh runs ($domain, $port), or
+- later: when nginx handles a request ($host, $remote_addr, ...), or when
+  the generated health check runs ($1, $path, $url)?
+The draft decides that once per heredoc. Can one heredoc fill in some $ and
+keep others?
+
+Also try ./gen_vhost.sh with no arguments: what lands in sites/?
+Game tip: `edit gen_vhost.sh` opens the script in an editor.

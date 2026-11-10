@@ -1,1 +1,28 @@
-Example: `for n in 1 2 3; do printf 'command-substitution item %s\n' "$n" > generated/command-substitution-$n.txt; done`
+Type this at the prompt. It replaces make_tag.sh:
+
+cat > make_tag.sh <<'SCRIPT'
+#!/bin/bash
+# make_tag.sh - write the release tag to release.tag
+make_tag() {
+  local version sha day
+  version=$(< VERSION) || return 1
+  version=${version%$'\r'}
+  if [ -z "$version" ]; then
+    echo "make_tag: VERSION is empty" >&2
+    return 1
+  fi
+  sha=$(git rev-parse --short HEAD) || return 1
+  day=${TAG_DATE:-$(date +%Y%m%d)}
+  echo "app-$version-$sha-$day"
+}
+tag=$(make_tag) || { echo "make_tag: could not build the tag" >&2; exit 1; }
+echo "$tag" > release.tag
+echo "release tag: $tag"
+SCRIPT
+
+- local version sha day           declare first, so the assignments below keep their status
+- x=$(cmd) || return 1            git (or a missing VERSION) failing stops the function
+- ${version%$'\r'}                drop the CR from the CRLF file
+- tag=$(make_tag) || { ...; exit 1; }   the function's failure stops the script before release.tag is written
+
+Try it: PATH="$PWD/bin:$PATH" ./make_tag.sh; echo $?   (then again after mv .mockgit .mockgit.off)

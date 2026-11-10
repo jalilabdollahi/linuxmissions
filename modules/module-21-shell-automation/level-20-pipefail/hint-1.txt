@@ -1,1 +1,13 @@
-This is a sorting task followed by deduplication.
+Replay the bad night (RESTORE_DRILL.txt):
+  PGDUMP_FAIL=1 ./backup_db.sh; echo "exit $?"; ls -l backups; cat backups/dump.log
+
+- `a | b` has ONE exit status. Whose: pg_dump's or gzip's? Try
+  false | true; echo $?
+- Which shell option changes that? Turn it on and replay again, then try
+  a night without warnings:  PGDUMP_WARNINGS=0 ./backup_db.sh; echo $?
+  Why does a perfect night fail now? What does grep return when it finds
+  nothing, and what does the new option do with that?
+- After a failure, what is left in backups/? And how can the script tell
+  WHICH command of the pipeline failed, to say so in its message?
+
+Game tip: `edit backup_db.sh` opens the script in an editor.

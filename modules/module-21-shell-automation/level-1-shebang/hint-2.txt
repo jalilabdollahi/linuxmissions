@@ -1,1 +1,13 @@
-`mkdir -p organized/shebang` followed by `mv inbox/shebang.txt organized/shebang/shebang-notes.txt` is enough.
+- The shebang is only honoured on line 1, byte 1. A blank line above it means
+  "no shebang": the kernel refuses (Exec format error) and a shell may then try
+  to run the Python code as shell commands.
+- `#!/bin/sh` runs dash on Ubuntu, which has no [[ ]], arrays or other bash
+  extensions. A script written for bash needs `#!/bin/bash` (or
+  `#!/usr/bin/env bash`).
+- An absolute interpreter path (#!/opt/.../python3) only works on machines
+  where that file exists. `#!/usr/bin/env python3` looks python3 up in PATH.
+- Check your fix exactly the way cron runs it: ./bin/disk_report data/df.txt
+- To change a first line from the prompt: sed -i '1s|^old$|new|' FILE, or
+  delete line 1 with sed -i '1d' FILE (on macOS: sed -i '' ...).
+
+Read more: man execve (section "Interpreter scripts"), man dash.

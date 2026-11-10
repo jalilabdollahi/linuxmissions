@@ -1,1 +1,12 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- A status is one byte (0-255): `return 512` arrives as 0, `return 300` as 44.
+  Use the status only for success (0) or failure (1).
+- Hand back data by printing it: `echo "$bytes"`. The caller captures it with
+  bytes=$(to_bytes 3M), exactly like check_upload.sh does.
+- `local name=...` makes a variable belong to the function call only; without
+  it every assignment overwrites (or creates) a variable of the caller.
+  Declare every helper variable local, not just the ones from the old code.
+- Check the number before using it in $(( )):
+    case $number in ''|*[!0-9]*) return 1 ;; esac
+- Use return, never exit: exit in a sourced function ends the caller's shell.
+
+Read more: help local, help return, man bash section "FUNCTIONS".

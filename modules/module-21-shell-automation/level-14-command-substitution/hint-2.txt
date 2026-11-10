@@ -1,1 +1,14 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+- A plain assignment keeps the status of the command substitution:
+    sha=$(git rev-parse --short HEAD) || return 1
+  but `local sha=$(...)`, `export x=$(...)` and `declare x=$(...)` return the
+  status of local/export/declare, which is 0. Declare first, assign after:
+    local version sha day
+- A function returns the status of its last command. Stop it early with
+  `|| return 1`, and check it where it is called:
+    tag=$(make_tag) || { echo "..." >&2; exit 1; }
+- `$(< VERSION)` reads a file without cat (and fails if it is missing).
+  It removes trailing newlines but not the \r of a CRLF file:
+    version=${version%$'\r'}
+- Write release.tag only after the whole tag is known.
+
+Read more: `help local`, and man bash, "Command Substitution".

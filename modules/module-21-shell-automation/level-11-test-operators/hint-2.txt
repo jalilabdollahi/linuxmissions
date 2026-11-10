@@ -1,1 +1,13 @@
-Use tar extraction flags and point at the archive file.
+- [ A -nt B ] is true when A's modification time is newer than B's (or B
+  does not exist). Equal times are NOT newer.
+- [ -e X ] follows symlinks: for a link that points nowhere it is false.
+  [ -L X ] is true for any symlink, even a broken one. So "broken symlink"
+  is: [ -L "$src" ] && [ ! -e "$src" ]
+- [ -r X ] is true when you may read X.
+- Check all sources for errors in a first loop (exit 2 with the message on
+  stderr: echo "..." >&2), and only then decide rebuild / up to date.
+- Count the arguments before `shift`: [ "$#" -lt 2 ]
+- Quote everything: "$target", "$@". One of the sources has a space in
+  its name.
+
+Read more: help test (the FILE operators), man bash "CONDITIONAL EXPRESSIONS".

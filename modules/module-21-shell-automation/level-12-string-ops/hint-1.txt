@@ -1,1 +1,16 @@
-Inspect the current mode first if you want to verify the change.
+Run it the way the bot does, then the normal way:
+
+  env -i PATH=/nonexistent /bin/bash ./parse_artifact.sh dist/log-shipper-2.4.1-linux-amd64.tar.gz
+  ./parse_artifact.sh dist/k8s-node-agent-0.19.0-linux-arm64.tar.xz
+
+Two problems: every $(echo | cut) starts programs the runner does not have,
+and "the part before the first hyphen" is not the name when the name itself
+contains hyphens.
+
+Read the name from the RIGHT instead: the extension starts at the first dot
+after the last hyphen, the architecture sits between the last hyphen and that
+dot, the OS before it, the version (always X.Y.Z) before that, and whatever
+remains on the left is the name. Bash can cut strings from either end by
+itself, or match the whole format at once with a regular expression.
+
+Game tip: `edit parse_artifact.sh` opens the script in an editor.

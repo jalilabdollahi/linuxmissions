@@ -1,17 +1,26 @@
-# Heredoc: Capacity Report
+# Two Kinds of Dollar
 
-## What you practiced
-- This level focused on **Heredoc** in a safe sandbox.
-- The shortest path usually combines `du` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Every `$` in a generated file belongs to one of two moments: when the
+generator runs, or when the generated file is used. A quoted delimiter
+(`<<'EOF'`) freezes the whole text; an unquoted one (`<<EOF`) expands
+everything. Neither fits a file that needs both, so the heredoc stays
+unquoted and the dollars that belong to later are escaped: `\$host` is
+written as `$host` for nginx, `\$1` as `$1` for the health check. `$domain`
+and `$port` stay unescaped and are filled in now.
 
-## Commands to remember
-```bash
-du -s datasets/*
-du -sh datasets/* | sort -h
-sort -n report.txt | tail -n 1
-```
+## Common mistakes
+- Escaping too much: `\$domain` writes `$domain` into the health check,
+  where no such variable exists.
+- Forgetting the `\` before `$path` in `url="...:$port\$path"`: the
+  generator's own (empty) `$path` disappears silently. `bash -n` cannot catch
+  that, only a diff against a known good file can.
+- Checking arguments after `mkdir` and `cat >`: a bad call leaves half a
+  vhost behind for nginx to load.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Measure directory sizes before deciding which one is largest.
+## Learn next
+`<<-EOF` strips leading *tab* characters (not spaces) from each line and from
+the closing delimiter, so heredocs can be indented inside functions and
+loops. `envsubst '$DOMAIN $PORT' < vhost.tmpl` replaces only the variables
+you name, a common way to keep templates as separate files. `nginx -t`
+checks a generated config before a reload.

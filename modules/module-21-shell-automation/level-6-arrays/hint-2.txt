@@ -1,1 +1,11 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+- `mapfile -t lines < "$1"` puts each line of the file in its own array
+  element (-t removes the newline). It needs bash 4 or newer; on macOS's
+  bash 3.2 use: while IFS= read -r line; do lines+=("$line"); done < "$1"
+- Build the list of real names: files=(); then files+=("$line") for each
+  non-empty line.
+- "${files[@]}" (with the quotes) expands to one word per element, exactly
+  as stored. ${#files[@]} is the number of elements.
+- "${files[@]:i:4}" is a slice: at most 4 elements starting at index i.
+  Loop with: for ((i = 0; i < ${#files[@]}; i += 4)); do ... done
+
+Read more: help mapfile; man bash, section "Arrays".

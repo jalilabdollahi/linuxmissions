@@ -1,1 +1,14 @@
-Archive the directory contents without leaving anything out.
+- Put the most specific patterns first: *.tar.gz before *.gz.
+- One branch can take several patterns: *.tar.gz|*.tar.xz)
+- `shopt -s nocasematch` makes case patterns ignore letter case (bash 3.1+),
+  so *.zip also matches .ZIP.
+- ${base%.*} removes the last ".something", whatever its case:
+  fonts.TGZ -> fonts. Twice for the double extensions:
+  app-2.4.1.tar.gz -> app-2.4.1.tar -> app-2.4.1.
+  (${base%%.*} would cut at the FIRST dot: app-2.)
+- ${f##*/} is the file name without its directory, like basename.
+- gunzip -c FILE > NAME decompresses to stdout and leaves FILE alone; plain
+  gunzip replaces FILE, in the directory where FILE lives.
+- Unsupported: echo "..." >&2; exit 2
+
+Read more: man bash, sections "case" and "Parameter Expansion"; help shopt.

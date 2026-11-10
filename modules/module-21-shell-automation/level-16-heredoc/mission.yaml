@@ -1,15 +1,11 @@
 {
-  "name": "Heredoc: Capacity Report",
-  "description": "In the shell automation lab, a task related to Heredoc needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Heredoc",
-    "du",
-    "sort"
-  ],
+  "name": "Two Kinds of Dollar",
+  "description": "gen_vhost.sh creates the nginx vhost and a health check script for every new site. Since the last edit, the vhosts come out with empty `$host` headers and the health checks contain `$domain` instead of the site name. examples/ shows the right output for `./gen_vhost.sh shop.example.com 8081`.",
+  "objective": "Fix gen_vhost.sh so that `./gen_vhost.sh DOMAIN PORT` writes sites/DOMAIN.conf and an executable sites/DOMAIN-healthcheck.sh that are identical to the two files in examples/ with shop.example.com and 8081 replaced by DOMAIN and PORT: nginx's own variables and the generated script's $1, $path and $url stay literal. With a missing argument or a PORT that is not a number it must print usage on stderr, exit 2 and write nothing. It is tested with domains you have not seen.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["<<EOF vs <<'EOF'", "\\$ in an unquoted heredoc", "generating scripts", "nested heredocs", "usage errors exit 2"],
   "module": "module-21-shell-automation",
   "level": "level-16-heredoc"
 }

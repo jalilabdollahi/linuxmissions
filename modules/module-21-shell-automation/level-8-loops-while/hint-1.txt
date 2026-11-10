@@ -1,1 +1,14 @@
-Use a targeted file search so you do not remove the wrong files.
+Run it, then look at the inventory with its invisible characters:
+
+  ./check_hosts.sh inventory.txt; cat status.txt
+  cat -A inventory.txt
+
+Three separate problems:
+- Inside `while ... done < "$1"`, EVERY command in the loop body has that
+  file as its standard input, not just `read`. Read the comment at the top of
+  tools/remote: what does it do with its stdin?
+- What does cat -A show at the end of some lines (^M)? What does the host
+  name look like to remote then?
+- The last line: is there a $ (newline) after mon-01?
+
+Game tip: `edit check_hosts.sh` opens the script in an editor.

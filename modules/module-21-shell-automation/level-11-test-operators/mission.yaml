@@ -1,15 +1,11 @@
 {
-  "name": "Test Operators: Restore Drill",
-  "description": "In the shell automation lab, a task related to Test Operators needs cleanup before the handoff.",
-  "objective": "Extract test-operators-restore.tar.gz so the restored/test-operators directory appears in the sandbox",
+  "name": "Make Believe",
+  "description": "The build wrapper asks needs_rebuild.sh whether each target is stale. Every CI run recompiles everything, because the cached build output has the same timestamps as the checkout, and last week a deleted header made it answer \"up to date\" instead of failing (CI-NOTES.txt).",
+  "objective": "Fix needs_rebuild.sh so that `./needs_rebuild.sh TARGET SRC...` answers exactly as its header says, only through its exit status: 0 when TARGET is missing (a dangling symlink counts as missing) or a SRC is newer, 1 when it is up to date (equal times included), 2 with the given stderr message when there are too few arguments or a SRC is missing, a broken symlink or unreadable. It is tested with many timestamp combinations.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Test Operators",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "15m",
+  "concepts": ["test -nt", "-e vs -L (dangling symlinks)", "-r", "exit status as the answer", "stderr for errors"],
   "module": "module-21-shell-automation",
   "level": "level-11-test-operators"
 }

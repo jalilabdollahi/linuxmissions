@@ -1,15 +1,11 @@
 {
-  "name": "Traps: Schedule Entry",
-  "description": "In the shell automation lab, a task related to Traps needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Leftover Lock",
+  "description": "Last night the scheduler killed nightly_export.sh with SIGTERM when it overran. It left export.lock and a temp directory behind, so tonight's run refused to start. On Tuesday the converter failed halfway and the BI team loaded a half-written export.csv. ONCALL.txt has the log and how to replay it.",
+  "objective": "Fix nightly_export.sh so that after every run (success, a failing to_csv, or SIGTERM in the middle of the slow fetch) export.lock and its temp directory (under $TMPDIR, as mktemp -d makes it) are gone and export.csv is either the complete new export or yesterday's file, untouched. A failure must exit non-zero; SIGTERM must make it exit with status 143 within 3 seconds and stop the fetch step it started. When export.lock already exists, it must exit non-zero and leave that lock alone.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Traps",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "20m",
+  "concepts": ["trap ... EXIT", "trap on TERM, exit 143", "traps wait for the foreground command", "cmd & + wait", "write to temp, then mv"],
   "module": "module-21-shell-automation",
   "level": "level-17-traps"
 }

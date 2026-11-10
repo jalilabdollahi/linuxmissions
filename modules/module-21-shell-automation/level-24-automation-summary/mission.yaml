@@ -1,15 +1,11 @@
 {
-  "name": "Automation Summary: Permission Fix",
-  "description": "In the shell automation lab, a task related to Automation Summary needs cleanup before the handoff.",
-  "objective": "Set the mode of automation-summary.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Automation Summary",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Nightly Runner",
+  "description": "The nightly health checks run from cron through run_checks.sh, a first draft that runs everything in checks.d/ once. Last week a dead NFS mount made one check hang until morning, a flaky API check paged someone at 2 a.m., the README was reported as a failed check, and two overlapping runs wrote one summary over the other. SPEC.txt says how it must work.",
+  "objective": "Write run_checks.sh to SPEC.txt: started from its folder, it runs every executable regular file directly in checks.d/ in name order (nothing else), limits each attempt to CHECK_TIMEOUT seconds, retries a failing or timed-out check up to 3 attempts in total, waiting RETRY_DELAY seconds before the 2nd attempt and twice that before the 3rd, writes summary.txt as `<name> <PASS|FAIL|TIMEOUT> <attempts>` lines plus `failed <n> of <total>`, and exits with the number of checks that did not pass. While another run holds run_checks.lock it must exit 75 at once. It is tested with check sets you have not seen. Needs Linux (flock, timeout).",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "40m",
+  "concepts": ["flock -n", "timeout and exit 124", "retry loop with backoff", "skipping non-executables", "summary via temp file + mv", "exit status as a count"],
   "module": "module-21-shell-automation",
   "level": "level-24-automation-summary"
 }

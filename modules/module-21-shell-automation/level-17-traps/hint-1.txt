@@ -1,1 +1,17 @@
-This mission is about cron field order and exact syntax.
+Replay the night (ONCALL.txt has the commands), then look at what is left:
+  ./nightly_export.sh & sleep 1; kill -TERM $!
+  ls; cat export.lock
+(rm export.lock afterwards, or type reset.)
+
+Questions:
+- Which lines of the script run when it is killed or when a step fails?
+  Is there a way to say "run this on the way out, whatever happens"?
+- If you add a handler for TERM, try the kill again and time it. Why does the
+  script only react when fetch_orders has finished 30 s later? What is bash
+  doing while a foreground command runs?
+- If export.lock already exists, the script stops at once. Should that run
+  clean up the lock? Whose lock is it?
+- to_csv writes straight into export.csv. What does the BI team see if it
+  dies on row 3?
+
+Game tip: `edit nightly_export.sh` opens the script in an editor.

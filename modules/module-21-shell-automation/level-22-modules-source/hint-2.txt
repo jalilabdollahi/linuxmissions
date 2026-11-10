@@ -1,1 +1,17 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- `${BASH_SOURCE[0]}` is the file being read; for a script started through a
+  symlink it is the path of the LINK (same as $0). `readlink -f PATH`
+  follows every link to the real file (GNU coreutils; on old macOS use
+  `realpath`). So, in each script:
+    source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../lib/common.sh"
+- An include guard at the top of the library:
+    [ -n "${_OPS_COMMON_LOADED:-}" ] && return 0
+    _OPS_COMMON_LOADED=1
+  `return` (not exit) leaves a sourced file; ${..:-} keeps it safe under set -u.
+- In the library: only function definitions. `set -euo pipefail` belongs in
+  the scripts.
+- The program name for log/die: "${0##*/}" (basename of $0, no extra process).
+  Here $0 being the link is what you want: bin/rotate-logs logs as rotate-logs.
+- require_cmd: `command -v "$c" >/dev/null 2>&1 || die "missing command: $c"`,
+  in a loop over "$@".
+
+Read more: man bash, "BASH_SOURCE" and "source"; man readlink.

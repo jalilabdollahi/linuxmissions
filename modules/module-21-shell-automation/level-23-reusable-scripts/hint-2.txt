@@ -1,1 +1,25 @@
-Archive the directory contents without leaving anything out.
+- Precedence, weakest first:
+    keep=7; dir=backups                                   # defaults
+    config="${PRUNE_CONFIG:-$HOME/.config/prune.conf}"
+    [ -f "$config" ] && while IFS='=' read -r key value; do
+      case "$key" in keep) keep=$value ;; dir) dir=$value ;; esac
+    done < "$config"
+    keep="${PRUNE_KEEP:-$keep}"; dir="${PRUNE_DIR:-$dir}"  # environment
+  and only then the options, which overwrite again.
+- A long-option loop:
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        -k|--keep) keep=$2; shift ;;   (check $# first: -k alone is an error)
+        --keep=*)  keep=${1#--keep=} ;;
+        --) shift; break ;;
+        -?*) echo "unknown option: $1" >&2; exit 2 ;;
+        *) break ;;
+      esac
+      shift
+    done
+- Is it a number?  case "$keep" in ''|*[!0-9]*) ...usage error... ;; esac
+- Files oldest first, names kept whole:  shopt -s nullglob; files=("$dir"/*.tar.gz)
+  then  ls -1dtr -- "${files[@]}"  and take the first (count - keep) lines.
+- Messages: echo "..." >&2. Only the file names go to stdout (${path##*/}).
+
+Read more: man bash, "case" and "Parameter Expansion"; `help shift`.

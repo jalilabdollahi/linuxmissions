@@ -1,16 +1,11 @@
 {
-  "name": "Shebang: Path Realignment",
-  "description": "In the shell automation lab, a task related to Shebang needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/shebang.txt to organized/shebang/shebang-notes.txt",
+  "name": "Works On My Shell",
+  "description": "The ops crontab runs three helpers as ./bin/<name>. Every one of them works when you type `bash bin/disk_report data/df.txt` or `python3 bin/queue_stats data/queue.txt`, yet cron keeps mailing errors (cron-mail.txt) and none of them has produced a report in weeks.",
+  "objective": "Fix bin/disk_report, bin/queue_stats and bin/backup_age so that each one runs correctly when started directly as ./bin/<name> FILE, the way cron starts it (see crontab.txt), without printing any error. Keep what the programs do; they are tested on data you have not seen.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Shebang",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "8m",
+  "concepts": ["#! shebang line", "#!/usr/bin/env python3", "/bin/sh is dash, not bash", "execve vs `bash script`", "head -1 / cat -A"],
   "module": "module-21-shell-automation",
   "level": "level-1-shebang"
 }

@@ -1,1 +1,16 @@
-Write the schedule into crontab.txt using the standard five time fields.
+- `trap cleanup EXIT` runs the function cleanup whenever the script ends:
+  normal end, `exit 1`, or an `exit` inside another trap. Install it only
+  after the lock is yours, so a refused run never deletes someone else's.
+- `trap 'exit 143' TERM` turns SIGTERM into a normal exit (143 = 128 + 15),
+  which then runs the EXIT trap.
+- Bash delivers a trapped signal only after the current foreground command
+  finishes. `wait` is the exception: it returns as soon as a trapped signal
+  arrives. So start the slow step in the background and wait for it:
+    ./bin/fetch_orders > "$work/orders.raw" &
+    fetch_pid=$!
+    wait "$fetch_pid" || exit 1
+  and `kill "$fetch_pid"` in cleanup, or it keeps running after you.
+- Write the CSV inside $work, then `mv` it over export.csv only when to_csv
+  succeeded.
+
+Read more: `help trap`, `help wait`, man bash "SIGNALS".

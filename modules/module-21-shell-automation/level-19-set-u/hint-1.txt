@@ -1,1 +1,16 @@
-You need a stream editor or another text replacement tool.
+Don't run the draft blindly: it deletes for real (type reset to undo).
+To see what rm would get without deleting anything, put `echo` in front of
+both rm commands for a moment (edit clean_build.sh), then run
+  PROJECT=shop ./clean_build.sh        and        ./clean_build.sh
+Or read the rm lines and ask, for every variable in them: is it ever set?
+
+Questions:
+- What does bash put in place of a variable that was never assigned?
+  What does  "$root/$nothing/"*  become then?
+- Which option makes a script stop instead, the moment it reads an unset
+  variable?
+- After you turn that on, which variables are allowed to be missing
+  (look at the comment block), and how do you read them without an error?
+- What should happen when the one required input, PROJECT, is missing?
+
+Game tip: `edit clean_build.sh` opens the script in an editor.

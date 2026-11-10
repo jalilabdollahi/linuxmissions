@@ -1,1 +1,13 @@
-This task wants a symbolic link, not a copy.
+Make it fail on purpose, one check at a time, and watch exit status and output:
+
+  : > empty.conf; CONFIG=empty.conf BRANCH=main ./preflight.sh; echo "exit $?"
+  BRANCH=main ./preflight.sh; echo "exit $?"; ls        (df.txt says 60 MB free)
+  TODAY=2026-12-20 BRANCH=main DF_FILE=df-after-cleanup.txt ./preflight.sh   (first freeze day)
+  BRANCH=feature/x ./preflight.sh; echo "exit $?"
+
+For each check ask: what does this test really compare? Is `>` inside [ ] a
+comparison at all (where does the file "500" come from)? Is "60" bigger than
+"500" when you compare them as text? Are the first and last day of a freeze
+inside it? And what happens to an `if` when [ itself fails with an error?
+
+Game tip: `edit preflight.sh` opens the script in an editor.

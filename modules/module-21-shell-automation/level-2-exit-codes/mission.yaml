@@ -1,15 +1,11 @@
 {
-  "name": "Exit Codes: Alert Filter",
-  "description": "In the shell automation lab, a task related to Exit Codes needs cleanup before the handoff.",
-  "objective": "Write every alert line from exit-codes.log into alerts.txt",
+  "name": "Green Dashboard",
+  "description": "The monitoring dashboard has shown all four mail queues as healthy for a week, while mx3 had almost 2000 stuck messages and mx4 stopped writing stats altogether. Monitoring only looks at the exit status of check_queue.sh (monitoring.log).",
+  "objective": "Fix check_queue.sh so that `./check_queue.sh STATS_FILE` prints exactly one line and exits with the code its header asks for: 0 OK, 1 WARNING, 2 CRITICAL, and 3 UNKNOWN (with the line `UNKNOWN - no queue data in STATS_FILE`) when the file is missing, unreadable or has no numeric deferred= value. It is tested with stats files you have not seen.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Exit Codes",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["exit N", "$? is the status of the last command", "Nagios exit codes 0/1/2/3", "validating input before using it"],
   "module": "module-21-shell-automation",
   "level": "level-2-exit-codes"
 }

@@ -1,16 +1,11 @@
 {
-  "name": "Command Substitution: Loop Builder",
-  "description": "In the shell automation lab, a task related to Command Substitution needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named command-substitution-1.txt through command-substitution-3.txt with matching numbered content",
+  "name": "Tag Without a Hash",
+  "description": "Release 1.2.0 shipped tagged `app-1.2.0--20261110`: the CI runner had lost its .git directory, git failed, and make_tag.sh still exited 0 and wrote release.tag. INCIDENT.txt shows how to replay it with the stand-in bin/git.",
+  "objective": "Fix make_tag.sh so that, run in the checkout as `PATH=\"$PWD/bin:$PATH\" ./make_tag.sh`, it writes release.tag with exactly one line `app-<version>-<sha>-<date>`: version from VERSION (no CR or newline), sha from `git rev-parse --short HEAD`, date from $TAG_DATE or else today as YYYYMMDD. When git fails, or VERSION is missing or empty, it must exit non-zero with a message on stderr and leave release.tag as it was (or absent).",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Command Substitution",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "12m",
+  "concepts": ["x=$(cmd) || exit", "local x=$(...) hides the status", "function return status", "$(< file)", "CRLF in input files"],
   "module": "module-21-shell-automation",
   "level": "level-14-command-substitution"
 }

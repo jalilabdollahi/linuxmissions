@@ -1,1 +1,12 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+- `exit N` ends the script with status N right away. Put the right one in
+  each branch (0, 1, 2), so nothing after it can change the status.
+- The extra "check done" line breaks the one-line contract: delete it.
+- Before comparing numbers, make sure you HAVE a number. `[ "" -ge 500 ]` is
+  an error ("integer expression expected"), and an error inside an `if`
+  condition just counts as false. A `case` does the check in one place:
+    case $deferred in ''|*[!0-9]*) ...UNKNOWN...; exit 3 ;; esac
+  '' catches a missing file or a missing line, *[!0-9]* anything not purely digits.
+- 3, not 2: a missing file means "I don't know", which is not the same as
+  "the queue is full".
+
+Read more: help exit; man bash, section "EXIT STATUS".

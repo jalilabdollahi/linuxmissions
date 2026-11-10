@@ -1,15 +1,11 @@
 {
-  "name": "Modules Source: Field Extract",
-  "description": "In the shell automation lab, a task related to Modules Source needs cleanup before the handoff.",
-  "objective": "Extract the second column from modules-source-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Modules Source",
-    "cut",
-    "awk"
-  ],
+  "name": "One Library",
+  "description": "rotate_logs.sh, check_inbox.sh and sync_assets.sh in scripts/ each carry their own copy of log, die and require_cmd, and the copies have drifted: one logs to stdout, one exits 2 instead of 1. The team agreed on one shared version (STYLE.txt). Admins start the scripts by full path, from the repo, and through the links in bin/.",
+  "objective": "Create lib/common.sh with log, die and require_cmd exactly as STYLE.txt describes, and make the three scripts use it instead of their own copies. Each script must work when started by full path from any directory, as scripts/NAME.sh from the repo, through bin/NAME, and through another symlink to bin/NAME elsewhere. Sourcing lib/common.sh must print nothing, change no shell option or directory, never exit the caller, and a second source must change nothing.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["source a library", "${BASH_SOURCE[0]} vs $0", "readlink -f through symlinks", "include guard with return", "no side effects when sourced"],
   "module": "module-21-shell-automation",
   "level": "level-22-modules-source"
 }

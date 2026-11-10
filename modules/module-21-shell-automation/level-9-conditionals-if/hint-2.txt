@@ -1,1 +1,13 @@
-Use `ln -s` so current.conf points at the release file.
+- -f is "is a regular file"; -s is "exists and is not empty".
+- [ $free > 500 ] runs [ $free ] with stdout redirected to a file named 500.
+  For numbers use -lt -le -gt -ge: [ "$free" -lt 500 ]. Inside [[ ]], < and >
+  compare TEXT ("60" > "500" because "6" > "5"), so they are wrong for
+  numbers but right for YYYY-MM-DD dates.
+- "Inside the window, both days included" = not before START and not after
+  END: [[ ! $TODAY < $start && ! $TODAY > $end ]]
+- [ $BRANCH != main -a $FORCE != 1 ] with FORCE unset becomes
+  [ feature/x != main -a != 1 ]: an error, status 2, and the if just treats it
+  as false. Use [[ $BRANCH != main && $FORCE != 1 ]] or quote every variable
+  and write two tests joined by &&.
+
+Read more: help test, help [[ ; man bash "CONDITIONAL EXPRESSIONS".

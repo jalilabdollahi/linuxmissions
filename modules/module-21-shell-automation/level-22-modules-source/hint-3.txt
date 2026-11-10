@@ -1,1 +1,36 @@
-Example: `cut -d, -f2 modules-source-report.csv > owners.txt`
+Type this at the prompt. It writes the library, then puts one source line in
+each script in place of its own helper functions (lines 4 to the blank line
+before the first `[ $# -eq` check):
+
+cat > lib/common.sh <<'LIB'
+# lib/common.sh - shared helpers for the ops scripts. Source it, don't run it.
+[ -n "${_OPS_COMMON_LOADED:-}" ] && return 0
+_OPS_COMMON_LOADED=1
+log() {
+  printf '%s: %s\n' "${0##*/}" "$*" >&2
+}
+die() {
+  printf '%s: error: %s\n' "${0##*/}" "$*" >&2
+  exit 1
+}
+require_cmd() {
+  local c
+  for c in "$@"; do
+    command -v "$c" >/dev/null 2>&1 || die "missing command: $c"
+  done
+}
+LIB
+for f in scripts/rotate_logs.sh scripts/check_inbox.sh scripts/sync_assets.sh; do
+  { sed -n '1,3p' "$f"
+    echo 'source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../lib/common.sh"'
+    sed -n '/^\[ \$# -eq/,$p' "$f"
+  } > "$f.new" && cat "$f.new" > "$f" && rm "$f.new"
+done
+
+- [ -n "${_OPS_COMMON_LOADED:-}" ] && return 0   include guard: a second source stops here
+- only function definitions in the lib       no set -e, no cd, no output, no exit at load time
+- "${0##*/}"                                 the name the script was started as (bin/rotate-logs -> rotate-logs)
+- readlink -f "${BASH_SOURCE[0]}"            the real script behind any chain of symlinks, so ../lib is found from anywhere
+- sed -n '1,3p' + the source line + sed from the first usage check   keeps shebang, comment, set line and the script body; drops the old copies
+
+Try it: cd /; $SANDBOX/bin/rotate-logs $SANDBOX/demo/logs; cd $SANDBOX/demo; ../bin/check-inbox inbox 2; echo $?; cd $SANDBOX

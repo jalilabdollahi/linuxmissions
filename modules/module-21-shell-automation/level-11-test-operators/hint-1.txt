@@ -1,1 +1,17 @@
-List the archive if you want to inspect it first, then extract it.
+Look at the times and ask the script yourself:
+
+  ls -l --time-style=full-iso src out
+  ./needs_rebuild.sh out/core.o src/core.c src/core.h; echo "exit $?"
+  ./needs_rebuild.sh out/core.o src/core.c src/nope.h; echo "exit $?"
+
+All files have exactly the same time. Is out/core.o stale then? make says
+no: a target is stale only when a source is strictly NEWER. Which comparison
+in the script says otherwise?
+
+For the missing header: what do `stat` and the `[ ... -ge ... ]` after it do
+when the file does not exist, and how does the loop treat that?
+
+The test command can compare file times and check existence, symlinks and
+permissions by itself, no stat needed.
+
+Game tip: `edit needs_rebuild.sh` opens the script in an editor.

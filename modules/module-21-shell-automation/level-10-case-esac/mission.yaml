@@ -1,15 +1,11 @@
 {
-  "name": "Case Esac: Backup Bundle",
-  "description": "In the shell automation lab, a task related to Case Esac needs cleanup before the handoff.",
-  "objective": "Create case-esac-backup.tar.gz containing the files under bundle/case-esac",
+  "name": "Special Delivery",
+  "description": "The vendor drops archives into inbox/ and the import job runs unpack.sh on each one. Tarballs come out as a bare .tar file and the original disappears, the .ZIP deliveries are \"unknown\", and an unsupported .rar is reported as a success (SUPPORT.txt).",
+  "objective": "Fix unpack.sh so that it follows its header for every file type: .tar.gz, .tgz, .tar.xz and .zip (in any letter case) extract into a directory NAME/ in the current directory, a plain .gz becomes the file NAME, the original file is never changed or removed, and anything else prints a message on stderr, creates nothing and exits 2. It is tested with other archives, from a different working directory.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Case Esac",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "15m",
+  "concepts": ["case patterns (first match wins)", "a|b alternatives", "shopt -s nocasematch", "${var%.*} / ${var##*/}", "gunzip -c"],
   "module": "module-21-shell-automation",
   "level": "level-10-case-esac"
 }

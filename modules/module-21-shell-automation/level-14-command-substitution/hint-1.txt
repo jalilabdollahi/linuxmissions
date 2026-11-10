@@ -1,1 +1,13 @@
-A short for-loop is the cleanest option here.
+Reproduce the incident (INCIDENT.txt shows how), then look closely:
+
+  mv .mockgit .mockgit.off
+  PATH="$PWD/bin:$PATH" ./make_tag.sh; echo "status $?"; cat -A release.tag
+
+Questions:
+- `local sha=$(git ...)` is one command. Whose exit status does it return:
+  git's, or local's?
+- `tag=$(make_tag)` then `$?`: what is the status of a function whose last
+  command is `echo`?
+- What is the `^M` that `cat -A VERSION` shows at the end of the line?
+
+Game tip: `edit make_tag.sh` opens the script in an editor.

@@ -1,1 +1,12 @@
-Use `chmod +x jobs/arithmetic.sh` and then execute it.
+- In $(( )), a number with a leading 0 is octal (0755 = 493), 0x is hex, and
+  8 or 9 after a leading 0 is an error. `10#$n` says "read $n in base 10":
+    n=00921600; echo $(( 10#$n ))       -> 921600
+- Integer division throws away the remainder, so the order matters:
+    $(( used * 100 / quota ))   not   $(( used / quota * 100 ))
+- (( expr )) is a test: true when expr is not 0. `(( quota == 0 )) && continue`
+  skips unlimited users before you divide by their quota.
+- Skip the header with one plain `read -r header` before the loop, inside a
+  { ...; } < "$1" block so both reads use the same file.
+- Keep the total in KiB and divide once: $(( total / 1024 )).
+
+Read more: man bash, section "ARITHMETIC EVALUATION".

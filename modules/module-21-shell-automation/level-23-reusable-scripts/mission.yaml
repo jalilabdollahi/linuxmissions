@@ -1,15 +1,11 @@
 {
-  "name": "Reusable Scripts: Backup Bundle",
-  "description": "In the shell automation lab, a task related to Reusable Scripts needs cleanup before the handoff.",
-  "objective": "Create reusable-scripts-backup.tar.gz containing the files under bundle/reusable-scripts",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Reusable Scripts",
-    "tar",
-    "compression"
-  ],
+  "name": "Prune for Everyone",
+  "description": "prune.sh was written in a hurry during the disk-full incident: it only works from one folder, always keeps 7, breaks on names with spaces and prints its chatter into the output that other scripts read. Now every team wants to run it from cron and from their own scripts. REQUEST.txt is the interface they agreed on.",
+  "objective": "Rewrite prune.sh to the interface in REQUEST.txt: `prune.sh [OPTIONS] [DIR]` deletes the *.tar.gz files directly in DIR except the N most recently modified; -k/--keep N (also --keep=N), -n/--dry-run, -h/--help, and -- are supported; settings come from defaults, then the config file ($PRUNE_CONFIG or ~/.config/prune.conf), then PRUNE_KEEP/PRUNE_DIR, then the command line, each overriding the one before. stdout holds only the deleted (or would-be-deleted) names, oldest first; everything else goes to stderr. Exit 0 when done, 1 when DIR does not exist, 2 on a usage error. A second run deletes nothing. It is tested with about 20 command lines on folders you have not seen.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["while/case option loop", "long options and --", "config < env < flags", "stdout for data, stderr for logs", "exit codes 0/1/2", "idempotent scripts"],
   "module": "module-21-shell-automation",
   "level": "level-23-reusable-scripts"
 }

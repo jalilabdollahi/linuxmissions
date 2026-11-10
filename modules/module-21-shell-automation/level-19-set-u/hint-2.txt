@@ -1,1 +1,14 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+- `set -u` (or `set -o nounset`): reading an unset variable is an error,
+  and a non-interactive script stops right there, before the rm.
+  Run PROJECT=shop ./clean_build.sh after adding it: the error message names
+  the misspelled variable.
+- Optional inputs need a default so set -u does not trip on them:
+    target="${1:-}"        $1, or empty when no argument was given
+    debug="${DEBUG:-0}"    DEBUG, or 0
+- Required inputs: `${VAR:?message}` stops the script with the message when
+  VAR is unset OR empty:
+    : "${PROJECT:?PROJECT must name a project in workspace/}"
+  (`:` is the do-nothing command; it is there only so the expansion runs.)
+- set -u does not catch an EMPTY variable, which is why PROJECT= needs :?
+
+Read more: `help set`, man bash "Parameter Expansion".

@@ -1,1 +1,17 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- `set -o pipefail`: a pipeline fails when any command in it fails (the
+  status is the last non-zero one). With set -e, a failed pipeline stops the
+  script, unless it is an if condition or followed by ||.
+- `PIPESTATUS` is an array with the status of every command of the last
+  pipeline. Copy it right away, the next command overwrites it:
+    if ! cmd1 | cmd2 > out; then
+      rc=("${PIPESTATUS[@]}")      # rc[0] = cmd1, rc[1] = cmd2
+      ...
+    fi
+- grep exits 1 when nothing matches, which pipefail now counts as a failure
+  in `grep ... | wc -l`. Where "no match" is fine, say so:
+    n=$(grep -c 'warning' file || true)      (grep -c still prints 0)
+- Remove the partial file before exiting: rm -f backups/db.sql.gz
+- The message must start with `backup FAILED:` and name pg_dump or gzip,
+  on stderr (>&2).
+
+Read more: `help set` (pipefail), man bash "PIPESTATUS".

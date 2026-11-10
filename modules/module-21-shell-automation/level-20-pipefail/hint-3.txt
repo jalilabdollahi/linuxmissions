@@ -1,1 +1,28 @@
-Example: `sort pipefail-raw.txt | uniq > unique-sorted.txt`
+Type this at the prompt. It replaces backup_db.sh:
+
+cat > backup_db.sh <<'SCRIPT'
+#!/bin/bash
+# backup_db.sh - nightly dump of the shop database to backups/db.sql.gz
+set -euo pipefail
+mkdir -p backups
+if ! ./bin/pg_dump shop 2> backups/dump.log | gzip > backups/db.sql.gz; then
+  rc=("${PIPESTATUS[@]}")
+  rm -f backups/db.sql.gz
+  if [ "${rc[0]}" -ne 0 ]; then
+    echo "backup FAILED: pg_dump exited ${rc[0]} (see backups/dump.log)" >&2
+  else
+    echo "backup FAILED: gzip exited ${rc[1]}" >&2
+  fi
+  exit 1
+fi
+warnings=$(grep -c 'warning' backups/dump.log || true)
+echo "backup ok: backups/db.sql.gz ($warnings warnings)"
+SCRIPT
+
+- set -o pipefail                 pg_dump failing makes the whole pipeline fail, not just gzip
+- if ! pipeline; then             handle the failure yourself instead of letting set -e exit
+- rc=("${PIPESTATUS[@]}")         status of each stage: rc[0] pg_dump, rc[1] gzip
+- rm -f backups/db.sql.gz         no 20-byte "backup" left for the next restore drill
+- grep -c ... || true             zero warnings is fine: grep's exit 1 must not stop the script
+
+Try it: PGDUMP_FAIL=1 ./backup_db.sh; echo $?; PGDUMP_WARNINGS=0 ./backup_db.sh

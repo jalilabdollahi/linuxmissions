@@ -1,16 +1,11 @@
 {
-  "name": "Timer Audit: Path Realignment",
-  "description": "In the scheduling and jobs lab, a task related to Timer Audit needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/timer-audit.txt to organized/timer-audit/timer-audit-notes.txt",
+  "name": "Four Silent Timers",
+  "description": "After the web server was rebuilt, the night housekeeping stopped: four of the eleven systemd timers copied into etc/systemd/system never fire (MIGRATION.txt). Nobody knows which ones or why.",
+  "objective": "Find the four broken timers, list them in broken.txt (one name per line, like cert-renew.timer), and fix each with the smallest change: every timer ends up with a valid OnCalendar (or another trigger), an existing service to start, and a [Install] section with WantedBy=timers.target. The seven working timers must stay byte-identical. bin/systemd-analyze is a mock that supports only the calendar verb.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Timer Audit",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "20m",
+  "concepts": ["systemd timer units", "OnCalendar=", "Unit=", "[Install] and WantedBy=timers.target", "systemd-analyze calendar"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-21-timer-audit"
 }

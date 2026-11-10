@@ -1,1 +1,9 @@
-Example: `chmod +x jobs/watch-command.sh && jobs/watch-command.sh`
+./resume-uploads.sh && watch -g -n1 'ls -A spool | wc -l | grep -x 0' && ./switch-traffic.sh
+
+- ./resume-uploads.sh          start draining the queue in the background
+- watch -g -n1 '...'           check every second, exit when the output changes
+- ls -A spool | wc -l          count every entry, hidden .part files included
+- grep -x 0                    print "0" only when the count is exactly 0, so the
+                               output stays empty until the queue is really empty
+- && ./switch-traffic.sh       switch the moment watch exits
+Then type: validate

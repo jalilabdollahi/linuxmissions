@@ -1,1 +1,8 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' flock-locks-metrics.csv > total.txt`
+awk '{ print } /^cd /{ print "exec 9> sync.lock"; print "flock -n 9 || { echo \"sync.sh: another sync is running, not starting\" >&2; exit 1; }" }' sync.sh > .sync.new && cat .sync.new > sync.sh && rm .sync.new
+
+- awk ... /^cd /   copies sync.sh and adds two lines after the cd line
+- exec 9> sync.lock   opens fd 9 on sync.lock in the script's directory and keeps it open
+- flock -n 9   takes an exclusive lock without waiting; fails at once if a copy holds it
+- || { echo ... >&2; exit 1; }   say why on stderr and stop before catalog.db is touched
+- cat .sync.new > sync.sh   rewrites the file in place so it stays executable
+(You can also add the two lines by hand with: edit sync.sh)

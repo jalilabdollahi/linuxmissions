@@ -1,1 +1,4 @@
-Count matching lines instead of copying them out by hand.
+cron itself does not look inside etc/cron.daily: it runs `run-parts`, and run-parts
+decides which files in the directory to run. Ask run-parts which files it WOULD run
+(there is a dry-run option), and compare db-backup.sh with the scripts it accepts:
+look at the names and at `ls -l`. There is more than one difference.

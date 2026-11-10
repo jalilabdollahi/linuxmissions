@@ -1,1 +1,8 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+Pairing records: for a normal night, 02:00 of date D is lost if a shutdown happened on the
+evening of D-1 and the next boot was after 02:00 of D. `grep -E '^(shutdown|reboot)'
+boot-history.txt` removes the runlevel noise. A session that ends in "crash" has no shutdown
+record: the box stayed down from the crash time in TICKET.txt until the next boot, which
+can cover more than one 02:00. A box that never went down (no shutdown record, session
+spanning the night) ran the job.
+anacrontab lines have four fields: period (days), delay (minutes), job-id, command. See
+`man anacrontab` and the lines already in the file; the command is the part of the cron line after the five time fields.

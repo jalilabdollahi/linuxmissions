@@ -1,1 +1,8 @@
-Use chmod with octal mode 640.
+p95 by nearest rank: for each job sort its seconds ascending and take element ceil(0.95*n), i.e. the
+19th of 20. One approach with sort + awk:
+  awk '{print $2, $3}' durations.log | sort -k1,1 -k2,2n | awk '{v[$1]=v[$1]" "$2; n[$1]++}
+    END{for(j in n){split(v[j],a," "); r=int(0.95*n[j]); if(r<0.95*n[j]) r++; print j, a[r]}}'
+Don't use grep db-backup: it also matches db-backup-verify. Heavy = 1800 seconds or more.
+Then give each heavy job a start time = previous start + previous p95 (round up to the minute),
+starting at 00:00. Only change the minute and hour fields. Verify with:
+  cron-expand --from "2026-11-09 00:00" --to "2026-11-09 06:00" crontab.txt | grep -v heartbeat

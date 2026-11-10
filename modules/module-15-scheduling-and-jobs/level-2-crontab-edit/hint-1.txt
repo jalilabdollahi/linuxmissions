@@ -1,1 +1,3 @@
-Look for a filtering command that keeps only the alert lines in crontab-edit.log.
+First look at what deploy already has installed. Installing a crontab from a file
+does not merge anything: whatever you install becomes the WHOLE table. So the new
+job has to go into a file that also contains everything that is there now.

@@ -1,15 +1,11 @@
 {
-  "name": "Jobs Builtin: Backup Bundle",
-  "description": "In the scheduling and jobs lab, a task related to Jobs Builtin needs cleanup before the handoff.",
-  "objective": "Create jobs-builtin-backup.tar.gz containing the files under bundle/jobs-builtin",
+  "name": "Three Shards, Three Answers",
+  "description": "The nightly customer import is split into three shards (eu, us, apac). They have to run at the same time to fit the window, and the change ticket asks for each shard's exit status, because 3 and 4 mean very different things for the morning team (see README.txt).",
+  "objective": "Run ./import.sh eu, ./import.sh us and ./import.sh apac at the same time, as background jobs of your shell, wait for them, and write each shard's exit status to statuses.txt as three lines shard=status (for example eu=0). The check reads the shards' own logs: the three runs must overlap in time, and statuses.txt must hold the codes they really returned.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Jobs Builtin",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "10m",
+  "concepts": ["jobs -l", "job specs %n", "$!", "wait PID", "$?"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-10-jobs-builtin"
 }

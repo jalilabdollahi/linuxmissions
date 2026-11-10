@@ -1,15 +1,11 @@
 {
-  "name": "At Jobs: Field Extract",
-  "description": "In the scheduling and jobs lab, a task related to At Jobs needs cleanup before the handoff.",
-  "objective": "Extract the second column from at-jobs-report.csv into owners.txt",
+  "name": "Wrong Hour in the Queue",
+  "description": "Before going on leave, a colleague queued three one-shot jobs on the shared dbadmin account for the database maintenance (change-ticket.txt). One of them restarts the main database at 15:00 today, in the middle of business hours, instead of 03:00 tomorrow.",
+  "objective": "Fix dbadmin's at queue: the main database restart must no longer run at 15:00 today and must be queued exactly once for 03:00 tomorrow (Thu 2025-09-18), with the same command. The other two jobs must keep their job numbers and times. at, atq and atrm are mocks here (in bin/, first on your PATH): they keep the spool in var/spool/cron/atjobs, their clock is frozen at Wed 2025-09-17 11:20, and jobs never really run.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "At Jobs",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "8m",
+  "concepts": ["atq", "at -c", "atrm", "at TIME tomorrow"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-5-at-jobs"
 }

@@ -1,1 +1,10 @@
-Example: `tar -czf jobs-builtin-backup.tar.gz bundle/jobs-builtin`
+./import.sh eu & e=$!; ./import.sh us & u=$!; ./import.sh apac & a=$!
+jobs -l
+wait $e; echo "eu=$?" > statuses.txt; wait $u; echo "us=$?" >> statuses.txt; wait $a; echo "apac=$?" >> statuses.txt
+cat statuses.txt
+
+- CMD & e=$!                start each shard as a background job and keep its PID
+- jobs -l                   [1] [2] [3] all Running at the same time, with those PIDs
+- wait $e; echo "eu=$?"     wait for that one shard; $? is its exit status. By PID, because
+                            a shard that already finished has lost its %n job number
+- cat statuses.txt          three lines like eu=0, us=4, apac=3

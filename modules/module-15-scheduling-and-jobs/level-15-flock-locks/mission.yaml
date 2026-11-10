@@ -1,15 +1,11 @@
 {
-  "name": "Flock Locks: Metric Sum",
-  "description": "In the scheduling and jobs lab, a task related to Flock Locks needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of flock-locks-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Flock Locks",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "One At A Time",
+  "description": "Cron starts sync.sh every minute, but since the supplier feed grew a sync takes about 90 seconds. Two imports now write into catalog.db at the same time and corrupt it (INCIDENT.txt, crontab.txt).",
+  "objective": "Change sync.sh so a copy that finds another sync still running exits with a non-zero status at once, with a message on its output, without touching catalog.db. The exclusion must survive a run killed with kill -9, and its lock file must live in this directory. Keep the SYNC_SECONDS line; the checker uses it to shorten the sync.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["flock -n", "lock files", "exec 9>file", "exit codes", "stale pidfiles"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-15-flock-locks"
 }

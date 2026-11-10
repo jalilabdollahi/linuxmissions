@@ -1,1 +1,18 @@
-Example: `chmod 640 sleep-delay.sh`
+cat > wait_ready.sh <<'EOF'
+#!/bin/bash
+limit="${1:-30}"
+SECONDS=0
+until ./probe; do
+  if [ "$SECONDS" -ge "$limit" ]; then echo "not ready after ${limit}s" >&2; exit 1; fi
+  sleep 2
+done
+EOF
+chmod +x wait_ready.sh
+./wait_ready.sh 4; echo "exit $?"
+
+- limit="${1:-30}"   the timeout: first argument, 30 if none was given
+- SECONDS=0          bash counts the seconds from here
+- until ./probe      loop until probe exits 0; then the script ends with status 0
+- if ... -ge ...     time is up: say so on stderr and exit 1
+- sleep 2            one probe every 2 seconds, not hundreds per second
+- ./wait_ready.sh 4  a quick test: probe needs about 9 s, so this times out with exit 1

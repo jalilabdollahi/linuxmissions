@@ -1,15 +1,11 @@
 {
-  "name": "Nohup: Cleanup Sweep",
-  "description": "In the scheduling and jobs lab, a task related to Nohup needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/nohup and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Nohup",
-    "find",
-    "rm"
-  ],
+  "name": "Survive the Hangup",
+  "description": "migrate.sh copies the orders table to the new database cluster, batch by batch, for about four hours. Your VPN drops every evening, and when the terminal goes away, so does everything started from it.",
+  "objective": "Start one copy of migrate.sh so that it keeps running when the terminal hangs up (it must ignore SIGHUP) and its output (stdout and stderr) goes to logs/migrate.log, not to the terminal and not to nohup.out. The check sends the running migration a real SIGHUP. Linux only (it reads /proc): on macOS play with --docker.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["nohup", "SIGHUP", "& background", "> file 2>&1", "/proc/PID/status SigIgn"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-8-nohup"
 }

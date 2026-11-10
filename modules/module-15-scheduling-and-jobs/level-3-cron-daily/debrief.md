@@ -1,17 +1,21 @@
-# Cron Daily: Event Counter
+# The Backup That Never Ran
 
-## What you practiced
-- This level focused on **Cron Daily** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`/etc/crontab` on Debian and Ubuntu runs `run-parts --report /etc/cron.daily` every
+morning (through anacron on desktops). run-parts only runs files whose names consist of
+letters, digits, `_` and `-`, **and** that are executable. `db-backup.sh` failed both
+tests, and run-parts skips such files without a word, so nothing ever showed up in a log.
+`run-parts --test` shows the list it would run, which makes the problem visible at once.
 
-## Commands to remember
-```bash
-grep -c '^pattern$' file.txt
-grep PATTERN file.txt | wc -l
-wc -l file.txt
-```
+## Common mistakes
+- Fixing only one problem: `chmod +x db-backup.sh` still has the dot, and renaming
+  without `chmod +x` still leaves a file that is not executable.
+- Removing the `#!/bin/sh` line or writing bash-only syntax under `#!/bin/sh`. run-parts
+  executes the file directly, so the first line picks the interpreter.
+- Keeping `db-backup.sh` *and* a copy `db-backup`: harmless here because the `.sh` one
+  is skipped, but the next person to "fix" it runs the backup twice.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Count matching lines instead of copying them out by hand.
+## Next step
+The rule exists so that package files like `foo.dpkg-old` or editor backups `foo~` never
+run. `run-parts --lsbsysinit` uses a different rule set, and `/etc/cron.d/` file names
+follow the same no-dots rule. Check with `run-parts --test` after every change.

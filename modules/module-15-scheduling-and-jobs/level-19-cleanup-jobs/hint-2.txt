@@ -1,1 +1,8 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+Guard: `set -u` makes an unset variable an error; `: "${CACHE_DIR:?message}"` stops the
+script with a message when the variable is unset OR empty; `[ -d "$CACHE_DIR" ]` checks it
+is a directory. Quote "$CACHE_DIR" everywhere.
+Selection (see man find): -mindepth 1 skips the starting directory itself, -type f only
+matches regular files (not directories, not symlinks), -mtime +7 means "older than 7 days",
+! -name .keep spares the .keep files, and -delete removes without a pipe through xargs, so
+names with newlines or spaces are fine. find does not follow symlinks unless asked (-L).
+Test with a sandbox copy: CACHE_DIR=t ./cleanup.sh; ls -la t

@@ -1,15 +1,11 @@
 {
-  "name": "Crontab Edit: Alert Filter",
-  "description": "In the scheduling and jobs lab, a task related to Crontab Edit needs cleanup before the handoff.",
-  "objective": "Write every alert line from crontab-edit.log into alerts.txt",
+  "name": "One More Job",
+  "description": "You are logged in as deploy. The product team wants the page cache warmed every night before the European morning, and deploy's crontab already holds six jobs that other people depend on.",
+  "objective": "Add a job to deploy's installed crontab that runs /opt/app/bin/warm-cache --all every day at 04:10. The six jobs already in the table, and every other line in it, must stay exactly as they are. In this sandbox crontab is a mock (bin/crontab, first on your PATH) that keeps tables in var/spool/cron/crontabs/ instead of the system's.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Crontab Edit",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["crontab -l", "crontab FILE", "crontab -e", "installing a crontab replaces it"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-2-crontab-edit"
 }

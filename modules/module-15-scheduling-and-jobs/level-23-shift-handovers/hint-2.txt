@@ -1,1 +1,10 @@
-Archive the directory contents without leaving anything out.
+- cron lines: skip blank lines, lines starting with # (after leading blanks) and VAR=value lines.
+  `read -r m h dom mon dow cmd` splits the five fields and leaves everything else in cmd untouched,
+  including its inner spaces; system crontabs need one more variable, the user, before cmd.
+  @reboot/@daily lines have one time word instead of five fields.
+- cron.d: cron only reads names made of letters, digits, _ and - (no dots): old.conf.dpkg-old,
+  .placeholder and extra.disabled are ignored.
+- timers: only those linked in etc/systemd/system/timers.target.wants; OnCalendar= is in the
+  .timer, ExecStart= and User= in the service (the same name, or the Unit= line).
+- at: `atq` lists id, time, queue, owner; `at -c ID | tail -n 1` is the command.
+Build the file with printf '%s\t%s\t%s\t%s\n' and check it with: column -t -s "$(printf '\t')" inventory.tsv

@@ -1,1 +1,6 @@
-Inspect the sandbox, then create the missing path for organized/cron-syntax/cron-syntax-notes.txt.
+Each schedule becomes five time fields (minute, hour, day of month, month, day of
+week) followed by the command. crontab-fields.txt has the order.
+Take each schedule word by word: which field does "every 15 minutes" restrict, and
+which ones do "Monday to Friday" and "January, April, July and October"? A field
+you do not need to restrict is *.
+Read schedule 1 carefully: what is the LAST time the check should run on a weekday?

@@ -1,15 +1,11 @@
 {
-  "name": "Maintenance Window: Schedule Entry",
-  "description": "In the scheduling and jobs lab, a task related to Maintenance Window needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Sunday Freeze",
+  "description": "Storage maintenance owns Sunday from 01:00 to 04:00 and nothing else may run then. The team's crontab.txt (storage-ops on stor-02) has twenty lines, and the schedules are not all as simple as they look.",
+  "objective": "In crontab.txt, put the prefix `#FREEZE ` (with the space) in front of every job line that can fire on any Sunday of the next 12 months at a minute from 01:00 to 03:59, using cron's real rules. Do not change, add or remove anything else: every other line must stay byte-identical.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Maintenance Window",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "15m",
+  "concepts": ["cron field semantics", "day-of-month OR day-of-week", "step values", "@hourly", "cron-expand"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-17-maintenance-window"
 }

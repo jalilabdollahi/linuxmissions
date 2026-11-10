@@ -1,1 +1,11 @@
-Example: `sort cron-hourly-raw.txt | uniq > unique-sorted.txt`
+sed -i '/report\.sh/s/%/\\%/g' crontab.txt
+grep report.sh crontab.txt
+cron-run --crontab crontab.txt --from "2025-06-10 09:00" --to "2025-06-10 11:00" --summary
+ls reports/
+
+- sed -i '/report\.sh/s/%/\\%/g'   on the report line only, put a backslash before every %
+                                   (the line becomes ... $(date +\%F-\%H).txt)
+- grep report.sh crontab.txt       check the line
+- cron-run ...                     runs it at 09:00 and 10:00 on the simulated clock: exit 0
+- ls reports/                      report-2025-06-10-09.txt and -10.txt are there
+(or use: edit crontab.txt, and type the two backslashes by hand)

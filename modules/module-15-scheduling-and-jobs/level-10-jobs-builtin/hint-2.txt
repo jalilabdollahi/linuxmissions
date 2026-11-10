@@ -1,1 +1,9 @@
-Archive the directory contents without leaving anything out.
+CMD &         start CMD as a background job: [1], [2], [3] ... and $! holds its PID
+jobs -l       job numbers, PIDs and states
+wait %2       wait for job 2 only; afterwards $? is job 2's exit status
+wait PID      the same with a PID (save it right after the &: pid=$!)
+wait          with no argument: waits for ALL jobs, but returns 0, not their statuses
+Careful: as soon as bash has reported a job as "Done" or "Exit 3", its %n is gone
+("no such job"), and shards can finish in any order. A PID saved from $! still works:
+bash remembers the exit status of its recent background PIDs.
+More: help wait, help jobs

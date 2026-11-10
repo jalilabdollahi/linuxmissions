@@ -1,1 +1,5 @@
-This is a numeric aggregation task.
+Read INCIDENT.txt again: the last attempt used a pidfile and blocked every sync for two
+days after kill -9. Why does "does a file exist?" fail twice: once when two copies look at
+the same instant, once when a run dies without cleaning up? Something that the kernel
+owns, and drops when the process dies, doesn't have either problem. Which tool in the
+util-linux family offers that?

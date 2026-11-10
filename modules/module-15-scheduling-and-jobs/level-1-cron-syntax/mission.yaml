@@ -1,16 +1,11 @@
 {
-  "name": "Cron Syntax: Path Realignment",
-  "description": "In the scheduling and jobs lab, a task related to Cron Syntax needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/cron-syntax.txt to organized/cron-syntax/cron-syntax-notes.txt",
+  "name": "Five Schedules",
+  "description": "The ops lead wants five monitoring checks for the new status page and wrote the schedules in plain English in ticket.txt. Before anything gets the real scripts, the schedules have to be right.",
+  "objective": "Write schedule.cron with one crontab line per schedule in ticket.txt, in the ticket's order, each running the command true. Each line must fire at exactly the times its schedule describes, no more and no fewer. cron-expand (a LinuxMissions helper, not a standard tool) lists when crontab lines would fire.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Cron Syntax",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "10m",
+  "concepts": ["crontab time fields", "ranges", "steps */N", "lists", "month and weekday fields"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-1-cron-syntax"
 }

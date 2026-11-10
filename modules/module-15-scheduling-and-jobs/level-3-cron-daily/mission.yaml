@@ -1,16 +1,11 @@
 {
-  "name": "Cron Daily: Event Counter",
-  "description": "In the scheduling and jobs lab, a task related to Cron Daily needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in cron-daily-events.txt and write the number to ok-count.txt",
+  "name": "The Backup That Never Ran",
+  "description": "Last month someone dropped db-backup.sh into etc/cron.daily so the database would be dumped every morning. var/backups/ is still empty, and the cron log shows cron.daily running every day.",
+  "objective": "Make run-parts pick up the database backup in etc/cron.daily, so the daily cron run (06:25, `run-parts --report etc/cron.daily`) really runs it and it writes var/backups/db-<date>.sql.gz. Keep the script's code and its #!/bin/sh line working, keep exactly one copy of it, and leave the other cron.daily scripts as they are.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Cron Daily",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["run-parts", "run-parts --test", "cron.daily naming rules", "chmod +x", "shebang"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-3-cron-daily"
 }

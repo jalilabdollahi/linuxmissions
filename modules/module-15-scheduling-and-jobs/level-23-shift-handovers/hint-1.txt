@@ -1,1 +1,5 @@
-Use tar with create, gzip, and file flags.
+Start by listing what is where (ls -R var etc) and read one file of each kind before you
+write any parsing. What differs between a user crontab, /etc/crontab and a file in
+/etc/cron.d? Which files would cron skip, by name? How does systemd know a timer is
+enabled, and where does a timer's command come from? How do you read an at job: look at
+what atq and `at -c N` print. Decide for each kind where the four columns come from.

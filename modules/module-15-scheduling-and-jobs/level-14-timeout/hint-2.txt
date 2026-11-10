@@ -1,1 +1,9 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+timeout DURATION CMD...   runs CMD and sends it SIGTERM after DURATION.
+  exit 124        CMD was stopped by the timeout
+  other values    CMD's own exit status (0 = OK, 1, 2 ... = it failed)
+  -k 2            if CMD is still alive 2 s after the TERM, send KILL;
+                  timeout then exits 137 (128 + 9). Some programs ignore TERM.
+A loop over the file, one line per host:
+  while read -r host; do ...; done < hosts.txt > report.txt
+and `case $? in 0) ...;; 124|137) ...;; *) ...;; esac` to pick the word.
+Read more: man timeout

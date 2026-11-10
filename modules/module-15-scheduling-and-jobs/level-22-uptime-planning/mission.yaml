@@ -1,15 +1,11 @@
 {
-  "name": "Uptime Planning: Field Extract",
-  "description": "In the scheduling and jobs lab, a task related to Uptime Planning needs cleanup before the handoff.",
-  "objective": "Extract the second column from uptime-planning-report.csv into owners.txt",
+  "name": "The Box That Sleeps At Night",
+  "description": "The build box bb-02 is switched off every night from 22:00 to 07:00, so its 02:00 nightly build in crontab.txt silently skips. boot-history.txt is the box's `last -x` output (TICKET.txt has the details, including a crash).",
+  "objective": "Write missed.txt: the dates, as YYYY-MM-DD one per line, among the last 14 nightly runs (2026-10-28 to 2026-11-10) on which the box was down at 02:00. Then move the nightly job to anacrontab as exactly one new line that runs it every day, 5 to 15 minutes after anacron starts, with a unique job identifier and the full original command, and remove it from crontab.txt. Leave the other lines of both files alone.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Uptime Planning",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "20m",
+  "concepts": ["last -x", "reboot and shutdown records", "anacron", "anacrontab fields", "downtime analysis"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-22-uptime-planning"
 }

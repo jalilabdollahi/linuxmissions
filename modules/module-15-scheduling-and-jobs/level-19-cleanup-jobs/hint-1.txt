@@ -1,1 +1,5 @@
-You need a stream editor or another text replacement tool.
+Reproduce the accident first: what does `find $CACHE_DIR -mtime +7 -delete` become when
+CACHE_DIR is empty, and why does the missing quoting matter too? Then list what the
+current command would delete that it should not: directories, .keep files, files behind
+symlinks. Work in a scratch directory (mkdir t; touch -d '10 days ago' t/a) rather than
+on the real thing. Two jobs for the script: refuse bad input early, and select precisely.

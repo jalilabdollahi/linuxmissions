@@ -1,15 +1,11 @@
 {
-  "name": "Recurring Backups: Alert Filter",
-  "description": "In the scheduling and jobs lab, a task related to Recurring Backups needs cleanup before the handoff.",
-  "objective": "Write every alert line from recurring-backups.log into alerts.txt",
+  "name": "The Backup Calendar",
+  "description": "The file server's one-line backup crontab runs incrementals every day, Sundays and month starts included, on top of the other backups. The new calendar is in BACKUP-PLAN.txt and has to be written as cron lines for review.",
+  "objective": "Write backup.cron with the jobs from BACKUP-PLAN.txt, each calling this directory's backup.sh with its mode (incremental, full, archive). Incremental: 01:30 Monday to Saturday, but not on the 1st. Full: 01:30 every Sunday. Archive: 03:00 on the 1st. A simulated cron run of about two months must produce exactly these runs. Do not install the file.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Recurring Backups",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["multiple cron lines", "day-of-month/day-of-week OR rule", "shell guards in cron", "escaping % in cron", "cron-run"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-18-recurring-backups"
 }

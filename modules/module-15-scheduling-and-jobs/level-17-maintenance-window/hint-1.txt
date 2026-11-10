@@ -1,1 +1,5 @@
-This mission is about cron field order and exact syntax.
+Don't judge a line by how it looks: work out for each one at which minutes it really fires
+and whether one of those is a Sunday between 01:00 and 03:59. Watch the special cases:
+which days does a line with both a day-of-month and a day-of-week match? What do `*/50`,
+`7` in the weekday field and `@hourly` mean? Is 04:00 inside the window? There is a mock
+tool in bin/ that can list the fire times for you instead of guessing.

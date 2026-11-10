@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+crontab -l           print the installed table
+crontab FILE         install FILE as the new table (replaces the old one completely)
+crontab -            install what comes on standard input
+crontab -e           open the installed table in an editor and reinstall it on save
+A safe edit without an editor: save the table to a file with crontab -l > FILE,
+append the new line with >>, check the file, then install it.
+"Every day at 04:10" is minute 10, hour 4.   More: man crontab, man 5 crontab

@@ -1,1 +1,15 @@
-Example: `mkdir -p organized/timer-audit && mv inbox/timer-audit.txt organized/timer-audit/timer-audit-notes.txt`
+cd etc/systemd/system
+sed -i.bak 's/^\[Timers\]/[Timer]/' report-weekly.timer
+sed -i.bak 's/25:00:00/02:00:00/' db-vacuum.timer
+mv certbot-renew.service cert-renew.service
+printf '\n[Install]\nWantedBy=timers.target\n' >> sessions-purge.timer
+cd ../../..
+printf '%s\n' cert-renew.timer db-vacuum.timer report-weekly.timer sessions-purge.timer > broken.txt
+systemd-analyze calendar '*-*-* 02:00:00'
+
+- [Timers] -> [Timer]   systemd ignores an unknown section, so the schedule never applied
+- 25:00:00 -> 02:00:00   hour 25 does not exist; any valid time fixes it
+- mv certbot-renew.service cert-renew.service   the timer starts cert-renew.service, which was named differently
+- printf ... >> sessions-purge.timer   adds the missing [Install] so the timer can be enabled
+- broken.txt   the four names, one per line
+- systemd-analyze calendar   confirms a spec parses and shows when it elapses

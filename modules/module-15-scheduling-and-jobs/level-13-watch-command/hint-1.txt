@@ -1,1 +1,7 @@
-This task usually takes two steps: fix execute permission, then run the script.
+You can't type ./switch-traffic.sh at the right moment by hand: you need a
+command that keeps checking spool/ and returns as soon as it is empty, so
+the switch can run right after it on the same line.
+
+Before you start the uploader, look at spool/ the way the uploader sees it.
+Does plain `ls` show every entry? What does "empty" mean for a directory
+that also holds in-flight uploads?

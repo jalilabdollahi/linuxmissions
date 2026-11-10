@@ -1,1 +1,4 @@
-This is a sorting task followed by deduplication.
+Read one of the mails in var/mail/deploy: the error comes from the shell, and the
+"Subject:" line shows the command exactly as cron passed it to the shell. Compare it
+with the line in crontab.txt. Where does it stop? Look at the other jobs too: one of
+them uses the same character without trouble, and one uses it on purpose.

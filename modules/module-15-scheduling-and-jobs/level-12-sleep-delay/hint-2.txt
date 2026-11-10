@@ -1,1 +1,9 @@
-Use chmod with octal mode 640.
+until CMD; do ...; done    repeat the body while CMD fails (exit status not 0)
+sleep 2                    pause 2 seconds
+SECONDS=0                  bash then counts the seconds since this line in $SECONDS
+limit=${1:-30}             first argument, or 30 when there is none
+[ "$SECONDS" -ge "$limit" ]  true once the time is up
+exit 0 / exit 1            the status the deploy hook checks
+Write the file with a heredoc (cat > wait_ready.sh <<'EOF' ... EOF) or with
+edit wait_ready.sh, then chmod +x it. Try it: ./wait_ready.sh 4; echo $?
+More: help until, man sleep, man bash (search for SECONDS)

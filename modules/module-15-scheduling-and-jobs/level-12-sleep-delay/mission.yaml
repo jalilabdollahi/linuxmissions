@@ -1,15 +1,11 @@
 {
-  "name": "Sleep Delay: Permission Fix",
-  "description": "In the scheduling and jobs lab, a task related to Sleep Delay needs cleanup before the handoff.",
-  "objective": "Set the mode of sleep-delay.sh to 640",
+  "name": "Wait for Ready",
+  "description": "The deploy hook runs the smoke tests right after starting the app, and half the time the app is not listening yet, so the deploy fails for nothing. ./probe tells whether the app is ready (exit 0) or not yet (exit 1).",
+  "objective": "Write an executable wait_ready.sh that runs ./probe every 2 seconds until it succeeds, then exits 0. It gives up after a timeout in seconds, taken from its first argument (default 30), and then exits 1. It must react within 2 seconds of the app becoming ready, and must not call ./probe more often than every 2 seconds. The check runs your script against an app that becomes ready after a few seconds and against one that never does (with a short timeout), so it takes about 10 seconds after each change to the script.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Sleep Delay",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "12m",
+  "concepts": ["sleep", "until / while loops", "exit status", "$SECONDS", "${1:-default}"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-12-sleep-delay"
 }

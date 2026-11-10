@@ -1,1 +1,9 @@
-Example: `tar -xzf disown-restore.tar.gz`
+setsid -f ./consumer.sh < /dev/null >> logs/consumer.log 2>&1
+ps -o pid,sid,tty,cmd -p $(pgrep -f "$SANDBOX/consumer.sh")
+tail -n 3 logs/consumer.log
+
+- setsid -f              start consumer.sh in a new session (SID = its PID), no terminal
+- < /dev/null            nothing to read from your keyboard
+- >> logs/consumer.log 2>&1   append its output and errors to the log
+- ps -o pid,sid,tty,cmd  SID equals PID, TTY is ?; your shell's session has a pts/N
+- tail                   it has processed the four waiting orders

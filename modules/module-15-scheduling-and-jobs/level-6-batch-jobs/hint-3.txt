@@ -1,1 +1,12 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' batch-jobs.conf > fixed.conf`
+cd app
+export DATA_DIR="$SANDBOX/data"
+echo './reindex.sh' | batch
+atq
+at -c 12 | grep -E '^DATA_DIR=|^cd '
+
+- cd app                        the job will start in the directory you queue it from
+- export DATA_DIR=...           exported, so batch saves it into the job ("$SANDBOX/data"
+                                expands to the full path now)
+- echo './reindex.sh' | batch   queue it in queue b
+- atq / at -c 12                check the job number and that the job sets DATA_DIR and cds
+                                into .../app (use the number atq shows if it is not 12)

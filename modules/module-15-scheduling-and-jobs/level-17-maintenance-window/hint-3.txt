@@ -1,1 +1,13 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+sed -i.bak -e '8s/^/#FREEZE /' -e '10s/^/#FREEZE /' -e '12s/^/#FREEZE /' -e '14s/^/#FREEZE /' -e '15s/^/#FREEZE /' -e '22s/^/#FREEZE /' -e '23s/^/#FREEZE /' -e '25s/^/#FREEZE /' crontab.txt
+diff crontab.txt.bak crontab.txt
+
+- 8   0 1 * * 7: 7 is Sunday too
+- 10  */50 1 * * 0: fires at 01:00 and 01:50
+- 12  0 3 1 * 0: the 1st OR any Sunday, so every Sunday at 03:00
+- 14  @hourly: every hour, so also 01:00-03:00 on Sundays
+- 15  59 3 * * 0: the last minute of the window
+- 22  30 1 1 * *: the 1st of a month that falls on a Sunday
+- 23  */20 3-5 * * 0: 03:00, 03:20 and 03:40 are inside
+- 25  15 3 8-14 * *: every 8th-14th, so also the Sundays among them
+- (left alone: */50 4, @weekly at 00:00, 0 4 and 45 22 are outside the window)
+- s/^/#FREEZE /   puts the prefix at the start of a line; -i.bak keeps a backup to diff against

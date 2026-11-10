@@ -1,1 +1,46 @@
-Example: `tar -czf shift-handovers-backup.tar.gz bundle/shift-handovers`
+cat > inventory.sh <<'EOF2'
+out=inventory.tsv
+: > "$out"
+emit() { printf '%s\t%s\t%s\t%s\n' "$1" "$2" "$3" "$4" >> "$out"; }
+crontab_rows() {
+  local line a b c d e u rest
+  while IFS= read -r line; do
+    line=${line#"${line%%[![:space:]]*}"}
+    case "$line" in ''|\#*) continue ;; esac
+    case "$line" in [A-Za-z_]*=*) continue ;; esac
+    if [ "${line:0:1}" = "@" ]; then
+      if [ -n "$2" ]; then read -r a rest <<< "$line"; u=$2; else read -r a u rest <<< "$line"; fi
+      emit "$1" "$u" "$a" "$rest"
+    else
+      if [ -n "$2" ]; then read -r a b c d e rest <<< "$line"; u=$2; else read -r a b c d e u rest <<< "$line"; fi
+      emit "$1" "$u" "$a $b $c $d $e" "$rest"
+    fi
+  done < "$1"
+}
+for f in var/spool/cron/crontabs/*; do crontab_rows "$f" "$(basename "$f")"; done
+crontab_rows etc/crontab ""
+for f in etc/cron.d/*; do
+  case "$(basename "$f")" in *[!A-Za-z0-9_-]*) continue ;; esac
+  crontab_rows "$f" ""
+done
+for l in etc/systemd/system/timers.target.wants/*.timer; do
+  t=$(basename "$l"); file=etc/systemd/system/$t
+  cal=$(sed -n 's/^OnCalendar=//p' "$file" | head -n 1)
+  unit=$(sed -n 's/^Unit=//p' "$file" | head -n 1)
+  svc=etc/systemd/system/${unit:-${t%.timer}.service}
+  user=$(sed -n 's/^User=//p' "$svc" | head -n 1)
+  emit "$file" "${user:-root}" "$cal" "$(sed -n 's/^ExecStart=//p' "$svc" | head -n 1)"
+done
+atq | while IFS=$'\t' read -r id rest; do
+  when=$(echo "$rest" | awk '{print $1, $2, $3, $4, $5}')
+  emit "at:$id" "$(echo "$rest" | awk '{print $NF}')" "$(date -d "$when" '+%Y-%m-%d %H:%M')" "$(at -c "$id" | tail -n 1)"
+done
+EOF2
+bash inventory.sh; wc -l inventory.tsv
+
+- read -r a b c d e rest   splits the time fields and keeps the command text as written
+- the case lines   skip blanks, comments and VAR=value lines; a dot in a cron.d name means cron ignores the file
+- read ... u rest   in /etc/crontab and cron.d the 6th field is the user
+- timers.target.wants/*.timer   only enabled timers; sed pulls OnCalendar, User and ExecStart out of the unit files
+- atq / at -c "$id" | tail -n 1   the owner and time from the queue, the command from the job script
+- printf '%s\t...'   writes one tab-separated row per item

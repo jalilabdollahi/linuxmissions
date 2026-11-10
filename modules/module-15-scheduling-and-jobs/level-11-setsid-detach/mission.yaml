@@ -1,15 +1,11 @@
 {
-  "name": "Disown: Restore Drill",
-  "description": "In the scheduling and jobs lab, a task related to Disown needs cleanup before the handoff.",
-  "objective": "Extract disown-restore.tar.gz so the restored/disown directory appears in the sandbox",
+  "name": "Cut the Cord",
+  "description": "The order-queue consumer keeps dying: last week a Ctrl-C meant for another command took it down, and before that a closed SSH session did. It has to run completely apart from any terminal.",
+  "objective": "Start exactly one consumer.sh that is fully detached: it leads its own session (its session id equals its PID), has no controlling terminal (TTY ?), reads stdin from /dev/null, and appends its stdout and stderr to logs/consumer.log. It must keep processing messages: the check drops one into queue/ and expects it in done/ within a few seconds. Linux only (it reads /proc): on macOS play with --docker.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Disown",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "10m",
+  "concepts": ["setsid", "sessions and controlling terminals", "ps -o pid,sid,tty", "< /dev/null", "nohup vs setsid vs disown"],
   "module": "module-15-scheduling-and-jobs",
-  "level": "level-11-disown"
+  "level": "level-11-setsid-detach"
 }

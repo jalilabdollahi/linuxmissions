@@ -1,15 +1,11 @@
 {
-  "name": "Logrotate: Capacity Report",
-  "description": "In the scheduling and jobs lab, a task related to Logrotate needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Logrotate",
-    "du",
-    "sort"
-  ],
+  "name": "The Log That Won't Let Go",
+  "description": "app.log is huge and still growing, and the application that writes it cannot be restarted: it opened the file once and keeps it open (TICKET.txt). A scaled-down copy of the problem is in this directory.",
+  "objective": "Write logrotate.conf for $SANDBOX/app.log: keep 5 old logs, the newest app.log.1 uncompressed and the older ones gzipped. Then rotate right now with the state file logrotate.state in this directory. The running writer must not be stopped, and afterwards its new lines must appear in app.log, not in app.log.1.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["logrotate", "copytruncate", "delaycompress", "logrotate -d", "logrotate -f -s"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-16-logrotate"
 }

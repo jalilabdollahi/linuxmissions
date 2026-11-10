@@ -1,1 +1,24 @@
-Example: `chmod 640 automation-calendar.sh`
+awk '{print $2, $3}' durations.log | sort -k1,1 -k2,2n | awk '{v[$1]=v[$1]" "$2; n[$1]++} END{for(j in n){split(v[j],a," "); r=int(0.95*n[j]); if(r<0.95*n[j]) r++; print j, a[r]}}' | sort -k2,2nr
+cat > crontab.txt <<'EOF2'
+# batch host bt-01, user batch
+MAILTO=batch-oncall@example.com
+# m h dom mon dow  command
+*/5 * * * *      /opt/batch/bin/heartbeat
+0 0 * * 1        /opt/batch/bin/db-backup
+45 0 * * 1       /opt/batch/bin/reindex
+45 1 * * *       /opt/batch/bin/export-orders
+25 2 * * 1       /opt/batch/bin/report-sales
+0 3 * * 1        /opt/batch/bin/etl-load --full
+50 3 * * 1-5     /opt/batch/bin/archive-logs
+0 2 * * 1        /opt/batch/bin/db-backup-verify
+20 4 * * *       /opt/batch/bin/cache-prune
+0 3 * * 2-6      /opt/batch/bin/tmp-clean
+30 4 * * 1       /opt/batch/bin/etl-load --delta
+EOF2
+cron-expand --from "2026-11-09 00:00" --to "2026-11-09 06:00" crontab.txt | grep -v heartbeat
+
+- the first line   p95 per job: sort each job's seconds, take the 19th of 20; six jobs are 30 min or more (heavy)
+- db-backup 00:00 (40 min), reindex 00:45 (55), export-orders 01:45 (35), report-sales 02:25 (32, after the export ends at 02:20)
+- etl-load --full 03:00 (45), archive-logs 03:50 (34), etl-load --delta 04:30 (45, the 05:45 line would run past 06:00)
+- the light jobs (heartbeat, db-backup-verify, cache-prune, tmp-clean) are copied unchanged
+- cron-expand   shows what fires when in the window, to check the plan

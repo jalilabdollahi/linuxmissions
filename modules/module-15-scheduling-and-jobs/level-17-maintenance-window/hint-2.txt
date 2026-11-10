@@ -1,1 +1,7 @@
-Write the schedule into crontab.txt using the standard five time fields.
+cron-expand prints when lines fire in a time window:
+  cron-expand --from "2026-11-15 01:00" --to "2026-11-15 04:00" crontab.txt
+  cron-expand -e '*/50 1 * * 0 x' --from "2026-11-15 00:00" --days 1
+It shows the line number of each hit. Remember the window is a Sunday, but a line with a
+day-of-month AND a day-of-week uses OR: try the months where the 1st or the 8th-14th is
+a Sunday too, e.g. --from "2027-08-01 00:00" --days 1.
+To edit one line by number: sed -i.bak '12s/^/#FREEZE /' crontab.txt   (or: edit crontab.txt)

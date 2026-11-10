@@ -1,1 +1,8 @@
-`mkdir -p organized/timer-audit` followed by `mv inbox/timer-audit.txt organized/timer-audit/timer-audit-notes.txt` is enough.
+Ways to check all of them at once:
+  grep -L '^\[Timer\]' etc/systemd/system/*.timer          files without a proper [Timer] header
+  grep -L 'WantedBy=timers.target' etc/systemd/system/*.timer
+  grep -H OnCalendar etc/systemd/system/*.timer             then test each spec:
+  systemd-analyze calendar '*-*-* 03,15:00:00'              prints the next elapse or an error
+For the service: foo.timer starts foo.service unless it has Unit=...; compare ls *.service with the timers.
+A timer with OnBootSec=/OnUnitActiveSec= and no OnCalendar is a valid monotonic timer.
+Fix a name with `mv` or a `Unit=` line; fix a header with sed -i.bak; append [Install] with printf >>.

@@ -1,15 +1,11 @@
 {
-  "name": "Watch Command: Script Kickoff",
-  "description": "In the scheduling and jobs lab, a task related to Watch Command needs cleanup before the handoff.",
-  "objective": "Make jobs/watch-command.sh executable, run it, and create the token file it writes",
+  "name": "Drain Then Switch",
+  "description": "Upload traffic moves from eu-west-1 to eu-west-2 tonight (CHANGE.txt). The uploader is paused with a full queue in spool/, and the load balancer gives you a 5-second window once the queue is empty.",
+  "objective": "Resume the uploader with ./resume-uploads.sh; it empties spool/ in the background within about a minute. Run ./switch-traffic.sh once spool/ has no entries left at all (files still being uploaded count): not before, and no more than 5 seconds after. If you miss the window, type reset to refill the queue.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Watch Command",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "10m",
+  "concepts": ["watch -g", "watch -n", "ls -A", "waiting for a condition", "&&"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-13-watch-command"
 }

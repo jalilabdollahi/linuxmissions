@@ -1,1 +1,5 @@
-This is a sorting task followed by deduplication.
+Several things are wrong with that one line, and each needs its own look. Where does the
+current line send the error messages, and does the order of the redirections matter? What
+does cron do with a `%` in a command? Which program does report.sh need, and is it on the
+PATH cron gives its jobs? And since a good run is quiet, how will cron ever have something
+to mail? Run the line under bin/cron-run and read the log it leaves.

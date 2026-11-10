@@ -1,15 +1,11 @@
 {
-  "name": "Report Jobs: Noise Dedup",
-  "description": "In the scheduling and jobs lab, a task related to Report Jobs needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from report-jobs-raw.txt with sorted unique values",
+  "name": "Reports Nobody Reads",
+  "description": "The daily sales report job runs under cron, but its output never arrives anywhere, its warnings vanish, and a missing feed went unnoticed (TICKET.txt). The job line is in crontab.txt.",
+  "objective": "Fix crontab.txt (do not install it, and don't edit report.sh or salesagg): one job at 06:30 every day, with MAILTO=ops@example.com set before it. A good run keeps all of its output, report and warnings, in $SANDBOX/logs/report-YYYY-MM-DD.log and sends no mail; when report.sh fails, cron mails ops. It must work under cron's PATH of /usr/bin:/bin. bin/cron-run is a mock cron for testing.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Report Jobs",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "20m",
+  "concepts": ["redirection order >file 2>&1", "MAILTO", "escaping % in cron", "cron's minimal environment", "PATH in crontab"],
   "module": "module-15-scheduling-and-jobs",
   "level": "level-20-report-jobs"
 }

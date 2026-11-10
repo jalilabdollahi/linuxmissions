@@ -1,1 +1,6 @@
-Inspect the current mode first if you want to verify the change.
+Plan before you edit. First find out which jobs are heavy: that needs a number per job
+from durations.log, and PLAN.txt says exactly which one (a percentile, not the average or the
+maximum, and exact job names). Then look at crontab.txt as a whole: which lines fire on
+Monday inside the window (a `1-5` or `*` in the weekday field counts), and are there lines you
+might have missed, one of which doesn't even look like it belongs to the night? Finally lay the
+heavy runs end to end on paper, in an order that respects the export-before-report rule.

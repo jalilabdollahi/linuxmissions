@@ -1,1 +1,7 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+nohup CMD             run CMD with SIGHUP ignored; if stdout is a terminal, nohup sends the
+                      output to ./nohup.out instead
+CMD > FILE 2>&1       stdout to FILE, then stderr to the same place
+CMD &                 run in the background so you get the prompt back
+Put them together in that order: nohup, the command, the redirections, &.
+Check it: grep SigIgn /proc/PID/status (the last hex digit odd = SIGHUP ignored).
+More: man nohup, man 7 signal

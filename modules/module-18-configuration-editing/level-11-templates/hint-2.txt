@@ -1,1 +1,8 @@
-Use tar extraction flags and point at the archive file.
+  tail -n +2 envs.csv | while IFS=, read -r env url pass reps; do ... done
+splits each row at the commas into variables. Inside the loop you can fill a
+placeholder without sed, using bash's own substitution:
+  text=${text//'{{X}}'/"$value"}
+Quote the replacement and the value is inserted literally. With sed, "&" means
+"the matched text" and your delimiter must not occur in the value, so every
+special character needs escaping first. Write each result with
+printf '%s\n' "$text" > out/$env.conf (create out/ first). More: help read, man bash

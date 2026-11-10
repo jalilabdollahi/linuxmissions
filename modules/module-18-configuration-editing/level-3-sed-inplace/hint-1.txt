@@ -1,1 +1,5 @@
-Count matching lines instead of copying them out by hand.
+The number 8080 occurs in several places: other sections, comments, even a
+different setting. A change has to apply to one line only. What marks the
+beginning and the end of the [staging] section? And what makes the real port
+line different from a comment that merely contains the same digits?
+Do not forget the backup: editing "in place" normally leaves no copy behind.

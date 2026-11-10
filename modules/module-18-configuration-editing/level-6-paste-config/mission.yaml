@@ -1,15 +1,11 @@
 {
-  "name": "Paste Config: Config Rewrite",
-  "description": "In the configuration editing lab, a task related to Paste Config needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in paste-config.conf and save the fixed result to fixed.conf",
+  "name": "One Line for the Balancer",
+  "description": "The load balancer reads its backend list from a single BACKENDS= line in lb.env. The backends are kept in two parallel lists, hosts.txt and ports.txt, and someone must combine them.",
+  "objective": "Append one line to lb.env of the form BACKENDS=host1:port1,host2:port2,... built from hosts.txt and ports.txt (the first host with the first port, and so on, in order). Keep all existing lines of lb.env; the BACKENDS line must be the last one and there must be exactly one.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Paste Config",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["paste -d", "paste -s", "appending to a config", "trailing blank lines"],
   "module": "module-18-configuration-editing",
   "level": "level-6-paste-config"
 }

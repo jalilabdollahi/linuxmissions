@@ -1,17 +1,18 @@
-# Resolv Conf: Capacity Report
+# Resolver That Remembers
 
-## What you practiced
-- This level focused on **Resolv Conf** in a safe sandbox.
-- The shortest path usually combines `du` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+On a systemd-resolved host `/etc/resolv.conf` is a symlink to a file the service regenerates
+(the "DO NOT EDIT" header says so), so a hand edit lasts only until the next restart. The
+persistent place for local settings is a drop-in in `resolved.conf.d/`, which leaves the
+package's own file alone and survives upgrades. `DNS=` and `Domains=` are lists that accumulate
+across files, which is why the old server and domain stayed until the new drop-in reset them
+with an empty assignment.
 
-## Commands to remember
-```bash
-du -s datasets/*
-du -sh datasets/* | sort -h
-sort -n report.txt | tail -n 1
-```
+## Common mistakes
+- `sed -i` on etc/resolv.conf: it replaces the symlink with a regular file, and systemd-resolved no longer owns it.
+- Adding `DNS=` without resetting it: the vendor's old server stays in the list.
+- Editing the packaged resolved.conf: the next package update asks about it or overwrites it.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Measure directory sizes before deciding which one is largest.
+## Next step
+`systemctl cat unit`, `systemd-analyze cat-config systemd/resolved.conf` and `resolvectl status` show the merged
+result of base file and drop-ins on a real system.

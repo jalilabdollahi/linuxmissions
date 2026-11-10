@@ -1,1 +1,18 @@
-Example: `mkdir -p organized/prompt-customize && mv inbox/prompt-customize.txt organized/prompt-customize/prompt-customize-notes.txt`
+sed -i '/^PS1=/d' home/.bashrc
+cat >> home/.bashrc <<'RC'
+set_prompt() {
+  local code=$?
+  PS1='\u@\h:\w'
+  if [ "$code" -ne 0 ]; then
+    PS1+=" \[\e[31m\]$code\[\e[0m\]"
+  fi
+  PS1+='\$ '
+}
+PROMPT_COMMAND=set_prompt
+RC
+
+- sed -i '/^PS1=/d'     removes the old, unwrapped prompt
+- local code=$?         first line of the function: remember the last command's exit status
+- PS1='\u@\h:\w'        user@host:directory, rebuilt before every prompt
+- \[\e[31m\] ... \[\e[0m\]  red on, code, colour reset: the \[ \] tell readline these bytes take no space
+- PROMPT_COMMAND=...    bash runs the function before it draws each prompt

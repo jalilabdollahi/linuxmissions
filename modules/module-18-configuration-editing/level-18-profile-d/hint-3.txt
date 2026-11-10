@@ -1,1 +1,18 @@
-Example: `grep 'ALERT' profile-d.log > alerts.txt`
+cat > etc/profile.d/tool.sh <<'SH'
+tool_dir="$SANDBOX/opt/tool/bin"
+if [ -d "$tool_dir" ]; then
+  case ":$PATH:" in
+    *":$tool_dir:"*) ;;
+    *) PATH="$PATH:$tool_dir" ;;
+  esac
+fi
+export PATH
+unset tool_dir
+SH
+sh -c '. etc/profile.d/tool.sh; . etc/profile.d/tool.sh; echo "$PATH"'
+
+- tool.sh              the .sh suffix is what /etc/profile looks for; tool.conf is never loaded
+- [ -d "$tool_dir" ]   nothing happens when the directory does not exist
+- case ":$PATH:" ...   adds the directory only if it is not already a whole element of PATH
+- export PATH          makes the change visible to programs the login shell starts
+- the last line        runs the file twice in plain sh and prints the result

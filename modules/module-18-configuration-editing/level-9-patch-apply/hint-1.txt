@@ -1,1 +1,5 @@
-This task wants a symbolic link, not a copy.
+Read fix-timeouts.patch first: it is plain text. The lines starting with - and +
+are the changes, and the unchanged lines around them are the context that patch
+uses to find the place. How many separate changes (hunks) does it hold? Try
+applying it and watch what patch says about each hunk. The file names in the
+patch have an extra leading directory, which patch must be told to strip.

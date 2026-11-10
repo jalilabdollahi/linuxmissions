@@ -1,1 +1,10 @@
-Use chmod with octal mode 640.
+Work with the checker, one message at a time, and verify each file with its own
+tool when you are unsure: `python3 -m json.tool etc/app/features.json`,
+`python3 -c 'import yaml; print(yaml.safe_load(open("etc/app/services.yml")))'`,
+`cat -A` for tabs (^I) and stray spaces. Typical fixes: add the missing `=`; remove
+a suffix that is not part of a number; no spaces around `=` in an env file; spell
+APP_ENV out as the message lists; no trailing comma in JSON, and of two identical
+keys keep the one that matches MIGRATION.txt (the parser silently uses the last);
+tabs become spaces and a quoted number becomes a number in YAML; a valid dotted
+address in hosts. Then `bin/app start` and `curl http://127.0.0.1:<port>/`.
+More: man curl, man sed

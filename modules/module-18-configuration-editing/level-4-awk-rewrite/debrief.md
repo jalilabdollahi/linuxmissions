@@ -1,17 +1,18 @@
-# Awk Rewrite: Noise Dedup
+# Drain Rack B
 
-## What you practiced
-- This level focused on **Awk Rewrite** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+awk gives you the fields of a line, but the moment you assign to one (`$4 = 0`)
+it re-joins all fields with the output separator, a single space. A hand-aligned
+table then loses its alignment. Printing the row yourself with `printf` and
+fixed-width formats (`%-12s`) reproduces the layout, and a pattern restricted to
+real data rows (`NF == 5`, not starting with `#`, rack field exactly `B`) leaves
+comments, blank lines and look-alikes such as `web-b1` or `cache-b` alone.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- `awk '$4=0'` style one-liners: all spacing collapses.
+- Matching `/B/` anywhere in the line: the comments and `web-b1` contain a B.
+- Writing `awk ... file > file`: the shell truncates the file before awk reads it.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Next step
+`awk 'BEGIN{OFS="\t"}'` sets the output separator when you *want* a rebuilt line, and
+`column -t` re-aligns a table when exact bytes do not matter.

@@ -1,1 +1,7 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+{ while read -r h u p k; do printf 'Host %s\n    User %s\n    Port %s\n    IdentityFile ~/.ssh/%s\n\n' "$h" "$u" "$p" "$k"; done < db-hosts.txt; printf 'Host db-*\n    HostName %%h.corp.internal\n    ProxyJump bastion.corp\n    IdentitiesOnly yes\n\nHost bastion.corp\n    User jump\n    IdentityFile ~/.ssh/keys/bastion\n    IdentitiesOnly yes\n\nHost github.com\n    User git\n    IdentityFile ~/.ssh/keys/github\n    IdentitiesOnly yes\n\nHost gitlab.corp\n    User git\n    IdentityFile ~/.ssh/keys/gitlab\n\nHost *\n    ServerAliveInterval 30\n    ForwardAgent no\n'; } > home/.ssh/config
+
+- the while loop      writes one specific block per line of db-hosts.txt: user, port and key of that host
+- Host db-*           shared settings for the group: real name via %h, the jump host, only the listed key
+- bastion/github/gitlab  their own users and keys, none of them goes through the jump host
+- Host * (last)       defaults for everything else, without a User
+- { ...; } > file     one redirection for the whole group, so the old config is replaced in one go

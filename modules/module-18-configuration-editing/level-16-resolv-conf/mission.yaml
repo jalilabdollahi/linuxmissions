@@ -1,15 +1,11 @@
 {
-  "name": "Resolv Conf: Capacity Report",
-  "description": "In the configuration editing lab, a task related to Resolv Conf needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Resolv Conf",
-    "du",
-    "sort"
-  ],
+  "name": "Resolver That Remembers",
+  "description": "Ticket NET-212: this host should use the two new DNS servers and search corp.example first. Someone edited etc/resolv.conf and it worked, until the next restart wiped it. The host runs systemd-resolved (a small stand-in is in bin/: systemctl and resolvectl).",
+  "objective": "Configure systemd-resolved the way it expects (a drop-in under etc/systemd/resolved.conf.d/) so that DNS servers are exactly 10.20.0.53 then 10.20.0.54, and the search domains are corp.example then lab.example. Restart systemd-resolved with the mock systemctl so it takes effect. etc/resolv.conf must still be the symlink to the stub file, and etc/systemd/resolved.conf (the package's file) stays unchanged.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["systemd-resolved", "symlinked resolv.conf", "configuration drop-ins", "list settings and resetting them"],
   "module": "module-18-configuration-editing",
   "level": "level-16-resolv-conf"
 }

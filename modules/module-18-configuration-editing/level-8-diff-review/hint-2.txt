@@ -1,1 +1,8 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+diff has options for exactly this:
+  -w   ignore all whitespace (tabs, spaces, alignment)
+  -B   ignore changes that only add or remove blank lines
+  -u   unified format: lines starting with - are old, + are new
+Run `diff -u -w -B haproxy.orig.cfg haproxy.cfg` and read the hunks. In the plain
+(non -u) format, changed lines of the new file start with ">", so
+`diff -w -B a b | grep '^>'` lists them. The directive is the first word of the line.
+Write the names to changed.txt, one per line. More: man diff

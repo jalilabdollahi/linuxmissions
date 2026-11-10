@@ -1,1 +1,9 @@
-Example: `cut -d, -f2 vim-modes-report.csv > owners.txt`
+sed -i -e '/^# LEGACY/,/^# END LEGACY/{/^acl /d}' -e '120,180s/^http_port 3128/http_port 3129/' -e '/^# ---- local overrides below ----/r snippet.conf' squid.conf
+sed -i '/^cache_dir /{N;s/\n[[:space:]]*/ /}' squid.conf
+
+- /^# LEGACY/,/^# END LEGACY/{/^acl /d}   inside the block only, delete the lines that start with acl
+- 120,180s/^http_port 3128/.../           the substitution runs only on lines 120 to 180, and only on http_port lines
+- /^# ---- local overrides.../r snippet.conf   reads snippet.conf in after the marker line
+- /^cache_dir /{N;s/\n[[:space:]]*/ /}    appends the next line and replaces the line break (and its indentation) with one space
+
+The same in vi: :/^# LEGACY/,/^# END LEGACY/g/^acl /d   then   :120,180s/^http_port 3128/http_port 3129/   then   :/^# ---- local/r snippet.conf   then J on the cache_dir line, and :wq.

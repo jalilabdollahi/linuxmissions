@@ -1,17 +1,17 @@
-# Exports File: Noise Dedup
+# Who Can Write to Builds
 
-## What you practiced
-- This level focused on **Exports File** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+In `/etc/exports` the options belong to the host expression directly in front of the parenthesis. With a
+space in between, `10.20.0.0/24 (rw)` means two clients: the subnet with default options, and everybody
+with `rw`. Joining them puts rw where it was meant to be. Removing `no_root_squash` brings back the default
+that maps client root to an unprivileged user. Editing the file changes nothing until `exportfs -r` loads it
+into the running table, which is why `exportfs -v` is the real check.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- Changing the file and forgetting `exportfs -r`: the old, too-open table stays active.
+- Fixing the builds line and leaving `no_root_squash` on another export.
+- Adding a second line for the same path instead of correcting the first.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Next step
+`showmount -e server` (from a client) lists what a server exports, and `exportfs -s` prints the table in the
+format of exports(5), handy for copying into the file.

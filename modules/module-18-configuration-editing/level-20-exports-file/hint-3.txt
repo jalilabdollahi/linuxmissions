@@ -1,1 +1,8 @@
-Example: `sort exports-file-raw.txt | uniq > unique-sorted.txt`
+sed -i -e 's|\(10\.20\.0\.0/24\) (|\1(|' -e 's/,no_root_squash//' etc/exports
+exportfs -r
+exportfs -v
+
+- s|\(10\.20\.0\.0/24\) (|\1(|   glues the option list to the subnet again, so the subnet is the client that gets rw and nobody else does
+- s/,no_root_squash//          removes the option, so root on clients is squashed again (the default)
+- exportfs -r                  re-exports everything from the file into the export table
+- exportfs -v                  shows the table with every client and its options: check builds and iso

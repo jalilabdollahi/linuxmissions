@@ -1,1 +1,26 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' aliases-file.conf > fixed.conf`
+cat > etc/aliases <<ALIASES
+# /etc/aliases - mail aliases for mail-01
+# See aliases(5). Run newaliases after every change.
+
+# Required by RFC 2142
+postmaster:    root
+mailer-daemon: postmaster
+abuse:         postmaster
+
+# cron and system mail goes to a person who left in September
+root:          :include:$SANDBOX/etc/oncall.list
+
+dev-team:      alice@corp.example,
+               mkhanna@corp.example,
+               bob@corp.example
+ops:           alice@corp.example
+support:       :include:$SANDBOX/etc/oncall.list
+security:      secops@corp.example, soc-oncall@corp.example
+ALIASES
+sed -i '/^mkhan@/Id' etc/oncall.list
+newaliases
+
+- the heredoc          rewrites the alias file: root includes the list, mkhan is gone from dev-team and ops, webmaster and backup-admin (only mkhan) are removed, security is new
+- unquoted ALIASES     lets the shell fill in $SANDBOX, since :include: needs a full path
+- sed ... /Id          deletes the include file's line in any capitalisation (the colleague mkhanna does not match, because of the "@")
+- newaliases           rebuilds the database; no output means no warnings

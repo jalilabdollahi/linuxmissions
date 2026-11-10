@@ -1,1 +1,7 @@
-Save each result into its own file.
+awk can keep state between lines. Keep a "depth" counter: +1 for every { and -1
+for every }, and a block is finished when the depth is back to 0. Useful pieces:
+  gsub(/\{/, "{")      returns how many { the line contains (and changes nothing)
+  $1 == "server_name"  the line that names the site; $2 is the first name (strip the ;)
+  print > file         write into a named file (close(file) when you are done)
+Collect the lines of a block in a variable and write it out when the depth is 0.
+Lines outside blocks that start with # are the header. More: man awk

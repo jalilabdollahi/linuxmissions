@@ -1,1 +1,8 @@
-`mkdir -p organized/prompt-customize` followed by `mv inbox/prompt-customize.txt organized/prompt-customize/prompt-customize-notes.txt` is enough.
+In PS1, \u \h \w and \$ give user, host, directory and the prompt character.
+Colour codes are escape sequences: write them as \e[31m (red) and \e[0m (reset)
+and wrap each in \[ ... \] so readline does not count them.
+For the exit code, PS1 text is fixed when it is set, so build it fresh before
+every prompt: PROMPT_COMMAND names a command (or function) that bash runs before
+each prompt, and in it you can assign PS1. The first thing that function must
+do is save `$?`, before anything else runs. Test with `true`, `false` and
+`(exit 130)`, and check what `echo "${PS1@P}"` shows. More: man bash (PROMPTING)

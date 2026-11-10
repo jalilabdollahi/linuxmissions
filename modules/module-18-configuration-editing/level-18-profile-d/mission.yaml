@@ -1,15 +1,11 @@
 {
-  "name": "Profile D: Alert Filter",
-  "description": "In the configuration editing lab, a task related to Profile D needs cleanup before the handoff.",
-  "objective": "Write every alert line from profile-d.log into alerts.txt",
+  "name": "One Drop-in, Once in PATH",
+  "description": "The vendor tool lives in opt/tool/bin and every login shell on the fleet should find it. A colleague left a draft in etc/profile.d that nothing ever loads.",
+  "objective": "Write etc/profile.d/tool.sh so that, for sh and for bash, the directory $SANDBOX/opt/tool/bin ends up in PATH exactly once even if the profile is sourced several times or the directory is already in PATH, and only if the directory exists. PATH must not change when the directory is missing, other profile.d scripts must keep working, and the script must run under a plain POSIX sh (dash) without errors.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Profile D",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "20m",
+  "concepts": ["profile.d naming", "idempotent PATH edits", "case \":$PATH:\"", "POSIX sh vs bash"],
   "module": "module-18-configuration-editing",
   "level": "level-18-profile-d"
 }

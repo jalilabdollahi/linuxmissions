@@ -1,17 +1,18 @@
-# Diff Review: Cleanup Sweep
+# Reformatted and Tweaked
 
-## What you practiced
-- This level focused on **Diff Review** in a safe sandbox.
-- The shortest path usually combines `find` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`diff` is exact by default, so re-indentation hides the real change under hundreds of
+noise lines. `-w` makes whitespace irrelevant and `-B` ignores blank-line changes; what
+remains is the semantic difference: `maxconn 2000 -> 200`, a different balance algorithm
+and the retry count. A reviewer who only skims a 300-line diff would miss the one that
+could cut capacity by ten.
 
-## Commands to remember
-```bash
-find dir -name '*.tmp'
-find dir -name '*.tmp' -delete
-find dir -type f -exec rm {} \;
-```
+## Common mistakes
+- `diff -b` instead of `-w`: it ignores changes in the *amount* of whitespace but not whitespace
+  that is added where there was none.
+- Listing lines instead of directive names, or listing a directive that only moved.
+- Trusting the formatting commit message: "small tweaks" included a 10x drop of maxconn.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use a targeted file search so you do not remove the wrong files.
+## Next step
+`git diff --ignore-all-space` does the same for repositories, and `diff -y -W 160`
+shows old and new side by side.

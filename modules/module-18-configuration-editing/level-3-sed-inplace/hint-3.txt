@@ -1,1 +1,7 @@
-Example: `grep -c '^ok$' sed-inplace-events.txt > ok-count.txt`
+sed -i.bak '/^\[staging\]/,/^\[/ s/^port = 8080$/port = 9080/' services.conf
+diff services.conf.bak services.conf
+
+- -i.bak                      edit in place and keep the original as services.conf.bak
+- /^\[staging\]/,/^\[/        the range: from the [staging] header to the next section header
+- s/^port = 8080$/port = 9080/ only a line that is exactly the port setting, not a comment or admin_port
+- diff                        proves that exactly one line changed

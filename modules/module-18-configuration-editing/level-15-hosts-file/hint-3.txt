@@ -1,1 +1,7 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' hosts-file-metrics.csv > total.txt`
+awk 'NR == FNR { if ($0 ~ /^[[:space:]]*(#|$)/ || $1 ~ /^10\.9\./) next; for (i = 2; i <= NF; i++) if (!($i in seen)) { seen[$i] = 1; names[$1] = names[$1] " " $i }; next } /^[[:space:]]*(#|$)/ { print; next } $1 ~ /^10\.9\./ { print "# " $0; next } !($1 in done) && names[$1] != "" { done[$1] = 1; print $1 names[$1] }' etc/hosts etc/hosts > etc/hosts.new && mv etc/hosts.new etc/hosts
+
+- NR == FNR { ... next }      first pass: skip comments and legacy lines, remember each name's first address and the names per address
+- /^[[:space:]]*(#|$)/        second pass: comments and blank lines are printed unchanged
+- $1 ~ /^10\.9\./             decommissioned hosts are kept, behind a "# "
+- !($1 in done) ...           each address is printed once, with all its names, at its first position
+- > etc/hosts.new && mv       awk cannot edit in place

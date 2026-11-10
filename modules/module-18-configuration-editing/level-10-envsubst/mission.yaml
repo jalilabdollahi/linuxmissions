@@ -1,15 +1,11 @@
 {
-  "name": "Envsubst: Backup Bundle",
-  "description": "In the configuration editing lab, a task related to Envsubst needs cleanup before the handoff.",
-  "objective": "Create envsubst-backup.tar.gz containing the files under bundle/envsubst",
+  "name": "Fill the Template, Spare nginx",
+  "description": "The deployment renders nginx.conf from nginx.conf.tmpl. Two placeholders, $APP_HOST and $APP_PORT, belong to the deployment (their values are in deploy.env). The template also contains nginx's own variables, which nginx fills in at request time.",
+  "objective": "Render nginx.conf from nginx.conf.tmpl: replace $APP_HOST and ${APP_PORT} with the values from deploy.env, and leave every nginx variable ($host, $remote_addr, $request_uri, $http_upgrade, $scheme, ...) exactly as it is in the template.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Envsubst",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "12m",
+  "concepts": ["envsubst", "shell-format list", "export", "template rendering"],
   "module": "module-18-configuration-editing",
   "level": "level-10-envsubst"
 }

@@ -1,1 +1,6 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+In exports(5) a line is `path client1(options) client2(options)`: the options
+belong to the client they touch. A space before the "(" ends that client, and the
+parenthesised part then applies to a new client without a name, which means "any
+host". Remove that space. For the ISO mirror, take no_root_squash out of the option
+list (root_squash is the default). exportfs reads the file only when told to: `exportfs -r`
+re-exports everything, `exportfs -v` shows the result. More: man exports, man exportfs

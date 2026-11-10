@@ -1,15 +1,11 @@
 {
-  "name": "Split Configs: History Window",
-  "description": "In the configuration editing lab, a task related to Split Configs needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of split-configs-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Split Configs",
-    "head",
-    "tail"
-  ],
+  "name": "One Site per File",
+  "description": "The monolithic sites.conf holds seven nginx server blocks. The new deployment tool wants one file per site in sites-available/, named after the site, and the header comment kept in its own file.",
+  "objective": "Create the directory sites-available/ and split sites.conf into it: one file per server block named <first server_name>.conf (for example shop.example.com.conf), plus 00-header.conf holding the comment lines at the top. Each file must contain its block exactly as written (nested blocks included). Leave sites.conf in place.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["awk brace counting", "splitting a file", "server_name", "nested blocks"],
   "module": "module-18-configuration-editing",
   "level": "level-7-split-configs"
 }

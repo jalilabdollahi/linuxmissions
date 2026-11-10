@@ -1,1 +1,8 @@
-Archive the directory contents without leaving anything out.
+`diff -rq golden/etc live/etc` lists files that differ and files that exist on only
+one side. It does not show permission changes: compare modes with something like
+`(cd golden/etc && find . -type f -printf '%m %p\n' | sort) > /tmp/g` and the same for live,
+then diff the two lists (or `rsync -rnci golden/etc/ live/etc/`).
+Restore with `cp -p` so the mode comes along (plain cp onto an existing file keeps
+the old mode). For the file with an allowed line, copy golden and then put the allowed
+line back (sed), instead of copying blindly. Move extras with `mv` into quarantine/.
+Check with `diff -r golden/etc live/etc`. More: man diff, man cp

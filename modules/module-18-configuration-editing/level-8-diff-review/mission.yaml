@@ -1,15 +1,11 @@
 {
-  "name": "Diff Review: Cleanup Sweep",
-  "description": "In the configuration editing lab, a task related to Diff Review needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/diff-review and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Diff Review",
-    "find",
-    "rm"
-  ],
+  "name": "Reformatted and Tweaked",
+  "description": "A teammate's pull request is titled \"reformat haproxy.cfg and small tweaks\". The old file is haproxy.orig.cfg and the new one haproxy.cfg. A plain diff shows hundreds of changed lines because the indentation was rewritten.",
+  "objective": "Write changed.txt listing the directives whose value really changed between haproxy.orig.cfg and haproxy.cfg, one directive name per line (for example 'timeout'), ignoring re-indentation, extra spaces and blank lines. Do not modify either haproxy file.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["diff -u", "diff -w -B", "reading hunks", "whitespace-insensitive review"],
   "module": "module-18-configuration-editing",
   "level": "level-8-diff-review"
 }

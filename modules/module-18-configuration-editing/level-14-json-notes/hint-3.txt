@@ -1,1 +1,6 @@
-Example: `for n in 1 2 3; do printf 'json-notes item %s\n' "$n" > generated/json-notes-$n.txt; done`
+jq '.flags.new_checkout.regions.eu = true | .testers += ["beta-12"] | del(.flags.xmas_banner)' flags.json > flags.json.tmp && mv flags.json.tmp flags.json
+
+- .flags.new_checkout.regions.eu = true   the full path, so dark_mode's eu stays false
+- .testers += ["beta-12"]                 appends to the testers array only
+- del(.flags.xmas_banner)                 removes the expired flag
+- > flags.json.tmp && mv ...              write to a temp file, replace the original only if jq succeeded

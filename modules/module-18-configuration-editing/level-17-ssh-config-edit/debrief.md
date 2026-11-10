@@ -1,17 +1,17 @@
-# Ssh Config Edit: Schedule Entry
+# Hop Through the Bastion
 
-## What you practiced
-- This level focused on **Ssh Config Edit** in a safe sandbox.
-- The shortest path usually combines `crontab` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+ssh evaluates `Host` blocks from the top, and for each option the first value obtained is the one that
+counts. That is why the old `Host *` at the top, with a User and ForwardAgent, overrode everything below
+it. Specific hosts go first (they can still pick up group settings from a later `Host db-*` block, because
+options they did not set are filled in by later matches), and `Host *` goes last as the fallback for the
+options nobody set. `ssh -G` prints the result of this merge without connecting, so it is the right way to test.
 
-## Commands to remember
-```bash
-crontab -l
-printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt
-cat crontab.txt
-```
+## Common mistakes
+- `Host *` at the top with a `User`: it wins for every host.
+- Missing `IdentitiesOnly yes`: ssh tries every key in the agent first and the server may close the connection after too many attempts.
+- Forgetting `Port` for hosts on a non-standard port, which `ssh -G` shows immediately.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This mission is about cron field order and exact syntax.
+## Next step
+`ssh -J bastion.corp db-3` does the same hop ad hoc, and `Match host db-* user ...` blocks allow conditions
+that go beyond host name patterns.

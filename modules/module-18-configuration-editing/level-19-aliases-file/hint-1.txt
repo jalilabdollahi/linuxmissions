@@ -1,1 +1,6 @@
-You need a stream editor or another text replacement tool.
+Read etc/aliases with the format in mind: an alias is "name: recipient, recipient",
+and a line that starts with whitespace belongs to the alias above it. Where does the
+departed address appear? Check every spelling and every place, including the file that
+root's neighbour `support` includes, and think about which aliases would be left with
+nobody. The alias database is built from the text file, so the order of the last two
+steps matters.

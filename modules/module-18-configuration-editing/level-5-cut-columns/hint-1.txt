@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+Each setting is NAME=value. A "name" is the part before the first = sign. Which
+lines are not settings at all? One of the comments even looks like a setting, and
+a few settings carry a shell keyword in front of the name.
+For the key, ask: what if the value itself contains = characters? Which part of
+the line do you want when you split at the first = only?

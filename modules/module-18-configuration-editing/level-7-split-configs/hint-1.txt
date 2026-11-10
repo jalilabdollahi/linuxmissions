@@ -1,1 +1,5 @@
-Use one command for the beginning of the file and another for the end.
+Look at sites.conf: where does a site begin, and how do you know where it ends?
+Counting `}` is not enough, because some blocks contain other blocks. What number
+changes when you meet `{` and when you meet `}`? And the name of each file comes
+from the content of the block, from the first line that names the site, not from
+its position in the file.

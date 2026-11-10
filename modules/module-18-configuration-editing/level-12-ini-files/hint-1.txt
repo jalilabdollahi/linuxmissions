@@ -1,1 +1,6 @@
-Inspect the current mode first if you want to verify the change.
+Open my.cnf and map it: which section headers are there, and how often does
+each appear? Several sections have a setting with the same name, and one comment
+even contains the word max_connections. Your edit must be limited to one
+section, and the new line has to go to the right place. Which [mysqld] block is
+"the first"? What should a safe edit leave behind, line by line, when you
+compare it with the original?

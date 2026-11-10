@@ -1,1 +1,6 @@
-A short for-loop is the cleanest option here.
+Look at the shape of flags.json first: which keys are nested inside which? The
+word "eu" appears in more than one place, so "the eu region of new_checkout"
+is a path, not a search term. The same goes for the testers: there is more than
+one array of names. And think about what you will do with the output: a tool
+that reads a file and a shell that writes a file cannot use the same file at the
+same moment.

@@ -1,1 +1,7 @@
-Example: `chmod +x jobs/yaml-basics.sh && jobs/yaml-basics.sh`
+sed -i -e 's/^\t/      /' -e 's/^         RETRIES:/      RETRIES:/' -e '/shop\/worker:/s/2\.7\.0/2.7.1/' compose.yml
+python3 -c 'import yaml; yaml.safe_load(open("compose.yml")); print("parses")'
+
+- s/^\t/      /           a line that starts with a tab gets six spaces, like its siblings
+- s/^         RETRIES:/..  the entry with nine spaces goes back to six
+- /shop\/worker:/s/...    the replacement runs only on the line that mentions the worker image
+- the python3 line        proves that the file parses again

@@ -1,1 +1,8 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+awk splits each line into fields ($1..$NF). When you assign to a field, awk
+rebuilds the whole line with single spaces, which destroys alignment. Print the
+line yourself with printf and the column widths instead:
+  printf "%-12s %-15s %-5s %-7s %s\n", $1, $2, $3, 0, $5
+(%-12s = left-aligned in 12 characters). Use a pattern to choose the rows, and
+`next` or a final `{ print }` rule to let all other lines through.
+awk can't edit in place: write to a new file, then `mv` it over the old one.
+More: man awk

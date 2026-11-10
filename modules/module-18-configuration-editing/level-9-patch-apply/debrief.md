@@ -1,17 +1,18 @@
-# Patch Apply: Link Repair
+# Half a Vendor Patch
 
-## What you practiced
-- This level focused on **Patch Apply** in a safe sandbox.
-- The shortest path usually combines `ln` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A patch is a list of hunks, each with a few lines of unchanged context. `patch` finds
+the place by matching the context, tolerating an offset (our extra lines) and a little
+fuzz, but when the lines right next to the change differ (we had edited
+`health_check_interval`), it refuses the hunk and writes it to `proxy.conf.rej`
+instead of guessing. `--dry-run` shows this in advance. The rest is a three-way merge
+done by you: vendor change plus local edits, then cleaning up `.rej` and `.orig`.
 
-## Commands to remember
-```bash
-ln -s target linkname
-ls -l current.conf
-readlink current.conf
-```
+## Common mistakes
+- Forgetting `-p1` and patching a new `a/proxy.conf`, or giving `-p0` for a patch with `a/` `b/` prefixes.
+- Copying the vendor's whole file over ours: all the local tuning is gone.
+- Leaving `.rej` / `.orig` files that later tools may pick up as config.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task wants a symbolic link, not a copy.
+## Next step
+`patch -R` reverses a patch, `diff -u old new > fix.patch` makes one, and `git apply --3way`
+merges instead of rejecting when the file is in a repository.

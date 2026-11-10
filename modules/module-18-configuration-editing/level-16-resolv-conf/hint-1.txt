@@ -1,1 +1,5 @@
-Measure directory sizes before deciding which one is largest.
+Look at what etc/resolv.conf really is (`ls -l etc/resolv.conf`) and what its
+first lines say about who writes it. A file that is generated is overwritten when
+the generator runs. Then find where systemd-resolved reads its settings from, and
+which of those files belongs to the package and which are meant for local changes.
+Check what `resolvectl status` reports today, and where the old server comes from.

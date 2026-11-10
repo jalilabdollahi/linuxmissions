@@ -1,1 +1,5 @@
-Look for a filtering command that keeps only the alert lines in less-review.log.
+The directive you want appears dozens of times, so searching for it alone will
+not help. First find where the uploads.example.com virtual host starts: which
+line names it? Then read only that block. Pay attention to how deep each
+directive is nested: a value inside `location { }` is a different thing from a
+value directly inside `server { }`. Comments can mention values too.

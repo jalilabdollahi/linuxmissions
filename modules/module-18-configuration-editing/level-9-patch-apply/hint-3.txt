@@ -1,1 +1,11 @@
-Example: `ln -s releases/patch-apply.conf current.conf`
+patch -p1 --dry-run < fix-timeouts.patch
+patch -p1 < fix-timeouts.patch
+cat proxy.conf.rej
+sed -i 's/^health_check_timeout 3s;$/health_check_timeout 5s;/' proxy.conf
+rm -f proxy.conf.rej proxy.conf.orig
+
+- --dry-run     shows which hunks would apply without touching the file
+- patch -p1 <   applies the hunks that fit; the third one is rejected and saved in proxy.conf.rej
+- cat ....rej   shows the rejected hunk: health_check_timeout 3s becomes 5s
+- sed -i        makes that one change by hand and keeps our local health_check_interval edit
+- rm -f         removes the leftover files patch created

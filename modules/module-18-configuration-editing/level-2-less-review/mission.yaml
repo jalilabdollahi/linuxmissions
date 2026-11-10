@@ -1,15 +1,11 @@
 {
-  "name": "Less Review: Alert Filter",
-  "description": "In the configuration editing lab, a task related to Less Review needs cleanup before the handoff.",
-  "objective": "Write every alert line from less-review.log into alerts.txt",
+  "name": "Which Upload Limit?",
+  "description": "Support ticket 4471: customers get \"413 Request Entity Too Large\" on uploads.example.com. The reverse proxy config nginx-full.conf was generated from 80 vhosts and is about 6000 lines long.",
+  "objective": "Find the client_max_body_size that applies to the whole uploads.example.com virtual host (the value set directly in its server block, not inside a location) and write just that value, for example 10m, to answer.txt. Do not edit nginx-full.conf.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Less Review",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["less search", "grep -n", "grep -A/-B context", "nginx block nesting"],
   "module": "module-18-configuration-editing",
   "level": "level-2-less-review"
 }

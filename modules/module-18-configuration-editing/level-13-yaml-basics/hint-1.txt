@@ -1,1 +1,4 @@
-This task usually takes two steps: fix execute permission, then run the script.
+First ask the computer why it refuses the file: a YAML parser names the line and
+the problem. YAML is strict about whitespace, and some whitespace is invisible.
+Look at the `environment:` block of the worker service and compare how the lines
+inside it start. Also look at the image lines: how many of them end in 2.7.0?

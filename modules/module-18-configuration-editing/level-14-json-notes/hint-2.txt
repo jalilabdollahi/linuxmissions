@@ -1,1 +1,8 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+jq is the tool for structured JSON edits. The pieces you need:
+  .a.b.c = true          set a value at a path
+  .list += ["x"]         append to an array
+  del(.a.b)              delete a key
+Chain them with | inside one quoted program. jq prints the result to stdout, so
+send it to a temporary file and then mv that file over the original. Never write
+`jq ... flags.json > flags.json`: the shell truncates the file before jq opens it.
+Check the result with `jq . flags.json`. More: man jq

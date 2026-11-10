@@ -1,1 +1,8 @@
-Inspect the current mode first if you want to verify the change.
+Start with `bin/app --check-config` and read what it says: file, line and the
+problem. It stops at the first error only, so expect a loop: fix, run it again,
+read the next one. Five files, five formats, and each format has its own rules:
+which characters are allowed around `=`, what a trailing comma does in JSON, what
+YAML thinks of tabs and of quotes around a number. Keep MIGRATION.txt open: it
+says what the final values must be, so a fix that only removes a setting will
+not be accepted. One JSON problem is invisible to most tools: look closely at
+the keys of `features`, and decide which of two equal keys is the one you meant.

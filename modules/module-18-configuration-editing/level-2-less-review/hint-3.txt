@@ -1,1 +1,7 @@
-Example: `grep 'ALERT' less-review.log > alerts.txt`
+grep -A25 'server_name uploads.example.com' nginx-full.conf
+grep -A25 'server_name uploads.example.com' nginx-full.conf | grep -E '^ {8}client_max_body_size'
+echo VALUE > answer.txt        # replace VALUE with the number you read, for example 12m
+
+- grep -A25 ...           the vhost's own lines (server_name plus the 25 lines after it)
+- grep -E '^ {8}client_'  keeps only the directive indented 8 spaces: server level, not "location /api" (12 spaces) and not a comment
+- echo VALUE > answer.txt writes the value without the trailing semicolon

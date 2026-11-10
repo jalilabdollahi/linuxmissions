@@ -1,1 +1,5 @@
-This mission is about cron field order and exact syntax.
+Open the current config and db-hosts.txt. ssh reads the config top to bottom and
+for every option the first value it finds wins, whatever a later block says. So
+the order of the blocks matters as much as their content. Which block sits at
+the top today, and what does it already decide for every host? Think about which
+settings are the same for all six db hosts and which differ per host.

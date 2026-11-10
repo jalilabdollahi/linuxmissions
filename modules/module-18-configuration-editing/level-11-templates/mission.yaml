@@ -1,15 +1,11 @@
 {
-  "name": "Templates: Restore Drill",
-  "description": "In the configuration editing lab, a task related to Templates needs cleanup before the handoff.",
-  "objective": "Extract templates-restore.tar.gz so the restored/templates directory appears in the sandbox",
+  "name": "One Config per Environment",
+  "description": "Every environment gets its own app config, generated from app.conf.tmpl and one row of envs.csv. The values of prod and dr contain characters that are special to sed.",
+  "objective": "Create the directory out/ and generate out/dev.conf, out/staging.conf, out/prod.conf and out/dr.conf: each is app.conf.tmpl with the {{ENV}}, {{DB_URL}}, {{DB_PASSWORD}} and {{REPLICAS}} placeholders replaced by that environment's values from envs.csv (skip the header row). Values must appear literally, exactly as written in the CSV.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Templates",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "18m",
+  "concepts": ["while IFS=, read", "template rendering", "special characters in sed", "bash substitution"],
   "module": "module-18-configuration-editing",
   "level": "level-11-templates"
 }

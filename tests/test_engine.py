@@ -93,6 +93,13 @@ class ShellSessionTests(unittest.TestCase):
         out = self.shell.capture("for i in 1 2 3; do\n  echo n$i\ndone")
         self.assertEqual(out.split(), ["n1", "n2", "n3"])
 
+    def test_sandbox_bin_first_on_path(self):
+        (self.sandbox / "bin").mkdir()
+        tool = self.sandbox / "bin" / "crontab"
+        tool.write_text("#!/bin/sh\necho sandbox-crontab\n")
+        tool.chmod(0o755)
+        self.assertEqual(self.shell.capture("crontab -l"), "sandbox-crontab")
+
     def test_shell_exit_restarts(self):
         start = time.time()
         code, out = self.shell._execute("exit 3")

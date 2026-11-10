@@ -286,7 +286,11 @@ class ShellSession:
             # Python ignores SIGPIPE; restore the default so `cmd | head` behaves like a normal shell.
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)
             os.chdir(self.sandbox)
-            env = {**os.environ, "SANDBOX": str(self.sandbox), "TERM": os.environ.get("TERM", "xterm")}
+            # $SANDBOX/bin comes first so a level's tools (and shared mocks such as
+            # crontab or apt) win over the host's real ones.
+            path = f"{self.sandbox}/bin{os.pathsep}{os.environ.get('PATH', '/usr/bin:/bin')}"
+            env = {**os.environ, "SANDBOX": str(self.sandbox), "PATH": path,
+                   "TERM": os.environ.get("TERM", "xterm")}
             os.execvpe("bash", ["bash", "--noprofile", "--norc", "-i"], env)
 
         self.pid = pid

@@ -72,7 +72,9 @@ saved in players' `progress.json`.
   this, so try it).
 
 Commands in hints are written to be typed at the `linuxmissions>` prompt: the
-shell already starts in the sandbox and `$SANDBOX` is set. Multi-line input
+shell already starts in the sandbox, `$SANDBOX` is set, and `$SANDBOX/bin` is
+first on PATH (ship mocks there so `crontab`, `apt`, `systemctl` reach the mock;
+don't put files named like system commands in `bin/` unless that is the point). Multi-line input
 (heredocs, if/for) works; `edit <file>` or `nano <file>` opens an editor.
 
 ## Debrief

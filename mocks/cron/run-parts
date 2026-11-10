@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Mock run-parts(8) (debianutils) for LinuxMissions; works on macOS too.
+
+  run-parts [--test] [--list] [--report] [-v] [--lsbsysinit] [--regex=RE]
+            [--reverse] [--exit-on-error] [-a ARG]... [-u UMASK] [--] DIRECTORY
+
+Runs every executable regular file in DIRECTORY whose name matches
+^[A-Za-z0-9_-]+$ (no dots!), in C-locale order. --test prints the files it
+would run, --list prints every matching name (executable or not).
+Not supported (prints "mock: ..."): --stdin, --new-session, --ignore-suffixes.
+"""
+import os
+import subprocess
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import cronlib  # noqa: E402
+
+
+def usage(msg=None) -> int:
+    if msg:
+        print(f"run-parts: {msg}", file=sys.stderr)
+    print("Usage: run-parts [OPTION]... DIRECTORY", file=sys.stderr)
+    return 1
+
+
+def main(argv) -> int:
+    test = list_mode = report = verbose = lsb = reverse = exit_on_error = False
+    regex = None
+    run_args = []
+    umask = 0o022
+    dirs = []
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        val = None
+        if a.startswith("--") and "=" in a:
+            a, val = a.split("=", 1)
+
+        def need():
+            nonlocal i
+            if val is not None:
+                return val
+            i += 1
+            if i >= len(argv):
+                raise SystemExit(usage(f"option '{a}' requires an argument"))
+            return argv[i]
+        if a == "--":
+            dirs.extend(argv[i + 1:])
+            break
+        if a == "--test":
+            test = True
+        elif a == "--list":
+            list_mode = True
+        elif a == "--report":
+            report = True
+        elif a in ("-v", "--verbose"):
+            verbose = True
+        elif a == "--lsbsysinit":
+            lsb = True
+        elif a == "--reverse":
+            reverse = True
+        elif a == "--exit-on-error":
+            exit_on_error = True
+        elif a == "--regex":
+            regex = need()
+        elif a in ("-a", "--arg"):
+            run_args.append(need())
+        elif a.startswith("-a") and len(a) > 2:
+            run_args.append(a[2:])
+        elif a in ("-u", "--umask"):
+            try:
+                umask = int(need(), 8)
+            except ValueError:
+                return usage("bad umask value")
+        elif a in ("-h", "--help"):
+            print("Usage: run-parts [OPTION]... DIRECTORY\n"
+                  "LinuxMissions mock of debianutils run-parts: --test --list --report -v\n"
+                  "--lsbsysinit --regex=RE --reverse --exit-on-error -a ARG -u UMASK")
+            return 0
+        elif a in ("-V", "--version"):
+            print("Debian run-parts program, version 5.17 (LinuxMissions mock)")
+            return 0
+        elif a in ("--stdin", "--new-session", "--ignore-suffixes"):
+            print(f"run-parts: mock: {a} not supported", file=sys.stderr)
+            return 1
+        elif a.startswith("-") and a != "-":
+            return usage(f"unrecognized option '{a}'")
+        else:
+            dirs.append(a)
+        i += 1
+    if len(dirs) != 1:
+        return usage("missing operand" if not dirs else "extra operand")
+    if test and list_mode:
+        return usage("--list and --test can not be used together")
+    directory = dirs[0]
+    if not os.path.isdir(directory):
+        print(f"run-parts: failed to open directory {directory}: No such file or directory", file=sys.stderr)
+        return 1
+    try:
+        files = cronlib.run_parts_list(directory, lsb, regex, executable_only=not list_mode, reverse=reverse)
+    except OSError as exc:
+        print(f"run-parts: failed to open directory {directory}: {exc.strerror}", file=sys.stderr)
+        return 1
+    if test or list_mode:
+        for p in files:
+            print(p)
+        return 0
+    os.umask(umask)
+    rc = 0
+    for p in files:
+        if verbose:
+            print(f"run-parts: executing {p}", file=sys.stderr)
+        proc = subprocess.Popen([p] + run_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = proc.communicate()
+        if report and (out or err):
+            print(f"{p}:", flush=True)
+        sys.stdout.buffer.write(out)
+        sys.stdout.flush()
+        sys.stderr.buffer.write(err)
+        sys.stderr.flush()
+        status = proc.returncode
+        if status < 0:
+            print(f"run-parts: {p} exited because of uncaught signal {-status}", file=sys.stderr)
+            rc = 1
+        elif status:
+            print(f"run-parts: {p} exited with return code {status}", file=sys.stderr)
+            rc = 1
+        if rc and exit_on_error:
+            return rc
+    return rc
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

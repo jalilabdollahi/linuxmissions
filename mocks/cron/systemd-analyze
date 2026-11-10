@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+"""Mock `systemd-analyze calendar` for LinuxMissions (only the calendar verb).
+
+The reference image has the real systemd-analyze; this one is for macOS and
+for validators that must not depend on it. See oncalendar.py.
+"""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import oncalendar  # noqa: E402
+
+if __name__ == "__main__":
+    sys.exit(oncalendar.main())

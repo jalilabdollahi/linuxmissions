@@ -529,14 +529,21 @@ def prompt_command() -> str:
     if first.strip().lower() in META_COMMANDS or first.strip().split()[0].lower() in ("edit",):
         return first.strip()
     lines = [first]
-    while needs_more_input("\n".join(lines)):
-        try:
-            lines.append(input("...> "))
-        except KeyboardInterrupt:
-            console.print("\n[dim]Input cancelled.[/dim]")
-            return ""
-        except EOFError:
-            break
+    if not needs_more_input(first):
+        return first.strip()
+    # Inside a heredoc or block, Tab inserts a tab (needed for <<-) instead of completing.
+    readline.parse_and_bind("tab: tab-insert")
+    try:
+        while needs_more_input("\n".join(lines)):
+            try:
+                lines.append(input("...> "))
+            except KeyboardInterrupt:
+                console.print("\n[dim]Input cancelled.[/dim]")
+                return ""
+            except EOFError:
+                break
+    finally:
+        readline.parse_and_bind("tab: complete")
     return "\n".join(lines).strip()
 
 

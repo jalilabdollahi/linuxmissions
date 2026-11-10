@@ -57,6 +57,18 @@ folder):
 Some levels use Linux-only tools (`/proc`, apt/dpkg, systemd file formats), so
 `--docker` is the recommended way to play on macOS.
 
+In Docker mode the sandboxes live inside the container, not in `/tmp/linuxmissions`
+on your Mac: the levels need Linux's own filesystem (case-sensitive names, ACLs,
+FIFOs, Linux file modes), which a folder shared from macOS does not provide. To
+look around, edit files or test in a second terminal tab while the game runs:
+
+```bash
+./play.sh --shell
+```
+
+It opens a shell in the same container, already in the current level's sandbox
+(`$SANDBOX` is set and `$SANDBOX/bin` is first on `PATH`, as in the game).
+
 To reset progress and start over from level 1:
 
 ```bash

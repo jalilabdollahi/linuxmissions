@@ -25,13 +25,13 @@ PROTECTED_PATHS = {
 
 RAW_PATTERNS = [
     (re.compile(r":\s*\(\s*\)\s*\{.*:\s*\|\s*:.*\}"), "fork bombs are not allowed"),
-    (re.compile(r"\bmkfs(\.\w+)?\b"), "formatting filesystems is not allowed"),
+    (re.compile(r"\b(mkfs(\.\w+)?|mke2fs|mkswap|wipefs|sfdisk|fdisk|parted)\b.*\s/dev/"), "formatting or partitioning a real disk is not allowed"),
     (re.compile(r"\bdd\b.*\bof=/dev/(sd|nvme|hd|vd|disk|mmcblk)"), "writing to a raw disk is not allowed"),
     (re.compile(r">\s*/dev/(sd|nvme|hd|vd|disk|mmcblk)"), "writing to a raw disk is not allowed"),
     (re.compile(r"--no-preserve-root"), "--no-preserve-root is not allowed"),
 ]
 
-WARN_PATTERNS = ["sudo ", "passwd root", "userdel root"]
+WARN_PATTERNS = [re.compile(r"(^|[\s;&|(])sudo\s"), re.compile(r"\bpasswd\s+root\b"), re.compile(r"\buserdel\s+root\b")]
 
 _SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|&\n]")
 
@@ -81,9 +81,8 @@ def validate_command(cmd: str) -> tuple[bool, str]:
 
 def warn_command(cmd: str) -> bool:
     """Print a warning for dangerous-but-allowed commands. Returns True if warning shown."""
-    lower = cmd.strip().lower()
     for pat in WARN_PATTERNS:
-        if pat in lower:
+        if pat.search(cmd):
             console.print(
                 f"[yellow]⚠  Warning: '{cmd}' could affect the real system outside the sandbox.[/yellow]"
             )

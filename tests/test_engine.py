@@ -17,7 +17,7 @@ sys.path.insert(0, str(REPO))
 
 from engine.engine import ShellSession, is_interactive_command, needs_more_input  # noqa: E402
 from engine.runner import reset_sandbox, run_setup, run_validate  # noqa: E402
-from engine.safety import validate_command  # noqa: E402
+from engine.safety import validate_command, warn_command  # noqa: E402
 
 
 class SafetyTests(unittest.TestCase):
@@ -30,16 +30,23 @@ class SafetyTests(unittest.TestCase):
     def test_blocks_host_destruction(self):
         for cmd in ("rm -rf /", "rm -rf /*", "rm -fr ~", "rm -r -f $HOME", "sudo rm -rf /etc",
                     "cd x && rm -rf /usr/", "rm --recursive --force /", "chmod -R 777 /",
-                    "chown -R root /home", ":(){ :|:& };:", "mkfs.ext4 /dev/sda1",
+                    "chown -R root /home", ":(){ :|:& };:", "mkfs.ext4 /dev/sda1", "sudo fdisk /dev/nvme0n1",
                     "dd if=/dev/zero of=/dev/sda", "rm -rf --no-preserve-root /"):
             self.assertBlocked(cmd)
 
     def test_allows_sandbox_work(self):
         for cmd in ("rm -rf /tmp/linuxmissions/module-1/level-1/old", "rm -rf old_logs/",
-                    "rm -rf $SANDBOX/cache", "rm -f /tmp/x.txt", "chmod -R 755 webroot",
+                    "rm -rf $SANDBOX/cache", "rm -f /tmp/x.txt", "mkfs.ext4 -F disk.img", "mke2fs -L data fs.img", "chmod -R 755 webroot",
                     "rm -rf ./build", "grep -r 'rm -rf /' notes.txt", "echo '/' | rm -i a",
                     "dd if=/dev/zero of=disk.img bs=1M count=1", "mkdir mkfs_notes"):
             self.assertAllowed(cmd)
+
+
+    def test_sudo_warning_only_for_sudo(self):
+        self.assertTrue(warn_command("sudo apt update"))
+        self.assertTrue(warn_command("cd x && sudo ls"))
+        self.assertFalse(warn_command("visudo -cf sudoers.d/devuser"))
+        self.assertFalse(warn_command("cat pseudo notes"))
 
 
 class InputTests(unittest.TestCase):
@@ -84,6 +91,10 @@ class ShellSessionTests(unittest.TestCase):
     def test_multiline_block(self):
         out = self.shell.capture("for i in 1 2 3; do\n  echo n$i\ndone")
         self.assertEqual(out.split(), ["n1", "n2", "n3"])
+
+    def test_sigpipe_is_default(self):
+        out = self.shell.capture("bash -c 'for i in $(seq 1 20000); do echo $i; done' | head -1")
+        self.assertEqual(out, "1")
 
     def test_exit_code(self):
         self.assertEqual(self.shell._execute("false")[0], 1)

@@ -10,6 +10,7 @@ import re
 import select
 import shlex
 import shutil
+import signal
 import subprocess
 import sys
 import termios
@@ -245,6 +246,8 @@ class ShellSession:
 
         pid, fd = pty.fork()
         if pid == 0:
+            # Python ignores SIGPIPE; restore the default so `cmd | head` behaves like a normal shell.
+            signal.signal(signal.SIGPIPE, signal.SIG_DFL)
             os.chdir(self.sandbox)
             env = {**os.environ, "SANDBOX": str(self.sandbox), "TERM": os.environ.get("TERM", "xterm")}
             os.execvpe("bash", ["bash", "--noprofile", "--norc", "-i"], env)

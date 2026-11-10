@@ -1,1 +1,3 @@
-Inspect the sandbox, then create the missing path for organized/partitions/partitions-notes.txt.
+A disk image is a file, and the partition table lives in its first sector. There are tools that read that table straight from the file without any root rights.
+Look at how the partitions are numbered. Do the numbers run 1, 2, 3 without gaps? What kind of partition could be holding the ones that start at 5?
+Sizes may be printed in sectors, but the ticket wants MiB.

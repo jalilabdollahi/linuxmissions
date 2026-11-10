@@ -1,15 +1,11 @@
 {
-  "name": "Hard Links: Permission Fix",
-  "description": "In the storage and backups lab, a task related to Hard Links needs cleanup before the handoff.",
-  "objective": "Set the mode of hard-links.sh to 640",
+  "name": "Deleted but Still There",
+  "description": "A 2 GB dump was deleted to free space, but df did not change: the data has other names scattered around the tree.",
+  "objective": "Remove every extra name (hard link) of the data in data/big.dat so that it is the file's only name and its link count is 1. Keep the data itself. Separate copies that merely have identical content, a different file with the same name, and links between unrelated files must stay exactly as they are.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Hard Links",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "15m",
+  "concepts": ["hard links and inodes", "link count", "ls -i / stat -c %h", "find -samefile", "hidden directories"],
   "module": "module-14-storage-and-backups",
   "level": "level-12-hard-links"
 }

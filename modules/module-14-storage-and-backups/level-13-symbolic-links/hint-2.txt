@@ -1,1 +1,7 @@
-Use `chmod +x jobs/symbolic-links.sh` and then execute it.
+  find app -type l                      list every symlink in the tree
+  readlink LINK                         print where a link points
+  realpath -s --relative-to=DIR PATH    write PATH as seen from DIR (-s: don't follow symlinks, -m: PATH need not exist)
+  ln -sfn TARGET LINK                   replace an existing link; -n matters when LINK points to a directory
+Work out the new absolute path (the old prefix replaced by the real location of app/), turn it into a relative one with realpath, and replace the link.
+Do it in a loop over the links, and leave the ones that point outside the old tree alone. A prefix match must be on a whole directory name.
+More: man realpath, man ln

@@ -1,1 +1,10 @@
-Example: `grep -c '^ok$' fstab-review-events.txt > ok-count.txt`
+uuid() { sed -n "s|^/dev/$1:.* UUID=\"\([^\"]*\)\".*|\1|p" blkid.txt; }
+sed -i -e "/[[:space:]]\/[[:space:]]/s/^UUID=[^[:space:]]*/UUID=$(uuid vda1)/" -e "/[[:space:]]none[[:space:]]/s/^UUID=[^[:space:]]*/UUID=$(uuid vda2)/" -e "/[[:space:]]\/srv\/data[[:space:]]/s/^UUID=[^[:space:]]*/UUID=$(uuid vdb1)/" -e "/[[:space:]]\/mnt\/usb-backup[[:space:]]/s/^UUID=[^[:space:]]*/UUID=$(uuid vdc1)/" -e "/[[:space:]]\/mnt\/usb-backup[[:space:]]/s/defaults,/defaults,nofail,/" -e "/[[:space:]]\/[[:space:]]/s/0$/1/" -e "/[[:space:]]\/srv\/data[[:space:]]/s/1$/2/" etc/fstab
+cat etc/fstab
+
+- uuid()                   finds the UUID="..." value (not PARTUUID) of a device in blkid.txt
+- s/^UUID=.../UUID=new/    replace the first field on the line that has that mount point
+- defaults,nofail,         the USB disk becomes optional at boot
+- s/0$/1/ on the "/" line  root is checked first (pass 1)
+- s/1$/2/ on /srv/data     the data disk is checked after root (pass 2)
+You can also do the same in an editor: edit etc/fstab

@@ -1,15 +1,11 @@
 {
-  "name": "Tmpfs: Config Rewrite",
-  "description": "In the storage and backups lab, a task related to Tmpfs needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in tmpfs.conf and save the fixed result to fixed.conf",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Tmpfs",
-    "sed",
-    "redirection"
-  ],
+  "name": "Put /tmp in RAM",
+  "description": "CI builds on ci-build-03 are slow because /tmp lives on a disk. The ticket wants a tmpfs there, set up in fstab, plus a figure from the machine you are on.",
+  "objective": "In etc/fstab replace the disk entry for /tmp by a tmpfs entry with exactly the options TICKET.txt asks for, and leave every other line as it was. Then write shm.txt: the size of this machine's /dev/shm as a plain number of KiB.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "12m",
+  "concepts": ["tmpfs", "fstab options", "mode=1777 and the sticky bit", "nosuid/nodev/noexec", "df -k"],
   "module": "module-14-storage-and-backups",
   "level": "level-6-tmpfs"
 }

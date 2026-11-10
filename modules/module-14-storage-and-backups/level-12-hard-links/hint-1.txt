@@ -1,1 +1,2 @@
-Inspect the current mode first if you want to verify the change.
+A file's data is freed only when its last name is gone. So the file must have more than one name. How can you tell, from a listing, how many names a file has? And how can you tell whether two files with the same size and content are the same file or two copies?
+The kernel tells names apart from copies by one number. Compare it for the suspects. Also search the whole tree, including directories whose names start with a dot.

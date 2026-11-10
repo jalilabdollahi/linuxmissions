@@ -1,1 +1,3 @@
-This mission is about cron field order and exact syntax.
+File names say nothing here. What does the data inside each image say? Ask the low-level library that tools like mount use to recognise a file system: it reads signatures straight from the file.
+Not every image is a file system. One has a partition table, and a table is not a file system, so the answer for that file is about something else. Where do its partitions start, and how do you point the probe there?
+One image holds nothing recognisable. How does the tool tell you so, and what does that do to a loop?

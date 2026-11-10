@@ -1,1 +1,5 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+A tmpfs entry:   tmpfs  /tmp  tmpfs  OPTIONS  0  0
+Options for tmpfs: size=2G (limit), mode=1777 (permissions of the mount's top directory; the default is not what /tmp needs), nosuid, nodev, noexec (not here).
+Remove the old line with `edit etc/fstab` or sed -i '/pattern/d'.
+For shm.txt: `df -k /dev/shm` prints 1K-blocks; df -P keeps the output on one line per file system, and awk 'NR == 2 {print $2}' picks the number. `findmnt -no SIZE /dev/shm` prints a human-readable size instead.
+More: man 5 fstab, man mount (tmpfs section), man df

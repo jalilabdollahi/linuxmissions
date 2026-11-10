@@ -1,1 +1,3 @@
-Use tar with create, gzip, and file flags.
+Four kinds of data, four rules, and an order: a log that is past 90 days should never be compressed first. Which find option selects by age, and what does "older than 7 days" mean to it (days are rounded down)?
+The tricky parts: a file that is already compressed must not be compressed again, and compressing must not reset the modification time (other tools will use it later). What does gzip do with timestamps by default?
+For the PII exports, read the legal hold file with care: what do the comment lines look like, and how do you test "this exact file name is listed" without a pattern accidentally matching more?

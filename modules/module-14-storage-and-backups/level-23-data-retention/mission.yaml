@@ -1,15 +1,11 @@
 {
-  "name": "Data Retention: Backup Bundle",
-  "description": "In the storage and backups lab, a task related to Data Retention needs cleanup before the handoff.",
-  "objective": "Create data-retention-backup.tar.gz containing the files under bundle/data-retention",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Data Retention",
-    "tar",
-    "compression"
-  ],
+  "name": "Retention with a Paper Trail",
+  "description": "Compliance has issued a data retention policy for the shared data/ directory: logs, PII exports and invoices each have their own clock, and legal holds override them.",
+  "objective": "Write retention.sh that applies POLICY.txt to the data/ directory next to it (compress logs older than 7 days keeping their modification time, delete logs older than 90 days, delete PII exports older than 30 days unless the file name is on the legal hold list, delete invoices after 7 years, touch nothing else) and appends one COMPRESS/DELETE line per action to retention.log. Run it here. A second run must change nothing, and the checker also runs your script on a fresh copy of the data.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "60m",
+  "concepts": ["find -mtime with actions", "gzip preserving mtime", "legal hold exact matching", "idempotent scripts", "action logging"],
   "module": "module-14-storage-and-backups",
   "level": "level-23-data-retention"
 }

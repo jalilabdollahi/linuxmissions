@@ -1,1 +1,2 @@
-Use a targeted file search so you do not remove the wrong files.
+Where does partition 2 begin, and how long is it? The partition table knows both, but in which unit? To copy a slice of a file you need an offset and a length in the same unit that your copy tool uses.
+Do not guess: the vendor's checksum will not forgive a single byte too many or too few. Also look at whether the start is a round number of megabytes.

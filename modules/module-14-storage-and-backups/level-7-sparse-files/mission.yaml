@@ -1,15 +1,11 @@
 {
-  "name": "Sparse Files: History Window",
-  "description": "In the storage and backups lab, a task related to Sparse Files needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of sparse-files-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Sparse Files",
-    "head",
-    "tail"
-  ],
+  "name": "The 20 GB Backup",
+  "description": "The weekly backup of two VM images ballooned. One image is a sparse file, the other was written with dd from /dev/zero, and nobody noticed that ls and du disagree about their size.",
+  "objective": "Following TICKET.txt: write sizes.txt with each original image's apparent size in bytes and allocated size in KiB (\"NAME APPARENT_BYTES ALLOCATED_KIB\"); create vm2-copy.img, identical to vm/vm2.img but mostly holes; and create vm-backup.tar, a plain tar of vm1.img that stays small and stores the file as a sparse file. The two originals must not be modified.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "18m",
+  "concepts": ["sparse files", "apparent vs allocated size", "du --apparent-size", "cp --sparse", "tar -S"],
   "module": "module-14-storage-and-backups",
   "level": "level-7-sparse-files"
 }

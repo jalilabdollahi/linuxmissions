@@ -1,1 +1,3 @@
-Look for a filtering command that keeps only the alert lines in backup-manifests.log.
+Split the job in two: what do you want to record for a regular file, and what for a link? A link should be described as a link (what it points to), not by the file behind it.
+The tree has hidden files and names with spaces, so any step that splits on whitespace will break. How can you pass file names between commands in a way that survives any character?
+Where does a modification time or a sort order depend on your locale? A manifest has to look the same on the restore team's machine.

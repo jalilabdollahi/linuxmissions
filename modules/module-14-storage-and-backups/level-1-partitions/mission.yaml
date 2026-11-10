@@ -1,16 +1,11 @@
 {
-  "name": "Partitions: Path Realignment",
-  "description": "In the storage and backups lab, a task related to Partitions needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/partitions.txt to organized/partitions/partitions-notes.txt",
+  "name": "What Is On This Disk?",
+  "description": "A VM lost power during a resize and will not boot. Ops pulled its disk as disk.img and wants an inventory of its partitions before anyone touches it.",
+  "objective": "Write partitions.txt with one line per data partition on disk.img, in the form: number start_sector size_MiB type_id (for example: 1 2048 100 83). Use the partition numbers the table gives them, the 512-byte start sector, the size in MiB and the hex type id as sfdisk prints it. The extended container is not a data partition and must not be listed. Do not modify disk.img.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Partitions",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "10m",
+  "concepts": ["fdisk -l", "sfdisk -d", "MBR partitions", "extended and logical partitions", "512-byte sectors"],
   "module": "module-14-storage-and-backups",
   "level": "level-1-partitions"
 }

@@ -1,1 +1,8 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+for img in data.img backup.img; do if debugfs -R 'ls /' "$img" 2>/dev/null | grep -qw db; then e2label "$img" DATA; else e2label "$img" BACKUP; fi; done
+sed -i -E 's#^[^[:space:]]+([[:space:]]+/srv/data[[:space:]])#LABEL=DATA\1#; s#^[^[:space:]]+([[:space:]]+/srv/backup[[:space:]])#LABEL=BACKUP\1#' etc/fstab
+e2label data.img; e2label backup.img; cat etc/fstab
+
+- debugfs -R 'ls /' ... | grep -qw db   does the image have the shop's db directory at its top level?
+- e2label IMG DATA / BACKUP              write the label into the file system
+- sed -i -E 's#^FIELD1(  /srv/data )#LABEL=DATA\1#'   replace only the device field of the line with that mount point
+- the last line shows the result

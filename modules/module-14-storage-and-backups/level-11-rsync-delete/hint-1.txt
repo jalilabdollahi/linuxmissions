@@ -1,1 +1,2 @@
-List the archive if you want to inspect it first, then extract it.
+A sync that only adds and updates files never removes anything. There is an option that makes the destination follow the source's deletions, and it is dangerous precisely because the destination can hold things the source has never heard of.
+Do not run it yet. First find a way to let the tool tell you what it would do, and keep only the part of that report that matters. Then ask how to tell the tool "this directory is not yours to touch".

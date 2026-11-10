@@ -1,1 +1,6 @@
-A du pipeline sorted numerically is a strong fit here.
+  debugfs -R 'ls -l /' FILE        list a directory of an ext file system image, read-only, no mount needed
+  e2label FILE                     show the label; e2label FILE NAME sets it (tune2fs -L NAME FILE does too; max 16 characters)
+  dumpe2fs -h FILE                 superblock: label ("volume name") and UUID
+  LABEL=NAME  in fstab's first field instead of /dev/...
+Change only the first field of the two lines; keep options, mount points and the passes as they are. `sed -i` on those two lines is enough.
+More: man debugfs, man e2label, man fstab

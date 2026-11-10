@@ -1,1 +1,10 @@
-Example: `sort mountpoints-raw.txt | uniq > unique-sorted.txt`
+sed -i 's|if \[ ! -d "\$TARGET" \]; then|if ! mountpoint -q "$TARGET"; then|' backup.sh
+mkdir -p stray
+mv mnt/backup/.[!.]* mnt/backup/* stray/
+ls -A mnt/backup; find stray -type f
+
+- sed -i ...         replace the "is it a directory" test by "is it a mount point" (the echo and exit 1 below it stay)
+- mkdir -p stray     the review folder
+- .[!.]* and *       hidden entries and normal ones (.[!.]* skips the . and .. entries)
+- ls -A mnt/backup   shows nothing left, even hidden
+- find stray ...     lists what you moved

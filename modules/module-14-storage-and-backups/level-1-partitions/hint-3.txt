@@ -1,1 +1,8 @@
-Example: `mkdir -p organized/partitions && mv inbox/partitions.txt organized/partitions/partitions-notes.txt`
+sfdisk -d disk.img | sed 's/[=,]/ /g' | awk '/^disk.img[0-9]/ && $8 != "5" && $8 != "f" && $8 != "85" { n = $1; sub(/disk.img/, "", n); print n, $4, $6 / 2048, $8 }' > partitions.txt
+cat partitions.txt
+
+- sfdisk -d disk.img       dump the table: one "disk.img1 : start=..., size=..., type=..." line per partition
+- sed 's/[=,]/ /g'         make "start=2048," into "start 2048" so awk sees plain fields
+- $8 != "5" && ...         skip the extended container (types 5, f, 85)
+- n = $1; sub(...)         "disk.img5" becomes the partition number 5
+- $6 / 2048                sectors to MiB (512-byte sectors)

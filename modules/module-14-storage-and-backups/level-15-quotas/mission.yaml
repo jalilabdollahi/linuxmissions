@@ -1,15 +1,11 @@
 {
-  "name": "Quotas: Metric Sum",
-  "description": "In the storage and backups lab, a task related to Quotas needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of quotas-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Quotas",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Reading the Quota Report",
+  "description": "The NAS is running out of room for the team. The repquota capture says who is in trouble, and a change ticket asks for two users' limits to be raised.",
+  "objective": "From the NAS report, write into over.txt the users over a soft limit whose grace period is still running (and not at a hard limit), and into hard.txt the users who cannot write any more (at a hard limit, or grace expired). Then apply the two limit changes from TICKET.txt with setquota (a stand-in for the real tool is provided in bin/), leaving everything else as it is. One name per line.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "30m",
+  "concepts": ["repquota columns and flags", "soft and hard limits", "grace period", "setquota units (KiB)", "all four limits at once"],
   "module": "module-14-storage-and-backups",
   "level": "level-15-quotas"
 }

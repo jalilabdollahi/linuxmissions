@@ -1,15 +1,11 @@
 {
-  "name": "Restore Drill: Noise Dedup",
-  "description": "In the storage and backups lab, a task related to Restore Drill needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from restore-drill-raw.txt with sorted unique values",
+  "name": "Restore Without Overwriting",
+  "description": "An accidental rm on Tuesday removed several files and a directory from projects/, and the team has been editing other files since Monday's backup.",
+  "objective": "Restore from backups/projects-mon.tar.gz only what was deleted from projects/, with the content, permissions and modification times it had in the backup. Files that still exist (edited or not) and files created since Monday must stay exactly as they are, and nothing outside the backup's contents may appear.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Restore Drill",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "20m",
+  "concepts": ["tar -t", "--skip-old-files / -k", "-p and umask", "restoring selectively", "rsync --ignore-existing"],
   "module": "module-14-storage-and-backups",
   "level": "level-20-restore-drill"
 }

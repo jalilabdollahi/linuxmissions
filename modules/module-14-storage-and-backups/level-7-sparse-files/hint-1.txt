@@ -1,1 +1,3 @@
-Use one command for the beginning of the file and another for the end.
+A file has two sizes: the length it claims (what a program reading it to the end would see) and the disk blocks that are actually allocated to it. Compare what ls -l reports with what du reports for both images.
+For the copy: a sparse source copied byte by byte becomes a fully allocated file, unless the tool is told to leave holes. And the tool cannot create holes from "real" zero blocks unless it is told to look for them.
+For the tar: a plain tar of a sparse file writes the holes out as zeros.

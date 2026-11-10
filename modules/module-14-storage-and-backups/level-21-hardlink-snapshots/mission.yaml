@@ -1,16 +1,11 @@
 {
-  "name": "Snapshot Notes: Path Realignment",
-  "description": "In the storage and backups lab, a task related to Snapshot Notes needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/snapshot-notes.txt to organized/snapshot-notes/snapshot-notes-notes.txt",
+  "name": "Snapshots that Share",
+  "description": "The nightly full copy of site/ is filling the backup disk, although most files never change from one day to the next.",
+  "objective": "Take snapshots/day1 of site/, run ./change-day.sh once, then take snapshots/day2. Both must look like complete copies (same contents, modes and modification times); files identical in the two days must be stored once (same inode), changed files separately, deleted files absent from day2, and no snapshot may share files with the live site/.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Snapshot Notes",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "20m",
+  "concepts": ["rsync --link-dest", "hard links and inodes", "snapshot order", "relative link-dest", "ls -li / stat -c %i"],
   "module": "module-14-storage-and-backups",
-  "level": "level-21-snapshot-notes"
+  "level": "level-21-hardlink-snapshots"
 }

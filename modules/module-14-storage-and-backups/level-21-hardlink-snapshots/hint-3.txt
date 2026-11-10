@@ -1,1 +1,9 @@
-Example: `mkdir -p organized/snapshot-notes && mv inbox/snapshot-notes.txt organized/snapshot-notes/snapshot-notes-notes.txt`
+rsync -a site/ snapshots/day1/
+./change-day.sh
+rsync -a --link-dest=../day1 site/ snapshots/day2/
+ls -li snapshots/day1/pages snapshots/day2/pages
+
+- rsync -a site/ snapshots/day1/              the first snapshot: a complete independent copy with attributes
+- ./change-day.sh                             tomorrow's edits, deletions and new files, applied to site/
+- --link-dest=../day1                         relative to snapshots/day2/ (the destination): unchanged files are hard links to day1's
+- ls -li                                      same inode number = stored once; edited files have different numbers

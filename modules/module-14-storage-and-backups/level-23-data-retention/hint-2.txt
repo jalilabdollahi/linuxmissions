@@ -1,1 +1,7 @@
-Archive the directory contents without leaving anything out.
+  find DIR -type f -name '*.log' -mtime +7 -print0     files older than 7 days (+N means more than N full days); NUL-separated for names with spaces
+  while IFS= read -r -d '' f; do ...; done            walk those names safely
+  gzip -- FILE      replaces FILE by FILE.gz and keeps the modification time (gzip -c > new would not)
+  grep -vE '^[[:space:]]*(#|$)' FILE                   drop comments and empty lines;  grep -qxF -- NAME LIST  exact whole-line match
+  echo "ACTION path" >> retention.log                  only AFTER the action succeeded
+Order: deletions first, then compression. Idempotence comes for free if every rule selects files that its own action removes from the selection.
+Write it as retention.sh with cd "$(dirname "$0")" at the top. More: man find (-mtime), man gzip

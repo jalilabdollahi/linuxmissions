@@ -1,1 +1,2 @@
-Use tar with create, gzip, and file flags.
+A plain cp loses information a migration must keep. Look inside www/ with `ls -lR` and `find www -links +1`: what kinds of things are there besides ordinary files? Which of them would a naive copy turn into something else (a link into a file, two names into two separate files)?
+And how will you prove afterwards that the copy is complete? A tool that compares and reports differences can be run in a mode where it changes nothing.

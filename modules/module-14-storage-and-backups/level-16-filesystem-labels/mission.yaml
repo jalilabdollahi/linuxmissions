@@ -1,15 +1,11 @@
 {
-  "name": "Filesystem Labels: Capacity Report",
-  "description": "In the storage and backups lab, a task related to Filesystem Labels needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Filesystem Labels",
-    "du",
-    "sort"
-  ],
+  "name": "Names That Stay Put",
+  "description": "After a reboot /dev/sdb1 and /dev/sdc1 traded places and the backup job wrote onto the live data disk. The file systems need names that survive a reshuffle.",
+  "objective": "Find out which of data.img and backup.img really holds the shop's live data and which the nightly backups (do not trust file names or current labels). Label the first DATA and the second BACKUP without reformatting, then change etc/fstab so /srv/data is mounted by LABEL=DATA and /srv/backup by LABEL=BACKUP, keeping all other fields and lines unchanged.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["debugfs ls on an image", "e2label / tune2fs -L", "LABEL= in fstab", "kernel device names", "16-character label limit"],
   "module": "module-14-storage-and-backups",
   "level": "level-16-filesystem-labels"
 }

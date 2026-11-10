@@ -1,1 +1,15 @@
-Example: `chmod 640 recovery-bundle.sh`
+rm -rf stage; mkdir -p stage/dr-bundle/files out
+rsync -aL --files-from=bundle.list box/ stage/dr-bundle/files/
+cp box/etc/fstab stage/dr-bundle/fstab
+sfdisk -d disk.img > stage/dr-bundle/disk.sfdisk
+( cd stage/dr-bundle && find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256 )
+tar -czf stage/dr-bundle.tgz -C stage dr-bundle
+split -b 20000000 stage/dr-bundle.tgz out/dr-bundle.tgz.part-
+( cd out && sha256sum dr-bundle.tgz.part-* > SHA256SUMS )
+ls -l out
+
+- rsync -aL --files-from: copies the listed paths under files/, following links, so link targets are shipped as regular files
+- cp / sfdisk -d: the fstab and the partition-table dump
+- the manifest is made inside dr-bundle, so paths are relative and verify after extraction; it skips itself
+- tar -czf ... -C stage dr-bundle: one top-level directory; split -b 20000000: parts within the byte limit
+- sha256sum in out/ gives names without a path; the staging tgz stays outside out/

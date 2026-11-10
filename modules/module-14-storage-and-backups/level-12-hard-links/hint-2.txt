@@ -1,1 +1,6 @@
-Use chmod with octal mode 640.
+  ls -li FILE            first column: inode number; the number after the permissions is the link count
+  stat -c '%i %h' FILE   inode and link count
+  find . -samefile FILE  every path with the same inode as FILE (hidden directories included)
+  find ... -delete       remove what matches (put your tests first, -delete last!)
+Exclude the name you want to keep: ! -path ./data/big.dat. Copies made with cp have different inodes and do not show up in -samefile.
+More: man find, man ln, man 2 stat

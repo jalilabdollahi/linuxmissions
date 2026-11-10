@@ -1,15 +1,11 @@
 {
-  "name": "Sync Command: Link Repair",
-  "description": "In the storage and backups lab, a task related to Sync Command needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/sync-command.conf",
+  "name": "Half-Written Archive",
+  "description": "A power cut during publish.sh left a truncated latest.tar.gz that the download servers happily served, twice this month.",
+  "objective": "Rewrite publish.sh so that releases/latest.tar.gz is always either the complete old archive or the complete new one, and the new archive is synced to disk before it gets its public name. The temporary file belongs in the same directory, and the published file must stay mode 644. The checker runs publish.sh with its own tar, sync and mv found through PATH, so call them by plain name. Keep the SRC and DEST variables working.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Sync Command",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "20m",
+  "concepts": ["atomic rename", "mktemp -p", "sync FILE", "same-filesystem mv", "file modes of temp files"],
   "module": "module-14-storage-and-backups",
   "level": "level-9-sync-command"
 }

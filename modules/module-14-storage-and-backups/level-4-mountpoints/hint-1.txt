@@ -1,1 +1,3 @@
-This is a sorting task followed by deduplication.
+Read backup.sh and ask what its guard really tests. If the disk is unplugged, is the directory still there? Does "the directory exists" tell you anything about a disk being attached?
+There is a small tool that answers exactly the question "is something mounted here?", and it reports through its exit status, which is what an if statement uses.
+For the cleanup: ls shows less than the directory contains. What does `ls -A` add?

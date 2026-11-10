@@ -1,1 +1,8 @@
-Example: `for n in 1 2 3; do printf 'inodes item %s\n' "$n" > generated/inodes-$n.txt; done`
+hog=$(find srv-root -type f | sed 's#/[^/]*$##' | sort | uniq -c | sort -rn | head -1 | awk '{print $2}')
+echo "$hog" > hog.txt
+find "$hog" -maxdepth 1 -name 'sess_*' -mmin +1440 -delete
+
+- find srv-root -type f | sed ...   one line per file with the file name removed: its directory
+- sort | uniq -c | sort -rn | head  count files per directory, biggest first; awk takes the path
+- echo "$hog" > hog.txt            record the answer
+- find ... -mmin +1440 -delete      delete expired sessions (older than 1440 minutes) without building an argument list

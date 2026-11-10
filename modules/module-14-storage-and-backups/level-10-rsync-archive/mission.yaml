@@ -1,15 +1,11 @@
 {
-  "name": "Rsync Archive: Backup Bundle",
-  "description": "In the storage and backups lab, a task related to Rsync Archive needs cleanup before the handoff.",
-  "objective": "Create rsync-archive-backup.tar.gz containing the files under bundle/rsync-archive",
+  "name": "Migrate the Site",
+  "description": "The site moves to a new server. The copy has to keep permissions, modification times, symlinks and hard links, and the team wants proof that nothing is left to sync.",
+  "objective": "Copy www/ to new-server/www/ so that it is an exact copy: file types, permissions (including setuid and sticky bits), modification times, symlinks as links and hard links between files. Then run the same copy again as a listing only (itemized, changing nothing) and save its output in second-run.txt, which must be empty. Do not create a nested www/www.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Rsync Archive",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "15m",
+  "concepts": ["rsync -aH", "trailing slash on the source", "dry run and itemized output", "hard links and symlinks in copies"],
   "module": "module-14-storage-and-backups",
   "level": "level-10-rsync-archive"
 }

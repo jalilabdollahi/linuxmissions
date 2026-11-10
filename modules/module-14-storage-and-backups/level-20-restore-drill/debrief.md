@@ -1,17 +1,21 @@
-# Restore Drill: Noise Dedup
+# Restore Without Overwriting
 
-## What you practiced
-- This level focused on **Restore Drill** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`tar -x` overwrites by default, which would silently throw away today's edits. `--skip-old-files` (or `-k`)
+extracts only members that do not exist yet, so exactly the deleted files and directory come back. Modification
+times are restored automatically; permissions are only restored verbatim for root, so a normal user passes `-p`
+to keep modes like 664 or 660 that a umask of 022 would otherwise trim.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+- Look first (`tar -tvzf`): the member names show where you must extract from.
+- `-k` makes tar report "Cannot open: File exists" for every skipped file and exit with status 2; `--skip-old-files`
+  stays quiet.
+- Restoring into a scratch directory and `rsync -a --ignore-existing` gets the same result and lets you inspect first.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Common mistakes
+- A plain `tar -xzf`: yesterday's content overwrites today's edits.
+- Using the Sunday backup, which has an older version of some files.
+- Extracting inside projects/, which creates projects/projects.
+
+## Next step
+`tar -xzf ARCHIVE path/inside` restores single members, `--wildcards` selects groups, and `--keep-newer-files`
+overwrites only older files.

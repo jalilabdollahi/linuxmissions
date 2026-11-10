@@ -1,17 +1,18 @@
-# Backup Manifests: Alert Filter
+# Ship It with a Manifest
 
-## What you practiced
-- This level focused on **Backup Manifests** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A manifest is only useful if it can be recomputed exactly later. Each part is chosen for that:
+`find -print0` with `read -d ''` handles any file name; `stat -c %a` gives the octal permission bits (including
+setuid); hashing through stdin gives just the digest; `readlink` records what a symlink points to instead of the
+file behind it (hashing through a link would make the manifest change whenever the target does, and a dangling
+link would fail). `LC_ALL=C sort` fixes the order: in a language locale `sort` ignores case and punctuation
+differently on each machine.
 
-## Commands to remember
-```bash
-grep 'ALERT' file.log
-grep -n PATTERN file.log
-grep -v PATTERN file.log
-```
+## Common mistakes
+- `sha256sum *` or `find | xargs sha256sum`: breaks on spaces, skips hidden files, follows links.
+- Writing MANIFEST.tsv inside the tree it describes, so it lists itself and never matches.
+- Relying on the default locale for sorting.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Look for a filtering command that keeps only the alert lines in backup-manifests.log.
+## Next step
+`sha256sum -c` verifies a standard checksum list in one go, and `find -printf '%p\t%s\t%m\n'` prints metadata
+without spawning stat per file. Level 19 uses a manifest like this to verify a restore.

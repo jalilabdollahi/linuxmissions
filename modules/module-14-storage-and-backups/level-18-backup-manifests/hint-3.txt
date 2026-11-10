@@ -1,1 +1,9 @@
-Example: `grep 'ALERT' backup-manifests.log > alerts.txt`
+cd backup
+{ find . -type f -print0 | while IFS= read -r -d '' f; do printf '%s\t%s\t%s\t%s\n' "$f" "$(stat -c %s "$f")" "$(stat -c %a "$f")" "$(sha256sum < "$f" | cut -d' ' -f1)"; done; find . -type l -print0 | while IFS= read -r -d '' l; do printf '%s\tsymlink\t%s\n' "$l" "$(readlink "$l")"; done; } | LC_ALL=C sort > ../MANIFEST.tsv
+cd ..; head -3 MANIFEST.tsv
+
+- find -type f -print0 | while read -d ''   each regular file, safe for spaces and hidden names
+- stat -c %s / %a, sha256sum < file         size, octal mode, hash of the content
+- find -type l ... readlink                 each symlink and its own target
+- LC_ALL=C sort                             byte-order sort, independent of the locale
+- > ../MANIFEST.tsv                         the manifest sits next to backup/, not inside it

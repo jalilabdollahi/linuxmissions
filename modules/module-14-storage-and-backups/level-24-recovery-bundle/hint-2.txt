@@ -1,1 +1,8 @@
-Use chmod with octal mode 640.
+  rsync -aL --files-from=LIST SRC/ DEST/   copy exactly the listed paths (names with spaces are fine), -L replaces links by what they point to
+  sfdisk -d DISK > FILE                     dump a partition table in a form that `sfdisk DISK < FILE` restores
+  (cd DIR && find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 sha256sum > MANIFEST.sha256)   paths relative to DIR
+  tar -czf OUT -C STAGE dr-bundle            pack with the right top-level name
+  split -b 20000000 FILE PREFIX              cut into parts (suffixes aa, ab...); -b 20M would mean 20*1048576
+  (cd out && sha256sum dr-bundle.tgz.part-* > SHA256SUMS)    file names only, no path
+Finish with a rehearsal of your own: join the parts, check the sums, extract in another directory, run the manifest check.
+More: man split, man sfdisk, man rsync (--files-from)

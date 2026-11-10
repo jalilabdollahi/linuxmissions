@@ -1,1 +1,3 @@
-This is a delimiter-based column extraction task.
+Turn the policy into questions about one backup at a time: given its date and TODAY, does any of the keep rules apply? You need the date as a number you can subtract (days since the epoch), not as text.
+The weekly rule is about a week as a whole: find the newest backup of each of the last four weeks, not just the Sundays. And what makes "the last 12 months" tricky when TODAY is in January?
+Which entries in backups/ are not backups at all? What should happen to a name like db-2026-13-40.tar.zst?

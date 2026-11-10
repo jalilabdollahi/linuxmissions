@@ -1,1 +1,3 @@
-Inspect the current mode first if you want to verify the change.
+Think like the engineer who gets this bundle at 3 a.m.: which problems can you remove now? Links that point outside the bundle are dead on arrival; a part that the transfer tool refuses wastes the night; a manifest with a path prefix of your build directory never verifies.
+Plan the layout first: a staging directory shaped exactly like what the engineer will see after extracting. Which tool can copy a list of names (with spaces!) and follow links while doing so?
+Two different "20M" exist in Unix tools. Which one is under 20,000,000 bytes?

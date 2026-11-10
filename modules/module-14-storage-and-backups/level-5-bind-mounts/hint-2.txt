@@ -1,1 +1,4 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+/proc/self/mountinfo fields: 1 mount ID, 2 parent ID, 3 major:minor (the device), 4 root (the directory inside the file system), 5 mount point, 6 options, then zero or more optional fields (shared:N, master:N), a lone "-", then fstype, source and super options. Count from the "-", not from the left: the number of optional fields differs per line.
+A bind mount of a subdirectory has root other than "/". To get its real path, take the mount point of the same device's normal mount (root "/") and append root; if that device is mounted at /, the root field is already the path.
+Patterns for rsync --exclude-from: /path/ is anchored at the top of the transfer and matches directories only.
+More: man 5 proc, man rsync (FILTER RULES)

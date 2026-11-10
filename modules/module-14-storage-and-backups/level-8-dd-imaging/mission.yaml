@@ -1,15 +1,11 @@
 {
-  "name": "Dd Imaging: Cleanup Sweep",
-  "description": "In the storage and backups lab, a task related to Dd Imaging needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/dd-imaging and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Dd Imaging",
-    "find",
-    "rm"
-  ],
+  "name": "Cut Out Partition 2",
+  "description": "A vendor wants only the application partition of a disk image. They sent a SHA-256 of exactly what they expect to receive.",
+  "objective": "Extract partition 2 of disk.img into p2.img so that it is byte-for-byte the partition and matches the checksum in vendor.sha256. Do not modify disk.img.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["dd skip and count", "sector arithmetic", "sfdisk -d", "sha256sum -c", "block size units"],
   "module": "module-14-storage-and-backups",
   "level": "level-8-dd-imaging"
 }

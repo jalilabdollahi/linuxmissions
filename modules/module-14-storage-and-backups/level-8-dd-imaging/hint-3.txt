@@ -1,1 +1,9 @@
-Example: `find cleanup/dd-imaging -name '*.tmp' -delete`
+sfdisk -d disk.img
+read -r start size < <(sfdisk -d disk.img | sed 's/[=,]/ /g' | awk '$1 == "disk.img2" { print $4, $6 }')
+dd if=disk.img of=p2.img bs=512 skip="$start" count="$size"
+sha256sum -c vendor.sha256
+
+- sfdisk -d ... awk    the start sector and the size (in sectors) of partition 2
+- bs=512               one block is one sector, so skip and count are the numbers from the table
+- skip= count=         begin at the start sector and copy as many sectors as the partition has
+- sha256sum -c         compare p2.img with the vendor's checksum: prints OK when it matches

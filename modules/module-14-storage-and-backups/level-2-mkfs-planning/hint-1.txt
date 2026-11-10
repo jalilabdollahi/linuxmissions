@@ -1,1 +1,2 @@
-Look for a filtering command that keeps only the alert lines in mkfs-planning.log.
+An image file is only as big as you make it, and a file system fills whatever it is given. So the order is: first make an empty file of the right size, then build the file system on it.
+Three requirements are not defaults: how much is kept for root, how many inodes exist, and the label. Which of the three can you not change afterwards without extra tools? (Inodes: their number is fixed when the file system is made.)

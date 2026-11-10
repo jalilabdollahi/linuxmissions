@@ -1,15 +1,11 @@
 {
-  "name": "Bind Mounts: Field Extract",
-  "description": "In the storage and backups lab, a task related to Bind Mounts needs cleanup before the handoff.",
-  "objective": "Extract the second column from bind-mounts-report.csv into owners.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Bind Mounts",
-    "cut",
-    "awk"
-  ],
+  "name": "Same Disk, Two Paths",
+  "description": "On web-02 the customers' uploads show up under several paths, so the nightly backup of / copies them more than once. You have captures of /proc/mounts and /proc/self/mountinfo.",
+  "objective": "From mountinfo.txt write binds.txt with one line per bind mount: its mount point and the real source directory it shows, separated by a space, sorted by mount point. Then write backup-excludes.txt for rsync: one anchored directory pattern per line (leading and trailing slash) excluding every bind mount point and none of the originals. Leave the captures unchanged.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "20m",
+  "concepts": ["/proc/self/mountinfo fields", "bind mounts", "mount root field", "rsync exclude patterns", "awk parsing"],
   "module": "module-14-storage-and-backups",
   "level": "level-5-bind-mounts"
 }

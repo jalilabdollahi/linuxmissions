@@ -1,15 +1,11 @@
 {
-  "name": "Recovery Bundle: Permission Fix",
-  "description": "In the storage and backups lab, a task related to Recovery Bundle needs cleanup before the handoff.",
-  "objective": "Set the mode of recovery-bundle.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Recovery Bundle",
-    "chmod",
-    "permissions"
-  ],
+  "name": "The 3 a.m. Bundle",
+  "description": "On-call needs a self-contained disaster-recovery bundle for shop-01 that can be shipped through a transfer tool with a 20 MB part limit and verified on arrival.",
+  "objective": "Build out/dr-bundle.tgz.part-aa, -ab, ... (parts of at most 20,000,000 bytes) of a gzip tar holding the directory dr-bundle with files/ (every path of bundle.list from box/, links replaced by their target's content), fstab, disk.sfdisk (the dump of disk.img) and MANIFEST.sha256 (relative paths, verifiable after extraction), plus out/SHA256SUMS for the parts. out/ holds only those. TICKET.txt has the exact layout; the checker joins, extracts, verifies and replays the partition table.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "60m",
+  "concepts": ["rsync --files-from / -L", "sfdisk -d and replay", "sha256sum manifests", "split -b units", "testing your own restore"],
   "module": "module-14-storage-and-backups",
   "level": "level-24-recovery-bundle"
 }

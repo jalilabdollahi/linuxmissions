@@ -1,17 +1,19 @@
-# Hard Links: Permission Fix
+# Deleted but Still There
 
-## What you practiced
-- This level focused on **Hard Links** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A file name is only a directory entry pointing at an inode. `ln` makes more entries for the same inode (hard
+links), and the inode, with its data, is freed only when the **link count** reaches 0 and nobody has the file
+open. So `rm` of one name freed nothing: the other names kept the data alive.
 
-## Commands to remember
-```bash
-chmod 750 script.sh
-ls -l script.sh
-stat -c '%a %n' script.sh
-```
+`find -samefile FILE` (or `find -inum N`) lists every path pointing at the same inode, wherever it is, and
+`ls -li` or `stat -c %h` shows the count. A copy made with `cp` is a different inode with its own data, even
+if `cmp` says the contents are the same, which is why equal checksums prove nothing about links.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the current mode first if you want to verify the change.
+## Common mistakes
+- Deleting everything with the same name, size or checksum: separate copies are not links.
+- Searching only visible directories: hidden ones (`.cache`) are skipped by `ls *` and by shell globs.
+- Using `rm` on `data/big.dat` itself and keeping another name; the task wants that one name to stay.
+
+## Next step
+`find / -xdev -links +1 -type f` finds all hard-linked files on a file system, `du` counts a hard-linked file
+only once per run, and `rsync -H` or `cp -a` preserve links when copying.

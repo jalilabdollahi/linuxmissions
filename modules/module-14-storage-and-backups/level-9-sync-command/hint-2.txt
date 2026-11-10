@@ -1,1 +1,7 @@
-Use `ln -s` so current.conf points at the release file.
+  mktemp -p DIR TEMPLATE   create a unique file in DIR (default is $TMPDIR, often another file system; mktemp creates it with mode 600)
+  tar -czf "$tmp" ...      write the archive into the temporary file
+  chmod 644 "$tmp"         give it the mode the public file should have
+  sync "$tmp"              flush that file's data to disk (plain `sync` flushes everything)
+  mv -f "$tmp" "$DEST/latest.tar.gz"   rename within one directory: atomic
+Use `|| exit 1` after the tar step so a failed archive is never published. A `trap 'rm -f "$tmp"' EXIT` cleans up after an interrupted run.
+More: man mktemp, man sync, man rename (rename(2))

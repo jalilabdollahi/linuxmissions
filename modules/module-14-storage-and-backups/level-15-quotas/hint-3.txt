@@ -1,1 +1,20 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' quotas-metrics.csv > total.txt`
+cat > parse.awk <<'XEOF'
+NR > 5 && NF >= 8 && $1 != "root" {
+  i = 6; bg = ""
+  if ($6 !~ /^[0-9]+$/) { bg = $6; i = 7 }
+  iu = $i; ih = $(i+2); ig = (NF > i+2) ? $(i+3) : ""
+  blocked = ($5 > 0 && $3 >= $5) || (ih > 0 && iu >= ih) || bg == "none" || ig == "none"
+  over = ($2 ~ /\+/) && !blocked
+  if (blocked) print $1 > "hard.txt"; else if (over) print $1 > "over.txt"
+}
+XEOF
+repquota -a | awk -f parse.awk
+lim() { repquota -a | awk -v u="$1" '$1==u {i=($6~/^[0-9]+$/)?6:7; print $(i+1), $(i+2)}'; }
+while read -r u bs bh is ih; do [ -n "$is" ] || read -r is ih <<< "$(lim "$u")"; setquota -u "$u" "$bs" "$bh" "$is" "$ih" /srv/nas; done < <(awk '/block limits/ {u=$1; sub(":","",u); print u, $4*1048576, $8*1048576, (NF>=16 ? $13 " " $16 : "")}' TICKET.txt)
+repquota -a
+
+- parse.awk: if field 6 is not a number it is the block grace, so the file columns start one field later
+- blocked: hard block limit reached, hard file limit reached, or a grace of "none"; those go to hard.txt
+- over: a "+" flag that is not blocked goes to over.txt
+- lim(): the current inode soft/hard limits of a user, for the user whose file limits do not change
+- the while loop: read user and the new limits from the ticket (GiB x 1048576 = KiB) and call setquota for each

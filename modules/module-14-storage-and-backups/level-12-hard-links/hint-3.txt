@@ -1,1 +1,9 @@
-Example: `chmod 640 hard-links.sh`
+ls -li data/big.dat
+find . -samefile data/big.dat
+find . -samefile data/big.dat ! -path ./data/big.dat -delete
+stat -c 'links: %h' data/big.dat
+
+- ls -li                          inode number and link count of the file to keep
+- find . -samefile data/big.dat   every other name of that inode, hidden directories and names with spaces included
+- ! -path ./data/big.dat -delete  delete all of them except the one to keep (-delete goes last)
+- stat -c %h                      the link count should now be 1

@@ -1,16 +1,11 @@
 {
-  "name": "Inodes: Loop Builder",
-  "description": "In the storage and backups lab, a task related to Inodes needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named inodes-1.txt through inodes-3.txt with matching numbered content",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Inodes",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "name": "No Space, Plenty of Space",
+  "description": "Logins on web-01 fail with \"No space left on device\" although df shows the disk less than half full.",
+  "objective": "Write the path of the directory that holds the most files, relative to the level folder, into hog.txt. Then delete the expired PHP session files in it (sess_* files not modified for more than 24 hours). Fresh sessions and everything else in the tree must stay untouched.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
+  "concepts": ["inode exhaustion", "df -i", "counting files per directory", "find -mmin -delete", "argument list too long"],
   "module": "module-14-storage-and-backups",
   "level": "level-14-inodes"
 }

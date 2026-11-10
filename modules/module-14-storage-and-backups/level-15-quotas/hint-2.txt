@@ -1,1 +1,7 @@
-An awk one-liner can skip the header and add the second field.
+  repquota -a                          report for every user (units: KiB for blocks)
+  flags "+-" / "-+" / "++"             block limit exceeded / file limit exceeded / both
+  grace column                         time left ("6days"), "none" when it has expired, blank when not over
+  setquota -u USER bsoft bhard isoft ihard /srv/nas    set all four limits at once; blocks are in KiB, 0 means no limit
+Note that a blank grace column shifts the later columns left when you cut the line apart. Anyone at a hard limit goes in hard.txt only.
+Convert GiB to KiB by multiplying by 1024*1024, and give unchanged inode limits their current values.
+More: man repquota, man setquota

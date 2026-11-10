@@ -1,1 +1,8 @@
-Example: `sort restore-drill-raw.txt | uniq > unique-sorted.txt`
+tar -tvzf backups/projects-mon.tar.gz | head -5
+tar -xzpf backups/projects-mon.tar.gz --skip-old-files
+find projects -type f | wc -l
+
+- tar -t ...      a look at the archive first: paths start with projects/, modes and times are stored
+- tar -xzp        extract gzip, keeping the stored permissions whatever the umask is
+- --skip-old-files  do not overwrite existing files (edited ones keep today's content), no error output
+- the last line   count the files that are there now

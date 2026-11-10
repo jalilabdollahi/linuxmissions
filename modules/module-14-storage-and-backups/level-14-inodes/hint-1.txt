@@ -1,1 +1,3 @@
-A short for-loop is the cleanest option here.
+The disk is not full in bytes, so something else ran out. df can show a second kind of "full": read the two captures side by side. What is a file system running out of when it holds millions of tiny files?
+`du` measures bytes and will point you at the wrong place. You need to count files per directory instead, and the tree has far too many for `ls`.
+For the cleanup, think about what "older than 24 hours" means for a file's timestamps, and how to remove 40,000 files when the shell refuses a glob that long.

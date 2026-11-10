@@ -1,1 +1,4 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' awk-arena.conf > fixed.conf`
+Load the rates and provider cents, convert each invoice with its date's rate, print when the difference is more than one cent:
+  ( echo "invoice,invoice_eur,provider_eur"; awk -F, 'FILENAME=="rates.csv" && FNR>1 {n[$2]++; d[$2,n[$2]]=$1; r[$2,n[$2]]=$3; next} FILENAME=="provider.txt" {prov[substr($0,1,9)]=substr($0,18,12)+0; next} FILENAME=="invoices.csv" && FNR>1 {rate=1; if ($3!="EUR") {rate=0; for (i=1;i<=n[$3];i++) if (d[$3,i]<=$2) rate=r[$3,i]}; cents=int(int($4*100+0.5)*rate+0.5); diff=cents-prov[$1]; if (diff>1||diff<-1) printf "%s,%.2f,%.2f\n", $1, cents/100, prov[$1]/100}' rates.csv provider.txt invoices.csv | sort ) > mismatch.csv
+  wc -l mismatch.csv
+The first two blocks fill arrays from rates.csv (per currency, in date order) and from the provider's fixed-width columns; the third converts each invoice to EUR cents using the last rate on or before its date and prints the ones off by more than a cent; sort orders by id and the subshell puts the header first.

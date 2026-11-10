@@ -1,15 +1,11 @@
 {
-  "name": "Boot Scare: Restore Drill",
-  "description": "In the linux war games lab, a task related to Boot Scare needs cleanup before the handoff.",
-  "objective": "Extract boot-scare-restore.tar.gz so the restored/boot-scare directory appears in the sandbox",
+  "name": "Boot Scare",
+  "description": "web-05 was cloned to new hardware and will not boot. `./boot-sim sysroot` walks the boot chain of the cloned root (GRUB menu, kernel and initrd, the initramfs root-device logic, fstab and the default systemd target) and stops at the first thing that fails, so each fix may reveal the next problem. blkid.txt is the capture of the new disks. The sim reads the files as they are: it does not run update-grub or update-initramfs.",
+  "objective": "Make `./boot-sim sysroot` finish with `Reached multi-user.target` (exit 0) by fixing the configuration under sysroot/: the GRUB menu (boot/grub/grub.cfg), /etc/fstab and the systemd configuration under etc/systemd/ may be edited; kernels, initrds and the /dev/disk tree are the hardware and must stay as they are. Pick the boot entry properly: do not remove entries or rewrite files that are not at fault.",
   "xp": 300,
   "difficulty": "expert",
-  "expected_time": "15m",
-  "concepts": [
-    "Boot Scare",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "40m",
+  "concepts": ["GRUB default entry and submenu paths (1>2)", "UUIDs after a disk clone (blkid)", "initrd presence and driver content", "fstab and nofail", "systemd default.target", "staged troubleshooting"],
   "module": "module-26-linux-wargames",
   "level": "level-28-boot-scare"
 }

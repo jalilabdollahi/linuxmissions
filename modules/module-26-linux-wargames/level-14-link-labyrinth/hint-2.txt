@@ -1,1 +1,4 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+- `find deploy -type l -exec ls -l {} +` lists links; `find -L deploy -type l` lists the ones that are broken or loop (with -L a link that still looks like a link has no valid target).
+- `ls -li` / `find deploy -samefile FILE` show hard links: same inode number, link count above 1. A hard link is another name for the same data, not a pointer to a path. Editors that write a new file break it.
+- `ln -s TARGET LINK`: a relative TARGET is resolved from the directory the LINK is in, not from where you type the command. `ln -sr` computes it for you; `ln -sfn` replaces an existing link to a directory. `readlink -f` shows the final destination.
+- Test the relocation: `cp -a deploy /tmp/x/` and check again there.

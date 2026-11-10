@@ -1,14 +1,17 @@
 {
-  "name": "Secret Hunt: History Window",
-  "description": "In the linux war games lab, a task related to Secret Hunt needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of secret-hunt-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Secret Hunt",
+  "description": "A live payments key (pk_live_...) turned up on a public paste site. TICKET.md has the excerpt.",
+  "objective": "Create leaks.txt listing every location of that exact key under site/ (a path, or archive:member for tar members), and replace every copy in ordinary files with REDACTED (base64 copies and the key split by a line continuation included). Archives are listed but must stay byte-identical, as must everything that is not part of the leak. Keys that merely look alike are not ours.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "40m",
   "concepts": [
-    "Secret Hunt",
-    "head",
-    "tail"
+    "secret scanning",
+    "grep -r and zgrep",
+    "tar -xOf",
+    "base64",
+    "sed -z multi-line",
+    "evidence handling"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-7-secret-hunt"

@@ -1,1 +1,1 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+`ps -eo pid,ppid,pgid,sid,comm,args` (or `pstree -p`) shows parent, group and session; the swarm shares one group while the app processes live in their own. `readlink /proc/PID/exe` and `cat /proc/PID/cmdline | tr '\0' ' '` show what a process really is. Either freeze the supervisor first (`kill -STOP PID`) and then kill the members, or signal the whole group at once with a negative PID: `kill -9 -- -PGID`. Be careful with `pkill -f`, which matches every process under the sandbox path, including app.

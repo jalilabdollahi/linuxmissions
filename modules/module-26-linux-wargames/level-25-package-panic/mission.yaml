@@ -1,15 +1,11 @@
 {
-  "name": "Package Panic: Script Kickoff",
-  "description": "In the linux war games lab, a task related to Package Panic needs cleanup before the handoff.",
-  "objective": "Make jobs/package-panic.sh executable, run it, and create the token file it writes",
+  "name": "Wedged apt",
+  "description": "apt and dpkg are wedged after an interrupted upgrade on web-04. Nobody can run dpkg on that box, but you have its captured package database: sysroot/var/lib/dpkg/status. FORMAT.md defines exactly what the three reports must contain.",
+  "objective": "From sysroot/var/lib/dpkg/status write broken.txt (every package whose state is not `installed`, with its state), unsatisfied.txt (installed packages with a version-constrained dependency that the installed version of that dependency fails) and fix_order.txt (the packages that still need configuring, dependencies first), exactly as FORMAT.md describes. Do not modify the status file.",
   "xp": 300,
   "difficulty": "expert",
-  "expected_time": "15m",
-  "concepts": [
-    "Package Panic",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "40m",
+  "concepts": ["dpkg status database", "awk paragraph mode (RS=)", "dpkg --compare-versions", "epochs and ~ in versions", "dependency ordering (tsort)", "Depends vs Pre-Depends"],
   "module": "module-26-linux-wargames",
   "level": "level-25-package-panic"
 }

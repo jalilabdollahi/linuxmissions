@@ -1,16 +1,11 @@
 {
-  "name": "Process Swarm: Loop Builder",
-  "description": "In the linux war games lab, a task related to Process Swarm needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named process-swarm-1.txt through process-swarm-3.txt with matching numbered content",
+  "name": "The Swarm",
+  "description": "Load average is 40 on app-03. A swarm of `crunch` processes keeps respawning whenever someone kills one, and the on-call who looked first swears that one of the members is not what it pretends to be. Three legitimate `app` processes serve customers on the same box.",
+  "objective": "Get rid of the whole swarm, and keep it gone: ten seconds after you finish, no swarm process may exist, and the three `app` processes must be the same PIDs as before. Then write hidden.txt: the real, absolute executable path of the swarm member that is disguised as something else (one line).",
   "xp": 300,
   "difficulty": "expert",
-  "expected_time": "15m",
-  "concepts": [
-    "Process Swarm",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "30m",
+  "concepts": ["process groups and sessions", "SIGSTOP / SIGKILL on a group", "respawning supervisors", "/proc/PID/exe and cmdline", "kernel threads vs fakes", "ps -o pgid,ppid"],
   "module": "module-26-linux-wargames",
   "level": "level-26-process-swarm"
 }

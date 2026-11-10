@@ -1,1 +1,4 @@
-A grep count or grep piped into wc can produce the number you need.
+- `diff config.json.last-good config.json` shows every difference; `cat -A config.json` reveals non-ASCII characters (they print as `M-bM-^@...`).
+- `jq . config.json` stops at the first syntax error, but `jq` is silent about duplicate keys: it keeps the last one. The checker (`./app --check`) does complain.
+- Leftover lines from a merge start with `<<<<<<<`, `=======` or `>>>>>>>`.
+- Often the safest repair is to rebuild from the last known good file and apply only the two ticketed changes with `jq '.a.b = value'`.

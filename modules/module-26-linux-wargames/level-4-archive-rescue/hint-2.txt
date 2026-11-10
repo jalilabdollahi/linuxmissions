@@ -1,1 +1,4 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- `ls -l incoming/` shows sizes; `ls incoming | sort -V` (or a `for i in $(seq 1 12)` loop) gives the numeric order.
+- Join with `cat part.1 part.2 ... > dataset.tar.gz`; `sha256sum -c --ignore-missing SHA256SUMS` tells you whether the joined file is the vendor's.
+- `tar -tzf dataset.tar.gz | head` lists members (look for odd paths). `tar -xzf FILE -C DIR path/inside/archive` extracts one subtree only.
+- Check the extracted files against the vendor's hashes: `sha256sum -c` run from the folder that holds `dataset/`.

@@ -1,1 +1,1 @@
-You need a stream editor or another text replacement tool.
+Count it yourself, by hand, for a small slice, and compare with the report. Where could a line be counted twice? Ask two questions: which files does the script read, and does it read any of them more than once? And: can the same request show up as two lines even in a single file (look at the request IDs of the successful checkouts)?

@@ -1,1 +1,1 @@
-You need a stream editor or another text replacement tool.
+Three files, three formats, and the amounts are in different units. Before computing anything, decide the unit you will compare in. Then ask which rate applies to one invoice: not the newest rate in the file, but the newest one that was already valid on the invoice's date. awk can read all three files in a single run if you tell the rows apart.

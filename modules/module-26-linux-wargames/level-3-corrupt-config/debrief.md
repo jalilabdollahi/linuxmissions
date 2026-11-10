@@ -1,17 +1,19 @@
-# Corrupt Config: Event Counter
+# Corrupt Config
 
-## What you practiced
-- This level focused on **Corrupt Config** in a safe sandbox.
-- The shortest path usually combines `grep` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+The file had four separate faults: merge-conflict markers around the very line
+the ticket changed, a trailing comma (valid in JavaScript, not in JSON), smart
+quotes pasted from a chat tool, and a duplicate key. The last one is the
+dangerous one: most parsers, `jq` included, silently keep the later value, so
+the file "works" with a timeout ten times too small. Rebuilding from the last
+known good file and applying the ticket with `jq` removes all four at once and
+guarantees nothing else drifted.
 
-## Commands to remember
-```bash
-grep -c '^pattern$' file.txt
-grep PATTERN file.txt | wc -l
-wc -l file.txt
-```
+## Common mistakes
+- Stopping when the checker turns green; it cannot know what the ticket asked for.
+- Resolving the conflict markers by picking the wrong side.
+- Retyping by hand: you can paste new smart quotes or lose a key.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Count matching lines instead of copying them out by hand.
+## Next step
+`diff <(jq -S . a.json) <(jq -S . b.json)` compares two JSON files ignoring
+formatting and key order. `jq -e` makes a filter usable as a test.

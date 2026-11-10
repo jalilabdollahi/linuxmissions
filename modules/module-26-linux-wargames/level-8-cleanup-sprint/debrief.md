@@ -1,17 +1,21 @@
-# Cleanup Sprint: Cleanup Sweep
+# Cleanup Sprint
 
-## What you practiced
-- This level focused on **Cleanup Sprint** in a safe sandbox.
-- The shortest path usually combines `find` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`find -mtime` selects by modification time, which is what the policy
+means; dates in file names and `ls` columns lie. Names with spaces or
+newlines only survive when every hand-off between commands is NUL-delimited
+(`-print0` with `read -d ''` or `xargs -0`). The two files the batch job holds
+open are the real trap: deleting an open file frees nothing until the process
+exits and the job loses its ledger, and compressing it replaces the inode
+under the process. `lsof -p PID` (or `/proc/PID/fd`) lists them, so the script
+skips exactly those. Deleting first and compressing second means nothing that
+should be deleted gets compressed.
 
-## Commands to remember
-```bash
-find dir -name '*.tmp'
-find dir -name '*.tmp' -delete
-find dir -type f -exec rm {} \;
-```
+## Common mistakes
+- `find var -mtime +7 -delete` without the held-file check.
+- Looping with `for f in $(find ...)`: it splits at the space or newline.
+- `-mtime 7` (exactly 7): matches only one day.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use a targeted file search so you do not remove the wrong files.
+## Next step
+`find -newermt '2026-11-01'` selects by an explicit date; `lsof +L1` lists
+files that are deleted but still open, the usual reason `df` does not drop.

@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""boot-sim: walks the boot chain of a captured root filesystem and stops at the first failure.
+
+    ./boot-sim SYSROOT
+
+Stages: GRUB (default entry from boot/grub/grub.cfg), kernel and initrd files, the initramfs
+root-device logic, /etc/fstab, and finally the default systemd target. It never runs update-grub
+or update-initramfs: it reads the files as they are.
+"""
+import os, re, subprocess, sys
+
+args = sys.argv[1:]
+mock = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".mock", "systemctl")
+if args[:1] == ["--systemctl"]:
+    mock = args[1]; args = args[2:]
+if len(args) != 1 or not os.path.isdir(args[0]):
+    sys.stderr.write("usage: boot-sim SYSROOT\n"); sys.exit(2)
+R = os.path.abspath(args[0])
+P = lambda *a: os.path.join(R, *[x.lstrip("/") for x in a])
+
+def say(m): print(m, flush=True)
+def stop(code_msg, lines):
+    for l in lines: say(l)
+    say(code_msg); sys.exit(1)
+
+# ---------------- GRUB
+cfg = P("boot/grub/grub.cfg")
+if not os.path.exists(cfg): stop("error: file '/boot/grub/grub.cfg' not found.\ngrub rescue>", [])
+text = open(cfg).read()
+m = re.search(r'^\s*set\s+default\s*=\s*"?([^"\n]*)"?\s*$', text, re.M)
+default = m.group(1).strip() if m else "0"
+
+def parse(lines, i=0):
+    """returns (entries, next_i); entry = dict(kind, title, id, body, children)"""
+    out = []
+    while i < len(lines):
+        l = lines[i].strip()
+        mm = re.match(r"^(menuentry|submenu)\s+'([^']*)'(.*)\{\s*$", l)
+        if l == "}":
+            return out, i + 1
+        if mm:
+            kind, title, rest = mm.groups()
+            idm = re.search(r"--id\s+(\S+)", rest)
+            if kind == "submenu":
+                kids, i = parse(lines, i + 1)
+                out.append(dict(kind=kind, title=title, id=idm.group(1) if idm else title, children=kids))
+            else:
+                body = []; i += 1
+                while i < len(lines) and lines[i].strip() != "}": body.append(lines[i].strip()); i += 1
+                out.append(dict(kind=kind, title=title, id=idm.group(1) if idm else title, body=body)); i += 1
+            continue
+        i += 1
+    return out, i
+
+top, _ = parse(text.splitlines())
+level, path = top, []
+entry = None
+for tok in default.split(">"):
+    tok = tok.strip()
+    pick = None
+    if tok.isdigit():
+        k = int(tok)
+        if k < len(level): pick = level[k]
+    else:
+        for e in level:
+            if tok in (e["title"], e["id"]): pick = e; break
+    if pick is None: stop("error: no such entry '%s' in the GRUB menu (default=\"%s\")." % (tok, default), ["GRUB: reading boot/grub/grub.cfg"])
+    path.append(tok); entry = pick
+    if pick["kind"] == "submenu": level = pick["children"]
+    else: break
+if entry["kind"] == "submenu":
+    stop("error: default \"%s\" selects a submenu, not a boot entry." % default, ["GRUB: reading boot/grub/grub.cfg"])
+say("GRUB: default entry \"%s\" -> '%s'" % (default, entry["title"]))
+linux = initrd = bootuuid = None
+for b in entry["body"]:
+    mm = re.match(r"^search\b.*--set=root\s+(\S+)", b)
+    if mm: bootuuid = mm.group(1)
+    mm = re.match(r"^linux\s+(\S+)\s*(.*)$", b)
+    if mm: linux, cmdline = mm.groups()
+    mm = re.match(r"^initrd\s+(\S+)", b)
+    if mm: initrd = mm.group(1)
+def byuuid(u): return os.path.lexists(P("dev/disk/by-uuid", u))
+if bootuuid and not byuuid(bootuuid):
+    stop("error: no such device: %s.\nEntering rescue mode...\ngrub rescue>" % bootuuid, [])
+if not linux: stop("error: this entry has no linux line.", [])
+if not os.path.exists(P(linux)): stop("error: file '%s' not found.\nPress any key to continue..." % linux, [])
+say("GRUB: loaded %s" % linux)
+if initrd is None or not os.path.exists(P(initrd)):
+    stop("error: file '%s' not found.\nPress any key to continue..." % initrd, [])
+say("GRUB: loaded %s" % initrd)
+
+# ---------------- kernel / initramfs
+say("kernel: Command line: %s" % cmdline)
+rm = re.search(r"\broot=(\S+)", cmdline)
+if not rm: stop("kernel: panic - no root= on the command line", [])
+root = rm.group(1)
+mods = {l.split()[1] for l in open(P(initrd)) if l.startswith("module ")}
+if root.startswith("UUID="):
+    u = root[5:]
+    if not byuuid(u):
+        stop("Gave up waiting for root file system device.\nALERT!  %s does not exist.  Dropping to a shell!\n(initramfs)" % root, ["initramfs: waiting for root device %s" % root])
+    dev = os.path.basename(os.readlink(P("dev/disk/by-uuid", u)))
+    disk = re.sub(r"\d+$", "", dev)
+    drv = None
+    mp = P("proc/driver-map")
+    if os.path.exists(mp):
+        for l in open(mp):
+            a = l.split()
+            if len(a) == 2 and a[0] == disk: drv = a[1]
+    say("initramfs: waiting for root device %s (%s, driver %s)" % (root, dev, drv))
+    if drv and drv not in mods:
+        stop("ALERT!  /dev/%s: no driver '%s' in %s.  Dropping to a shell!\n(initramfs)" % (disk, drv, os.path.basename(initrd)), [])
+    say("initramfs: root filesystem mounted on /")
+else:
+    stop("kernel: panic - unsupported root= value", [])
+
+# ---------------- fstab
+fs = P("etc/fstab")
+if os.path.exists(fs):
+    for l in open(fs):
+        l = l.strip()
+        if not l or l.startswith("#"): continue
+        f = l.split()
+        if len(f) < 4: continue
+        src, mnt, _, opts = f[:4]
+        ok = True
+        if src.startswith("UUID="): ok = byuuid(src[5:])
+        elif src.startswith("LABEL="): ok = os.path.lexists(P("dev/disk/by-label", src[6:]))
+        if ok: say("[  OK  ] Mounted %s." % mnt)
+        elif "nofail" in opts.split(",") or "noauto" in opts.split(","): say("[ SKIP ] %s: %s not present (nofail)." % (mnt, src))
+        else:
+            stop("You are in emergency mode. After logging in, type \"journalctl -xb\" to view system logs.",
+                 ["[ TIME ] Timed out waiting for device dev-disk-by\\x2duuid-%s.device." % src.split("=", 1)[-1],
+                  "[DEPEND] Dependency failed for %s." % mnt, "[DEPEND] Dependency failed for Local File Systems."])
+
+# ---------------- systemd default target
+if not os.path.exists(mock): stop("boot-sim: cannot find the systemd mock", [])
+env = dict(os.environ, LM_ROOT=R)
+r = subprocess.run([mock, "mock-boot"], env=env, capture_output=True, text=True)
+for l in r.stdout.splitlines()[-8:]: say(l)
+if r.returncode != 0:
+    err = (r.stderr.strip().splitlines() or ["default target could not be reached"])[-1]
+    stop("Failed to start the default target (%s)." % err, [])
+say("Reached multi-user.target")

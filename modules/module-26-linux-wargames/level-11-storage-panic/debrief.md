@@ -1,17 +1,21 @@
-# Storage Panic: Restore Drill
+# Storage Panic
 
-## What you practiced
-- This level focused on **Storage Panic** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A filesystem has two budgets: blocks (bytes) and inodes (one per file or
+directory). `df -h` showed plenty of blocks; `df -i` showed 100 % of the
+inodes used, and the session cache had turned thousands of tiny files into
+the problem. Counting files per directory (`find -printf '%h\n' | sort | uniq
+-c | sort -rn`) points at the hog; the 40 GB `vm.img` is a sparse file, with a
+huge apparent size (`ls -l`) but almost no blocks (`du`) and not a single
+extra inode, so deleting it would have fixed nothing and broken the VM. The
+fix follows the policy exactly: only sessions older than a day.
 
-## Commands to remember
-```bash
-tar -tf archive.tar.gz
-tar -xzf archive.tar.gz
-ls -R restored/
-```
+## Common mistakes
+- Deleting the biggest file because `ls -lS` ranks it first.
+- `rm -rf` of the whole session directory: logged-in users lose their session.
+- Rebuilding with `rm *` on thousands of files: "Argument list too long";
+  use `find -delete`.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: List the archive if you want to inspect it first, then extract it.
+## Next step
+`du --inodes` and `df -i` give inode usage per directory and filesystem;
+`ncdu` and `find -xdev` are the interactive versions.

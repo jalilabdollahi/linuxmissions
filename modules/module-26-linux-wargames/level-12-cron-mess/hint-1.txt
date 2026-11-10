@@ -1,1 +1,1 @@
-Inspect the current mode first if you want to verify the change.
+Run `./cron-sim` and read its table: every row that differs points at one job, and each of those has a different reason. Think about what is different between your shell and the environment cron starts a job in (who sets the PATH? which characters does cron treat specially? does the file have to be executable?), and about what should happen when a job takes longer than the gap before its next start.

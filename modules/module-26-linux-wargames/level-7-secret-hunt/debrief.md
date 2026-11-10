@@ -1,17 +1,21 @@
-# Secret Hunt: History Window
+# Secret Hunt
 
-## What you practiced
-- This level focused on **Secret Hunt** in a safe sandbox.
-- The shortest path usually combines `head` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A secret is a string, and a string leaves one trace per transformation it went
+through. `grep -rIF` covers plain text (hidden files included); compressed
+copies need `zgrep`; tar members need `tar -xzOf archive member | grep`;
+Kubernetes Secrets store values in base64, so you search for the base64 of the
+key; and a shell-style `\` continuation splits the key over two lines, so only
+a multi-line match (`sed -z`) finds and removes it. Archives are evidence: you
+list them, you do not edit them. A similar `pk_live_` value belonged to a
+partner and a `pk_test_` key is harmless, so each hit has to be read, not just
+replaced.
 
-## Commands to remember
-```bash
-head -n 3 file.log
-tail -n 3 file.log
-tail -f file.log
-```
+## Common mistakes
+- Replacing every `pk_live_[A-Za-z0-9]*`: that destroys the partner's key too.
+- Redacting the first half of the split key and leaving the rest behind.
+- Forgetting that revoking the key is the real fix; redaction only stops new copies.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use one command for the beginning of the file and another for the end.
+## Next step
+`git log -p -S'pk_live_'` finds secrets in repository history, and tools like
+`gitleaks` automate this search. Always rotate a leaked key first.

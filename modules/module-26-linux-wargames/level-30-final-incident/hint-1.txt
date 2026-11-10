@@ -1,1 +1,1 @@
-Measure directory sizes before deciding which one is largest.
+Work the chain backwards, but fix it forwards: restarting the app is the last step, not the first. Ask what is writing into the volume and where cron gets its jobs (more than one place), what the retention policy allows you to delete and what it forbids, how the attacker got in and which key that was, and where the evidence for the postmortem lives (including inside the area you are about to clean).

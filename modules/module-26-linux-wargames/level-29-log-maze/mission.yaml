@@ -1,15 +1,11 @@
 {
-  "name": "Log Maze: Metric Sum",
-  "description": "In the linux war games lab, a task related to Log Maze needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of log-maze-metrics.csv and write the total to total.txt",
+  "name": "Log Maze",
+  "description": "One checkout request in fifty fails with a 502 and nobody knows which of the five services starts it. gateway, checkout, payments, inventory and notifier each log in their own format and clock, and call the request ID something different. logs/ holds an hour of all five; TICKET.txt has the gateway's request ID for one failing request. TIMES.md lists each service's time format.",
+  "objective": "Write rootcause.txt (two lines: the service that logged the earliest ERROR on any failing request, then that ERROR line copied verbatim) and timeline.tsv for the ticket's request: one line per log event of that request, in time order, tab-separated as `UTC-time<TAB>service<TAB>level` with the time as YYYY-MM-DDTHH:MM:SS.mmmZ (use .000 where a log has no milliseconds). A multi-line stack trace is part of the event whose line starts it. Do not modify logs/.",
   "xp": 300,
   "difficulty": "expert",
-  "expected_time": "15m",
-  "concepts": [
-    "Log Maze",
-    "awk",
-    "numeric aggregation"
-  ],
+  "expected_time": "45m",
+  "concepts": ["correlating logs by ID across formats", "time zones and epoch milliseconds", "multi-line log records", "jq / awk / date -d conversions", "root cause vs symptom", "tab-separated output"],
   "module": "module-26-linux-wargames",
   "level": "level-29-log-maze"
 }

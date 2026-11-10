@@ -1,15 +1,11 @@
 {
-  "name": "Sed Surgery: Noise Dedup",
-  "description": "In the linux war games lab, a task related to Sed Surgery needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from sed-surgery-raw.txt with sorted unique values",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Sed Surgery",
-    "sort",
-    "uniq"
-  ],
+  "name": "Audit Surgery",
+  "description": "Before the audit, all 40 service configs in conf/ must stop offering TLS 1.0 and 1.1 and must point at the new upstream port. The same keys also appear in other sections of these files, in commented-out examples, and not every file was written in the same style.",
+  "objective": "In every conf/*.conf: set `ssl_protocols` to `TLSv1.2 TLSv1.3` in the [tls] section only, and change the port from 8080 to 8443 in the [upstream] section only (an upstream port other than 8080 stays as it is). Everything else must stay byte-for-byte as it was: other sections, comments, spacing, line endings. Keep a `.bak` copy of the original next to each file you change (conf/svc-NN.conf.bak).",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["sed address ranges", "sed -i.bak", "section-scoped edits", "line endings (CRLF)", "regex anchoring", "bulk edits with verification"],
   "module": "module-26-linux-wargames",
   "level": "level-20-sed-surgery"
 }

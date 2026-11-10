@@ -1,1 +1,1 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+`tar -tf FILE >/dev/null; echo $?` tests an archive (a damaged one ends with "Unexpected EOF"); `ls -l --time-style=long-iso` shows when each file was made and `cmp`/`sha256sum` show which offsite copy equals which backup. To restore an incremental chain use `tar -x --listed-incremental=/dev/null -f ARCHIVE -C restored/` for each archive, oldest first: the /dev/null snapshot makes tar apply the deletions recorded in the archive. See "Incremental dumps" in `info tar`.

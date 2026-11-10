@@ -1,1 +1,4 @@
-Save each result into its own file.
+- `grep -rIF KEY site` finds plain text (`-F` = literal, `-I` skips binaries); hidden files are included by `-r`.
+- `zgrep -F KEY file.gz` searches inside a gzip file; `tar -tzf A` lists a tarball and `tar -xzOf A MEMBER` prints one member to stdout.
+- `printf %s KEY | base64` gives the encoded form to search for. A line ending in a backslash continues on the next line, so look for a `pk_live_` fragment at the end of a line.
+- `sed -i s/KEY/REDACTED/g` for plain text; `sed -z` treats the whole file as one line so a pattern may span a newline. Never edit the archives.

@@ -1,14 +1,15 @@
 {
-  "name": "Checksum Race: Link Repair",
-  "description": "In the linux war games lab, a task related to Checksum Race needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/checksum-race.conf",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Checksum Race",
+  "description": "The mirror sync ended 'with warnings'. README-MIRROR.md explains the layout; the upstream's SHA256SUMS came from another system, and one big file is still being uploaded.",
+  "objective": "Put only verified files into public/ (byte-identical, the in-flight file only once its upload is complete), and write rejected.txt with the name of every file listed in SHA256SUMS that is corrupt, truncated or missing, one per line. Do not publish partial files, and do not reject a file for being unfinished.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
   "concepts": [
-    "Checksum Race",
-    "ln",
-    "symbolic links"
+    "sha256sum -c",
+    "CRLF line endings",
+    "flock",
+    "verification before publishing"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-9-checksum-race"

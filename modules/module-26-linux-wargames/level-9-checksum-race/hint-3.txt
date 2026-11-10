@@ -1,1 +1,11 @@
-Example: `ln -s releases/checksum-race.conf current.conf`
+tr -d '\r' < mirror/SHA256SUMS | sed 's/^\([0-9a-f]*\) [ *]/\1  /' > sums.clean
+flock mirror/upload.lock true
+mkdir -p public
+: > rejected.txt
+while read -r hash name; do if [ -f "mirror/data/$name" ] && echo "$hash  mirror/data/$name" | sha256sum -c --quiet - 2>/dev/null; then cp -- "mirror/data/$name" public/; else echo "$name" >> rejected.txt; fi; done < sums.clean
+sort -o rejected.txt rejected.txt
+
+- tr -d '\r' | sed   strips the CRLF endings and the * markers, leaving plain "hash  name" lines
+- flock ... true     blocks until the uploader has released its lock, so the last file is complete
+- the loop           copies a file to public/ only when it verifies, otherwise adds its name to rejected.txt
+- sort -o            puts rejected.txt in order

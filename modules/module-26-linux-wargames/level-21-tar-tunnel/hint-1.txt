@@ -1,1 +1,1 @@
-Inspect the sandbox, then create the missing path for organized/tar-tunnel/tar-tunnel-notes.txt.
+The relay only carries short ASCII lines in messages under 64 KB, and it hands messages to bravo in random order. So you need three things: a way to turn a whole tree (with its metadata) into one stream, a way to make that stream text, and a way to cut it into numbered pieces that bravo can put back in order. Think about what a plain file-by-file copy would lose.

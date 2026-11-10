@@ -1,1 +1,18 @@
-Example: `for n in 1 2 3; do printf 'link-labyrinth item %s\n' "$n" > generated/link-labyrinth-$n.txt; done`
+new=$(ls deploy/releases | sort -V | tail -1)
+cd deploy
+ln -sfn "releases/$new" current
+ln -sfn "../releases/$new/bin/app" bin/app
+ln -sfn storage/logs logs
+rm shared/uploads shared/uploads.current
+ln -s ../storage/uploads shared/uploads
+rm config/active.conf
+ln -s "../releases/$new/app.conf" config/active.conf
+cd ..
+find -L deploy -type l
+
+- ln -sfn ... current   the relative link now names the renamed folder
+- ln -sfn ../releases/...   relative to bin/, not to where you stand
+- ln -sfn storage/logs logs   relative, instead of an absolute path that breaks on a move
+- rm both + ln -s   removes the loop and links shared/uploads to the real directory
+- rm config/active.conf + ln -s   replaces the hard link (which kept pointing at the old data) by a symlink to the new file
+- find -L deploy -type l   prints nothing when no link is broken or looping

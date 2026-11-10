@@ -1,15 +1,11 @@
 {
-  "name": "Forensic Dump: Cleanup Sweep",
-  "description": "In the linux war games lab, a task related to Forensic Dump needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/forensic-dump and leave the other files intact",
+  "name": "web-02 Triage",
+  "description": "We think web-02 was breached. The triage collector left triage/: the auth log, shell histories, cron and systemd files, the dpkg file lists, the suspicious binary itself and stat.tsv (captured path, mtime and ctime of interesting files). HOST.txt has the server's time zone and the other facts the collector recorded.",
+  "objective": "Write incident.json with exactly four keys. first_malicious_login: {time_utc (ISO 8601, `YYYY-MM-DDTHH:MM:SSZ`), ip} of the first login by someone who should not have had access. persistence: the sorted list of files that define the attacker's persistence (the cron.d file, the unit file and the authorized_keys file; not enable symlinks), as absolute paths on the host. exfil_host: the host name (no port) the dropped binary reports to. dropped_binary: its absolute path on the host. Do not modify anything under triage/.",
   "xp": 300,
   "difficulty": "expert",
-  "expected_time": "15m",
-  "concepts": [
-    "Forensic Dump",
-    "find",
-    "rm"
-  ],
+  "expected_time": "45m",
+  "concepts": ["auth.log analysis", "time zones and epoch conversion", "bash history timestamps", "ctime vs mtime (timestomping)", "dpkg ownership", "grep -a on binaries", "base64 decoding", "jq output"],
   "module": "module-26-linux-wargames",
   "level": "level-27-forensic-dump"
 }

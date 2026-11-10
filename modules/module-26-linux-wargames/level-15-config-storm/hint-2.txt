@@ -1,1 +1,4 @@
-An awk one-liner can skip the header and add the second field.
+- `man envsubst`: without an argument it replaces every `$VAR` and `${VAR}` it knows; with a SHELL-FORMAT argument (`'${A} ${B}'`, in single quotes) it replaces only those and leaves other `$` text alone. A substituted value is not expanded a second time.
+- Do not `source` the env files: the shell would expand `$` inside the passwords. Read them as data instead: `while IFS='=' read -r k v` keeps the value raw; `tr -d '\r'` removes carriage returns; `${k#export }` drops a prefix.
+- Do one service in a subshell `( ... )` so variables do not leak, then wrap it in `for f in env/*.env`.
+- `diff -q <(grep -v '^#' A | grep -v '^$') <(...)` compares two files without comments and blank lines.

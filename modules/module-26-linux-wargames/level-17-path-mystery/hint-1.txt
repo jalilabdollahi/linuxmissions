@@ -1,1 +1,1 @@
-This mission is about cron field order and exact syntax.
+Your own shell is not CI's shell. First find out exactly how CI starts bash (the simulator is a plain script you can read), then ask that kind of shell what `deployctl` resolves to, step by step: search order, startup files it reads, and what a function or an alias can do. Not everything that mentions deployctl is read by CI.

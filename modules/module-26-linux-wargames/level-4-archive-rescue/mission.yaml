@@ -1,14 +1,16 @@
 {
-  "name": "Archive Rescue: Noise Dedup",
-  "description": "In the linux war games lab, a task related to Archive Rescue needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from archive-rescue-raw.txt with sorted unique values",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Twelve Parts and a Trojan",
+  "description": "The vendor's dataset arrived as a 12-part email attachment in incoming/, and one part was re-sent separately (VENDOR-NOTE.txt). Only the reports are needed for the audit.",
+  "objective": "Leave in restored/ exactly the dataset/reports/ subtree (paths kept under restored/dataset/reports/), with every file verified against the vendor's SHA256SUMS, and nothing else: no other part of the dataset, and nothing written outside restored/.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
   "concepts": [
-    "Archive Rescue",
-    "sort",
-    "uniq"
+    "split archives",
+    "sort -V",
+    "sha256sum -c",
+    "tar -t and selective extraction",
+    "untrusted archives"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-4-archive-rescue"

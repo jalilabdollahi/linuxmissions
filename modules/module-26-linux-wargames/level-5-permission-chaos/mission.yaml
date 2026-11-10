@@ -1,14 +1,16 @@
 {
-  "name": "Permission Chaos: Field Extract",
-  "description": "In the linux war games lab, a task related to Permission Chaos needs cleanup before the handoff.",
-  "objective": "Extract the second column from permission-chaos-report.csv into owners.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Permission Chaos",
+  "description": "Someone ran chmod -R 777 on the app tree, then 'fixed' the secrets by hand; the app still cannot read its database password. POLICY.md and last month's getfacl dump (perms.acl) are the references.",
+  "objective": "Restore the tree under app/: every path that is in perms.acl must have exactly the mode and ACL it had there; every path created since then must follow POLICY.md; nothing may be left world-writable.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
   "concepts": [
-    "Permission Chaos",
-    "cut",
-    "awk"
+    "getfacl and setfacl --restore",
+    "find -newer",
+    "chmod special bits",
+    "ACL mask",
+    "permission audits"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-5-permission-chaos"

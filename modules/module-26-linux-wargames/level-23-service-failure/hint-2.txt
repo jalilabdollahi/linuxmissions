@@ -1,1 +1,1 @@
-Archive the directory contents without leaving anything out.
+`systemctl status webapp`, `systemctl cat webapp` (shows the unit and its drop-ins in order) and `journalctl -u webapp` give the reasons. In a unit, ExecStart needs an absolute path; `status=200/CHDIR` points at WorkingDirectory; later EnvironmentFile entries (also from drop-ins) override earlier ones. `ss -ltnp` (or `curl`) shows which service owns a port. After editing unit files run `systemctl daemon-reload` before restarting. Don't touch legacy.

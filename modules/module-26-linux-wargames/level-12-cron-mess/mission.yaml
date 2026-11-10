@@ -1,14 +1,17 @@
 {
-  "name": "Cron Mess: Permission Fix",
-  "description": "In the linux war games lab, a task related to Cron Mess needs cleanup before the handoff.",
-  "objective": "Set the mode of cron-mess.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
+  "name": "Cron Mess",
+  "description": "Half our cron jobs never run, one fires every minute between 2 and 3 am, and two backups overlapped last night. SCHEDULE.md says what each job should do.",
+  "objective": "Fix crontab.txt (and anything else the jobs need) so that ./cron-sim, which runs the table through a cron-like environment for one simulated day, reports every job exactly as SCHEDULE.md requires and exits 0.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
   "concepts": [
-    "Cron Mess",
-    "chmod",
-    "permissions"
+    "crontab syntax",
+    "% escaping",
+    "cron environment and PATH",
+    "execute bit",
+    "flock -n",
+    "exit codes 126 and 127"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-12-cron-mess"

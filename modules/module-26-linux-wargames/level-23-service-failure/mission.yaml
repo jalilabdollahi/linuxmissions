@@ -1,15 +1,11 @@
 {
-  "name": "Service Failure: Backup Bundle",
-  "description": "In the linux war games lab, a task related to Service Failure needs cleanup before the handoff.",
-  "objective": "Create service-failure-backup.tar.gz containing the files under bundle/service-failure",
+  "name": "502 After the Migration",
+  "description": "webapp was moved to the new host layout last night and now it will not stay up; customers get 502 from the proxy. TICKET.txt says which port it must serve on. The old `legacy` service shares this box and must not be disturbed. `systemctl` and `journalctl` here are mocks that treat the sandbox as / (use the ones in bin/).",
+  "objective": "Make webapp start and keep working: `systemctl is-active webapp` is active and `curl http://127.0.0.1:PORT/health` (PORT from TICKET.txt) answers 200, also after a `systemctl restart webapp`. The `legacy` unit must keep running on its own port, untouched (same process).",
   "xp": 300,
   "difficulty": "expert",
-  "expected_time": "15m",
-  "concepts": [
-    "Service Failure",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "35m",
+  "concepts": ["systemd unit debugging", "drop-ins and EnvironmentFile precedence", "WorkingDirectory and ExecStart rules", "port conflicts (ss, curl)", "journalctl -u", "systemctl daemon-reload"],
   "module": "module-26-linux-wargames",
   "level": "level-23-service-failure"
 }

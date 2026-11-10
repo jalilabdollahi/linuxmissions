@@ -1,17 +1,21 @@
-# Checksum Race: Link Repair
+# Checksum Race
 
-## What you practiced
-- This level focused on **Checksum Race** in a safe sandbox.
-- The shortest path usually combines `ln` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Two things made `sha256sum -c` lie: the CRLF line endings (the carriage return
+becomes part of every file name, so every file "is missing") and the upload
+that was still running (a half-written file can never match). Normalising the
+sums file fixes the first. For the second, you wait on the lock the uploader
+holds on purpose: `flock FILE true` returns only after it is released, so
+verification afterwards sees the finished file. A loop that verifies each
+file separately then splits them into `public/` and `rejected.txt`. A file
+with the right size but different content fails the same way a truncated one
+does: only the hash can tell.
 
-## Commands to remember
-```bash
-ln -s target linkname
-ls -l current.conf
-readlink current.conf
-```
+## Common mistakes
+- Comparing sizes only: one file is the right size and different.
+- Rejecting the big file because it fails now, or copying it too early and publishing half of it.
+- Missing that a listed file that is not in `data/` at all belongs in `rejected.txt`.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task wants a symbolic link, not a copy.
+## Next step
+`sha256sum --check --ignore-missing`, `flock -w 30` (give up after 30 s) and
+`cp --reflink`/`rsync --checksum` are the next tools for mirrors.

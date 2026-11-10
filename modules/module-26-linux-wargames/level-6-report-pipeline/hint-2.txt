@@ -1,1 +1,4 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+- Run the script's stages one by one in the shell (remove the later `|` stages) and count lines: `wc -l`. Compare `zcat -f logs/access.log* | wc -l` with `ls -l logs/`.
+- `zcat -f` reads plain files too, so a file named in two places is read twice. List every file exactly once.
+- A retry repeats the request id (the `req=` field). `sort -u` or `awk '!seen[$3]++'` keeps only the first occurrence of a key.
+- Match the path and status exactly (`/checkout` is not `/checkout/cart`), and only count the day you were asked for.

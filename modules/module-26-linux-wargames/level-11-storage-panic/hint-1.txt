@@ -1,1 +1,1 @@
-List the archive if you want to inspect it first, then extract it.
+Blocks are not the only thing a filesystem can run out of. Which of the two captures looks wrong, and what does that column count? The usual suspect, the biggest file, is a red herring: look at how the inodes are spent, not how the bytes are. Count files per directory, and be careful what you delete: the policy only names one kind of file.

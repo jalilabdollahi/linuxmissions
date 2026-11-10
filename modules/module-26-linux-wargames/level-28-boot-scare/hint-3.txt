@@ -1,1 +1,12 @@
-Example: `tar -xzf boot-scare-restore.tar.gz`
+Fix the stages in order, checking after each (new UUIDs come from blkid.txt, old ones from fstab):
+  ./boot-sim sysroot
+  cat blkid.txt
+  new() { grep "^/dev/$1:" blkid.txt | grep -o ' UUID="[^"]*"' | cut -d'"' -f2; }
+  OLD=($(awk '/^UUID=/{sub("UUID=","",$1);print $1}' sysroot/etc/fstab))
+  sed -i 's/^set default=.*/set default="1>2"/' sysroot/boot/grub/grub.cfg
+  sed -i -e "s/${OLD[0]}/$(new sda2)/g" -e "s/${OLD[1]}/$(new sda1)/g" -e "s/${OLD[2]}/$(new sda3)/g" sysroot/boot/grub/grub.cfg sysroot/etc/fstab
+  sed -i '/^UUID=.*\/data/s/defaults/defaults,nofail/' sysroot/etc/fstab
+  ln -sfn /usr/lib/systemd/system/multi-user.target sysroot/etc/systemd/system/default.target
+  sed -i 's|^ExecStart=.*|ExecStart=/opt/agent/bin/run|' sysroot/etc/systemd/system/vendor-agent.service
+  ./boot-sim sysroot
+The first sed selects submenu entry 1>2 (6.8.0-45, the one with an initrd that contains the root disk's driver); the new() helper reads a device's new UUID from blkid.txt, OLD holds fstab's old UUIDs (in order /, /boot, swap), and the second sed swaps them in GRUB and fstab; nofail lets the missing /data disk be skipped; the ln fixes the mistyped default.target and the last sed points the vendor unit at the moved binary.

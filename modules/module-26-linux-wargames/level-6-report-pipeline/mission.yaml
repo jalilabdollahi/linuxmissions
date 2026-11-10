@@ -1,14 +1,16 @@
 {
-  "name": "Report Pipeline: Config Rewrite",
-  "description": "In the linux war games lab, a task related to Report Pipeline needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in report-pipeline.conf and save the fixed result to fixed.conf",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Double Revenue",
+  "description": "The daily KPI mail has shown roughly double revenue and orders since Monday, when log rotation was changed (see TICKET.md).",
+  "objective": "Fix daily_report.sh so it gives finance's numbers: each successful checkout (POST /checkout answered 200) counted once, for today's logs (2026-11-10) and for any other day's logs placed next to the script. The report format must stay as it is.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
   "concepts": [
-    "Report Pipeline",
-    "sed",
-    "redirection"
+    "globs and zcat -f",
+    "sort -u and awk dedupe",
+    "awk sums",
+    "logrotate delaycompress",
+    "verifying a report"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-6-report-pipeline"

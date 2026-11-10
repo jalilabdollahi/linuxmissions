@@ -1,1 +1,1 @@
-This task wants a symbolic link, not a copy.
+`sha256sum -c` is the right tool, but the checksum file was written on another system: look at it with `cat -A` before trusting what it says. And one file is not finished yet: how do you know when an upload is complete without guessing? Something is holding a lock on purpose.

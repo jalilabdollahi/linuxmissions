@@ -1,1 +1,1 @@
-This is a sorting task followed by deduplication.
+The keys you must change also appear where you must not change them: other sections, commented examples, and one section whose name only starts like the one you want. Think of each file as sections, and limit each edit to the lines between a section header and the next header. Also check how the files differ from one another before you write a pattern: spacing, indentation, line endings.

@@ -1,1 +1,1 @@
-List the archive if you want to inspect it first, then extract it.
+Run ./boot-sim sysroot and fix exactly what it complains about, then run it again: it stops at the first failure. Think about what a disk clone changes (identifiers!) and what it does not. For GRUB, work out which menu entry the default value really selects: a plain number counts top-level items, and entries inside a submenu are addressed differently. Then check what that entry needs on disk.

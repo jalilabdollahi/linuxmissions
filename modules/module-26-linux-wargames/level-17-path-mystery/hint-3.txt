@@ -1,1 +1,6 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+Remove the three things in front of 2.4.1 and list them:
+  rm home/ci/.local/bin/deployctl usr/local/bin/deployctl
+  sed -i '/^deployctl()/d' home/ci/.ci_env
+  printf '%s\n' "$SANDBOX/home/ci/.ci_env" "$SANDBOX/home/ci/.local/bin/deployctl" "$SANDBOX/usr/local/bin/deployctl" > shadows.txt
+  ./deploy-sim
+The two rm commands delete the stale symlink and the compat wrapper that sit earlier in CI's PATH; sed drops only the exported function from the BASH_ENV file (keeping DEPLOY_ENV); printf records the three files; deploy-sim confirms. The alias in .bashrc and the PATH line in .profile are never read by CI.

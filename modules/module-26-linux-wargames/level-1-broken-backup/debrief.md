@@ -1,17 +1,22 @@
-# Broken Backup: Path Realignment
+# Broken Backup
 
-## What you practiced
-- This level focused on **Broken Backup** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Three small faults added up to an archive that held almost nothing and a log
+that always said "ok". The unquoted `$SRC` split at the space in `office share`,
+`*` was expanded by the shell in whatever directory cron started the job in
+(and never matches dotfiles like `.env.production`), and without `pipefail` the
+exit status of `tar | gzip` was gzip's, so tar's errors vanished into
+`2>/dev/null`. The fix quotes the path, lets `tar -C DIR .` find the files, and
+turns a failing pipeline into a non-zero exit and a log line that says FAILED.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- Fixing only the quoting: the archive is then still wrong when cron starts
+  the job from another directory, and failures stay silent.
+- Testing in your own shell: cron has a tiny environment and its own cwd.
+  `env -i PATH=/usr/bin:/bin ./backup.sh` is a better rehearsal.
+- Trusting "backup ok". The only backup that counts is one you restored.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/broken-backup/broken-backup-notes.txt.
+## Next step
+Make the script verify its own work: `tar -tzf "$OUT" >/dev/null` after writing,
+or compare `tar -tzf` against `find`. `man bash` (search for pipefail) and
+`tar --help` are worth ten minutes.

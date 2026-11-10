@@ -1,14 +1,17 @@
 {
-  "name": "Noisy Logs: Alert Filter",
-  "description": "In the linux war games lab, a task related to Noisy Logs needs cleanup before the handoff.",
-  "objective": "Write every alert line from noisy-logs.log into alerts.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
+  "name": "Noisy Logs",
+  "description": "The application volume is at 95 % because app.log grows about a megabyte a minute. TICKET.md says the app must not be restarted.",
+  "objective": "Make the already running app (same process) log at warn again, free the space its log holds without deleting the file out from under it, and make rotate.conf valid (logrotate -d with logrotate.state reports no errors) for the log the app really writes, in a way that is safe for a process that keeps the file open.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "25m",
   "concepts": [
-    "Noisy Logs",
-    "grep",
-    "output redirection"
+    "environment layering",
+    "/proc/PID/environ and fd",
+    "SIGHUP",
+    "truncate vs rm",
+    "logrotate copytruncate",
+    "incident triage"
   ],
   "module": "module-26-linux-wargames",
   "level": "level-2-noisy-logs"

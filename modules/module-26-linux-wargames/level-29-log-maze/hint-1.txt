@@ -1,1 +1,1 @@
-This is a numeric aggregation task.
+Start with the symptom and walk backwards: which requests did the gateway answer with a 5xx, and what do the other four services logged for those same IDs (each calls the ID something else)? Before you compare times across files, bring them to one clock: three different time zones and one epoch format are in play. A stack trace belongs to the one event whose line starts it.

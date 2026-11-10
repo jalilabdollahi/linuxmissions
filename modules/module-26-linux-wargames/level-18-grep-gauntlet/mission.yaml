@@ -1,15 +1,11 @@
 {
-  "name": "Grep Gauntlet: Alert Filter",
-  "description": "In the linux war games lab, a task related to Grep Gauntlet needs cleanup before the handoff.",
-  "objective": "Write every alert line from grep-gauntlet.log into alerts.txt",
+  "name": "Order 7f3a",
+  "description": "A customer says their order failed around 14:00 yesterday and support has only a truncated ID. TICKET.txt has the full order ID. The services log it in different spellings, some of the logs have rotated, and one of them makes grep complain.",
+  "objective": "Write trail.txt: every log line under logs/ (all five services, current files, rotations and compressed rotations) that mentions that order, copied verbatim, one per line, sorted by the time the event happened (oldest first). Lines about other orders, even ones that look similar, must not be in it. Do not modify anything under logs/.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Grep Gauntlet",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "25m",
+  "concepts": ["grep -a / -i / -E", "zgrep", "ID spelling variants", "URL encoding", "merging logs by timestamp", "binary file matches"],
   "module": "module-26-linux-wargames",
   "level": "level-18-grep-gauntlet"
 }

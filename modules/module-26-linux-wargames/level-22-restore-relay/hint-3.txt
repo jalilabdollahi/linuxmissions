@@ -1,1 +1,6 @@
-Example: `cut -d, -f2 restore-relay-report.csv > owners.txt`
+Check every archive, pick the good Tuesday copy by its time, and extract the chain in order:
+  for a in backups/*.tar offsite/*.bak; do tar -tf "$a" >/dev/null 2>&1 && echo "ok $a" || echo "DAMAGED $a"; done
+  good=$(ls -l --time-style=long-iso offsite/*.bak | grep '2026-11-10 18:02' | awk '{print $NF}')
+  mkdir -p restored
+  for a in backups/share-full-2026-11-08.tar backups/share-inc-2026-11-09.tar "$good"; do tar -x --listed-incremental=/dev/null -f "$a" -C restored; done
+The loop shows which archive is damaged (Tuesday's in backups/); the second line finds the offsite copy with Tuesday 18:02's time; the last loop extracts Sunday, Monday and Tuesday in order, and --listed-incremental=/dev/null lets tar apply each archive's deletions. Wednesday's archive is left out on purpose.

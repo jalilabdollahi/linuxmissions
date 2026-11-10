@@ -1,1 +1,1 @@
-Use a targeted file search so you do not remove the wrong files.
+Four questions, four kinds of evidence. Who logged in from somewhere that is not in known_ips.txt, and when (in which time zone is that log?). Which files were created because of the attack? Which file only looks old: compare two timestamps, and ask whether a package owns it. And where would a binary hide the place it phones home to?

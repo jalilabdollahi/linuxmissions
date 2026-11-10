@@ -1,1 +1,14 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' su-notes.conf > fixed.conf`
+read umin umax smin smax <<< "$(awk '$1=="UID_MIN"{a=$2} $1=="UID_MAX"{b=$2} $1=="SYS_UID_MIN"{c=$2} $1=="SYS_UID_MAX"{d=$2} END{print a,b,c,d}' etc/login.defs)"
+top() { awk -F: -v a=$1 -v b=$2 '$3>=a && $3<=b && $3>m {m=$3} END {print m}' $3; }
+bottom() { awk -F: -v a=$1 -v b=$2 '$3>=a && $3<=b && (m==""||$3<m) {m=$3} END {print m}' $3; }
+lu=$(( $(top $umin $umax etc/passwd) + 1 )); lg=$lu
+cut -d: -f3 etc/group | grep -qx $lg && lg=$(( $(top $umin $umax etc/group) + 1 ))
+mu=$(( $(bottom $smin $smax etc/passwd) - 1 )); mg=$mu
+cut -d: -f3 etc/group | grep -qx $mg && mg=$(( $(bottom $smin $smax etc/group) - 1 ))
+printf 'lena %s %s\nmetrics %s %s\n' $lu $lg $mu $mg | tee next-ids.txt
+
+- read ...                the four ranges from login.defs (the live lines, not the # comments)
+- top / bottom            highest / lowest ID inside a range, from passwd or group
+- lu, lg                  lena: highest regular UID + 1; her GID is the same number only if no group has it
+- mu, mg                  metrics: one below the lowest system UID; same check for the group
+- printf | tee            write the two lines to next-ids.txt and show them

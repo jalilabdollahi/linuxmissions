@@ -1,1 +1,15 @@
-Example: `ln -s releases/skeleton-files.conf current.conf`
+cp usr/share/base-files/dot.profile etc/skel/.profile
+cp usr/share/base-files/dot.bashrc etc/skel/.bashrc
+cp usr/share/base-files/dot.bash_logout etc/skel/.bash_logout
+chmod 644 etc/skel/.profile etc/skel/.bashrc etc/skel/.bash_logout
+rm etc/skel/.bash_history etc/skel/.ssh/id_rsa
+chmod 700 etc/skel/.ssh
+chmod 600 etc/skel/.ssh/authorized_keys
+bin/useradd -m dana
+ls -la home/dana home/dana/.ssh
+
+- cp ...            restore the three dotfiles from the package copies (.profile was missing, .bashrc was empty)
+- chmod 644 ...     the modes the spec lists for them (.bashrc was 777)
+- rm ...            remove the leftovers: a history file and a private key
+- chmod 700 / 600   the .ssh directory and its authorized_keys
+- bin/useradd -m    only now create dana, so she gets the fixed copy (if she exists already: bin/userdel -r dana first)

@@ -1,1 +1,8 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  awk -F: '$1 == "docker"' etc/group             match the group name exactly, not docker-ci
+  awk -F: '$1 == "docker" { print $3, $4 }'      its GID and its member list
+  tr ',' '\n'                                    one member per line
+  awk -F: -v g=NNN '$4 == g { print $1 }' etc/passwd
+                                                 users whose primary GID is NNN
+  grep -v '^$'                                   drop the empty line left by a trailing comma
+  sort -u                                        sort and remove duplicates
+More: man 5 group, man 5 passwd

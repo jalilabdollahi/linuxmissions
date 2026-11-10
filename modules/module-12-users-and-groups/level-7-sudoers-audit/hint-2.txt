@@ -1,1 +1,6 @@
-Save each result into its own file.
+  cat etc/sudoers                      read the main file in full; a line starting with #includedir is a directive
+  ls -l etc/sudoers.d; man sudoers     sudo skips names that contain a . or end in ~
+  grep -H . etc/sudoers.d/FILE ...     print rules with their file name
+  grep '^GROUP:' etc/group | cut -d: -f4   the members of a group
+Alias lines may continue over several lines with a trailing backslash.
+Write down for each rule: who, which host, runas, which commands; then build the list.

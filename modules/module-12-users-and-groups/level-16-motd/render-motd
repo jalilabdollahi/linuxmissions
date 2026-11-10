@@ -1,0 +1,17 @@
+#!/bin/bash
+# Stand-in for what pam_motd does at login: run-parts --lsbsysinit on
+# etc/update-motd.d. It runs the executable files whose names are only
+# letters, digits, underscores and hyphens, in C-locale name order, and prints
+# what they write. Anything else in the directory is skipped silently.
+here=$(cd "$(dirname "$0")" && pwd)
+root=${here%/bin}
+dir=$root/etc/update-motd.d
+export PATH="$here:$PATH"
+[ -d "$dir" ] || { echo "render-motd: $dir: No such directory" >&2; exit 1; }
+for f in $(cd "$dir" && LC_ALL=C ls); do
+  case "$f" in
+    *[!A-Za-z0-9_-]*) continue ;;
+  esac
+  [ -f "$dir/$f" ] && [ -x "$dir/$f" ] || continue
+  "$dir/$f"
+done

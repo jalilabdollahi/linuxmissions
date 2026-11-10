@@ -1,1 +1,8 @@
-Use a targeted file search so you do not remove the wrong files.
+Two lists to compare: the home directories the database promises (field 6 of
+etc/passwd, but only the ones under /home) and the directories that really
+exist in home/. What is in one list but not the other? There are two directions,
+and they mean different things (an account without a home vs. a home without an
+account).
+Watch the details: `ls home` hides some directories, names are case-sensitive,
+an account's name need not equal its directory's name, and the sandbox has no
+/home, only ./home.

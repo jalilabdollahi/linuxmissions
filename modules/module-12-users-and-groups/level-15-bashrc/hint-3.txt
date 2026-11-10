@@ -1,1 +1,7 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' bashrc-metrics.csv > total.txt`
+sed -i '2i [[ $- == *i* ]] || return' home/kim/.bashrc
+env -i HOME="$SANDBOX/home/kim" bash -c '. ~/.bashrc; echo OK'
+
+- sed -i '2i ...'      insert the guard as line 2, above the PATH, aliases, banner and exec
+- [[ $- == *i* ]]      true only when the shell is interactive (the letter i is in $-)
+- || return            otherwise stop reading the file here (return, not exit: the file is sourced)
+- env -i ... bash -c   a clean non-interactive shell like the one scp starts; it must print only OK

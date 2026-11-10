@@ -1,1 +1,5 @@
-Look for a filtering command that keeps only the alert lines in account-locks.log.
+The ticket gives names and email addresses, but accounts are found by username.
+Which field of etc/passwd can still tell you who an account belongs to? Look at it
+for all accounts before you decide how to match: one leaver's comment may not carry
+the address at all, and a colleague may have a very similar name. Compare what the
+shared deploy account's comment says with the ticket's "do not touch" line.

@@ -1,15 +1,11 @@
 {
-  "name": "Group Membership: Config Rewrite",
-  "description": "In the users and groups lab, a task related to Group Membership needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in group-membership.conf and save the fixed result to fixed.conf",
+  "name": "Team Reorg Membership",
+  "description": "A team reorg moved people between groups on build-05. HR's export is in changes.csv, one add or remove per row, to be applied in order to the server's group databases.",
+  "objective": "Apply every row of changes.csv, in order, to etc/group and etc/gshadow with the sandbox's gpasswd (add the user to the group, or remove them). The member lists in both files must end up exactly as the rows imply: no stray commas, no duplicates, and no change anywhere else in either file. Rows that ask for something already true (adding a member, removing a non-member) change nothing.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Group Membership",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["group member list format", "gshadow member field", "gpasswd -a/-d", "idempotent changes", "reading CSV in a shell loop"],
   "module": "module-12-users-and-groups",
   "level": "level-19-group-membership"
 }

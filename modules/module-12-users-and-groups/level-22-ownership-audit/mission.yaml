@@ -1,15 +1,11 @@
 {
-  "name": "Ownership Audit: Field Extract",
-  "description": "In the users and groups lab, a task related to Ownership Audit needs cleanup before the handoff.",
-  "objective": "Extract the second column from ownership-audit-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Ownership Audit",
-    "cut",
-    "awk"
-  ],
+  "name": "Wrong Owners After Restore",
+  "description": "files/ was restored onto app-09 from the old server's backup with --numeric-owner, so every file carries the old server's UID and GID numbers. The numbers mean different people on app-09. The old server's passwd and group files and a listing of the restored tree (restore-listing.txt) are here.",
+  "objective": "Write chown-plan.sh in the sandbox: a shell script, run from inside restored/, with one chown line per path that restores the owner BY NAME (user:group, with the names the old server gave those numbers), quoting every path. If only the user or only the group exists on the new server (etc/passwd, etc/group), change just that part (user, or :group); if neither exists, leave the path out. Write unmapped.txt too: one line per owner who appears in the listing but does not exist on the new server, as 'user NAME' or 'group NAME', each once. The sandbox's chown only records what it is asked to do.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["numeric vs named ownership", "ls -ln", "joining passwd/group files by name", "quoting paths", "chown user:group, user, :group"],
   "module": "module-12-users-and-groups",
   "level": "level-22-ownership-audit"
 }

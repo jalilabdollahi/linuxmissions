@@ -1,15 +1,11 @@
 {
-  "name": "Groups Command: Field Extract",
-  "description": "In the users and groups lab, a task related to Groups Command needs cleanup before the handoff.",
-  "objective": "Extract the second column from groups-command-report.csv into owners.txt",
+  "name": "Stale Sessions",
+  "description": "Kim was added to the docker group an hour ago but still gets \"permission denied\" on the socket. Group changes only reach a process at login, so anyone who was already logged in when their groups changed has the same problem. The Uid/Gid/Groups lines of every running session were captured into sessions/<user>.status.",
+  "objective": "Write relogin.txt with the login names (one per line, any order) of every user whose running session is missing a group (their primary group included) that etc/group and etc/passwd give them now. These users must log in again. A user whose session holds a group they no longer have is not on this list. The session files show numbers only; bin/id, bin/groups and bin/getent read the group database like the real tools. Leave the captured files unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Groups Command",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "10m",
+  "concepts": ["groups and id", "supplementary groups", "/proc/PID/status Groups:", "group changes need a new login"],
   "module": "module-12-users-and-groups",
   "level": "level-5-groups-command"
 }

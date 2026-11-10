@@ -1,15 +1,11 @@
 {
-  "name": "Login Shells: Script Kickoff",
-  "description": "In the users and groups lab, a task related to Login Shells needs cleanup before the handoff.",
-  "objective": "Make jobs/login-shells.sh executable, run it, and create the token file it writes",
+  "name": "Shells by Policy",
+  "description": "The new hardening policy for app-04: service accounts must not have an interactive shell, and nobody may keep a login shell that isn't listed in etc/shells (it breaks chsh, FTP and some PAM checks). Audit etc/passwd and fix it. `bin/usermod -s` is the mock that edits the sandbox's etc/passwd.",
+  "objective": "Fix the shell field in etc/passwd: every service account (UID 1-999, and nobody) with a login shell gets /usr/sbin/nologin; a person (UID 1000-59999) whose shell is neither listed in etc/shells nor /usr/sbin/nologin nor /bin/false gets /bin/bash. Shells that are already fine stay as they are, including a person who was deliberately disabled with nologin. root and sync (/bin/sync) are exceptions. Every other field and the line order must stay byte-identical, the NIS line included.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Login Shells",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "15m",
+  "concepts": ["passwd shell field", "/etc/shells", "nologin vs false", "usermod -s"],
   "module": "module-12-users-and-groups",
   "level": "level-13-login-shells"
 }

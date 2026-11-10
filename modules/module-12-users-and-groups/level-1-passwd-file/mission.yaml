@@ -1,16 +1,11 @@
 {
-  "name": "Passwd File: Path Realignment",
-  "description": "In the users and groups lab, a task related to Passwd File needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/passwd-file.txt to organized/passwd-file/passwd-file-notes.txt",
+  "name": "Who Logs In?",
+  "description": "A ticket from the security team: \"Who can actually log in to web-03?\" You have copies of the server's etc/passwd and etc/shells.",
+  "objective": "Write humans.txt with the login names (one per line, any order) of every account on web-03 that a person can open a shell with: a UID in the regular user range 1000-59999 and a login shell listed in etc/shells. Also list any account other than root itself that has UID 0, because it is root under another name. Leave etc/passwd and etc/shells unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Passwd File",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "8m",
+  "concepts": ["/etc/passwd fields", "UID ranges", "login shells", "/etc/shells", "awk -F:"],
   "module": "module-12-users-and-groups",
   "level": "level-1-passwd-file"
 }

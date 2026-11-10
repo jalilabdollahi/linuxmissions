@@ -1,1 +1,10 @@
-Use chmod with octal mode 640.
+The sandbox's tools take the real tools' options (bin/useradd, bin/usermod, bin/chage,
+bin/visudo).
+  useradd -m -u UID -c 'Full Name' -s SHELL -G group,group -p 'HASH' LOGIN
+      -m copies etc/skel (mode from HOME_MODE); useradd also adds the subuid/subgid ranges
+  usermod -U -e '' -s SHELL -aG group,group LOGIN       re-enable an account (-a keeps other groups)
+  usermod -v FIRST-LAST LOGIN   (-w for subgid)         add a range by hand
+  chage -d 0 LOGIN                                      password must be changed at next login
+Single-quote the hash: it contains $ signs. A file in sudoers.d is only used if its name has no dot
+and no ~, and sudo wants mode 0440; check it with bin/visudo -c.
+Ben's existing password hash stays, and his home is already there.

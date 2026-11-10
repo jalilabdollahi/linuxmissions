@@ -1,1 +1,4 @@
-Measure directory sizes before deciding which one is largest.
+Run bin/render-motd to see what a user sees, then look at the directory it builds
+the banner from. What decides whether a file there takes part, and in what order?
+man run-parts explains the rules (look for --lsbsysinit and the file-name rules).
+You do not need to delete anything to silence a script.

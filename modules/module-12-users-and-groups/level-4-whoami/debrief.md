@@ -1,17 +1,22 @@
-# Whoami: Noise Dedup
+# Fake It
 
-## What you practiced
-- This level focused on **Whoami** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`$USER` and `$LOGNAME` are ordinary environment variables. `login`, `sshd` and `su`
+set them, but any caller can override them (`USER=release ./deploy.sh`), and cron,
+systemd or `env -i` may not set them at all. The kernel's answer is the process's
+**effective UID**. `whoami` and `id -un` ask for it and translate it to a name
+through the passwd database, so they cannot be faked by the caller.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- `$EUID` is the effective UID as a *number*; comparing it with a name always fails.
+  `[ "$EUID" -eq 0 ]` is the right way to test for root, though.
+- `logname` reports the name you *logged in* with. It needs a controlling terminal or
+  a login session, so it fails under cron and in CI, and after `sudo -u deploy` it still
+  names the original person.
+- A guard is not a security boundary when the caller can edit the script or
+  `deploy.allowed`. Here it only protects against mistakes. Real control comes from
+  file permissions or a `sudo` rule.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Next step
+`id -u` (number), `id -un` (name), `id -ru` (the *real* UID, which differs from the effective one
+in setuid programs). `ps -o user=,euser= -p $$` shows both for a running process.

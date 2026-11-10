@@ -1,1 +1,8 @@
-Example: `mkdir -p organized/passwd-file && mv inbox/passwd-file.txt organized/passwd-file/passwd-file-notes.txt`
+awk -F: '$7 !~ /(nologin|false)$/ && (($3 >= 1000 && $3 <= 59999) || ($3 == "0" && $1 != "root")) { print $1 }' etc/passwd > humans.txt
+cat humans.txt
+
+- -F:                       split each line at the colons
+- $7 !~ /(nologin|false)$/  keep only shells that start a session (all the others are in etc/shells)
+- $3 >= 1000 && $3 <= 59999 the UID range Ubuntu gives to people (65534 is nobody, 999 is a service)
+- $3 == "0" && $1 != "root" another name for UID 0 is root too; the "+" line has an empty UID and fails this string test
+- { print $1 }              print just the login name

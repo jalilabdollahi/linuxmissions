@@ -1,1 +1,6 @@
-This is a numeric aggregation task.
+scp and rsync start a shell on the server to run their helper, and that shell
+reads ~/.bashrc like any other. Which lines of her file would be harmless there,
+and which ones write to the channel the file transfer is using?
+Bash can tell whether a shell is being used by a person or run for a command.
+How? Look at what man bash says about "interactive" shells and the special
+parameter that holds the shell's option flags.

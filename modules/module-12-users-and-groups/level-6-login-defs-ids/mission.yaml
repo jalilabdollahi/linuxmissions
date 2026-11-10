@@ -1,15 +1,11 @@
 {
-  "name": "Su Notes: Config Rewrite",
-  "description": "In the users and groups lab, a task related to Su Notes needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in su-notes.conf and save the fixed result to fixed.conf",
+  "name": "Which ID Comes Next?",
+  "description": "Tomorrow you create two accounts on app-04: `metrics`, a system account for the exporter (useradd -r), and `lena`, a new colleague (a normal user with her own private group). Change control wants the exact IDs written on the ticket before anything is created.",
+  "objective": "Work out, from etc/login.defs, etc/passwd and etc/group, the UID and GID that useradd would give each new account, and write next-ids.txt with two lines: `lena UID GID` and `metrics UID GID`. Each account gets a private group named after it. Do not create the accounts and leave the three files unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Su Notes",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["login.defs ID ranges", "system vs regular accounts", "UID and GID allocation", "awk on passwd and group"],
   "module": "module-12-users-and-groups",
-  "level": "level-6-su-notes"
+  "level": "level-6-login-defs-ids"
 }

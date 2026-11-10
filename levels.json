@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-10T18:37:02.522511+00:00",
-  "level_count": 482,
+  "generated_at": "2026-11-10T20:05:02.051177+00:00",
+  "level_count": 500,
   "modules": [
     {
       "name": "module-1-filesystem",
@@ -3086,20 +3086,189 @@
           }
         },
         {
+          "id": "module-12-users-and-groups/level-5-groups-command",
+          "name": "level-5-groups-command",
+          "path": "modules/module-12-users-and-groups/level-5-groups-command",
+          "mission": {
+            "name": "Stale Sessions",
+            "description": "Kim was added to the docker group an hour ago but still gets \"permission denied\" on the socket. Group changes only reach a process at login, so anyone who was already logged in when their groups changed has the same problem. The Uid/Gid/Groups lines of every running session were captured into sessions/<user>.status.",
+            "objective": "Write relogin.txt with the login names (one per line, any order) of every user whose running session is missing a group (their primary group included) that etc/group and etc/passwd give them now. These users must log in again. A user whose session holds a group they no longer have is not on this list. The session files show numbers only; bin/id, bin/groups and bin/getent read the group database like the real tools. Leave the captured files unchanged.",
+            "xp": 100,
+            "difficulty": "beginner",
+            "expected_time": "10m",
+            "concepts": [
+              "groups and id",
+              "supplementary groups",
+              "/proc/PID/status Groups:",
+              "group changes need a new login"
+            ],
+            "module": "module-12-users-and-groups",
+            "level": "level-5-groups-command"
+          }
+        },
+        {
+          "id": "module-12-users-and-groups/level-6-login-defs-ids",
+          "name": "level-6-login-defs-ids",
+          "path": "modules/module-12-users-and-groups/level-6-login-defs-ids",
+          "mission": {
+            "name": "Which ID Comes Next?",
+            "description": "Tomorrow you create two accounts on app-04: `metrics`, a system account for the exporter (useradd -r), and `lena`, a new colleague (a normal user with her own private group). Change control wants the exact IDs written on the ticket before anything is created.",
+            "objective": "Work out, from etc/login.defs, etc/passwd and etc/group, the UID and GID that useradd would give each new account, and write next-ids.txt with two lines: `lena UID GID` and `metrics UID GID`. Each account gets a private group named after it. Do not create the accounts and leave the three files unchanged.",
+            "xp": 100,
+            "difficulty": "beginner",
+            "expected_time": "12m",
+            "concepts": [
+              "login.defs ID ranges",
+              "system vs regular accounts",
+              "UID and GID allocation",
+              "awk on passwd and group"
+            ],
+            "module": "module-12-users-and-groups",
+            "level": "level-6-login-defs-ids"
+          }
+        },
+        {
+          "id": "module-12-users-and-groups/level-7-sudoers-audit",
+          "name": "level-7-sudoers-audit",
+          "path": "modules/module-12-users-and-groups/level-7-sudoers-audit",
+          "mission": {
+            "name": "Who Is Root on db-01?",
+            "description": "Audit finding: nobody can say who gets full root on db-01. You have a copy of its etc/sudoers, the drop-in files in etc/sudoers.d/ and etc/group. Everyone with a username, an alias or a group in a rule counts, but only if sudo would really read that rule.",
+            "objective": "Write root-capable.txt with the usernames (one per line, any order, root itself left out) of everyone who can run any command as root on db-01, with or without a password: through their own name, a User_Alias, or membership of a %group in etc/group. Rules limited to certain commands or to another runas user are not full root, and neither are rules for other hosts, commented-out lines or files sudo does not read. Leave the copied files unchanged.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "20m",
+            "concepts": [
+              "sudoers rules",
+              "User_Alias and %group",
+              "#includedir and file-name rules",
+              "full root vs limited rules"
+            ],
+            "module": "module-12-users-and-groups",
+            "level": "level-7-sudoers-audit"
+          }
+        },
+        {
+          "id": "module-12-users-and-groups/level-8-home-layout",
+          "name": "level-8-home-layout",
+          "path": "modules/module-12-users-and-groups/level-8-home-layout",
+          "mission": {
+            "name": "Homes Without Owners",
+            "description": "Before the migration, the files-01 audit needs the home directories to match the account database. `etc/passwd` says where each account's home should be; `home/` is what is on the disk (the sandbox's stand-in for /home).",
+            "objective": "Write missing.txt with the login names (one per line) of accounts whose home is under /home but whose directory is not in home/, and orphans.txt with the names of the directories in home/ (hidden ones too) that no account has as its home. Then make every existing home directory of an account under /home mode 750, without changing the files inside them. Do not delete anything. Service accounts with homes elsewhere (/var/lib/postgresql, /srv/ftp, ...) are out of scope.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "15m",
+            "concepts": [
+              "passwd home field",
+              "comm on sorted lists",
+              "stat -c %a",
+              "chmod on directories"
+            ],
+            "module": "module-12-users-and-groups",
+            "level": "level-8-home-layout"
+          }
+        },
+        {
+          "id": "module-12-users-and-groups/level-9-skeleton-files",
+          "name": "level-9-skeleton-files",
+          "path": "modules/module-12-users-and-groups/level-9-skeleton-files",
+          "mission": {
+            "name": "Broken Skeleton",
+            "description": "Every new hire gets a broken shell: their prompt is plain, .profile is missing, and the first thing they find in ~/.ssh is somebody's old key. New accounts start from a copy of /etc/skel. The spec of what a new home must contain is in skel-spec.txt; Dana starts on Monday and alice already has a home from the old skeleton.",
+            "objective": "Fix etc/skel so it holds exactly the files and modes in skel-spec.txt (take the three dotfile contents from usr/share/base-files/dot.*), then create the account dana with the mock `bin/useradd -m dana` so that home/dana is a copy of the fixed skeleton. Leave alice's existing home as it is. The sandbox's etc/default/useradd already points at etc/skel.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "15m",
+            "concepts": [
+              "/etc/skel",
+              "dotfiles",
+              "file modes",
+              "skeleton is copied at account creation"
+            ],
+            "module": "module-12-users-and-groups",
+            "level": "level-9-skeleton-files"
+          }
+        },
+        {
+          "id": "module-12-users-and-groups/level-10-umask-basics",
+          "name": "level-10-umask-basics",
+          "path": "modules/module-12-users-and-groups/level-10-umask-basics",
+          "mission": {
+            "name": "Reports Nobody Can Edit",
+            "description": "The weekly job publish.sh writes the report into the shared project directory. Teammates in the same group can read the files but not edit them, and they cannot add files to the new folders. Somebody suggested a chmod at the end of the script, but then every new file needs another fix.",
+            "objective": "Fix publish.sh so that everything it creates (files and directories) can be edited by the group no matter what umask the caller has: new files must come out mode 664 and directories 775 when it runs under umask 077 or 022 alike. Do it with the right umask in the script itself, not with a chmod afterwards, and change nothing else about what it produces.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "12m",
+            "concepts": [
+              "umask",
+              "umask is per process and inherited",
+              "default modes 666 and 777",
+              "subshell scope"
+            ],
+            "module": "module-12-users-and-groups",
+            "level": "level-10-umask-basics"
+          }
+        },
+        {
+          "id": "module-12-users-and-groups/level-11-chage-review",
+          "name": "level-11-chage-review",
+          "path": "modules/module-12-users-and-groups/level-11-chage-review",
+          "mission": {
+            "name": "Passwords About to Expire",
+            "description": "Security wants to know which passwords on app-04 expire within 14 days of the ticket date, 2026-11-10, or already have. etc/shadow keeps ageing data as numbers of days since 1970-01-01, and the mock `bin/chage -l USER` prints the same data for one user.",
+            "objective": "Write expiring.txt with one line `user YYYY-MM-DD` per account whose password expires on or before 2026-11-24, including those already expired, sorted by that date (earliest first). The date is the day the password expires: last change plus maximum age. An account that must change its password at the next login counts as expired now: use the ticket date 2026-11-10 for it. Account expiry dates are not password expiry. Leave etc/shadow unchanged.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "20m",
+            "concepts": [
+              "shadow fields 3, 5 and 8",
+              "days since the epoch",
+              "date -d 1970-01-01 +N days",
+              "chage -l"
+            ],
+            "module": "module-12-users-and-groups",
+            "level": "level-11-chage-review"
+          }
+        },
+        {
+          "id": "module-12-users-and-groups/level-12-passwd-status",
+          "name": "level-12-passwd-status",
+          "path": "modules/module-12-users-and-groups/level-12-passwd-status",
+          "mission": {
+            "name": "Who Has No Password?",
+            "description": "The auditor wants a passwd -S style report for app-04: for every account whether it has a usable password, is locked, or has no password. passwd -S needs root on the live box, so they exported app-04's etc/shadow and etc/passwd into the sandbox. An account with no password is the finding they care about, so they want those listed separately.",
+            "objective": "Write status.txt with one line per account in etc/shadow, exactly `user P`, `user L` or `user NP` (the codes passwd -S prints: P = usable password, L = locked, NP = no password), and np.txt with the names of the accounts with no password, one per line. Classify each account from the password field of etc/shadow. Leave etc/shadow and etc/passwd unchanged.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "12m",
+            "concepts": [
+              "shadow password field",
+              "locked vs empty vs usable",
+              "passwd -S status codes",
+              "awk"
+            ],
+            "module": "module-12-users-and-groups",
+            "level": "level-12-passwd-status"
+          }
+        },
+        {
           "id": "module-12-users-and-groups/level-13-login-shells",
           "name": "level-13-login-shells",
           "path": "modules/module-12-users-and-groups/level-13-login-shells",
           "mission": {
-            "name": "Login Shells: Script Kickoff",
-            "description": "In the users and groups lab, a task related to Login Shells needs cleanup before the handoff.",
-            "objective": "Make jobs/login-shells.sh executable, run it, and create the token file it writes",
+            "name": "Shells by Policy",
+            "description": "The new hardening policy for app-04: service accounts must not have an interactive shell, and nobody may keep a login shell that isn't listed in etc/shells (it breaks chsh, FTP and some PAM checks). Audit etc/passwd and fix it. `bin/usermod -s` is the mock that edits the sandbox's etc/passwd.",
+            "objective": "Fix the shell field in etc/passwd: every service account (UID 1-999, and nobody) with a login shell gets /usr/sbin/nologin; a person (UID 1000-59999) whose shell is neither listed in etc/shells nor /usr/sbin/nologin nor /bin/false gets /bin/bash. Shells that are already fine stay as they are, including a person who was deliberately disabled with nologin. root and sync (/bin/sync) are exceptions. Every other field and the line order must stay byte-identical, the NIS line included.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "15m",
             "concepts": [
-              "Login Shells",
-              "chmod",
-              "bash"
+              "passwd shell field",
+              "/etc/shells",
+              "nologin vs false",
+              "usermod -s"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-13-login-shells"
@@ -3110,17 +3279,17 @@
           "name": "level-14-etc-profile",
           "path": "modules/module-12-users-and-groups/level-14-etc-profile",
           "mission": {
-            "name": "/Etc/Profile: Loop Builder",
-            "description": "In the users and groups lab, a task related to /Etc/Profile needs cleanup before the handoff.",
-            "objective": "Create three files under generated/ named etc-profile-1.txt through etc-profile-3.txt with matching numbered content",
+            "name": "Environment for Everyone",
+            "description": "Every login user on app-04 needs the company proxy and JAVA_HOME, including for sftp and scp sessions. The values are in it-notes.txt. On Ubuntu, etc/profile sources the snippets in etc/profile.d/ for every login shell, so that is where a system-wide setting belongs.",
+            "objective": "Add a snippet to etc/profile.d/ (without editing etc/profile or the existing snippets) so that a clean login shell gets http_proxy, https_proxy and JAVA_HOME exported with the values in it-notes.txt, under both sh (dash) and bash -l. It must print nothing when sourced, and the existing no_proxy setting must stay in effect. The sandbox's etc/profile reads $LM_ETC/profile.d; LM_ETC defaults to $SANDBOX/etc, so `sh -c '. etc/profile; printenv JAVA_HOME'` tests your snippet.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "15m",
             "concepts": [
-              "/Etc/Profile",
-              "for",
-              "seq",
-              "printf"
+              "/etc/profile and profile.d",
+              "POSIX sh vs bash",
+              "export",
+              "login shell environment"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-14-etc-profile"
@@ -3131,16 +3300,17 @@
           "name": "level-15-bashrc",
           "path": "modules/module-12-users-and-groups/level-15-bashrc",
           "mission": {
-            "name": "Bashrc: Metric Sum",
-            "description": "In the users and groups lab, a task related to Bashrc needs cleanup before the handoff.",
-            "objective": "Sum the numeric values in the second column of bashrc-metrics.csv and write the total to total.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "scp Breaks on Login",
+            "description": "Kim on bastion-02 can ssh in fine, but scp and rsync to her account die with \"protocol error\" or hang. Her ~/.bashrc prints a welcome banner and ends with exec zsh, and every non-interactive ssh command sources it too.",
+            "objective": "Fix home/kim/.bashrc so that a non-interactive shell prints nothing and carries on: env -i HOME=<her home> bash -c '. ~/.bashrc; echo OK' must print exactly OK. An interactive bash must still print her banner once and define her aliases ll, gs and k, her PATH addition and her EDITOR. Keep every line of her setup; do not delete the banner, the aliases or the exec zsh line.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "10m",
             "concepts": [
-              "Bashrc",
-              "awk",
-              "numeric aggregation"
+              "interactive vs non-interactive shells",
+              "$- shell flags",
+              "return in sourced files",
+              "bashrc and scp/rsync"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-15-bashrc"
@@ -3151,16 +3321,17 @@
           "name": "level-16-motd",
           "path": "modules/module-12-users-and-groups/level-16-motd",
           "mission": {
-            "name": "Motd: Capacity Report",
-            "description": "In the users and groups lab, a task related to Motd needs cleanup before the handoff.",
-            "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "Stale Login Banner",
+            "description": "Everyone who logs in to bastion-01 is told about a database failover that happened weeks ago, and the banner has no disk-usage line, which the on-call runbook says it must have.",
+            "objective": "In etc/update-motd.d: keep the stale maintenance script (20-maintenance) in the directory, unchanged, but make it stop running. Add a new script named 50-disk that prints exactly one line, Disk usage (/): NN%, with the percentage that df reports for / (the sandbox's bin/df is the one to ask). Check the result with bin/render-motd: header, system info, disk usage, footer, in that order, nothing else. Leave 00-header, 10-sysinfo and 90-footer alone.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "12m",
             "concepts": [
-              "Motd",
-              "du",
-              "sort"
+              "update-motd.d",
+              "run-parts naming rules",
+              "executable bit",
+              "script ordering"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-16-motd"
@@ -3171,16 +3342,17 @@
           "name": "level-17-lastlog-audit",
           "path": "modules/module-12-users-and-groups/level-17-lastlog-audit",
           "mission": {
-            "name": "Lastlog Audit: Schedule Entry",
-            "description": "In the users and groups lab, a task related to Lastlog Audit needs cleanup before the handoff.",
-            "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+            "name": "Dormant Accounts",
+            "description": "The quarterly access review wants every dormant account on app-07: people who have not logged in for 90 days or more, or never have. You have the server's passwd and the output of lastlog (lastlog.txt), as of 2026-11-10.",
+            "objective": "Write dormant.txt with one line per regular account (UID 1000-59999 in etc/passwd) that is dormant, as \"<user> <date>\" with the last login's date as YYYY-MM-DD in UTC, or \"<user> never\" if it never logged in. Dormant means the last login, converted to UTC, is on or before 2026-08-12 (90 days before 2026-11-10), or there is no login at all, including accounts that lastlog does not list. System and service accounts are not part of the review. Leave etc/passwd and lastlog.txt unchanged.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "20m",
             "concepts": [
-              "Lastlog Audit",
-              "cron",
-              "crontab syntax"
+              "lastlog output",
+              "fixed-width columns",
+              "date -d and time zones",
+              "joining files by user name"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-17-lastlog-audit"
@@ -3191,16 +3363,18 @@
           "name": "level-18-account-locks",
           "path": "modules/module-12-users-and-groups/level-18-account-locks",
           "mission": {
-            "name": "Account Locks: Alert Filter",
-            "description": "In the users and groups lab, a task related to Account Locks needs cleanup before the handoff.",
-            "objective": "Write every alert line from account-locks.log into alerts.txt",
+            "name": "Offboarding Four Leavers",
+            "description": "HR sent the leaver list for the end of the month: four people, identified by full name and company email, not by username. Their accounts on app-02 must be locked and expired today, and nothing else may change.",
+            "objective": "Read TICKET.md and find the four leavers' accounts in etc/passwd (the comment field is the clue). Using the sandbox's usermod, lock each one's password so the original hash stays behind a single ! and set the account expiry to day 1 (shadow field 8). Every other line of etc/shadow, and all of etc/passwd, must stay byte-for-byte as it was. The shared deploy account is on the ticket as 'do not touch'.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Account Locks",
-              "grep",
-              "output redirection"
+              "usermod -L -e",
+              "shadow ! lock prefix",
+              "expiry field",
+              "GECOS lookup",
+              "touching only what the ticket names"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-18-account-locks"
@@ -3211,16 +3385,18 @@
           "name": "level-19-group-membership",
           "path": "modules/module-12-users-and-groups/level-19-group-membership",
           "mission": {
-            "name": "Group Membership: Config Rewrite",
-            "description": "In the users and groups lab, a task related to Group Membership needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in group-membership.conf and save the fixed result to fixed.conf",
+            "name": "Team Reorg Membership",
+            "description": "A team reorg moved people between groups on build-05. HR's export is in changes.csv, one add or remove per row, to be applied in order to the server's group databases.",
+            "objective": "Apply every row of changes.csv, in order, to etc/group and etc/gshadow with the sandbox's gpasswd (add the user to the group, or remove them). The member lists in both files must end up exactly as the rows imply: no stray commas, no duplicates, and no change anywhere else in either file. Rows that ask for something already true (adding a member, removing a non-member) change nothing.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Group Membership",
-              "sed",
-              "redirection"
+              "group member list format",
+              "gshadow member field",
+              "gpasswd -a/-d",
+              "idempotent changes",
+              "reading CSV in a shell loop"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-19-group-membership"
@@ -3231,16 +3407,18 @@
           "name": "level-20-shared-dir-policy",
           "path": "modules/module-12-users-and-groups/level-20-shared-dir-policy",
           "mission": {
-            "name": "Shared Dir Policy: Noise Dedup",
-            "description": "In the users and groups lab, a task related to Shared Dir Policy needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from shared-dir-policy-raw.txt with sorted unique values",
+            "name": "Safe Team Directory",
+            "description": "The Apollo team has been sharing srv/projects/apollo for a year, and it shows: files in all sorts of modes, some world-writable, some owner-only, nothing inherits the team group. Make it a proper team directory without breaking the tree.",
+            "objective": "Fix the whole tree under srv/projects/apollo (the directory itself, every subdirectory and every file, hidden ones too). Directories: mode 3770, so new files inherit the group, only the owner can delete other people's files, the team has full access and outsiders none. Regular files: mode 660, except files that currently have any execute bit, which become 770. Symlinks are left alone, and nothing may be deleted, moved or changed outside the tree.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Shared Dir Policy",
-              "sort",
-              "uniq"
+              "setgid directories",
+              "sticky bit",
+              "chmod -R and capital X",
+              "find -type -exec chmod",
+              "symlinks and chmod"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-20-shared-dir-policy"
@@ -3251,20 +3429,20 @@
           "name": "level-21-subuid-ranges",
           "path": "modules/module-12-users-and-groups/level-21-subuid-ranges",
           "mission": {
-            "name": "Secure Tempfiles: Path Realignment",
-            "description": "In the users and groups lab, a task related to Secure Tempfiles needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/secure-tempfiles.txt to organized/secure-tempfiles/secure-tempfiles-notes.txt",
+            "name": "Rootless Container IDs",
+            "description": "Three engineers are getting rootless containers on build-03, which need subordinate UID and GID ranges (etc/subuid and etc/subgid). The files already hold ranges for other people and service accounts, in no particular order.",
+            "objective": "Give omar, pavel and nina each exactly one range of 65536 IDs in etc/subuid and exactly one in etc/subgid (nina already has one of them: only add what is missing). Every start must be 100000 or higher, and no range may overlap any other range in the same file, existing ones included. Lines that are already in the files stay exactly as they are.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Secure Tempfiles",
-              "mkdir",
-              "mv",
-              "cp"
+              "/etc/subuid and /etc/subgid",
+              "user:start:count format",
+              "range arithmetic",
+              "usermod --add-subuids"
             ],
             "module": "module-12-users-and-groups",
-            "level": "level-21-secure-tempfiles"
+            "level": "level-21-subuid-ranges"
           }
         },
         {
@@ -3272,16 +3450,18 @@
           "name": "level-22-ownership-audit",
           "path": "modules/module-12-users-and-groups/level-22-ownership-audit",
           "mission": {
-            "name": "Ownership Audit: Field Extract",
-            "description": "In the users and groups lab, a task related to Ownership Audit needs cleanup before the handoff.",
-            "objective": "Extract the second column from ownership-audit-report.csv into owners.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Wrong Owners After Restore",
+            "description": "files/ was restored onto app-09 from the old server's backup with --numeric-owner, so every file carries the old server's UID and GID numbers. The numbers mean different people on app-09. The old server's passwd and group files and a listing of the restored tree (restore-listing.txt) are here.",
+            "objective": "Write chown-plan.sh in the sandbox: a shell script, run from inside restored/, with one chown line per path that restores the owner BY NAME (user:group, with the names the old server gave those numbers), quoting every path. If only the user or only the group exists on the new server (etc/passwd, etc/group), change just that part (user, or :group); if neither exists, leave the path out. Write unmapped.txt too: one line per owner who appears in the listing but does not exist on the new server, as 'user NAME' or 'group NAME', each once. The sandbox's chown only records what it is asked to do.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "30m",
             "concepts": [
-              "Ownership Audit",
-              "cut",
-              "awk"
+              "numeric vs named ownership",
+              "ls -ln",
+              "joining passwd/group files by name",
+              "quoting paths",
+              "chown user:group, user, :group"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-22-ownership-audit"
@@ -3292,16 +3472,17 @@
           "name": "level-23-permission-matrix",
           "path": "modules/module-12-users-and-groups/level-23-permission-matrix",
           "mission": {
-            "name": "Permission Matrix: Backup Bundle",
-            "description": "In the users and groups lab, a task related to Permission Matrix needs cleanup before the handoff.",
-            "objective": "Create permission-matrix-backup.tar.gz containing the files under bundle/permission-matrix",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Who Can Touch What",
+            "description": "Before granting the audit team access on file-02, the security lead wants to know exactly who can already read and write six files, for five users. The stat output of the six files and of the directories above them was captured in stat.txt, with the server's passwd and group files alongside.",
+            "objective": "Write matrix.csv with a header line user,path,read,write and one row per user and file (5 users x 6 files = 30 rows), where read and write are yes or no: whether that user can read the file's contents and whether they can modify it, given the owner/group/other rules, group membership including supplementary groups and primary groups, and the directories on the way to the file. The users are kim, tomas, priya, wen and alex; the files are listed in paths.txt. Treat all five as ordinary users (no root, no ACLs).",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "30m",
             "concepts": [
-              "Permission Matrix",
-              "tar",
-              "compression"
+              "owner/group/other precedence",
+              "directory execute bit and path traversal",
+              "supplementary and primary groups",
+              "stat -c output"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-23-permission-matrix"
@@ -3312,16 +3493,19 @@
           "name": "level-24-onboarding-checklist",
           "path": "modules/module-12-users-and-groups/level-24-onboarding-checklist",
           "mission": {
-            "name": "Onboarding Checklist: Permission Fix",
-            "description": "In the users and groups lab, a task related to Onboarding Checklist needs cleanup before the handoff.",
-            "objective": "Set the mode of onboarding-checklist.sh to 640",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Onboarding Checklist",
+            "description": "Three engineers join the platform team on build-07 next week. The onboarding ticket lists everything their accounts need: users, groups, homes, sudo, a forced first password change and container ID ranges. One of them used to work here and still has a locked account.",
+            "objective": "Carry out TICKET.md on the server copy in this sandbox (etc/, home/) with the sandbox's tools (useradd, usermod, gpasswd, chage, visudo and so on): create or re-enable the three accounts as the ticket says, with the exact UIDs, shells, groups, home directories (from etc/skel, mode 0750; an existing home is kept as it is), a password that must be changed at first login, one 65536-ID range each in etc/subuid and etc/subgid, and a sudo rule file in etc/sudoers.d that visudo -c accepts. Nothing else in the account databases may change.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "40m",
             "concepts": [
-              "Onboarding Checklist",
-              "chmod",
-              "permissions"
+              "useradd/usermod/chage/gpasswd",
+              "UID allocation and reserved ranges",
+              "skel and HOME_MODE",
+              "sudoers.d file rules",
+              "re-enabling a locked account",
+              "subuid/subgid"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-24-onboarding-checklist"
@@ -3658,16 +3842,19 @@
           "name": "level-15-proc-maps",
           "path": "modules/module-13-services-and-logs/level-15-proc-maps",
           "mission": {
-            "name": "Proc Maps: Metric Sum",
-            "description": "In the services and logs lab, a task related to Proc Maps needs cleanup before the handoff.",
-            "objective": "Sum the numeric values in the second column of proc-maps-metrics.csv and write the total to total.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "Stale Library",
+            "description": "libssl3 was patched on app-03 an hour ago, but the package never restarts anything. Some of the running services are still using the old, deleted copy of the library from memory (TICKET.md).",
+            "objective": "Find the services whose process still maps the deleted old libssl and restart exactly those. Write their unit names, one per line (for example api.service), to needs-restart.txt. Restarting services that never used the deleted library is a failure. `systemctl` is a mock (the sandbox is /); the processes are real.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
             "concepts": [
-              "Proc Maps",
-              "awk",
-              "numeric aggregation"
+              "/proc/PID/maps",
+              "(deleted) mappings",
+              "mapped files vs open file descriptors",
+              "systemctl show -P MainPID",
+              "grep over /proc",
+              "needrestart-style audits"
             ],
             "module": "module-13-services-and-logs",
             "level": "level-15-proc-maps"
@@ -3725,19 +3912,23 @@
           "name": "level-18-restart-policy",
           "path": "modules/module-13-services-and-logs/level-18-restart-policy",
           "mission": {
-            "name": "Hostnamectl: Alert Filter",
-            "description": "In the services and logs lab, a task related to Hostnamectl needs cleanup before the handoff.",
-            "objective": "Write every alert line from hostnamectl.log into alerts.txt",
+            "name": "Restart Storm",
+            "description": "A 3-second broker blip took queue-consumer down for good: it was restarted so fast that systemd gave up with \"Start request repeated too quickly\". INC-4471 (TICKET.md) lists what the restart behaviour should be.",
+            "objective": "Change queue-consumer.service so it follows TICKET.md: restart after failures only (never after a clean exit 0), the RestartSec and start limit (StartLimitBurst / StartLimitIntervalSec) the ticket gives, still enabled. Then get it running again. Don't touch the program. `systemctl` and `journalctl` are mocks (the sandbox is /); the checker replays the broker blip.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Hostnamectl",
-              "grep",
-              "output redirection"
+              "Restart=on-failure vs always",
+              "RestartSec=",
+              "StartLimitIntervalSec= / StartLimitBurst= in [Unit]",
+              "start-limit-hit",
+              "systemctl reset-failed",
+              "systemctl show -P",
+              "daemon-reload"
             ],
             "module": "module-13-services-and-logs",
-            "level": "level-18-hostnamectl"
+            "level": "level-18-restart-policy"
           }
         },
         {
@@ -3768,19 +3959,22 @@
           "name": "level-20-unit-dropins",
           "path": "modules/module-13-services-and-logs/level-20-unit-dropins",
           "mission": {
-            "name": "Localectl: Noise Dedup",
-            "description": "In the services and logs lab, a task related to Localectl needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from localectl-raw.txt with sorted unique values",
+            "name": "Hands Off the Vendor Unit",
+            "description": "The monitoring vendor's agent runs with the vendor's own flags. Change request CHG-2291 (TICKET.md) asks for different flags and one more environment variable, but the unit file belongs to the vendor package and every upgrade overwrites it.",
+            "objective": "Make vendor-agent run with the flags and the AGENT_CLUSTER variable that TICKET.md asks for, without editing or copying the vendor's unit file in usr/lib/systemd/system, and restart the agent so it runs that way. The vendor's other settings (such as AGENT_LOG=info) must stay. `systemctl` and `journalctl` are mocks (the sandbox is /).",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Localectl",
-              "sort",
-              "uniq"
+              "drop-in files (unit.service.d/*.conf)",
+              "resetting ExecStart= with an empty assignment",
+              "Environment= in a drop-in",
+              "systemctl cat",
+              "daemon-reload",
+              "unit file load order"
             ],
             "module": "module-13-services-and-logs",
-            "level": "level-20-localectl"
+            "level": "level-20-unit-dropins"
           }
         },
         {
@@ -3788,17 +3982,20 @@
           "name": "level-21-unit-files",
           "path": "modules/module-13-services-and-logs/level-21-unit-files",
           "mission": {
-            "name": "Unit Files: Path Realignment",
-            "description": "In the services and logs lab, a task related to Unit Files needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/unit-files.txt to organized/unit-files/unit-files-notes.txt",
+            "name": "From tmux to systemd",
+            "description": "report-api has been running in a tmux pane that dies every few days. OPS-3318 (TICKET.md) asks for a proper service; notes/tmux-history.txt shows how it is started by hand today.",
+            "objective": "Write /etc/systemd/system/report-api.service (etc/systemd/system/ here) so that the ticket's requirements hold: it runs report-api on the ticket's port, is enabled for boot, restarts on failure, passes systemd-analyze verify, and is running now under systemd. Don't change /opt/report-api. `systemctl`, `journalctl` and `systemd-analyze` are mocks (the sandbox is /).",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "20m",
             "concepts": [
-              "Unit Files",
-              "mkdir",
-              "mv",
-              "cp"
+              "[Unit] / [Service] / [Install] sections",
+              "absolute ExecStart=",
+              "WorkingDirectory=",
+              "Type=simple vs a self-daemonizing program",
+              "Restart=on-failure",
+              "systemd-analyze verify",
+              "systemctl enable --now"
             ],
             "module": "module-13-services-and-logs",
             "level": "level-21-unit-files"
@@ -3809,16 +4006,20 @@
           "name": "level-22-service-dependencies",
           "path": "modules/module-13-services-and-logs/level-22-service-dependencies",
           "mission": {
-            "name": "Service Dependencies: Field Extract",
-            "description": "In the services and logs lab, a task related to Service Dependencies needs cleanup before the handoff.",
-            "objective": "Extract the second column from service-dependencies-report.csv into owners.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Start Order",
+            "description": "After every reboot of web-07, app.service fails because the database proxy is not up yet, and the two should also stop together. OPS-3340 (TICKET.md) lists what the unit files must guarantee.",
+            "objective": "Fix the unit files in etc/systemd/system so that at boot db-proxy.service starts before app.service, stopping db-proxy.service also stops app.service (but stopping app leaves db-proxy running), and systemd reports no ordering cycle. Keep all three services enabled. `systemctl mock-boot` simulates a boot; `systemctl` and `journalctl` are mocks (the sandbox is /).",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "25m",
             "concepts": [
-              "Service Dependencies",
-              "cut",
-              "awk"
+              "Requires= / Wants= / BindsTo= / PartOf=",
+              "After= / Before= ordering",
+              "requirement vs ordering",
+              "ordering cycles",
+              "systemctl list-dependencies",
+              "systemctl mock-boot",
+              "daemon-reload"
             ],
             "module": "module-13-services-and-logs",
             "level": "level-22-service-dependencies"
@@ -3829,16 +4030,21 @@
           "name": "level-23-incident-summary",
           "path": "modules/module-13-services-and-logs/level-23-incident-summary",
           "mission": {
-            "name": "Incident Summary: Backup Bundle",
-            "description": "In the services and logs lab, a task related to Incident Summary needs cleanup before the handoff.",
-            "objective": "Create incident-summary-backup.tar.gz containing the files under bundle/incident-summary",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "502 at 03:10",
+            "description": "The pager went off at 03:10: the API answers 502. web-02 left you five sources: the live services (mock systemctl), a journal export, the nginx access log, a dmesg capture and a df snapshot (INCIDENT.md). Each keeps time in its own way.",
+            "objective": "Find what really broke, fix it, and fill in incident.txt (four exact fields: first_error_utc, root_cause_unit, trigger from the listed values, failed_requests) as INCIDENT.md defines them. The unit that caused the incident must run healthy again, and api must be running; don't delete anything that isn't part of the damage. `systemctl` and `journalctl` are mocks (the sandbox is /; journalctl --file reads the export).",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "40m",
             "concepts": [
-              "Incident Summary",
-              "tar",
-              "compression"
+              "incident triage across sources",
+              "journalctl -p / --file / --utc",
+              "symptom vs root cause",
+              "nginx log fields and time zones",
+              "dmesg and df evidence",
+              "sparse files and apparent size",
+              "systemctl restart / reset-failed",
+              "EnvironmentFile"
             ],
             "module": "module-13-services-and-logs",
             "level": "level-23-incident-summary"
@@ -4666,6 +4872,227 @@
             ],
             "module": "module-15-scheduling-and-jobs",
             "level": "level-14-timeout"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-15-flock-locks",
+          "name": "level-15-flock-locks",
+          "path": "modules/module-15-scheduling-and-jobs/level-15-flock-locks",
+          "mission": {
+            "name": "One At A Time",
+            "description": "Cron starts sync.sh every minute, but since the supplier feed grew a sync takes about 90 seconds. Two imports now write into catalog.db at the same time and corrupt it (INCIDENT.txt, crontab.txt).",
+            "objective": "Change sync.sh so a copy that finds another sync still running exits with a non-zero status at once, with a message on its output, without touching catalog.db. The exclusion must survive a run killed with kill -9, and its lock file must live in this directory. Keep the SYNC_SECONDS line; the checker uses it to shorten the sync.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
+            "concepts": [
+              "flock -n",
+              "lock files",
+              "exec 9>file",
+              "exit codes",
+              "stale pidfiles"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-15-flock-locks"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-16-logrotate",
+          "name": "level-16-logrotate",
+          "path": "modules/module-15-scheduling-and-jobs/level-16-logrotate",
+          "mission": {
+            "name": "The Log That Won't Let Go",
+            "description": "app.log is huge and still growing, and the application that writes it cannot be restarted: it opened the file once and keeps it open (TICKET.txt). A scaled-down copy of the problem is in this directory.",
+            "objective": "Write logrotate.conf for $SANDBOX/app.log: keep 5 old logs, the newest app.log.1 uncompressed and the older ones gzipped. Then rotate right now with the state file logrotate.state in this directory. The running writer must not be stopped, and afterwards its new lines must appear in app.log, not in app.log.1.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
+            "concepts": [
+              "logrotate",
+              "copytruncate",
+              "delaycompress",
+              "logrotate -d",
+              "logrotate -f -s"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-16-logrotate"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-17-maintenance-window",
+          "name": "level-17-maintenance-window",
+          "path": "modules/module-15-scheduling-and-jobs/level-17-maintenance-window",
+          "mission": {
+            "name": "Sunday Freeze",
+            "description": "Storage maintenance owns Sunday from 01:00 to 04:00 and nothing else may run then. The team's crontab.txt (storage-ops on stor-02) has twenty lines, and the schedules are not all as simple as they look.",
+            "objective": "In crontab.txt, put the prefix `#FREEZE ` (with the space) in front of every job line that can fire on any Sunday of the next 12 months at a minute from 01:00 to 03:59, using cron's real rules. Do not change, add or remove anything else: every other line must stay byte-identical.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
+            "concepts": [
+              "cron field semantics",
+              "day-of-month OR day-of-week",
+              "step values",
+              "@hourly",
+              "cron-expand"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-17-maintenance-window"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-18-recurring-backups",
+          "name": "level-18-recurring-backups",
+          "path": "modules/module-15-scheduling-and-jobs/level-18-recurring-backups",
+          "mission": {
+            "name": "The Backup Calendar",
+            "description": "The file server's one-line backup crontab runs incrementals every day, Sundays and month starts included, on top of the other backups. The new calendar is in BACKUP-PLAN.txt and has to be written as cron lines for review.",
+            "objective": "Write backup.cron with the jobs from BACKUP-PLAN.txt, each calling this directory's backup.sh with its mode (incremental, full, archive). Incremental: 01:30 Monday to Saturday, but not on the 1st. Full: 01:30 every Sunday. Archive: 03:00 on the 1st. A simulated cron run of about two months must produce exactly these runs. Do not install the file.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
+            "concepts": [
+              "multiple cron lines",
+              "day-of-month/day-of-week OR rule",
+              "shell guards in cron",
+              "escaping % in cron",
+              "cron-run"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-18-recurring-backups"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-19-cleanup-jobs",
+          "name": "level-19-cleanup-jobs",
+          "path": "modules/module-15-scheduling-and-jobs/level-19-cleanup-jobs",
+          "mission": {
+            "name": "The Cleanup That Ate The Server",
+            "description": "A nightly cleanup job wiped web-03's uploads when its CACHE_DIR variable went missing from the crontab (POSTMORTEM.txt). The job is one `find` line with no safety net.",
+            "objective": "Rewrite cleanup.sh. With CACHE_DIR set to a directory it deletes only regular files below it whose last change is more than 7 days ago; it keeps every .keep file, every directory and every symlink, and never touches what a symlink points to. With CACHE_DIR unset, empty or not a directory it prints a reason on stderr, exits non-zero and deletes nothing. File names may contain spaces, leading dashes and newlines. It must stay executable.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
+            "concepts": [
+              "set -u",
+              "${VAR:?}",
+              "find -type f -mtime",
+              "find -delete",
+              "defensive scripting"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-19-cleanup-jobs"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-20-report-jobs",
+          "name": "level-20-report-jobs",
+          "path": "modules/module-15-scheduling-and-jobs/level-20-report-jobs",
+          "mission": {
+            "name": "Reports Nobody Reads",
+            "description": "The daily sales report job runs under cron, but its output never arrives anywhere, its warnings vanish, and a missing feed went unnoticed (TICKET.txt). The job line is in crontab.txt.",
+            "objective": "Fix crontab.txt (do not install it, and don't edit report.sh or salesagg): one job at 06:30 every day, with MAILTO=ops@example.com set before it. A good run keeps all of its output, report and warnings, in $SANDBOX/logs/report-YYYY-MM-DD.log and sends no mail; when report.sh fails, cron mails ops. It must work under cron's PATH of /usr/bin:/bin. bin/cron-run is a mock cron for testing.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "20m",
+            "concepts": [
+              "redirection order >file 2>&1",
+              "MAILTO",
+              "escaping % in cron",
+              "cron's minimal environment",
+              "PATH in crontab"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-20-report-jobs"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-21-timer-audit",
+          "name": "level-21-timer-audit",
+          "path": "modules/module-15-scheduling-and-jobs/level-21-timer-audit",
+          "mission": {
+            "name": "Four Silent Timers",
+            "description": "After the web server was rebuilt, the night housekeeping stopped: four of the eleven systemd timers copied into etc/systemd/system never fire (MIGRATION.txt). Nobody knows which ones or why.",
+            "objective": "Find the four broken timers, list them in broken.txt (one name per line, like cert-renew.timer), and fix each with the smallest change: every timer ends up with a valid OnCalendar (or another trigger), an existing service to start, and a [Install] section with WantedBy=timers.target. The seven working timers must stay byte-identical. bin/systemd-analyze is a mock that supports only the calendar verb.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "20m",
+            "concepts": [
+              "systemd timer units",
+              "OnCalendar=",
+              "Unit=",
+              "[Install] and WantedBy=timers.target",
+              "systemd-analyze calendar"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-21-timer-audit"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-22-uptime-planning",
+          "name": "level-22-uptime-planning",
+          "path": "modules/module-15-scheduling-and-jobs/level-22-uptime-planning",
+          "mission": {
+            "name": "The Box That Sleeps At Night",
+            "description": "The build box bb-02 is switched off every night from 22:00 to 07:00, so its 02:00 nightly build in crontab.txt silently skips. boot-history.txt is the box's `last -x` output (TICKET.txt has the details, including a crash).",
+            "objective": "Write missed.txt: the dates, as YYYY-MM-DD one per line, among the last 14 nightly runs (2026-10-28 to 2026-11-10) on which the box was down at 02:00. Then move the nightly job to anacrontab as exactly one new line that runs it every day, 5 to 15 minutes after anacron starts, with a unique job identifier and the full original command, and remove it from crontab.txt. Leave the other lines of both files alone.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "20m",
+            "concepts": [
+              "last -x",
+              "reboot and shutdown records",
+              "anacron",
+              "anacrontab fields",
+              "downtime analysis"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-22-uptime-planning"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-23-shift-handovers",
+          "name": "level-23-shift-handovers",
+          "path": "modules/module-15-scheduling-and-jobs/level-23-shift-handovers",
+          "mission": {
+            "name": "Night Shift Handover",
+            "description": "The night team wants one list of everything that will run by itself on app-07: crontabs of several kinds, systemd timers and queued at jobs live in five different places (HANDOVER.txt).",
+            "objective": "Write inventory.tsv with one tab-separated row per really scheduled item and the columns source, user, schedule, command (the exact definitions are in HANDOVER.txt), no header, any order. Leave out comments, blank lines, VAR=value lines, disabled timers and files cron ignores. bin/atq and bin/at (for at -c) are mocks of the real tools.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "25m",
+            "concepts": [
+              "crontab formats",
+              "system crontab user field",
+              "cron.d file name rules",
+              "systemd timer enablement",
+              "atq and at -c",
+              "shell text parsing"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-23-shift-handovers"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-24-automation-calendar",
+          "name": "level-24-automation-calendar",
+          "path": "modules/module-15-scheduling-and-jobs/level-24-automation-calendar",
+          "mission": {
+            "name": "Monday's Batch Window",
+            "description": "Monday's batch window (00:00 to 06:00) keeps colliding: the DB backup runs while the reindex holds its locks, and the sales report starts before the order export has finished (PLAN.txt). The real runtimes are in durations.log.",
+            "objective": "Reschedule the heavy jobs in crontab.txt (heavy = p95 runtime of 30 minutes or more, measured from durations.log, definition in PLAN.txt) so that on Monday every heavy line fires once in the window, each heavy run finishes by 06:00, no two heavy runs overlap, and report-sales starts only after export-orders has finished. Only the minute and hour fields of heavy lines may change; every other line stays exactly as it is. bin/cron-expand lists fire times.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "30m",
+            "concepts": [
+              "cron field expansion",
+              "p95 with awk and sort",
+              "capacity planning",
+              "job dependencies",
+              "cron-expand"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-24-automation-calendar"
           }
         }
       ]

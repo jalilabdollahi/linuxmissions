@@ -1,1 +1,4 @@
-This task wants a symbolic link, not a copy.
+Compare what is in etc/skel with the spec, including the files `ls` does not show.
+What is missing, what should not be there (one is a private key!), and which modes differ?
+Think about order: /etc/skel is copied once, at the moment the account is created, and never
+again. What would dana get if you created her now?

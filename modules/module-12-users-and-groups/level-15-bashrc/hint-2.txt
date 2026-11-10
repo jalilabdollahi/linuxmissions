@@ -1,1 +1,8 @@
-An awk one-liner can skip the header and add the second field.
+The special parameter $- holds the current option letters; "i" is in it only for
+an interactive shell. A guard at the very top of the file can stop the rest from
+running: test $- for an i, and leave the file when it is missing.
+  echo "$-"                            compare: bash -c 'echo $-'  and  bash -ic 'echo $-'
+  [[ $- == *i* ]] || return            return ends a sourced file; exit would end the whole shell
+Where the guard goes decides what is printed, so put it above everything that
+produces output. You can test it the way scp meets the file:
+  env -i HOME="$SANDBOX/home/kim" bash -c '. ~/.bashrc; echo OK'

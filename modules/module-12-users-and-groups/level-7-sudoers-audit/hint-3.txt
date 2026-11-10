@@ -1,1 +1,11 @@
-Example: `head -n 3 sudoers-audit-history.log > first3.txt` and `tail -n 3 sudoers-audit-history.log > last3.txt`
+cat etc/sudoers
+ls -l etc/sudoers.d
+grep -H . etc/sudoers.d/10-wheel etc/sudoers.d/30-ci etc/sudoers.d/50-hosts
+grep -E '^(sudo|wheel):' etc/group
+{ grep '^sudo:' etc/group | cut -d: -f4 | tr ',' '\n'; grep '^wheel:' etc/group | cut -d: -f4 | tr ',' '\n'; printf '%s\n' lena omar dmitri ci-runner vendor; } | sort -u > root-capable.txt
+cat root-capable.txt
+
+- cat, ls, grep -H     read the main file, see which drop-ins sudo reads (no dot, no ~) and print the ones that matter
+- cut -d: -f4          member list of the %sudo and %wheel groups, which have full-root rules
+- printf               the ADMINS alias (lena, omar, dmitri) and the two accounts with their own full-root rule
+- sort -u              one line per user, duplicates removed (alice is in sudo only; lena and dmitri appear twice)

@@ -1,15 +1,11 @@
 {
-  "name": "Lastlog Audit: Schedule Entry",
-  "description": "In the users and groups lab, a task related to Lastlog Audit needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Dormant Accounts",
+  "description": "The quarterly access review wants every dormant account on app-07: people who have not logged in for 90 days or more, or never have. You have the server's passwd and the output of lastlog (lastlog.txt), as of 2026-11-10.",
+  "objective": "Write dormant.txt with one line per regular account (UID 1000-59999 in etc/passwd) that is dormant, as \"<user> <date>\" with the last login's date as YYYY-MM-DD in UTC, or \"<user> never\" if it never logged in. Dormant means the last login, converted to UTC, is on or before 2026-08-12 (90 days before 2026-11-10), or there is no login at all, including accounts that lastlog does not list. System and service accounts are not part of the review. Leave etc/passwd and lastlog.txt unchanged.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Lastlog Audit",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "20m",
+  "concepts": ["lastlog output", "fixed-width columns", "date -d and time zones", "joining files by user name"],
   "module": "module-12-users-and-groups",
   "level": "level-17-lastlog-audit"
 }

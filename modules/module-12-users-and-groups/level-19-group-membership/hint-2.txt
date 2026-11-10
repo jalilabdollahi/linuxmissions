@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+gpasswd edits etc/group and etc/gshadow together, so you do not have to touch the
+comma lists by hand. The sandbox has the real tool's interface:
+  bin/gpasswd -a USER GROUP        add a member
+  bin/gpasswd -d USER GROUP        remove one (it complains when they are not a member)
+Seventeen rows by hand is slow and error-prone; read the CSV in a loop:
+  tail -n +2 changes.csv | while IFS=, read -r action user group; do ... done
+Run it, then compare the two files with the instructions again.

@@ -1,1 +1,6 @@
-Archive the directory contents without leaving anything out.
+  umask                    show the current mask; umask 002 sets it for this process and its children
+  files start at 666, directories at 777; the umask clears bits from them (666 & ~002 = 664)
+  Where does it go? Before the first thing the script creates: mkdir comes early.
+  A ( umask 002 ) subshell sets the mask only inside the parentheses, then vanishes.
+  rm -r shared/reports; ./publish.sh; ls -lR shared/reports     try it again from scratch
+More: help umask, man umask

@@ -1,1 +1,9 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  whoami       the name of the effective user (the account the process runs as)
+  id -un       the same: -u user, -n print the name instead of the number
+  $EUID        bash's effective UID, but as a NUMBER (deploy.allowed holds a name)
+  logname      the name you logged in with; it needs a terminal and fails in cron
+Use the command inside $( ) where the script now has $USER, e.g. "$(whoami)".
+Test both ways:
+  USER=release ./deploy.sh                    must refuse
+  echo "$(whoami)" > deploy.allowed; ./deploy.sh   must deploy
+More: man whoami, man id

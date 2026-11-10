@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""Stand-in for visudo -c (no editor, no root): checks the syntax and the mode of
+sudoers files. 'visudo -c' checks etc/sudoers and what its @includedir pulls in,
+'visudo -cf FILE' (or -c -f FILE) checks one file. Like sudo, it skips files in
+the include directory whose names contain a dot or end in '~'."""
+import os, re, stat, sys
+
+here = os.path.dirname(os.path.abspath(sys.argv[0]))
+root = here[:-4] if here.endswith("/bin") else here
+args = sys.argv[1:]
+check = False
+target = None
+i = 0
+while i < len(args):
+    a = args[i]
+    if a in ("-c", "--check"):
+        check = True
+    elif a in ("-f", "--file"):
+        i += 1
+        target = args[i] if i < len(args) else None
+    elif a in ("-cf", "-fc"):
+        check = True
+        i += 1
+        target = args[i] if i < len(args) else None
+    elif a in ("-s", "-q", "--strict", "--quiet"):
+        pass
+    else:
+        sys.stderr.write("visudo: this stand-in only supports -c, -cf FILE\n")
+        sys.exit(1)
+    i += 1
+if not check:
+    sys.stderr.write("visudo: this stand-in only supports -c, -cf FILE\n")
+    sys.exit(1)
+
+USER = r"[%+!]?[A-Za-z0-9_.:\-]+|ALL"
+SPEC = re.compile(r"^(%s)(\s*,\s*(%s))*\s+[A-Za-z0-9_.,\-!*]+\s*=\s*(\([^)]*\)\s*)?((NOPASSWD|PASSWD|NOEXEC|EXEC|SETENV|NOSETENV|LOG_INPUT|LOG_OUTPUT):\s*)*\S.*$" % (USER, USER))
+ALIAS = re.compile(r"^(User|Runas|Host|Cmnd)_Alias\s+[A-Z][A-Z0-9_]*\s*=\s*\S.*$")
+
+
+def lint(path):
+    """Return (ok, message)."""
+    try:
+        text = open(path).read()
+    except OSError as e:
+        return False, "unable to open %s: %s" % (path, e.strerror)
+    joined, buf = [], ""
+    for n, line in enumerate(text.split("\n"), 1):
+        if line.endswith("\\"):
+            buf += line[:-1]
+            continue
+        joined.append((n, buf + line))
+        buf = ""
+    for n, line in joined:
+        s = line.strip()
+        if not s or (s.startswith("#") and not s.startswith("#include")):
+            continue
+        if s.startswith(("Defaults", "@include", "#include")) or ALIAS.match(s) or SPEC.match(s):
+            continue
+        return False, ">>> %s: syntax error near line %d <<<" % (os.path.relpath(path, root) if path.startswith(root) else path, n)
+    return True, ""
+
+
+def show(path):
+    return os.path.relpath(path, root) if os.path.abspath(path).startswith(root) else path
+
+
+def check_file(path, mode_check):
+    ok, msg = lint(path)
+    status = 0
+    if not ok:
+        print("visudo: %s" % msg)
+        print("%s: parse error" % show(path))
+        return 1
+    print("%s: parsed OK" % show(path))
+    if mode_check:
+        m = stat.S_IMODE(os.stat(path).st_mode)
+        if m != 0o440:
+            print("visudo: %s: bad permissions, should be mode 0440" % show(path))
+            status = 1
+    return status
+
+
+if target:
+    sys.exit(check_file(target, True))
+
+main = os.path.join(root, "etc/sudoers")
+rc = check_file(main, False)
+d = os.path.join(root, "etc/sudoers.d")
+if os.path.isdir(d) and "includedir" in open(main).read():
+    for name in sorted(os.listdir(d)):
+        if "." in name or name.endswith("~"):
+            continue
+        p = os.path.join(d, name)
+        if os.path.isfile(p):
+            rc |= check_file(p, True)
+sys.exit(rc)

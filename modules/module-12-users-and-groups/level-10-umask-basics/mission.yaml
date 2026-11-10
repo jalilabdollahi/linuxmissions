@@ -1,15 +1,11 @@
 {
-  "name": "Umask Basics: Backup Bundle",
-  "description": "In the users and groups lab, a task related to Umask Basics needs cleanup before the handoff.",
-  "objective": "Create umask-basics-backup.tar.gz containing the files under bundle/umask-basics",
+  "name": "Reports Nobody Can Edit",
+  "description": "The weekly job publish.sh writes the report into the shared project directory. Teammates in the same group can read the files but not edit them, and they cannot add files to the new folders. Somebody suggested a chmod at the end of the script, but then every new file needs another fix.",
+  "objective": "Fix publish.sh so that everything it creates (files and directories) can be edited by the group no matter what umask the caller has: new files must come out mode 664 and directories 775 when it runs under umask 077 or 022 alike. Do it with the right umask in the script itself, not with a chmod afterwards, and change nothing else about what it produces.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Umask Basics",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "12m",
+  "concepts": ["umask", "umask is per process and inherited", "default modes 666 and 777", "subshell scope"],
   "module": "module-12-users-and-groups",
   "level": "level-10-umask-basics"
 }

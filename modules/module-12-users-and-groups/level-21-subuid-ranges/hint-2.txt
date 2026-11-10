@@ -1,1 +1,7 @@
-`mkdir -p organized/secure-tempfiles` followed by `mv inbox/secure-tempfiles.txt organized/secure-tempfiles/secure-tempfiles-notes.txt` is enough.
+A range that starts at S with count C covers S .. S+C-1, so the next free start is S+C.
+  sort -t: -k2,2n etc/subuid                       ordered by the start ID
+  awk -F: '$2 + $3 > m { m = $2 + $3 } END { print m }' etc/subuid     the first ID past every range
+The sandbox's usermod can add ranges, like the real one:
+  bin/usermod -v FIRST-LAST USER        add subordinate UIDs      (-w for GIDs)
+  man usermod
+You can also append a line to the file yourself, in user:start:count form.

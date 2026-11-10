@@ -1,1 +1,8 @@
-Write the schedule into crontab.txt using the standard five time fields.
+The columns of lastlog have fixed widths, so cut -c can take the "Latest" part
+reliably where splitting on spaces breaks (empty Port or From, "Aug  4" with two
+spaces). GNU date understands that format and can convert the zone for you.
+  cut -c1-16 lastlog.txt                  the name column; cut -c44- takes the Latest part
+  date -u -d 'Thu Aug 13 01:30:00 +0200 2026' +%F      the same moment as a UTC date
+  awk -F: '$3 >= 1000 && $3 <= 59999 { print $1 }' etc/passwd
+Dates in ISO form (YYYY-MM-DD) compare correctly as plain strings. Accounts that
+are missing from lastlog have never logged in, too.

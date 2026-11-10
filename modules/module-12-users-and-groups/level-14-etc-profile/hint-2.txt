@@ -1,1 +1,7 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+  cat etc/profile; ls etc/profile.d; cat etc/profile.d/01-no-proxy.sh
+  A new file there must end in .sh and use only POSIX sh: NAME=value, then export NAME
+  No echo, no [[ ]], no arrays, no `source` (use . if you ever need it)
+  env -i LM_ETC=$SANDBOX/etc sh -c '. etc/profile; printenv http_proxy https_proxy JAVA_HOME'
+  env -i LM_ETC=$SANDBOX/etc bash --login --noprofile -c '. etc/profile; printenv JAVA_HOME'
+    -> a clean environment (env -i), as a new login would have; printenv shows only exported variables
+More: man sh (dash), man bash (INVOCATION)

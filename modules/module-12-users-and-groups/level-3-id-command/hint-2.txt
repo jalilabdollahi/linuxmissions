@@ -1,1 +1,9 @@
-A grep count or grep piped into wc can produce the number you need.
+  grep -E '[=,][0-9]+\(www-data\)' id-*.txt    a group named exactly www-data, after = or ,
+  grep -L PATTERN FILES                        list the files that do NOT match
+  sed -e 's/^id-//' -e 's/\.txt$//'            turn id-web-01.txt into web-01
+  id -u        your UID as a number
+  id -g        your primary GID as a number
+  id -G        all your GIDs; add -n for names
+The \( \) are literal parentheses in grep -E; the closing one stops www-data-ro
+from matching.
+More: man id, man grep

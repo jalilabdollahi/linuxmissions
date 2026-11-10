@@ -1,1 +1,6 @@
-Inspect the current mode first if you want to verify the change.
+Read TICKET.md as a checklist and look at the server before touching it: which of the
+three accounts already exist, and in what state? What does the automatic UID choice
+give, and does the ticket allow it? What does etc/default/useradd say about the shell?
+Each line of the ticket maps to a different file (passwd, shadow, group and gshadow,
+home, subuid and subgid, sudoers.d), so make a list and tick them off by looking at the
+files afterwards. man useradd, man usermod and man chage cover the options.

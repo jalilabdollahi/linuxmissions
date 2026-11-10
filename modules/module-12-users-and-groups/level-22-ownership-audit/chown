@@ -1,0 +1,22 @@
+#!/bin/bash
+# Stand-in for chown: the player is not root, so it changes nothing. It records
+# every call (arguments joined by a unit separator, one call per line) in
+# .lm-state/chown.log, and checks the syntax a little like the real one.
+here=$(cd "$(dirname "$0")" && pwd)
+log="${here%/bin}/.lm-state/chown.log"
+args=()
+for a in "$@"; do
+  case "$a" in
+    -h|-R|-f|-v|-c|--) ;;
+    -*) echo "chown: invalid option -- '${a#-}'" >&2; exit 1 ;;
+    *) args+=("$a") ;;
+  esac
+done
+if [ ${#args[@]} -lt 2 ]; then
+  echo "chown: missing operand after '${args[0]:-}'" >&2
+  echo "Try 'chown --help' for more information." >&2
+  exit 1
+fi
+printf '%s\x1f' "$@" >> "$log"
+printf '\n' >> "$log"
+exit 0

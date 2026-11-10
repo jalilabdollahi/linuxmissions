@@ -1,1 +1,6 @@
-This is a delimiter-based column extraction task.
+Start with restore-listing.txt: the two numbers in each line are the OLD server's UID
+and GID, and old/etc/passwd and old/etc/group say who they were. On app-09 the same
+numbers may belong to other people, so the new server's numbers are no use: carry the
+NAME across. Then ask, for every name, whether app-09's etc/passwd or etc/group has
+it. Users and groups are separate databases with separate numbers.
+Also read the file names in the listing carefully before you write the plan.

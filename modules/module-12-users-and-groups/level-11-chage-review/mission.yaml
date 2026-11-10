@@ -1,15 +1,11 @@
 {
-  "name": "Chage Review: Restore Drill",
-  "description": "In the users and groups lab, a task related to Chage Review needs cleanup before the handoff.",
-  "objective": "Extract chage-review-restore.tar.gz so the restored/chage-review directory appears in the sandbox",
+  "name": "Passwords About to Expire",
+  "description": "Security wants to know which passwords on app-04 expire within 14 days of the ticket date, 2026-11-10, or already have. etc/shadow keeps ageing data as numbers of days since 1970-01-01, and the mock `bin/chage -l USER` prints the same data for one user.",
+  "objective": "Write expiring.txt with one line `user YYYY-MM-DD` per account whose password expires on or before 2026-11-24, including those already expired, sorted by that date (earliest first). The date is the day the password expires: last change plus maximum age. An account that must change its password at the next login counts as expired now: use the ticket date 2026-11-10 for it. Account expiry dates are not password expiry. Leave etc/shadow unchanged.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Chage Review",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "20m",
+  "concepts": ["shadow fields 3, 5 and 8", "days since the epoch", "date -d 1970-01-01 +N days", "chage -l"],
   "module": "module-12-users-and-groups",
   "level": "level-11-chage-review"
 }

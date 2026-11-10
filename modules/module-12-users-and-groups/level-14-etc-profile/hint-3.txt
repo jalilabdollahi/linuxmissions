@@ -1,1 +1,13 @@
-Example: `for n in 1 2 3; do printf 'etc-profile item %s\n' "$n" > generated/etc-profile-$n.txt; done`
+cat > etc/profile.d/company-env.sh <<'EOT'
+# company proxy and Java for every login shell
+http_proxy=http://proxy.corp.example:3128
+https_proxy=http://proxy.corp.example:3128
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export http_proxy https_proxy JAVA_HOME
+EOT
+env -i LM_ETC=$SANDBOX/etc sh -c '. etc/profile; printenv http_proxy https_proxy JAVA_HOME no_proxy'
+
+- the file name ends in .sh, which is what etc/profile's loop looks for
+- plain NAME=value lines work in sh as well as bash; no output is printed
+- export makes the variables visible to programs the shell starts
+- the last line sources etc/profile in an empty environment, like a fresh login, and prints the result (no_proxy comes from the existing snippet)

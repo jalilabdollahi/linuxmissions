@@ -1,15 +1,11 @@
 {
-  "name": "Home Layout: Cleanup Sweep",
-  "description": "In the users and groups lab, a task related to Home Layout needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/home-layout and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Home Layout",
-    "find",
-    "rm"
-  ],
+  "name": "Homes Without Owners",
+  "description": "Before the migration, the files-01 audit needs the home directories to match the account database. `etc/passwd` says where each account's home should be; `home/` is what is on the disk (the sandbox's stand-in for /home).",
+  "objective": "Write missing.txt with the login names (one per line) of accounts whose home is under /home but whose directory is not in home/, and orphans.txt with the names of the directories in home/ (hidden ones too) that no account has as its home. Then make every existing home directory of an account under /home mode 750, without changing the files inside them. Do not delete anything. Service accounts with homes elsewhere (/var/lib/postgresql, /srv/ftp, ...) are out of scope.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["passwd home field", "comm on sorted lists", "stat -c %a", "chmod on directories"],
   "module": "module-12-users-and-groups",
   "level": "level-8-home-layout"
 }

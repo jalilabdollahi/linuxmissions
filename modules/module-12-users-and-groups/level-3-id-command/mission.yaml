@@ -1,16 +1,11 @@
 {
-  "name": "Id Command: Event Counter",
-  "description": "In the users and groups lab, a task related to Id Command needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in id-command-events.txt and write the number to ok-count.txt",
+  "name": "Permission Denied on One Host",
+  "description": "The release job fails with \"permission denied\" writing to /var/www on some of the five web and API hosts, though it works on the others. The output of `id deploy` was captured on each host into id-<host>.txt.",
+  "objective": "Write missing.txt with the names of the hosts (web-01, api-02, ...; one per line, any order) where deploy is not in the www-data group in any way. Then, for the ticket, write me.txt with your own UID and primary GID as two numbers on one line, like \"1000 1000\", taken from your real account.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Id Command",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["id output format", "primary vs supplementary group", "id -u -g -G", "grep -L"],
   "module": "module-12-users-and-groups",
   "level": "level-3-id-command"
 }

@@ -1,1 +1,9 @@
-Example: `chmod +x jobs/login-shells.sh && jobs/login-shells.sh`
+cut -d: -f1,3,7 etc/passwd | cat -A
+for u in $(awk -F: '$3 ~ /^[0-9]+$/ && $1 != "root" && $1 != "sync" && ($3 < 1000 || $3 > 59999) && $7 != "/usr/sbin/nologin" && $7 != "/bin/false" { print $1 }' etc/passwd); do bin/usermod -s /usr/sbin/nologin $u; done
+for u in $(awk -F: 'NR == FNR { if ($0 !~ /^#/) ok[$0] = 1; next } $3 ~ /^[0-9]+$/ && $3 >= 1000 && $3 <= 59999 && !($7 in ok) && $7 != "/usr/sbin/nologin" && $7 != "/bin/false" { print $1 }' etc/shells etc/passwd); do bin/usermod -s /bin/bash $u; done
+cut -d: -f1,3,7 etc/passwd | cat -A
+
+- cat -A            look at the data first; "$" marks the end of each line, a space before it is part of the shell
+- first loop        service accounts (UID under 1000 or over 59999, not root or sync) with a login shell -> usermod -s /usr/sbin/nologin
+- second loop       people whose shell is not a whole line of etc/shells and not nologin/false -> usermod -s /bin/bash
+- last line         check the result

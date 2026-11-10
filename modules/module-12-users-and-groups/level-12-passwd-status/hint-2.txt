@@ -1,1 +1,6 @@
-Use chmod with octal mode 640.
+  cut -d: -f1,2 etc/shadow       user and password field; hashes start with $id$ (such as $y$ or $6$)
+  Shapes: empty | $y$... or $6$... | ! | !! | * | !$y$...
+  The report copies passwd -S: P usable password, L locked, NP no password.
+  Decide by the START of the field: empty is NP; a leading ! or * is L; anything else is P.
+  awk -F: '$2 == ""'             test for an empty field;  $2 ~ /^[!*]/  tests the first character
+More: man 5 shadow, man passwd (-S)

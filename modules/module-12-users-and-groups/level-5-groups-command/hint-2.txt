@@ -1,1 +1,7 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  bin/id -G USER        the database view: every GID of USER, primary first
+  bin/groups USER       the same as names
+  cat sessions/USER.status   look at the Groups: line (numbers only)
+  comm -23 A B          lines only in A (both inputs sorted the same way)
+  awk '/^Groups:/ { ... }' to print the numbers of that line one per line
+Do it for one user by hand first, then wrap it in a for loop over sessions/*.status.
+More: man id, man comm

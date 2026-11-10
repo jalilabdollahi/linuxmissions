@@ -1,15 +1,11 @@
 {
-  "name": "Bashrc: Metric Sum",
-  "description": "In the users and groups lab, a task related to Bashrc needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of bashrc-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Bashrc",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "scp Breaks on Login",
+  "description": "Kim on bastion-02 can ssh in fine, but scp and rsync to her account die with \"protocol error\" or hang. Her ~/.bashrc prints a welcome banner and ends with exec zsh, and every non-interactive ssh command sources it too.",
+  "objective": "Fix home/kim/.bashrc so that a non-interactive shell prints nothing and carries on: env -i HOME=<her home> bash -c '. ~/.bashrc; echo OK' must print exactly OK. An interactive bash must still print her banner once and define her aliases ll, gs and k, her PATH addition and her EDITOR. Keep every line of her setup; do not delete the banner, the aliases or the exec zsh line.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "10m",
+  "concepts": ["interactive vs non-interactive shells", "$- shell flags", "return in sourced files", "bashrc and scp/rsync"],
   "module": "module-12-users-and-groups",
   "level": "level-15-bashrc"
 }

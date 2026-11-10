@@ -1,15 +1,11 @@
 {
-  "name": "Shared Dir Policy: Noise Dedup",
-  "description": "In the users and groups lab, a task related to Shared Dir Policy needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from shared-dir-policy-raw.txt with sorted unique values",
+  "name": "Safe Team Directory",
+  "description": "The Apollo team has been sharing srv/projects/apollo for a year, and it shows: files in all sorts of modes, some world-writable, some owner-only, nothing inherits the team group. Make it a proper team directory without breaking the tree.",
+  "objective": "Fix the whole tree under srv/projects/apollo (the directory itself, every subdirectory and every file, hidden ones too). Directories: mode 3770, so new files inherit the group, only the owner can delete other people's files, the team has full access and outsiders none. Regular files: mode 660, except files that currently have any execute bit, which become 770. Symlinks are left alone, and nothing may be deleted, moved or changed outside the tree.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Shared Dir Policy",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "15m",
+  "concepts": ["setgid directories", "sticky bit", "chmod -R and capital X", "find -type -exec chmod", "symlinks and chmod"],
   "module": "module-12-users-and-groups",
   "level": "level-20-shared-dir-policy"
 }

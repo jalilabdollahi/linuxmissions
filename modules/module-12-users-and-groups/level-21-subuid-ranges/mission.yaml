@@ -1,16 +1,11 @@
 {
-  "name": "Secure Tempfiles: Path Realignment",
-  "description": "In the users and groups lab, a task related to Secure Tempfiles needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/secure-tempfiles.txt to organized/secure-tempfiles/secure-tempfiles-notes.txt",
+  "name": "Rootless Container IDs",
+  "description": "Three engineers are getting rootless containers on build-03, which need subordinate UID and GID ranges (etc/subuid and etc/subgid). The files already hold ranges for other people and service accounts, in no particular order.",
+  "objective": "Give omar, pavel and nina each exactly one range of 65536 IDs in etc/subuid and exactly one in etc/subgid (nina already has one of them: only add what is missing). Every start must be 100000 or higher, and no range may overlap any other range in the same file, existing ones included. Lines that are already in the files stay exactly as they are.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Secure Tempfiles",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "15m",
+  "concepts": ["/etc/subuid and /etc/subgid", "user:start:count format", "range arithmetic", "usermod --add-subuids"],
   "module": "module-12-users-and-groups",
-  "level": "level-21-secure-tempfiles"
+  "level": "level-21-subuid-ranges"
 }

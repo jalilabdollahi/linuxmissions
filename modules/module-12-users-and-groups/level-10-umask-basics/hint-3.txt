@@ -1,1 +1,7 @@
-Example: `tar -czf umask-basics-backup.tar.gz bundle/umask-basics`
+sed -i 's|^OUT=\${1:-shared/reports}$|umask 002\nOUT=${1:-shared/reports}|' publish.sh
+head -n 9 publish.sh
+rm -rf shared/reports; ./publish.sh; ls -lR shared/reports
+
+- sed -i ...   inserts the line "umask 002" in publish.sh above the mkdir (or add it by hand: edit publish.sh)
+- umask 002    clears only the "other write" bit: files 666 -> 664, directories 777 -> 775, for this script and everything it starts
+- rm, ./publish.sh, ls -lR   run it again on a fresh output directory and look at the modes

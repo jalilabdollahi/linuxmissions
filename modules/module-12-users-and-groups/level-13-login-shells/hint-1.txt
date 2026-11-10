@@ -1,1 +1,6 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Look at fields 3 (UID) and 7 (shell) of every line next to the list in etc/shells.
+Two groups of accounts, two questions: which services still have a shell that starts
+a session, and which people have a shell that the system does not list?
+Compare the text exactly: look for what is invisible at the end of a field, and
+remember what is deliberately not in the list. A person with nologin is not a mistake.
+Which accounts does the policy exempt?

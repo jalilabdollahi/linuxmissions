@@ -1,1 +1,8 @@
-`mkdir -p organized/passwd-file` followed by `mv inbox/passwd-file.txt organized/passwd-file/passwd-file-notes.txt` is enough.
+awk -F: splits each line at the colons; $1 is the name, $3 the UID, $7 the shell.
+  awk -F: '{ print $1, $3, $7 }' etc/passwd          see the three columns
+  awk -F: '$3 >= 1000 && $3 <= 59999' etc/passwd       a numeric range test
+  awk -F: '$7 !~ /nologin|false/' etc/passwd           drop the shells that refuse logins
+Combine conditions with && and ||, and use parentheses to group them.
+The line +:::::: is a NIS include: its UID field is empty, and awk compares an
+empty field as 0 in a numeric test, so compare the UID with the string "0".
+More: man 5 passwd, man 5 shells

@@ -1,1 +1,9 @@
-Archive the directory contents without leaving anything out.
+Collect each user's groups: the primary group is the 4th field of their passwd line (a
+GID to translate through etc/group), plus every group whose member list names them.
+  awk -F: '{ print $1, $4 }' etc/passwd
+  awk -F: '{ print $1, $3, $4 }' etc/group
+Then apply the kernel's rule: if you are the owner, only the owner bits count; else if
+one of your groups is the file's group, only the group bits count; else only the other
+bits. A directory needs x (search) for the user's class on the way down. The rw of the
+file itself decides read and write. Write the rule once in a script (awk or python3)
+and let it print the 30 rows, rather than answering them by hand.

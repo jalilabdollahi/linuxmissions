@@ -1,15 +1,11 @@
 {
-  "name": "Passwd Status: Permission Fix",
-  "description": "In the users and groups lab, a task related to Passwd Status needs cleanup before the handoff.",
-  "objective": "Set the mode of passwd-status.sh to 640",
+  "name": "Who Has No Password?",
+  "description": "The auditor wants a passwd -S style report for app-04: for every account whether it has a usable password, is locked, or has no password. passwd -S needs root on the live box, so they exported app-04's etc/shadow and etc/passwd into the sandbox. An account with no password is the finding they care about, so they want those listed separately.",
+  "objective": "Write status.txt with one line per account in etc/shadow, exactly `user P`, `user L` or `user NP` (the codes passwd -S prints: P = usable password, L = locked, NP = no password), and np.txt with the names of the accounts with no password, one per line. Classify each account from the password field of etc/shadow. Leave etc/shadow and etc/passwd unchanged.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Passwd Status",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "12m",
+  "concepts": ["shadow password field", "locked vs empty vs usable", "passwd -S status codes", "awk"],
   "module": "module-12-users-and-groups",
   "level": "level-12-passwd-status"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Motd: Capacity Report",
-  "description": "In the users and groups lab, a task related to Motd needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Motd",
-    "du",
-    "sort"
-  ],
+  "name": "Stale Login Banner",
+  "description": "Everyone who logs in to bastion-01 is told about a database failover that happened weeks ago, and the banner has no disk-usage line, which the on-call runbook says it must have.",
+  "objective": "In etc/update-motd.d: keep the stale maintenance script (20-maintenance) in the directory, unchanged, but make it stop running. Add a new script named 50-disk that prints exactly one line, Disk usage (/): NN%, with the percentage that df reports for / (the sandbox's bin/df is the one to ask). Check the result with bin/render-motd: header, system info, disk usage, footer, in that order, nothing else. Leave 00-header, 10-sysinfo and 90-footer alone.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "12m",
+  "concepts": ["update-motd.d", "run-parts naming rules", "executable bit", "script ordering"],
   "module": "module-12-users-and-groups",
   "level": "level-16-motd"
 }

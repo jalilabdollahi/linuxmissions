@@ -1,1 +1,10 @@
-Example: `find cleanup/home-layout -name '*.tmp' -delete`
+awk -F: '$6 ~ /^\/home\// { print $1, $6 }' etc/passwd | while read u h; do [ -d ".$h" ] || echo $u; done > missing.txt
+awk -F: '$6 ~ /^\/home\// { sub("^/home/", "", $6); print $6 }' etc/passwd | sort > expected.tmp
+find home -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | comm -23 - expected.tmp > orphans.txt
+awk -F: '$6 ~ /^\/home\// { print $6 }' etc/passwd | while read h; do [ -d ".$h" ] && chmod 750 ".$h"; done
+rm expected.tmp; cat missing.txt orphans.txt; stat -c '%a %n' home/*
+
+- first line      accounts with a /home home whose directory ./home/x is not there
+- second/third    sorted list of promised homes against the sorted real directories (hidden ones too); comm -23 keeps those nobody promised
+- fourth          chmod 750 on each promised home that exists, only the directory itself
+- last line       show the results and the modes to check

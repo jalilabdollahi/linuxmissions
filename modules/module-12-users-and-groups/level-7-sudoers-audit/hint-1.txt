@@ -1,1 +1,6 @@
-Use one command for the beginning of the file and another for the end.
+A sudoers rule reads: WHO  WHERE = (RUNAS) WHAT. Full root means WHO can run
+ALL as root, on this host. Start with etc/sudoers, then find out which other files sudo
+reads from the drop-in directory and which it ignores; the rules in them count the same.
+WHO can be a name, an alias defined earlier in the file (read it to its end), or
+a %group whose members live in etc/group. Check the RUNAS and WHAT parts of every
+rule: not every rule with ALL in it is full root.

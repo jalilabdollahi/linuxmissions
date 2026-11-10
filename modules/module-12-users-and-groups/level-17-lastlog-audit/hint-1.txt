@@ -1,1 +1,6 @@
-This mission is about cron field order and exact syntax.
+Two files, one question: which regular accounts have not logged in for 90 days?
+passwd tells you who counts as a regular account; lastlog.txt says when each
+one last logged in. Look at the layout of lastlog.txt: are the columns separated
+by single spaces, and what do the last two lines of a "never" row look like?
+Also look at the time zone each login was recorded in. Is "Aug 12" the same day
+for everyone?

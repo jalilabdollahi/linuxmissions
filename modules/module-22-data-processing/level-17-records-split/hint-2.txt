@@ -1,1 +1,11 @@
-Write the schedule into crontab.txt using the standard five time fields.
+awk can write to a file whose name it computes:
+  print > f                  the first > in a run empties f, later ones append
+  print header > f           the same file; put the header in first
+  if (!(f in seen)) { ...; seen[f] = 1 }    do something only once per file
+  gsub("/", "-", f)          replace every / in the variable f
+  NR == 1 { header = $0; next }             remember the header line, skip it
+Build the name in a variable first: print > "by_region/" $3 ".csv" is parsed
+differently by different awks.
+With dozens of output files you would also need close(f) (open-file limit).
+Clear out old files first: rm by_region/*.
+More: info gawk "Redirection"

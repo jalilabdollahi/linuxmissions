@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+Look at the first field of each log: 10 digits are seconds since 1970, 13
+digits are milliseconds. Turn both into UTC dates in the same format, put the
+service name after them, and then merge. An ISO date with fixed widths sorts
+correctly as text. Then compare lines that share a second in a log with the
+same lines in your result: did your sort keep their order?

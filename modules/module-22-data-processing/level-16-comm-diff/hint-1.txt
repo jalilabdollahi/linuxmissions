@@ -1,1 +1,7 @@
-Measure directory sizes before deciding which one is largest.
+This is set arithmetic. Make three clean lists, one name per line: who has a seat,
+whose account is enabled, who logged in successfully. Then "active" is the
+intersection of the last two, and the answers are differences between "licensed"
+and "active".
+Before comparing, make the names comparable: look at them with cat -A. What about
+upper case, spaces at the end, the comment line, users who appear 9 times in the
+log, failed logins, and lines where user= is not in the same column?

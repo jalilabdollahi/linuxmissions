@@ -1,1 +1,13 @@
-Use chmod with octal mode 640.
+Normalise (id and cents, sorted):
+  awk -F, 'NR > 1 { printf "%s %.0f\n", $1, $NF * 100 }' source.csv | sort
+        $NF = the last field, even when a quoted name contains a comma;
+        %.0f rounds (int() would truncate 114.99999 to 114)
+  awk -F'\t' 'NR > 1 { print tolower($1), $3 }' loaded.tsv | sort
+Then:
+  comm -23 A B        ids only in A          (missing)
+  uniq -d             lines that repeat      (duplicated; input sorted)
+  join A B            pairs lines with the same id: "id cents_src cents_loaded"
+  awk '$2 != $3'      the ones that differ   (changed); divide by 100 for output
+  awk '{ s += $2 } END { printf "%.2f\n", s / 100 }'    totals
+Use LC_ALL=C for sort, comm and join alike.
+More: man comm, man uniq, man join

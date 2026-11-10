@@ -1,1 +1,10 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+Quote parity: outside a field's quotes you have seen an even number of " in total.
+An escaped quote "" adds two, so it never changes even/odd.
+In awk:
+  n = gsub(/"/, "&")            counts the quotes on the line ("&" puts each one back)
+  q += n; q % 2                 odd = still inside a quoted field, the record goes on
+  rec = rec " " $0              glue the next line on with one space
+When q is even again: print rec, reset rec and q.
+Check: tail -n +2 tickets_flat.csv | wc -l, and look at a record that had notes.
+gawk's FPAT parses the fields of a joined line if you need them later.
+More: info gawk "Splitting By Content"

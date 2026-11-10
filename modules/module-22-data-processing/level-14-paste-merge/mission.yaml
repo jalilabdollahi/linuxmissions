@@ -1,16 +1,11 @@
 {
-  "name": "Paste Merge: Loop Builder",
-  "description": "In the data processing lab, a task related to Paste Merge needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named paste-merge-1.txt through paste-merge-3.txt with matching numbered content",
+  "name": "Scanner Dump",
+  "description": "The loading dock's old handheld scanner dumps every parcel it scanned as a block of four lines (parcel id, weight in kg, postcode, dock door), with a line containing only -- between the blocks. The warehouse system wants one row per parcel, and the carrier's pickup form wants all parcel ids in one field. Some batches were synced through the Windows PC.",
+  "objective": "Write parcels.tsv: the header line parcel, weight_kg, postcode, dock (tab-separated), then one tab-separated row per parcel in scan_dump.txt, in dump order, with no carriage returns. Write manifest.txt: one single line with every parcel id, in dump order, separated by commas (no spaces). Leave scan_dump.txt unchanged.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Paste Merge",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "12m",
+  "concepts": ["paste - - - -", "paste -sd, -", "grep -vx", "multi-line records", "CRLF line endings", "tr -d '\\r'"],
   "module": "module-22-data-processing",
   "level": "level-14-paste-merge"
 }

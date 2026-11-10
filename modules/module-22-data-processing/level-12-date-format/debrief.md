@@ -1,17 +1,22 @@
-# Date Format: Permission Fix
+# Whose Third Of November
 
-## What you practiced
-- This level focused on **Date Format** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Each style is recognised by its separator: `/` for day/month/year, a space
+for `3 Nov 2026`, and `-` for ISO dates, which need no change. `split` breaks
+the value into parts, a small array turns month names into numbers, and
+`sprintf("%04d-%02d-%02d", ...)` builds a zero-padded ISO date from them.
+Assigning to `$2` makes awk rebuild the line with `OFS`, so with `OFS=,` the
+other columns, even a quoted "Okafor, Chinedu" that awk split in two, come out
+exactly as they went in.
 
-## Commands to remember
-```bash
-chmod 750 script.sh
-ls -l script.sh
-stat -c '%a %n' script.sh
-```
+## Common mistakes
+- `date -d 03/11/2026` (GNU date) reads it as 11 March without any warning;
+  only days above 12 fail, and those are the minority.
+- Forgetting `-v OFS=,`: the rebuilt line is joined with spaces.
+- Zero-padding with string tricks instead of `%02d`, which leaves `2026-1-5`.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the current mode first if you want to verify the change.
+## Learn next
+Once dates are ISO they sort and compare as text:
+`awk -F, '$2 >= "2026-12-20" && $2 <= "2027-01-06"' bookings_iso.csv` lists
+the holiday arrivals. GNU `date -d 2026-11-03 +%A` names the weekday, and
+`date -d '2026-11-03 + 4 days' +%F` gives the checkout date.

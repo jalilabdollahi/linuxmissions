@@ -1,1 +1,4 @@
-This is a sorting task followed by deduplication.
+First see which spellings the status column really has: count the distinct
+values of column 5. Which of them mean "refunded" and which only contain the
+word? Then the amount: "more than 100.00" must be a number comparison, and
+100.00 itself stays out. Don't forget the header line.

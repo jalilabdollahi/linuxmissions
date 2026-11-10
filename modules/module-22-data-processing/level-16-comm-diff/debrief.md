@@ -1,17 +1,25 @@
-# Comm Diff: Capacity Report
+# License Reconciliation
 
-## What you practiced
-- This level focused on **Comm Diff** in a safe sandbox.
-- The shortest path usually combines `du` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`comm` compares two sorted files line by line and prints three columns: lines only in
+the first, lines only in the second, and lines in both. Suppressing columns turns it
+into set operations: `-12` is the intersection, `-23` is "first minus second",
+`-13` is "second minus first". The hard part is not comm but making the three sources
+agree on what a username looks like: lowercase, no padding, one line per user, sorted
+in the same order. Once each source is a clean sorted list, the whole reconciliation
+is three comm calls.
 
-## Commands to remember
-```bash
-du -s datasets/*
-du -sh datasets/* | sort -h
-sort -n report.txt | tail -n 1
-```
+## Common mistakes
+- Comparing raw files: `Jdoe ` (with a space) and `jdoe` are different lines, so the
+  same person shows up as both an unused seat and an unlicensed user.
+- Forgetting the enabled check: logins of people who left are in the log from before
+  their account was disabled. Their seat is free now.
+- `awk '{print $6}'` for the user: on lines with `mfa=` the user is one field later.
+  `grep -o 'user=[^ ]*'` finds it anywhere.
+- Sorting in one locale and running comm in another: comm then reports
+  "file 1 is not in sorted order" and its output can't be trusted.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Measure directory sizes before deciding which one is largest.
+## Learn next
+`comm` needs sorted input; `grep -Fxv -f B A` gives "A minus B" without sorting
+(but slowly for big files). For counts per set, `comm -3 A B | wc -l` is the size of
+the symmetric difference.

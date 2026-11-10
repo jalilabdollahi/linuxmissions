@@ -1,1 +1,5 @@
-Use one command for the beginning of the file and another for the end.
+Only the UP/DOWN column matters; the error text changes within one outage.
+sort | uniq -c counts every DOWN of the day together, but uniq without sort
+does something else: it only merges lines that are next to each other. Each
+of its output lines is one run. The length of the longest DOWN run is easy to
+see that way; you still need the timestamp of the run's first line.

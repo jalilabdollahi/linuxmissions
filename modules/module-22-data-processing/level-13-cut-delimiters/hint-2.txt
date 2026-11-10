@@ -1,1 +1,10 @@
-Use `chmod +x jobs/cut-delimiters.sh` and then execute it.
+  grep '^D' payroll.dat                    only the detail (payment) records
+  cut -c2-7,8-37 FILE                      characters 2 to 7 and 8 to 37 of every line
+      --output-delimiter='|'               put | between the ranges, so the next tool
+                                           can tell where the name ends (GNU cut)
+In awk -F'|' afterwards:
+  sub(/ +$/, "", $2)                       remove the trailing padding spaces
+  if ($2 ~ /,/) $2 = "\"" $2 "\""          quote a name that contains a comma
+  printf "%.2f", $3 / 100                  000012345 -> 123.45 (the zeros go away too)
+awk's substr($0, start, length) is another way to pick columns.
+More: man cut, man awk

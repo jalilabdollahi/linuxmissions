@@ -1,1 +1,7 @@
-Example: `tar -czf frequency-table-backup.tar.gz bundle/frequency-table`
+  awk -F'"' '{ split($1, t, ":"); hour = t[2] + 0; split($3, s, " "); count[hour, substr(s[1], 1, 1)]++ } END { print "hour,2xx,3xx,4xx,5xx"; for (h = 0; h < 24; h++) printf "%02d,%d,%d,%d,%d\n", h, count[h, 2], count[h, 3], count[h, 4], count[h, 5] }' access.log > status_by_hour.csv
+      -F'"'               fields split on quotes, so the request's spaces don't count
+      t[2] + 0            the hour, as a number (07 -> 7)
+      s[1]                the status after the request; its first digit is the class
+      count[hour, class]  one counter per hour and class
+      for h = 0..23       all 24 hours, quiet ones as 0,0,0,0
+  column -s, -t status_by_hour.csv

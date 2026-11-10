@@ -1,1 +1,13 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+printf format pieces (awk and the shell's printf work the same way):
+  %-20s        a string, left-aligned in 20 columns (padded with spaces on the right)
+  %12.2f       a number with 2 decimals, right-aligned in 12 columns
+  %12s         a string right-aligned in 12 columns
+  printf "%-20s %12.2f\n", name, cost
+awk pieces:
+  gsub(/^ +| +$/, "", name)                  trim spaces at both ends
+  length(name) > 20                          too long?
+  substr(name, 1, 19) "~"                    first 19 characters plus ~
+  $2 + 0                                     turns " 1e3" into the number 1000
+  /^#/ || NR == 2 || NF < 2 { next }         skip comment, header and empty lines
+Note: %-20.20s would cut to 20 without the ~.
+More: man 3 printf (format and width), info gawk "Printf"

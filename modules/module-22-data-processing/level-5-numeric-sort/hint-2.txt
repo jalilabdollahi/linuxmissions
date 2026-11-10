@@ -1,1 +1,8 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+  sort -t, -k3,3        sort on field 3 only, fields separated by commas
+       -n               numeric: 12 > 9, but it stops at the "e" in 1.2e3
+       -g               general numeric: also reads 1.2e3, 4.75E2, -2.5e1
+       -r               reverse: largest first
+  tail -n +2 FILE       skip the header
+  head -n 10            the first 10 lines
+-g exists in GNU sort and in the macOS sort.
+More: man sort (look for --general-numeric-sort)

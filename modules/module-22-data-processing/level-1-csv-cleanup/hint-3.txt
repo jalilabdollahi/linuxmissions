@@ -1,1 +1,6 @@
-Example: `mkdir -p organized/csv-cleanup && mv inbox/csv-cleanup.txt organized/csv-cleanup/csv-cleanup-notes.txt`
+  sed '1s/^\xEF\xBB\xBF//' contacts.csv | tr -d '\r' | grep -v '^$' > contacts_clean.csv
+      sed '1s/^\xEF\xBB\xBF//'   on line 1 only, delete the 3 BOM bytes at the start
+      tr -d '\r'                 delete every carriage return (CRLF becomes LF)
+      grep -v '^$'               drop the lines that are now empty
+  head -3 contacts_clean.csv | cat -A
+      check: the header starts with first_name and lines end in a plain $

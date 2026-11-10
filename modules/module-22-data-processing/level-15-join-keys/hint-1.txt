@@ -1,1 +1,6 @@
-This is a numeric aggregation task.
+Two steps. First turn orders.csv into one line per customer (count and sum), so
+the join pairs one customer line with one summary line. Then join that with the
+customer list and keep the customers that have no partner.
+Before joining, ask: in which column is the key in each file, what happens to the
+header lines, and in which order does join expect its input? Try
+printf '9\n10\n100\n' | sort and the same with sort -n: join wants one of them.

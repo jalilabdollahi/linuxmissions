@@ -1,1 +1,8 @@
-This is a delimiter-based column extraction task.
+Look at the data per host first: awk -F, '$2 == "mail-01"' requests.csv shows one host's
+month, and grep -c NaN / grep ',$' show the gaps. A z-score needs the mean and the
+standard deviation of the host's values before any single value can be judged, so the
+script needs the whole host first: either read the file twice, or store the values
+and do the maths in END.
+Three questions to settle before writing it: what does awk make of the text NaN in
+arithmetic? What is a z-score when a host's value never changes? And does your
+script still work when the hosts and dates are in a different order?

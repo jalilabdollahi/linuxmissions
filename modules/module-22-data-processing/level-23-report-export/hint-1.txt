@@ -1,1 +1,6 @@
-Use tar with create, gzip, and file flags.
+Two formats, two separate jobs. Look at clean.tsv with cat -A and find the values that
+would confuse a CSV reader: grep -P '\t[^\t]*[",]' clean.tsv. Write down the CSV rule:
+which fields need quotes, and how is a " written inside a quoted field?
+For the JSON, think about types: which columns are numbers someone will add up, and
+which only look like numbers? What happens to 02134 if it becomes a number?
+Excel's UTF-8 detection is a separate detail: it wants three bytes at the very start.

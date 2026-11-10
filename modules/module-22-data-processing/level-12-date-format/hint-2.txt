@@ -1,1 +1,9 @@
-Use chmod with octal mode 640.
+  awk -F, -v OFS=, '...' bookings.csv     assigning $2 rebuilds the line with OFS,
+                                          so the other fields keep their commas
+  $2 ~ /\//                               a d/m/y date
+  split($2, p, "/")                       p[1] = day, p[2] = month, p[3] = year
+  printf/sprintf "%04d-%02d-%02d"         zero-pads 3 -> 03
+  BEGIN { split("Jan Feb ... Dec", names, " "); for (i = 1; i <= 12; i++) mon[names[i]] = i }
+                                          mon["Nov"] = 11
+  NR > 1                                  leave the header alone
+More: man awk (split, sprintf)

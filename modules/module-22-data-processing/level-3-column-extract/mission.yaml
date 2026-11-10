@@ -1,16 +1,11 @@
 {
-  "name": "Column Extract: Event Counter",
-  "description": "In the data processing lab, a task related to Column Extract needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in column-extract-events.txt and write the number to ok-count.txt",
+  "name": "The Column Moved",
+  "description": "The newsletter vendor changed its export format between last quarter's old_export.csv and this quarter's new_export.csv: same subscribers' kind of data, but the columns were reordered and new ones added. Marketing wants one plain list of addresses to load into the mailing tool.",
+  "objective": "Write emails.txt with the value of the email column of every data row: first all rows of old_export.csv, then all rows of new_export.csv, each file in its own row order, one address per line, no header word. Use the column named exactly email in each file. Leave both exports unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Column Extract",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["head -1", "tr , '\\n'", "grep -nx", "cut -d, -f", "tail -n +2"],
   "module": "module-22-data-processing",
   "level": "level-3-column-extract"
 }

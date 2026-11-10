@@ -1,1 +1,8 @@
-Example: `grep 'ALERT' multiline-fixes.log > alerts.txt`
+awk '{ q += gsub(/"/, "&"); rec = (part ? rec " " $0 : $0); part = 1 } q % 2 == 0 { print rec; q = 0; part = 0 }' tickets.csv > tickets_flat.csv
+tail -n +2 tickets_flat.csv | wc -l | tr -d ' ' > count.txt
+cat count.txt
+
+- q += gsub(/"/, "&")          add this line's quotes to the running count
+- rec = (part ? ... : $0)      start a record, or glue the line to it with one space
+- q % 2 == 0 { print rec ...}  even quotes: the record is complete, print it, reset
+- tail -n +2 | wc -l           one line per record now, minus the header

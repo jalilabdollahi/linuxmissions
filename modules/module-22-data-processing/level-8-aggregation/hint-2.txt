@@ -1,1 +1,10 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+  awk -F'\t' 'NR > 1 { ... } END { ... }' gateway.tsv
+      $4 = url, $6 = bytes, $7 = latency_ms
+  ep = $4; sub(/\?.*/, "", ep)     delete from the first ? to the end
+  n[ep]++  bytes[ep] += $6         one array per number, indexed by endpoint
+                                   ("-" adds 0 in awk)
+  if ($7 > max[ep]) max[ep] = $7   a running maximum (fields compare as numbers)
+  END { for (ep in n) printf "%s\t%d\t%d\t%.1f\t%d\n", ep, n[ep], ... }
+  sort -t "$(printf '\t')" -k2,2nr  by column 2, numeric, highest first
+Print the header line yourself before the sorted rows.
+More: man awk (Arrays, printf), man sort

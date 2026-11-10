@@ -1,1 +1,5 @@
-This task wants a symbolic link, not a copy.
+Which column is elapsed? (head -1 results.jtl | tr , '\n' | cat -n). A bucket
+number is just the value divided by 100 without the decimals: 0-99 -> 0,
+100-199 -> 1, so 100 itself lands in bucket 1. Everything from 1000 up goes
+into one last bucket. Count per bucket, but print by walking over all 11
+buckets, not over the ones you happened to see; and skip the header line.

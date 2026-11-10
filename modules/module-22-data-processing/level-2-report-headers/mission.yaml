@@ -1,15 +1,11 @@
 {
-  "name": "Report Headers: Alert Filter",
-  "description": "In the data processing lab, a task related to Report Headers needs cleanup before the handoff.",
-  "objective": "Write every alert line from report-headers.log into alerts.txt",
+  "name": "Quarter From Three Months",
+  "description": "Finance keeps one invoice export per month: jan.csv, feb.csv and mar.csv, each starting with its own header line. The Q1 review needs them as one file, and last quarter's attempt had three header lines in it and one invoice that 'vanished'.",
+  "objective": "Write q1.csv: the header line once at the top, then the data rows of jan.csv, feb.csv and mar.csv, in that month order and each file's rows in their original order, every invoice on its own line. Leave the three monthly files unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Report Headers",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["head -n 1", "tail -n +2", "awk FNR vs NR", "missing final newline", "glob order"],
   "module": "module-22-data-processing",
   "level": "level-2-report-headers"
 }

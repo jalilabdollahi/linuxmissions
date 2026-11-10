@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-10T12:58:00.094391+00:00",
-  "level_count": 491,
+  "generated_at": "2026-11-10T18:37:02.522511+00:00",
+  "level_count": 482,
   "modules": [
     {
       "name": "module-1-filesystem",
@@ -3003,17 +3003,18 @@
           "name": "level-1-passwd-file",
           "path": "modules/module-12-users-and-groups/level-1-passwd-file",
           "mission": {
-            "name": "Passwd File: Path Realignment",
-            "description": "In the users and groups lab, a task related to Passwd File needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/passwd-file.txt to organized/passwd-file/passwd-file-notes.txt",
+            "name": "Who Logs In?",
+            "description": "A ticket from the security team: \"Who can actually log in to web-03?\" You have copies of the server's etc/passwd and etc/shells.",
+            "objective": "Write humans.txt with the login names (one per line, any order) of every account on web-03 that a person can open a shell with: a UID in the regular user range 1000-59999 and a login shell listed in etc/shells. Also list any account other than root itself that has UID 0, because it is root under another name. Leave etc/passwd and etc/shells unchanged.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Passwd File",
-              "mkdir",
-              "mv",
-              "cp"
+              "/etc/passwd fields",
+              "UID ranges",
+              "login shells",
+              "/etc/shells",
+              "awk -F:"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-1-passwd-file"
@@ -3024,16 +3025,18 @@
           "name": "level-2-group-file",
           "path": "modules/module-12-users-and-groups/level-2-group-file",
           "mission": {
-            "name": "Group File: Alert Filter",
-            "description": "In the users and groups lab, a task related to Group File needs cleanup before the handoff.",
-            "objective": "Write every alert line from group-file.log into alerts.txt",
+            "name": "Docker Crew",
+            "description": "Membership of the docker group is root-equivalent, so the auditors want to know who on build-02 has it. You have copies of the server's etc/group and etc/passwd.",
+            "objective": "Write docker-members.txt with every user who is in the docker group on build-02, one login name per line, in any order. A user is in a group when it is listed as a member on that group's line, or when it is the user's primary group. Leave etc/group and etc/passwd unchanged.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Group File",
-              "grep",
-              "output redirection"
+              "/etc/group fields",
+              "member list",
+              "primary group (passwd field 4)",
+              "awk -F:",
+              "tr"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-2-group-file"
@@ -3044,17 +3047,17 @@
           "name": "level-3-id-command",
           "path": "modules/module-12-users-and-groups/level-3-id-command",
           "mission": {
-            "name": "Id Command: Event Counter",
-            "description": "In the users and groups lab, a task related to Id Command needs cleanup before the handoff.",
-            "objective": "Count how many times `ok` appears in id-command-events.txt and write the number to ok-count.txt",
+            "name": "Permission Denied on One Host",
+            "description": "The release job fails with \"permission denied\" writing to /var/www on some of the five web and API hosts, though it works on the others. The output of `id deploy` was captured on each host into id-<host>.txt.",
+            "objective": "Write missing.txt with the names of the hosts (web-01, api-02, ...; one per line, any order) where deploy is not in the www-data group in any way. Then, for the ticket, write me.txt with your own UID and primary GID as two numbers on one line, like \"1000 1000\", taken from your real account.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Id Command",
-              "grep",
-              "wc",
-              "redirection"
+              "id output format",
+              "primary vs supplementary group",
+              "id -u -g -G",
+              "grep -L"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-3-id-command"
@@ -3065,179 +3068,21 @@
           "name": "level-4-whoami",
           "path": "modules/module-12-users-and-groups/level-4-whoami",
           "mission": {
-            "name": "Whoami: Noise Dedup",
-            "description": "In the users and groups lab, a task related to Whoami needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from whoami-raw.txt with sorted unique values",
+            "name": "Fake It",
+            "description": "deploy.sh should only run for the account named in deploy.allowed, but the security review (NOTE.txt) shows that `USER=release ./deploy.sh` gets anyone through, because the guard compares the name with $USER.",
+            "objective": "Change the guard in deploy.sh so it compares deploy.allowed with the user the script is really running as. A caller whose real account is not the allowed one must be refused with exit status 1, even with USER or LOGNAME faked; the allowed account must be able to deploy whatever USER says and also when USER and LOGNAME are not set at all (as under cron). Keep reading the allowed name from deploy.allowed and keep the rest of the script working.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Whoami",
-              "sort",
-              "uniq"
+              "whoami",
+              "id -un",
+              "$USER vs effective UID",
+              "$EUID",
+              "logname"
             ],
             "module": "module-12-users-and-groups",
             "level": "level-4-whoami"
-          }
-        },
-        {
-          "id": "module-12-users-and-groups/level-5-groups-command",
-          "name": "level-5-groups-command",
-          "path": "modules/module-12-users-and-groups/level-5-groups-command",
-          "mission": {
-            "name": "Groups Command: Field Extract",
-            "description": "In the users and groups lab, a task related to Groups Command needs cleanup before the handoff.",
-            "objective": "Extract the second column from groups-command-report.csv into owners.txt",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
-            "concepts": [
-              "Groups Command",
-              "cut",
-              "awk"
-            ],
-            "module": "module-12-users-and-groups",
-            "level": "level-5-groups-command"
-          }
-        },
-        {
-          "id": "module-12-users-and-groups/level-6-login-defs-ids",
-          "name": "level-6-login-defs-ids",
-          "path": "modules/module-12-users-and-groups/level-6-login-defs-ids",
-          "mission": {
-            "name": "Su Notes: Config Rewrite",
-            "description": "In the users and groups lab, a task related to Su Notes needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in su-notes.conf and save the fixed result to fixed.conf",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
-            "concepts": [
-              "Su Notes",
-              "sed",
-              "redirection"
-            ],
-            "module": "module-12-users-and-groups",
-            "level": "level-6-su-notes"
-          }
-        },
-        {
-          "id": "module-12-users-and-groups/level-7-sudoers-audit",
-          "name": "level-7-sudoers-audit",
-          "path": "modules/module-12-users-and-groups/level-7-sudoers-audit",
-          "mission": {
-            "name": "Sudoers Audit: History Window",
-            "description": "In the users and groups lab, a task related to Sudoers Audit needs cleanup before the handoff.",
-            "objective": "Write the first 3 lines of sudoers-audit-history.log to first3.txt and the last 3 lines to last3.txt",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
-            "concepts": [
-              "Sudoers Audit",
-              "head",
-              "tail"
-            ],
-            "module": "module-12-users-and-groups",
-            "level": "level-7-sudoers-audit"
-          }
-        },
-        {
-          "id": "module-12-users-and-groups/level-8-home-layout",
-          "name": "level-8-home-layout",
-          "path": "modules/module-12-users-and-groups/level-8-home-layout",
-          "mission": {
-            "name": "Home Layout: Cleanup Sweep",
-            "description": "In the users and groups lab, a task related to Home Layout needs cleanup before the handoff.",
-            "objective": "Delete only the `.tmp` files under cleanup/home-layout and leave the other files intact",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
-            "concepts": [
-              "Home Layout",
-              "find",
-              "rm"
-            ],
-            "module": "module-12-users-and-groups",
-            "level": "level-8-home-layout"
-          }
-        },
-        {
-          "id": "module-12-users-and-groups/level-9-skeleton-files",
-          "name": "level-9-skeleton-files",
-          "path": "modules/module-12-users-and-groups/level-9-skeleton-files",
-          "mission": {
-            "name": "Skeleton Files: Link Repair",
-            "description": "In the users and groups lab, a task related to Skeleton Files needs cleanup before the handoff.",
-            "objective": "Create current.conf as a symbolic link to releases/skeleton-files.conf",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Skeleton Files",
-              "ln",
-              "symbolic links"
-            ],
-            "module": "module-12-users-and-groups",
-            "level": "level-9-skeleton-files"
-          }
-        },
-        {
-          "id": "module-12-users-and-groups/level-10-umask-basics",
-          "name": "level-10-umask-basics",
-          "path": "modules/module-12-users-and-groups/level-10-umask-basics",
-          "mission": {
-            "name": "Umask Basics: Backup Bundle",
-            "description": "In the users and groups lab, a task related to Umask Basics needs cleanup before the handoff.",
-            "objective": "Create umask-basics-backup.tar.gz containing the files under bundle/umask-basics",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Umask Basics",
-              "tar",
-              "compression"
-            ],
-            "module": "module-12-users-and-groups",
-            "level": "level-10-umask-basics"
-          }
-        },
-        {
-          "id": "module-12-users-and-groups/level-11-chage-review",
-          "name": "level-11-chage-review",
-          "path": "modules/module-12-users-and-groups/level-11-chage-review",
-          "mission": {
-            "name": "Chage Review: Restore Drill",
-            "description": "In the users and groups lab, a task related to Chage Review needs cleanup before the handoff.",
-            "objective": "Extract chage-review-restore.tar.gz so the restored/chage-review directory appears in the sandbox",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Chage Review",
-              "tar",
-              "archive extraction"
-            ],
-            "module": "module-12-users-and-groups",
-            "level": "level-11-chage-review"
-          }
-        },
-        {
-          "id": "module-12-users-and-groups/level-12-passwd-status",
-          "name": "level-12-passwd-status",
-          "path": "modules/module-12-users-and-groups/level-12-passwd-status",
-          "mission": {
-            "name": "Passwd Status: Permission Fix",
-            "description": "In the users and groups lab, a task related to Passwd Status needs cleanup before the handoff.",
-            "objective": "Set the mode of passwd-status.sh to 640",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Passwd Status",
-              "chmod",
-              "permissions"
-            ],
-            "module": "module-12-users-and-groups",
-            "level": "level-12-passwd-status"
           }
         },
         {
@@ -3671,6 +3516,98 @@
           }
         },
         {
+          "id": "module-13-services-and-logs/level-9-auth-log",
+          "name": "level-9-auth-log",
+          "path": "modules/module-13-services-and-logs/level-9-auth-log",
+          "mission": {
+            "name": "Did They Get In?",
+            "description": "Overnight, the monitoring on bastion-1 counted thousands of failed SSH logins. Most brute force fails, but the security team needs to know right now whether any of it worked. Everything is in var/log/auth.log.",
+            "objective": "Write compromised.txt with one line 'ip user' for every IP address that had at least 5 failed password attempts and, after them, a successful (Accepted) SSH login. user is the account that logged in. Every failed attempt counts, including those rsyslog folded into 'message repeated N times' lines. Any order. Don't change the log.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "15m",
+            "concepts": [
+              "auth.log / sshd messages",
+              "Failed password vs Accepted",
+              "invalid user field shift",
+              "message repeated N times",
+              "awk running counts",
+              "correlating by IP and time"
+            ],
+            "module": "module-13-services-and-logs",
+            "level": "level-9-auth-log"
+          }
+        },
+        {
+          "id": "module-13-services-and-logs/level-10-nginx-log",
+          "name": "level-10-nginx-log",
+          "path": "modules/module-13-services-and-logs/level-10-nginx-log",
+          "mission": {
+            "name": "Since the Deploy",
+            "description": "Since the 14:00 deploy of the shop API, customers have been reporting error pages. Before rolling back, the team lead wants to know which endpoint is hit hardest and how slow its backend got when it failed. The nginx access log is var/log/nginx/access.log; its format is defined in etc/nginx/nginx.conf.",
+            "objective": "Write worst.txt with one line 'path count max_upstream': among requests logged at 14:00:00 or later, the endpoint path (without the query string) with the most 5xx responses, the number of those 5xx responses, and the highest upstream response time among them in seconds as logged (e.g. '/api/v2/example 12 1.234'). Don't change the log.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "15m",
+            "concepts": [
+              "nginx combined log format",
+              "log_format / $upstream_response_time",
+              "awk $NF",
+              "stripping query strings",
+              "time-window filtering",
+              "awk max per key"
+            ],
+            "module": "module-13-services-and-logs",
+            "level": "level-10-nginx-log"
+          }
+        },
+        {
+          "id": "module-13-services-and-logs/level-11-app-log-rotation",
+          "name": "level-11-app-log-rotation",
+          "path": "modules/module-13-services-and-logs/level-11-app-log-rotation",
+          "mission": {
+            "name": "The File Nobody Writes",
+            "description": "The disk on app-05 keeps filling up although logrotate runs every night. Since last night's rotation the new var/log/app/app.log has stayed empty while app.log.1 keeps growing, and the old files can't be compressed or removed while the app is still writing to them.",
+            "objective": "Fix etc/logrotate.d/app so that after every rotation the running app writes its new lines into the new app.log and audit.log and the rotated files stop growing. The app's README forbids copytruncate, and the app should be signalled once per rotation, not once per file. The validator forces a real rotation to check. `systemctl` is a mock that runs the app as a real background process; logrotate is the real one (as non-root, give it a state file with -s).",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "20m",
+            "concepts": [
+              "logrotate create vs copytruncate",
+              "postrotate / endscript",
+              "sharedscripts",
+              "inodes and open file descriptors",
+              "/proc/PID/fd",
+              "systemctl reload"
+            ],
+            "module": "module-13-services-and-logs",
+            "level": "level-11-app-log-rotation"
+          }
+        },
+        {
+          "id": "module-13-services-and-logs/level-12-tail-follow",
+          "name": "level-12-tail-follow",
+          "path": "modules/module-13-services-and-logs/level-12-tail-follow",
+          "mission": {
+            "name": "Printed Once",
+            "description": "The deploy agent prints a one-time admin token into var/log/deploy/deploy.log during each deploy: right after it rotates the log, into the new file, and it scrubs the log again a few seconds later. Last time nobody caught it and the deploy had to be redone. ./trigger-deploy.sh starts a deploy and waits until it has finished.",
+            "objective": "Run a deploy and save its one-time admin token (adm_ followed by 24 letters and digits) in token.txt. Tip: in the game shell a command ending in & runs in the background (`wait` waits for it, Ctrl-C stops a foreground command).",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
+            "concepts": [
+              "tail -f vs tail -F",
+              "log rotation and inodes",
+              "tail -n0",
+              "grep -m1 / -o",
+              "background jobs & and wait",
+              "timeout"
+            ],
+            "module": "module-13-services-and-logs",
+            "level": "level-12-tail-follow"
+          }
+        },
+        {
           "id": "module-13-services-and-logs/level-13-less-navigation",
           "name": "level-13-less-navigation",
           "path": "modules/module-13-services-and-logs/level-13-less-navigation",
@@ -3698,17 +3635,19 @@
           "name": "level-14-service-envfiles",
           "path": "modules/module-13-services-and-logs/level-14-service-envfiles",
           "mission": {
-            "name": "Service Envfiles: Loop Builder",
-            "description": "In the services and logs lab, a task related to Service Envfiles needs cleanup before the handoff.",
-            "objective": "Create three files under generated/ named service-envfiles-1.txt through service-envfiles-3.txt with matching numbered content",
+            "name": "Wrong Database",
+            "description": "Config management moved billing to a new database primary (TICKET.txt), but billing.service still connects to the decommissioned pg-legacy-01. The vendor binary takes its settings only from environment variables.",
+            "objective": "Make billing.service run with the DB_HOST and DB_PORT from TICKET.txt, loaded from etc/billing/env, the file config management owns (keep the values there). Don't modify opt/billing/bin/billing-server. `systemctl` and `journalctl` are mocks that treat the sandbox as /: /etc/billing/env is ./etc/billing/env.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Service Envfiles",
-              "for",
-              "seq",
-              "printf"
+              "EnvironmentFile=",
+              "EnvironmentFile=-path (optional)",
+              "EnvironmentFile overrides Environment",
+              "env-file syntax",
+              "systemctl show -p Environment",
+              "daemon-reload"
             ],
             "module": "module-13-services-and-logs",
             "level": "level-14-service-envfiles"
@@ -3762,19 +3701,23 @@
           "name": "level-17-oom-killer",
           "path": "modules/module-13-services-and-logs/level-17-oom-killer",
           "mission": {
-            "name": "Proc Meminfo: Schedule Entry",
-            "description": "In the services and logs lab, a task related to Proc Meminfo needs cleanup before the handoff.",
-            "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+            "name": "Killed in the Night",
+            "description": "reports.service died overnight and didn't come back. The on-call note says \"OOM?\". The runbook (POLICY.md) says how to size the memory limit of a service that the kernel OOM-killed.",
+            "objective": "Following POLICY.md, set reports.service's MemoryMax to 1.5 \u00d7 the largest anon-rss of the processes the kernel OOM-killed in reports.service's own cgroup (from the journal), rounded up to the next multiple of 256M, so that `systemctl show -p MemoryMax reports.service` reports it. Then start reports.service again. `systemctl` and `journalctl` are mocks (the journal is in var/log/journal).",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Proc Meminfo",
-              "cron",
-              "crontab syntax"
+              "kernel OOM killer messages",
+              "journalctl -k -g",
+              "task_memcg / cgroups",
+              "anon-rss in KiB",
+              "MemoryMax=",
+              "systemctl set-property",
+              "systemctl show -p"
             ],
             "module": "module-13-services-and-logs",
-            "level": "level-17-proc-meminfo"
+            "level": "level-17-oom-killer"
           }
         },
         {
@@ -3906,16 +3849,20 @@
           "name": "level-24-failure-timeline",
           "path": "modules/module-13-services-and-logs/level-24-failure-timeline",
           "mission": {
-            "name": "Failure Timeline: Permission Fix",
-            "description": "In the services and logs lab, a task related to Failure Timeline needs cleanup before the handoff.",
-            "objective": "Set the mode of failure-timeline.sh to 640",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Four Clocks, One Timeline",
+            "description": "Postmortem for last night's API outage on web-01. The evidence is in four places that each tell time differently: a journal export (microseconds since the epoch), syslog (local time, no year, no zone), the nginx access log ([10/Nov/2026:03:04:05 +0330]) and the app log (ISO 8601 with offset). rsyslog also copied every journal message into syslog.",
+            "objective": "Write timeline.txt exactly as TIMELINE-SPEC.txt describes: every event from 03:00:00 to 03:14:59 server local time on Nov 10, one per line as `UTC-TIME SOURCE MESSAGE` (time as 2026-11-09T23:31:05Z, fractions cut off), oldest first; journal entries once (drop their syslog copies), nginx only 5xx, app only WARN/ERROR; events in the same second keep the order journal, syslog, nginx, app and their file order. `timedatectl` and `journalctl` are mocks (journalctl --file reads the export). Don't change the logs.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "35m",
             "concepts": [
-              "Failure Timeline",
-              "chmod",
-              "permissions"
+              "timestamp formats",
+              "date -u -f - (batch conversion)",
+              "jq todate / journalctl --utc",
+              "syslog has no year or zone",
+              "grep -vxF -f (remove duplicates)",
+              "sort -s -k1,1 (stable sort)",
+              "paste"
             ],
             "module": "module-13-services-and-logs",
             "level": "level-24-failure-timeline"
@@ -4612,20 +4559,88 @@
           }
         },
         {
+          "id": "module-15-scheduling-and-jobs/level-10-jobs-builtin",
+          "name": "level-10-jobs-builtin",
+          "path": "modules/module-15-scheduling-and-jobs/level-10-jobs-builtin",
+          "mission": {
+            "name": "Three Shards, Three Answers",
+            "description": "The nightly customer import is split into three shards (eu, us, apac). They have to run at the same time to fit the window, and the change ticket asks for each shard's exit status, because 3 and 4 mean very different things for the morning team (see README.txt).",
+            "objective": "Run ./import.sh eu, ./import.sh us and ./import.sh apac at the same time, as background jobs of your shell, wait for them, and write each shard's exit status to statuses.txt as three lines shard=status (for example eu=0). The check reads the shards' own logs: the three runs must overlap in time, and statuses.txt must hold the codes they really returned.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
+            "concepts": [
+              "jobs -l",
+              "job specs %n",
+              "$!",
+              "wait PID",
+              "$?"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-10-jobs-builtin"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-11-setsid-detach",
+          "name": "level-11-setsid-detach",
+          "path": "modules/module-15-scheduling-and-jobs/level-11-setsid-detach",
+          "mission": {
+            "name": "Cut the Cord",
+            "description": "The order-queue consumer keeps dying: last week a Ctrl-C meant for another command took it down, and before that a closed SSH session did. It has to run completely apart from any terminal.",
+            "objective": "Start exactly one consumer.sh that is fully detached: it leads its own session (its session id equals its PID), has no controlling terminal (TTY ?), reads stdin from /dev/null, and appends its stdout and stderr to logs/consumer.log. It must keep processing messages: the check drops one into queue/ and expects it in done/ within a few seconds. Linux only (it reads /proc): on macOS play with --docker.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
+            "concepts": [
+              "setsid",
+              "sessions and controlling terminals",
+              "ps -o pid,sid,tty",
+              "< /dev/null",
+              "nohup vs setsid vs disown"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-11-setsid-detach"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-12-sleep-delay",
+          "name": "level-12-sleep-delay",
+          "path": "modules/module-15-scheduling-and-jobs/level-12-sleep-delay",
+          "mission": {
+            "name": "Wait for Ready",
+            "description": "The deploy hook runs the smoke tests right after starting the app, and half the time the app is not listening yet, so the deploy fails for nothing. ./probe tells whether the app is ready (exit 0) or not yet (exit 1).",
+            "objective": "Write an executable wait_ready.sh that runs ./probe every 2 seconds until it succeeds, then exits 0. It gives up after a timeout in seconds, taken from its first argument (default 30), and then exits 1. It must react within 2 seconds of the app becoming ready, and must not call ./probe more often than every 2 seconds. The check runs your script against an app that becomes ready after a few seconds and against one that never does (with a short timeout), so it takes about 10 seconds after each change to the script.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "12m",
+            "concepts": [
+              "sleep",
+              "until / while loops",
+              "exit status",
+              "$SECONDS",
+              "${1:-default}"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-12-sleep-delay"
+          }
+        },
+        {
           "id": "module-15-scheduling-and-jobs/level-13-watch-command",
           "name": "level-13-watch-command",
           "path": "modules/module-15-scheduling-and-jobs/level-13-watch-command",
           "mission": {
-            "name": "Watch Command: Script Kickoff",
-            "description": "In the scheduling and jobs lab, a task related to Watch Command needs cleanup before the handoff.",
-            "objective": "Make jobs/watch-command.sh executable, run it, and create the token file it writes",
+            "name": "Drain Then Switch",
+            "description": "Upload traffic moves from eu-west-1 to eu-west-2 tonight (CHANGE.txt). The uploader is paused with a full queue in spool/, and the load balancer gives you a 5-second window once the queue is empty.",
+            "objective": "Resume the uploader with ./resume-uploads.sh; it empties spool/ in the background within about a minute. Run ./switch-traffic.sh once spool/ has no entries left at all (files still being uploaded count): not before, and no more than 5 seconds after. If you miss the window, type reset to refill the queue.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "Watch Command",
-              "chmod",
-              "bash"
+              "watch -g",
+              "watch -n",
+              "ls -A",
+              "waiting for a condition",
+              "&&"
             ],
             "module": "module-15-scheduling-and-jobs",
             "level": "level-13-watch-command"
@@ -4636,221 +4651,21 @@
           "name": "level-14-timeout",
           "path": "modules/module-15-scheduling-and-jobs/level-14-timeout",
           "mission": {
-            "name": "Timeout: Loop Builder",
-            "description": "In the scheduling and jobs lab, a task related to Timeout needs cleanup before the handoff.",
-            "objective": "Create three files under generated/ named timeout-1.txt through timeout-3.txt with matching numbered content",
+            "name": "Hanging Healthchecks",
+            "description": "The nightly fleet report never finishes: ./healthcheck.sh HOST hangs forever for some hosts, and the loop over hosts.txt waits on it (NOTE.txt).",
+            "objective": "Write report.txt with one line per host, in the order of hosts.txt: the host name, a space, and OK (the check passed), FAIL (it returned an error) or TIMEOUT (no answer within 3 seconds). Every host must be checked with ./healthcheck.sh, each check may run at most 3 seconds, and no healthcheck.sh process may be left running.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Timeout",
-              "for",
-              "seq",
-              "printf"
+              "timeout",
+              "timeout -k",
+              "exit status 124",
+              "while read loop",
+              "case on $?"
             ],
             "module": "module-15-scheduling-and-jobs",
             "level": "level-14-timeout"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-15-flock-locks",
-          "name": "level-15-flock-locks",
-          "path": "modules/module-15-scheduling-and-jobs/level-15-flock-locks",
-          "mission": {
-            "name": "Flock Locks: Metric Sum",
-            "description": "In the scheduling and jobs lab, a task related to Flock Locks needs cleanup before the handoff.",
-            "objective": "Sum the numeric values in the second column of flock-locks-metrics.csv and write the total to total.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Flock Locks",
-              "awk",
-              "numeric aggregation"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-15-flock-locks"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-16-logrotate",
-          "name": "level-16-logrotate",
-          "path": "modules/module-15-scheduling-and-jobs/level-16-logrotate",
-          "mission": {
-            "name": "Logrotate: Capacity Report",
-            "description": "In the scheduling and jobs lab, a task related to Logrotate needs cleanup before the handoff.",
-            "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
-            "concepts": [
-              "Logrotate",
-              "du",
-              "sort"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-16-logrotate"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-17-maintenance-window",
-          "name": "level-17-maintenance-window",
-          "path": "modules/module-15-scheduling-and-jobs/level-17-maintenance-window",
-          "mission": {
-            "name": "Maintenance Window: Schedule Entry",
-            "description": "In the scheduling and jobs lab, a task related to Maintenance Window needs cleanup before the handoff.",
-            "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Maintenance Window",
-              "cron",
-              "crontab syntax"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-17-maintenance-window"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-18-recurring-backups",
-          "name": "level-18-recurring-backups",
-          "path": "modules/module-15-scheduling-and-jobs/level-18-recurring-backups",
-          "mission": {
-            "name": "Recurring Backups: Alert Filter",
-            "description": "In the scheduling and jobs lab, a task related to Recurring Backups needs cleanup before the handoff.",
-            "objective": "Write every alert line from recurring-backups.log into alerts.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Recurring Backups",
-              "grep",
-              "output redirection"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-18-recurring-backups"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-19-cleanup-jobs",
-          "name": "level-19-cleanup-jobs",
-          "path": "modules/module-15-scheduling-and-jobs/level-19-cleanup-jobs",
-          "mission": {
-            "name": "Cleanup Jobs: Config Rewrite",
-            "description": "In the scheduling and jobs lab, a task related to Cleanup Jobs needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in cleanup-jobs.conf and save the fixed result to fixed.conf",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Cleanup Jobs",
-              "sed",
-              "redirection"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-19-cleanup-jobs"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-20-report-jobs",
-          "name": "level-20-report-jobs",
-          "path": "modules/module-15-scheduling-and-jobs/level-20-report-jobs",
-          "mission": {
-            "name": "Report Jobs: Noise Dedup",
-            "description": "In the scheduling and jobs lab, a task related to Report Jobs needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from report-jobs-raw.txt with sorted unique values",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Report Jobs",
-              "sort",
-              "uniq"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-20-report-jobs"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-21-timer-audit",
-          "name": "level-21-timer-audit",
-          "path": "modules/module-15-scheduling-and-jobs/level-21-timer-audit",
-          "mission": {
-            "name": "Timer Audit: Path Realignment",
-            "description": "In the scheduling and jobs lab, a task related to Timer Audit needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/timer-audit.txt to organized/timer-audit/timer-audit-notes.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Timer Audit",
-              "mkdir",
-              "mv",
-              "cp"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-21-timer-audit"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-22-uptime-planning",
-          "name": "level-22-uptime-planning",
-          "path": "modules/module-15-scheduling-and-jobs/level-22-uptime-planning",
-          "mission": {
-            "name": "Uptime Planning: Field Extract",
-            "description": "In the scheduling and jobs lab, a task related to Uptime Planning needs cleanup before the handoff.",
-            "objective": "Extract the second column from uptime-planning-report.csv into owners.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Uptime Planning",
-              "cut",
-              "awk"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-22-uptime-planning"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-23-shift-handovers",
-          "name": "level-23-shift-handovers",
-          "path": "modules/module-15-scheduling-and-jobs/level-23-shift-handovers",
-          "mission": {
-            "name": "Shift Handovers: Backup Bundle",
-            "description": "In the scheduling and jobs lab, a task related to Shift Handovers needs cleanup before the handoff.",
-            "objective": "Create shift-handovers-backup.tar.gz containing the files under bundle/shift-handovers",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Shift Handovers",
-              "tar",
-              "compression"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-23-shift-handovers"
-          }
-        },
-        {
-          "id": "module-15-scheduling-and-jobs/level-24-automation-calendar",
-          "name": "level-24-automation-calendar",
-          "path": "modules/module-15-scheduling-and-jobs/level-24-automation-calendar",
-          "mission": {
-            "name": "Automation Calendar: Permission Fix",
-            "description": "In the scheduling and jobs lab, a task related to Automation Calendar needs cleanup before the handoff.",
-            "objective": "Set the mode of automation-calendar.sh to 640",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Automation Calendar",
-              "chmod",
-              "permissions"
-            ],
-            "module": "module-15-scheduling-and-jobs",
-            "level": "level-24-automation-calendar"
           }
         }
       ]
@@ -8384,6 +8199,52 @@
             ],
             "module": "module-22-data-processing",
             "level": "level-22-anomaly-detection"
+          }
+        },
+        {
+          "id": "module-22-data-processing/level-23-report-export",
+          "name": "level-23-report-export",
+          "path": "modules/module-22-data-processing/level-23-report-export",
+          "mission": {
+            "name": "Two Exports",
+            "description": "The invoice data in clean.tsv is final. Finance opens it in Excel, which needs a proper CSV and shows names like Zo\u00eb as Zo\u00c3\u00ab unless the file declares itself UTF-8. The API team wants the same records as JSON with real numbers. Some company names and notes contain commas and double quotes, and the ZIP codes of Massachusetts start with 0.",
+            "objective": "Write export.csv: the UTF-8 byte-order mark (bytes ef bb bf), then the header and every row of clean.tsv as RFC 4180 CSV: fields separated by commas, a field that contains a comma or a double quote enclosed in double quotes, and each double quote inside it doubled. Write export.json: one JSON array with one object per row of clean.tsv, in order, whose keys are the column names; id and amount are JSON numbers, every other value (zip included) is a string exactly as in clean.tsv. No byte-order mark in the JSON. Leave clean.tsv unchanged.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "30m",
+            "concepts": [
+              "RFC 4180 quoting",
+              "UTF-8 BOM for Excel",
+              "awk $1 = $1 to rebuild records",
+              "jq -R -s",
+              "transpose / from_entries",
+              "tonumber vs strings"
+            ],
+            "module": "module-22-data-processing",
+            "level": "level-23-report-export"
+          }
+        },
+        {
+          "id": "module-22-data-processing/level-24-data-audit",
+          "name": "level-24-data-audit",
+          "path": "modules/module-22-data-processing/level-24-data-audit",
+          "mission": {
+            "name": "ETL Audit",
+            "description": "Last night's ETL job loaded the invoices from source.csv into the warehouse; loaded.tsv is what actually arrived. Finance says the warehouse total doesn't match the billing system, yet the job log claims success because both files have the same number of rows. The loader writes ids in uppercase, separates fields with tabs and stores amounts in cents.",
+            "objective": "Write audit.txt with four sections, in this order, each starting with its header line: [missing] lists every invoice id in source.csv that is not in loaded.tsv; [duplicated] lists every id that occurs more than once in loaded.tsv (each id once); [changed] has one line 'id source_amount loaded_amount' for every invoice whose loaded amount differs from source.csv; [totals] has the two lines 'source <sum of source.csv>' and 'loaded <sum of all rows of loaded.tsv>'. Ids are written in lowercase as in source.csv, one per line and sorted within each section; all amounts in units with exactly two decimals (1520.00). Leave both input files unchanged.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "35m",
+            "concepts": [
+              "data reconciliation",
+              "comm -23",
+              "uniq -d",
+              "join on a normalised key",
+              "cents and floating point rounding",
+              "$NF when fields contain the delimiter"
+            ],
+            "module": "module-22-data-processing",
+            "level": "level-24-data-audit"
           }
         }
       ]

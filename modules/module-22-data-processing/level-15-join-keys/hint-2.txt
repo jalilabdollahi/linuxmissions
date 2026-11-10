@@ -1,1 +1,11 @@
-An awk one-liner can skip the header and add the second field.
+  awk -F, '{ n[$4]++; s[$4] += $3 } END { ... printf "%s,%d,%.2f\n" ... }'
+                             one summary line per customer id (column 4)
+  tail -n +2 FILE            skip the header
+  sort -t, -k1,1             sort on field 1 AS TEXT: the order join compares in
+                             (sort -n puts 9 before 10, join expects "10" before "9")
+  join -t, A B               pair lines of A and B on field 1, comma-separated
+       -a1                   also print lines of A without a partner
+       -e NONE -o 1.1,1.2,2.2,2.3   choose the output fields; missing ones become NONE
+  LC_ALL=C                   make sort and join use the same byte order
+Sort the joined result by id as a number at the end: sort -t, -k1,1n.
+More: man join (look for "sorted on the join fields")

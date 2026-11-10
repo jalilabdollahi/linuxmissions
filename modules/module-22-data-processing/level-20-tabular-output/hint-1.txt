@@ -1,1 +1,7 @@
-This is a sorting task followed by deduplication.
+Look at costs.csv with cat -A: which lines are data, where are the extra spaces, and
+which costs are not written as plain decimals? Then sketch the report on paper: a
+header and a rule before the teams, a rule and the TOTAL after them. awk can do all
+of that in one program, with BEGIN for the top and END for the bottom.
+column -t aligns, but it can't right-align numbers to a fixed width or cut names, so
+this report needs printf, where a width and a precision say exactly how each value
+is laid out.

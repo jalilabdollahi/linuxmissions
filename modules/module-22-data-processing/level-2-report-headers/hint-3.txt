@@ -1,1 +1,7 @@
-Example: `grep 'ALERT' report-headers.log > alerts.txt`
+  head -n 1 jan.csv > q1.csv
+      the header, once
+  awk 'FNR > 1' jan.csv feb.csv mar.csv >> q1.csv
+      line 2 onward of each file, in month order, appended; awk prints a
+      newline after feb.csv's last row, so it is not glued to March's first
+  grep -c INV- q1.csv
+      check: the number of invoices

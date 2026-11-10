@@ -1,1 +1,10 @@
-Example: `sort tabular-output-raw.txt | uniq > unique-sorted.txt`
+awk -F, 'BEGIN { rule = "-------------------- ------------"; printf "%-20s %12s\n", "TEAM", "COST (USD)"; print rule } /^#/ || NR == 2 || NF < 2 { next } { name = $1; gsub(/^ +| +$/, "", name); if (length(name) > 20) name = substr(name, 1, 19) "~"; cost = $2 + 0; total += cost; printf "%-20s %12.2f\n", name, cost } END { print rule; printf "%-20s %12.2f\n", "TOTAL", total }' costs.csv > report.txt
+cat report.txt
+
+- BEGIN { ... }                 header and rule before the first line is read
+- /^#/ || NR == 2 || NF < 2     skip the comment, the CSV header and the empty line
+- gsub(/^ +| +$/, "", name)     trim the team name
+- substr(name, 1, 19) "~"       long names: 19 characters plus ~
+- $2 + 0                        the cost as a number (1e3 -> 1000, padding ignored)
+- printf "%-20s %12.2f\n"       name in 20 columns on the left, cost in 12 on the right
+- END { ... }                   rule and TOTAL after the last team

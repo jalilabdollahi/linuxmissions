@@ -1,1 +1,7 @@
-Example: `sort row-filter-raw.txt | uniq > unique-sorted.txt`
+  awk -F, 'NR == 1 || (tolower($5) == "refunded" && $4 > 100)' orders.csv > big_refunds.csv
+      -F,                         split on commas: $4 = amount, $5 = status
+      NR == 1                     keep the header
+      tolower($5) == "refunded"   Refunded and REFUNDED count, partially_refunded does not
+      $4 > 100                    numeric test: 100.00 is not more than 100
+  cut -d, -f5 big_refunds.csv | sort | uniq -c
+      check: only spellings of refunded (and the header word) are left

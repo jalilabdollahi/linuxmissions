@@ -1,15 +1,11 @@
 {
-  "name": "Aggregation: Cleanup Sweep",
-  "description": "In the data processing lab, a task related to Aggregation needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/aggregation and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Aggregation",
-    "find",
-    "rm"
-  ],
+  "name": "Per-Endpoint API Stats",
+  "description": "For Friday's API review the team wants one line of numbers per endpoint. The gateway exported yesterday's traffic as gateway.tsv: a header line, then one request per line with tab-separated time, client, method, url, status, bytes and latency_ms. URLs carry query strings (/api/users?id=7), and responses without a body (304 Not Modified) have - as their byte count.",
+  "objective": "Write stats.tsv, tab-separated: the header line endpoint requests bytes avg_ms max_ms, then one line per endpoint (the url without its ? and query string, so /api/users?id=7 counts as /api/users): number of requests, total bytes (- counts as 0), average latency_ms with exactly 1 decimal, and the highest latency_ms. Sort the endpoint lines by number of requests, highest first.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["awk -F'\\t'", "associative arrays", "several accumulators per key", "sub() to strip a query string", "printf %.1f", "sort -t -k -nr"],
   "module": "module-22-data-processing",
   "level": "level-8-aggregation"
 }

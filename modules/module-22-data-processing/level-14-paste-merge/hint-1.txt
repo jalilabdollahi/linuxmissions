@@ -1,1 +1,5 @@
-A short for-loop is the cleanest option here.
+Look at the dump with cat -A scan_dump.txt | less: one parcel takes several lines,
+so the job is to fold every 4 data lines into one row. What must disappear before
+you count lines in fours? Look closely at the line endings of every block, the
+separators included: do all of them end in a plain $?
+The manifest is the reverse problem: many lines (one id each) into one line.

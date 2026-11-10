@@ -1,1 +1,7 @@
-Example: `head -n 3 uniq-count-history.log > first3.txt` and `tail -n 3 uniq-count-history.log > last3.txt`
+  awk '{ print $2 }' probe.log | uniq -c | grep DOWN | sort -rn | head -3
+      the DOWN runs, longest first: the top line is the longest outage
+  awk '$2 == "DOWN" { if (run == 0) start = $1; run++; if (run > best) { best = run; beststart = start }; next } { run = 0 } END { print beststart, best }' probe.log > longest_outage.txt
+      run = length of the current DOWN run, start = its first timestamp;
+      next skips the reset; an UP line ends the run (run = 0); END prints the
+      longest run's start and length
+  cat longest_outage.txt

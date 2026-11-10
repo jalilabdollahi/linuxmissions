@@ -1,15 +1,11 @@
 {
-  "name": "Uniq Count: History Window",
-  "description": "In the data processing lab, a task related to Uniq Count needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of uniq-count-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Uniq Count",
-    "head",
-    "tail"
-  ],
+  "name": "Longest Outage",
+  "description": "The payment API's uptime probe runs once a minute and wrote probe.log for yesterday: a timestamp, UP or DOWN, and the latency or the error it saw. The customer's SLA is breached if a single outage lasted too long, so the total number of DOWN minutes is not the question: separate outages must not be added together.",
+  "objective": "Write longest_outage.txt with one line: the timestamp of the first DOWN probe of the longest unbroken run of DOWN probes, a space, and the number of probes (minutes) in that run, e.g. 2026-11-09T13:42:00Z 17. A run ends at the next UP probe, whatever errors the DOWN probes report. Leave probe.log unchanged.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["uniq -c on unsorted input", "runs of equal lines", "awk state across lines", "sort | uniq -c vs uniq -c"],
   "module": "module-22-data-processing",
   "level": "level-7-uniq-count"
 }

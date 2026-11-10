@@ -1,1 +1,4 @@
-You need a stream editor or another text replacement tool.
+Sorting on the priority column is the easy part. What does sort do with two
+lines whose priority is the same? Try it and compare the P1 tickets in your
+result with the P1 tickets in queue.txt (grep ' P1 ' on both): are they in the
+same order? Which column decides the order between them now?

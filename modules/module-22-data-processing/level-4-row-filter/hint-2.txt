@@ -1,1 +1,8 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+  cut -d, -f5 orders.csv | sort | uniq -c     every status spelling and its count
+  awk -F, 'CONDITION' orders.csv              prints the lines where CONDITION is true
+      NR == 1                    the first line (the header)
+      tolower($5) == "refunded"  field 5, lowercased, compared as a whole
+      $4 > 100                   field 4 compared as a number
+      A || (B && C)              header, or both conditions
+grep -i refunded matches partially_refunded too; a whole-field test does not.
+More: man awk

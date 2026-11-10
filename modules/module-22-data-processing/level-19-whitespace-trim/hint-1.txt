@@ -1,1 +1,7 @@
-You need a stream editor or another text replacement tool.
+Make the invisible visible: cat -A users.tsv | head shows tabs as ^I, line ends as $
+and carriage returns as ^M. Some "spaces" show up as M-BM- : those two bytes (c2 a0
+in od -c / xxd) are a non-breaking space, a different character from the normal
+space (20). Trimming that only knows about ' ' or [[:space:]] leaves them in place.
+So: first turn the odd characters into normal ones, then trim each field, then drop
+the repeated users. Work per field, not per line: a tab-separated line has a
+padded field in the middle too.

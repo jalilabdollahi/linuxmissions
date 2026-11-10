@@ -1,15 +1,11 @@
 {
-  "name": "Numeric Sort: Field Extract",
-  "description": "In the data processing lab, a task related to Numeric Sort needs cleanup before the handoff.",
-  "objective": "Extract the second column from numeric-sort-report.csv into owners.txt",
+  "name": "Hottest Readings",
+  "description": "The plant's data logger exports readings.csv (sensor,timestamp,value). Different sensor firmware writes numbers differently: -3.5, 12, 0.75 and scientific notation such as 1.2e3 or 4.75E2. Ops suspects a few sensors spiked and wants the worst readings first.",
+  "objective": "Write top10.txt with the 10 data rows of readings.csv that have the highest value (as a number: 1.2e3 is 1200), highest first, each row copied unchanged, no header. Leave readings.csv unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Numeric Sort",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "10m",
+  "concepts": ["sort -t, -k3,3", "sort -g vs -n", "sort -r", "scientific notation", "head -n"],
   "module": "module-22-data-processing",
   "level": "level-5-numeric-sort"
 }

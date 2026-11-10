@@ -1,15 +1,11 @@
 {
-  "name": "Data Audit: Permission Fix",
-  "description": "In the data processing lab, a task related to Data Audit needs cleanup before the handoff.",
-  "objective": "Set the mode of data-audit.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Data Audit",
-    "chmod",
-    "permissions"
-  ],
+  "name": "ETL Audit",
+  "description": "Last night's ETL job loaded the invoices from source.csv into the warehouse; loaded.tsv is what actually arrived. Finance says the warehouse total doesn't match the billing system, yet the job log claims success because both files have the same number of rows. The loader writes ids in uppercase, separates fields with tabs and stores amounts in cents.",
+  "objective": "Write audit.txt with four sections, in this order, each starting with its header line: [missing] lists every invoice id in source.csv that is not in loaded.tsv; [duplicated] lists every id that occurs more than once in loaded.tsv (each id once); [changed] has one line 'id source_amount loaded_amount' for every invoice whose loaded amount differs from source.csv; [totals] has the two lines 'source <sum of source.csv>' and 'loaded <sum of all rows of loaded.tsv>'. Ids are written in lowercase as in source.csv, one per line and sorted within each section; all amounts in units with exactly two decimals (1520.00). Leave both input files unchanged.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["data reconciliation", "comm -23", "uniq -d", "join on a normalised key", "cents and floating point rounding", "$NF when fields contain the delimiter"],
   "module": "module-22-data-processing",
   "level": "level-24-data-audit"
 }

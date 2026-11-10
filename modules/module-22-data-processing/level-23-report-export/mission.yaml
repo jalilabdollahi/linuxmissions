@@ -1,15 +1,11 @@
 {
-  "name": "Report Export: Backup Bundle",
-  "description": "In the data processing lab, a task related to Report Export needs cleanup before the handoff.",
-  "objective": "Create report-export-backup.tar.gz containing the files under bundle/report-export",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Report Export",
-    "tar",
-    "compression"
-  ],
+  "name": "Two Exports",
+  "description": "The invoice data in clean.tsv is final. Finance opens it in Excel, which needs a proper CSV and shows names like Zoë as ZoÃ« unless the file declares itself UTF-8. The API team wants the same records as JSON with real numbers. Some company names and notes contain commas and double quotes, and the ZIP codes of Massachusetts start with 0.",
+  "objective": "Write export.csv: the UTF-8 byte-order mark (bytes ef bb bf), then the header and every row of clean.tsv as RFC 4180 CSV: fields separated by commas, a field that contains a comma or a double quote enclosed in double quotes, and each double quote inside it doubled. Write export.json: one JSON array with one object per row of clean.tsv, in order, whose keys are the column names; id and amount are JSON numbers, every other value (zip included) is a string exactly as in clean.tsv. No byte-order mark in the JSON. Leave clean.tsv unchanged.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["RFC 4180 quoting", "UTF-8 BOM for Excel", "awk $1 = $1 to rebuild records", "jq -R -s", "transpose / from_entries", "tonumber vs strings"],
   "module": "module-22-data-processing",
   "level": "level-23-report-export"
 }

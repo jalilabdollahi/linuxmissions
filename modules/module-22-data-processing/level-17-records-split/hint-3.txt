@@ -1,1 +1,10 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+rm -f by_region/*
+awk -F, 'NR == 1 { header = $0; next } { f = $3; gsub("/", "-", f); gsub(" ", "_", f); f = "by_region/" f ".csv"; if (!(f in seen)) { print header > f; seen[f] = 1 } print > f }' all_orders.csv
+wc -l by_region/*
+
+- rm -f by_region/*              last month's files go, Benelux.csv included
+- NR == 1 { header = $0; next }  keep the header for later, don't route it
+- f = $3; gsub(...)              EU/West -> EU-West, Asia Pacific -> Asia_Pacific
+- if (!(f in seen)) ...          header only the first time this file is written
+- print > f                      the row goes to its region's file (awk keeps it open)
+- wc -l                          the totals should add up to the source minus its header

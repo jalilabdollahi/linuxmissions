@@ -1,1 +1,8 @@
-`mkdir -p organized/csv-cleanup` followed by `mv inbox/csv-cleanup.txt organized/csv-cleanup/csv-cleanup-notes.txt` is enough.
+  file contacts.csv            reports "UTF-8 (with BOM) ... with CRLF line terminators"
+  head -1 contacts.csv | od -c shows the BOM as 357 273 277 and the CR as \r
+  tr -d '\r'                   deletes every carriage return
+  sed '1s/^\xEF\xBB\xBF//'     removes the BOM from line 1 (GNU sed; on macOS use
+                               tail -c +4 contacts.csv, which skips the first 3 bytes)
+  grep -v '^$'                 keeps only the lines that are not empty
+Order matters: a blank row is "\r" until the CR is gone, so '^$' does not match it yet.
+More: man tr, man sed, man grep

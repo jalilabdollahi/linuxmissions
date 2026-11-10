@@ -1,15 +1,11 @@
 {
-  "name": "Whitespace Trim: Config Rewrite",
-  "description": "In the data processing lab, a task related to Whitespace Trim needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in whitespace-trim.conf and save the fixed result to fixed.conf",
+  "name": "Directory Export",
+  "description": "The nightly SSO sync rejects half of the HR export users.tsv: it says user 'u1234 ' does not exist, and 'Anna Berg' doesn't match 'Anna Berg' although they look identical. The export has padded fields, odd invisible characters, some lines saved on Windows and users that appear twice.",
+  "objective": "Write users_clean.tsv: users.tsv with, in every field (header included), each non-breaking space (U+00A0) turned into a normal space, every run of spaces squeezed into one, and the spaces at the start and end of the field removed. Lines end in LF only. When a username (field 1, after cleaning) appears more than once, keep only its first record. Everything else, accented letters included, stays exactly as it is. Leave users.tsv unchanged.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Whitespace Trim",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "20m",
+  "concepts": ["cat -A / od -c", "U+00A0 non-breaking space", "sed $'\\xc2\\xa0'", "awk trimming per field", "!seen[$1]++", "CRLF"],
   "module": "module-22-data-processing",
   "level": "level-19-whitespace-trim"
 }

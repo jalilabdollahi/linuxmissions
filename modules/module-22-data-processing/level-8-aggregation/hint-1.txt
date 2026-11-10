@@ -1,1 +1,5 @@
-Use a targeted file search so you do not remove the wrong files.
+Look at the url column: cut -f4 gateway.tsv | sort | uniq -c | sort -rn | head.
+Every distinct query string looks like its own endpoint, so cut the url at the
+?. Then you need four numbers per endpoint at once (count, byte sum, latency
+sum for the average, latency maximum), collected in one pass over the file,
+and the header line is not a request.

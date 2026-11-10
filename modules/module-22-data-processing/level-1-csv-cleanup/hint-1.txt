@@ -1,1 +1,4 @@
-Inspect the sandbox, then create the missing path for organized/csv-cleanup/csv-cleanup-notes.txt.
+cat hides the problems; make the invisible bytes visible. Look at the first
+line with cat -A or od -c: what comes before "first_name"? What is at the end of
+every line? The file command gives a one-line summary too. Then think about the
+blank rows: once the line endings are fixed, how do you recognise an empty line?

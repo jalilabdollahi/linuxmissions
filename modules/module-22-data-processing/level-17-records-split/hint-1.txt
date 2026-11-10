@@ -1,1 +1,7 @@
-This mission is about cron field order and exact syntax.
+First see what you are splitting: cut -d, -f3 all_orders.csv | sort | uniq -c lists the
+regions and their row counts (and the total to check against later). Then look at
+by_region/: what is already there, and should it stay?
+A region comes back hundreds of times in the file. A loop with grep per region
+works, but one program that sends every row to "its" file in a single pass is the
+clean way. What should happen the first time a file is written, and every time
+after that? And what does a / in a file name mean to the shell?

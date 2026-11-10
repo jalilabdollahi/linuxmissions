@@ -1,1 +1,4 @@
-This is a delimiter-based column extraction task.
+Sort on the value column only, and look at what the plain sorts do with it:
+is 9 above 12? Is 1.2e3 (that is 1.2 x 10^3 = 1200) treated as 1200 or as
+1.2? Check the end of a sorted list, not only the start. And the header line
+is not a reading.

@@ -1,1 +1,7 @@
-Inspect the sandbox, then create the missing path for organized/summary-totals/summary-totals-notes.txt.
+Two jobs. First bring the rows of each team together (sort by department, then team)
+without mixing up the order of the rows inside a team. Then walk through the sorted
+rows once and notice the moment the team or the department changes: that is where
+the subtotal of the group that just ended goes. And the very last group never sees
+a "change"; something has to print its totals after the last line.
+Look at the amounts too: how many commas are on a line like
+Finance,Payroll,2026-10-07,Contractor hours,"1,234.50"?

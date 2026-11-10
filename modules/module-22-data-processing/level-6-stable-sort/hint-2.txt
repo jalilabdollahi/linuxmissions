@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  sort -k2,2 FILE      the key is field 2 and only field 2 (-k2 alone means
+                       "from field 2 to the end of the line")
+  sort -s              stable: lines with equal keys keep their input order.
+                       Without -s, sort breaks ties by comparing the whole
+                       line, which here means by the random ticket id
+  P1 < P2 < P3 < P4 as text, so no numeric option is needed.
+More: man sort (look for --stable)

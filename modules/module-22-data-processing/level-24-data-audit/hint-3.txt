@@ -1,1 +1,15 @@
-Example: `chmod 640 data-audit.sh`
+export LC_ALL=C
+awk -F, 'NR > 1 { printf "%s %.0f\n", $1, $NF * 100 }' source.csv | sort > src.ids
+awk -F'\t' 'NR > 1 { print tolower($1), $3 }' loaded.tsv | sort > load.ids
+{ echo "[missing]"; comm -23 <(cut -d' ' -f1 src.ids) <(cut -d' ' -f1 load.ids | sort -u)
+  echo "[duplicated]"; cut -d' ' -f1 load.ids | uniq -d
+  echo "[changed]"; join src.ids <(sort -u load.ids) | awk '$2 != $3 { printf "%s %.2f %.2f\n", $1, $2 / 100, $3 / 100 }'
+  echo "[totals]"; awk '{ s += $2 } END { printf "source %.2f\n", s / 100 }' src.ids; awk '{ s += $2 } END { printf "loaded %.2f\n", s / 100 }' load.ids; } > audit.txt
+cat audit.txt
+
+- src.ids / load.ids          "id cents" per line, lowercase ids, sorted; $NF and %.0f
+- comm -23 ... sort -u        ids in the source that never arrived
+- uniq -d                     ids loaded more than once
+- join ... sort -u            source and loaded cents side by side, each invoice once
+- awk '$2 != $3'              amounts that changed, printed back in units
+- the two sums                every loaded row counts, duplicates too

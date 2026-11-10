@@ -205,8 +205,9 @@ linuxmissions/
 │   └── certificate.py
 ├── scripts/
 │   ├── generate_levels.py
-│   ├── generate_expanded_curriculum.py
-│   └── generated_level_runtime.py
+│   ├── test_levels.py
+│   ├── test-levels-docker.sh
+│   └── check_duplicates.py
 └── modules/
     ├── module-1-filesystem/
     ├── module-2-text/
@@ -221,13 +222,15 @@ level-N-name/
 ├── mission.yaml
 ├── setup.sh
 ├── validate.sh
+├── solution.sh
 ├── hint-1.txt
 ├── hint-2.txt
 ├── hint-3.txt
 └── debrief.md
 ```
 
-Some generated levels also include a `level.json` file used by the shared setup/validation runtime.
+Every level is written by hand for its topic; see `docs/LEVEL_AUTHORING.md`. Shared
+stand-ins for tools that need root, a daemon or the network live in `mocks/`.
 
 ---
 

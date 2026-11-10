@@ -1,1 +1,6 @@
-Archive the directory contents without leaving anything out.
+  coproc NAME { cmd; }        run cmd in the background with two pipes: ${NAME[0]} reads its output, ${NAME[1]} writes its input
+  read -r -d ':' -t 5 -u FD VAR    read up to the next ":" (not a newline), wait at most 5 s, from file descriptor FD
+  case $VAR in *word*) ... ;; esac     decide which question it was
+  echo text >&"${NAME[1]}"    send an answer
+`. ./answers.conf` loads the values as shell variables. A mkfifo pair of named pipes does the same job.
+More: help coproc, help read

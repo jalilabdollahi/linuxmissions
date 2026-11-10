@@ -1,1 +1,5 @@
-Example: `mkdir -p organized/tee-append && mv inbox/tee-append.txt organized/tee-append/tee-append-notes.txt`
+  ./maintenance.sh 2>&1 | tee -a audit.log
+      2>&1      the WARN lines go to stderr; this joins them to stdout so the pipe carries them
+      | tee     prints each line on the screen and writes it to the file
+      -a        append: the six months of history stay where they are
+  tail -n 8 audit.log

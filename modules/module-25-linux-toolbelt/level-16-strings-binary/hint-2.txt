@@ -1,1 +1,5 @@
-A du pipeline sorted numerically is a strong fit here.
+  strings FILE            print runs of printable characters (default: 4 or more, 7-bit)
+  strings -n 8 FILE       only runs of 8 or more, fewer random false hits
+  strings -e l FILE       text stored as 16-bit little-endian characters (UTF-16LE)
+  sed '/A/,/B/d'          delete everything from a line matching A to a line matching B
+Pipe strings into grep or sed to find and filter. More: man strings

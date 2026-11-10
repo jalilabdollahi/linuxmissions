@@ -1,15 +1,11 @@
 {
-  "name": "Strings Binary: Capacity Report",
-  "description": "In the linux toolbelt lab, a task related to Strings Binary needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Strings Binary",
-    "du",
-    "sort"
-  ],
+  "name": "What Does The Agent Phone Home To",
+  "description": "A vendor monitoring agent opens a connection nobody approved. There is no source, only the binary agent.bin. Security needs two facts from it: the endpoint it reports to and the licence ID baked into it.",
+  "objective": "Find the real endpoint URL and the real licence ID in agent.bin and write them to findings.txt as exactly two lines: endpoint=<url> and license=<id>. The binary also carries a block marked TEST (between TEST-BEGIN and TEST-END) with fixture values that look real but are not; they must not be reported. The licence ID is stored in a different text encoding from the rest of the strings.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["strings", "strings -n", "strings -e l", "strings -t d", "grep", "sed ranges"],
   "module": "module-25-linux-toolbelt",
   "level": "level-16-strings-binary"
 }

@@ -1,17 +1,23 @@
-# Time Command: Path Realignment
+# Why Are The Reports Slow
 
-## What you practiced
-- This level focused on **Time Command** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`time` reports three clocks. `real` is wall-clock time, `user` is CPU spent
+running the program's own code and `sys` is CPU spent in the kernel on the
+program's behalf. A report that waits has a large `real` and almost nothing
+else; a number cruncher has `user` close to `real`; a program that makes
+millions of one-byte system calls shows more `sys` than `user`. Because
+`time` is a bash keyword and prints to the shell's own stderr, a redirect on
+the command (`time cmd 2> f`) catches nothing: wrap it as
+`{ time cmd; } 2> f`. `TIMEFORMAT` shapes the output.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- Trying `/usr/bin/time`: the GNU program is not installed here, and the
+  keyword is enough.
+- Comparing only `real`: two reports with the same `real` can need opposite
+  fixes (more CPU versus fewer system calls versus a faster dependency).
+- Running each report once under load and trusting a close call; the margins
+  here are wide on purpose.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/time-command/time-command-notes.txt.
+## Learn next
+`strace -c cmd` (when installed) counts system calls, and `times` prints the
+accumulated user and sys time of the shell itself.

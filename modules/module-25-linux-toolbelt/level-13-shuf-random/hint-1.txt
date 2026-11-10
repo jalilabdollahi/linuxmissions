@@ -1,1 +1,3 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Two things must be true at once: the 25 lines are random, and anyone can get
+exactly the same 25 again. A plain "give me random lines" will never do the
+second. Also look at the first line of tx.csv: is it a transaction?

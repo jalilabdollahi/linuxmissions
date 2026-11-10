@@ -1,1 +1,5 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  base64 FILE            encode; GNU base64 breaks the output into lines of 76 characters
+  base64 -w0 FILE        no wrapping at all
+  head -n 1 FILE         the first line, including its newline
+  tr -d '\n'             remove newlines;   printf '%s' text   prints without adding one (echo adds one)
+Check your work with `base64 -d` on a value and compare with `cmp`. More: man base64

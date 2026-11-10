@@ -1,1 +1,6 @@
-An awk one-liner can skip the header and add the second field.
+  csplit FILE '/REGEX/' '{*}'    cut before every line matching REGEX, as often as it matches
+  csplit -z                      remove empty pieces
+  csplit -s -f PREFIX -b FMT     quiet, choose the file name prefix and the number format
+Then loop over the pieces, read `kind:` and the name under `metadata:`, and write each
+piece to its final name. Remember the --- line is the first line of each piece.
+More: man csplit

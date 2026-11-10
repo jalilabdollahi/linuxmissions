@@ -1,17 +1,18 @@
-# Strings Binary: Capacity Report
+# What Does The Agent Phone Home To
 
-## What you practiced
-- This level focused on **Strings Binary** in a safe sandbox.
-- The shortest path usually combines `du` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`strings` scans a file for runs of printable characters, which is how readable
+text is found inside code. `-n 8` ignores short runs that random bytes produce
+by accident. The licence ID was stored as UTF-16LE (two bytes per character,
+every second byte zero), which the default 7-bit mode cannot see: `-e l`
+reads 16-bit little-endian characters instead. Because the output is in file
+order, a `sed` range from `TEST-BEGIN` to `TEST-END` removes the fixtures.
 
-## Commands to remember
-```bash
-du -s datasets/*
-du -sh datasets/* | sort -h
-sort -n report.txt | tail -n 1
-```
+## Common mistakes
+- `strings agent.bin | grep http` finds the decoys too and no licence at all.
+- Reading `strings -e b` (big-endian) gives nothing sensible: UTF-16 comes in
+  two byte orders and Windows and Linux builds use little-endian.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Measure directory sizes before deciding which one is largest.
+## Learn next
+`strings -t d` prints the byte offset of every hit, handy with `xxd -s OFFSET`
+(level 18) to look at the bytes around a string.

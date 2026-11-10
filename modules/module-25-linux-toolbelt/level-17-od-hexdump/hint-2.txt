@@ -1,1 +1,7 @@
-Write the schedule into crontab.txt using the standard five time fields.
+  od -j N                  skip the first N bytes
+  od -w16                  16 bytes per output row (one record)
+  od -A n                  no address column;   od -v   do not collapse repeated rows
+  od -t u4 / u2 / f4       print as unsigned 4-byte, unsigned 2-byte or 4-byte float numbers
+  od --endian=little       byte order
+Several -t options print the same row once per type. `paste - - -` joins three lines into one.
+More: man od

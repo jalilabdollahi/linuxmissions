@@ -1,17 +1,21 @@
-# Tac Reverse: History Window
+# Newest Release First
 
-## What you practiced
-- This level focused on **Tac Reverse** in a safe sandbox.
-- The shortest path usually combines `head` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`tac` reverses *records*, and a record is whatever lies between separators. By
+default the separator is a newline, so it reverses lines. `-s '----'` makes the
+separator the ---- marker, so each release is one record. By default the
+separator is treated as the *end* of a record, which would move every ----
+line to the wrong end of its block; `-b` attaches it to the start of the record
+instead, matching how the file is written.
 
-## Commands to remember
-```bash
-head -n 3 file.log
-tail -n 3 file.log
-tail -f file.log
-```
+## Common mistakes
+- Plain `tac CHANGES`: the order of lines inside each release is reversed too.
+- `tac -s '----'` without `-b`: the blocks come out in order but each ----
+  separator ends up after its block, shifting every header.
+- A separator string that also occurs inside a line splits that line; check the
+  data, or use `-r` with a regular expression.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use one command for the beginning of the file and another for the end.
+## Learn next
+`tac -r -s '^v[0-9]'` style regular-expression separators can split at a
+version header instead, and awk can do the same job when the rule is more
+complicated than "starts with".

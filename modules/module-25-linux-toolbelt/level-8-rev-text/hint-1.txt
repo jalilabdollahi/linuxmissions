@@ -1,1 +1,5 @@
-Use a targeted file search so you do not remove the wrong files.
+Look at a handful of lines in urls.txt: what has to be removed before the
+host is left, and in which order do the interesting labels sit? Counting the
+*last* labels of a variable-length name is awkward when you read left to
+right. Also check the hosts under bbc.co.uk-style suffixes: what would "last
+two labels" give for them?

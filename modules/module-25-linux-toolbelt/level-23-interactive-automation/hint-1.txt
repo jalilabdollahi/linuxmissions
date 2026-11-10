@@ -1,1 +1,4 @@
-Use tar with create, gzip, and file flags.
+Typing the answers in a fixed order only works by luck: the wizard picks the
+order. The script has to read what the wizard says, decide which question it
+is, and answer that one. Notice the prompts do not end with a newline, so a
+normal line-by-line `read` waits forever. What does each prompt end with?

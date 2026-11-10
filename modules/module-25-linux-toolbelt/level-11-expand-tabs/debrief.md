@@ -1,17 +1,20 @@
-# Expand Tabs: Restore Drill
+# YAML Forbids Tabs
 
-## What you practiced
-- This level focused on **Expand Tabs** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A tab does not mean "two spaces": it moves to the next tab stop. `expand -t 2`
+sets stops every 2 columns, so a tab at column 0 becomes 2 spaces, a space
+followed by a tab becomes 2 spaces as well (the tab only has to reach column
+2), and a tab after two spaces becomes 2 more. `-i` limits the conversion to
+the leading whitespace of each line, so the tabs inside `banner` and `message`
+are left alone. The output goes to a new file and is moved over the original
+because `> deploy.yaml` would truncate the file before `expand` reads it.
 
-## Commands to remember
-```bash
-tar -tf archive.tar.gz
-tar -xzf archive.tar.gz
-ls -R restored/
-```
+## Common mistakes
+- `sed 's/\t/  /g'`: every tab becomes two spaces, which breaks the mixed
+  lines (space + tab ends up with 3 spaces) and also changes the quoted values.
+- `expand -t 2` without `-i`: the meaningful tabs inside the values go too.
+- `expand ... > deploy.yaml`: the file is empty afterwards.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: List the archive if you want to inspect it first, then extract it.
+## Learn next
+`unexpand` goes the other way (next level), and `grep -nP '\t' file` lists the
+lines that contain a tab, with `cat -A` or `grep -c` to check the result.

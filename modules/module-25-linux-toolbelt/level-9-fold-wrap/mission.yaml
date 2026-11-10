@@ -1,15 +1,11 @@
 {
-  "name": "Fold Wrap: Link Repair",
-  "description": "In the linux toolbelt lab, a task related to Fold Wrap needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/fold-wrap.conf",
+  "name": "Seventy Characters per SMS",
+  "description": "The paging gateway accepts messages of at most 70 characters per line and rejects the whole alert if one line is longer. alert.txt has three long lines, one of which contains a link longer than 70 characters on its own.",
+  "objective": "Write alert.sms from alert.txt so that no line is longer than 70 characters, words are broken only where there is no other choice (a word longer than the limit has to be cut), and no text is lost or changed: apart from the inserted line breaks, alert.sms is identical to alert.txt, and the three original lines still end where they did.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Fold Wrap",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "15m",
+  "concepts": ["fold -w", "fold -s break at spaces", "hard break of an over-long word", "fmt vs fold"],
   "module": "module-25-linux-toolbelt",
   "level": "level-9-fold-wrap"
 }

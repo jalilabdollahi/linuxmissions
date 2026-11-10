@@ -1,1 +1,6 @@
-Use chmod with octal mode 640.
+  csplit -z -s -f parts/p- -b '%02d' FILE '/^--BOUNDARY/' '{*}'    one file per part (boundary from the Content-Type header)
+  sed '1,/^$/d'              delete from line 1 through the first blank line: part headers gone, body left
+  base64 -d                  decode the body
+  file -b FILE               name the type from the content (xxd FILE | head -1 shows the magic bytes: 1f 8b = gzip)
+  zcat FILE                  read a gzip file;   iconv -f UTF-16 -t UTF-8   convert text to something grep understands
+Pick each answer with grep -c / grep -o. More: man csplit, man file, man iconv

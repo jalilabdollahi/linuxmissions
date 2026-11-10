@@ -1,17 +1,19 @@
-# Seq Command: Noise Dedup
+# Labels for the B-Side PDUs
 
-## What you practiced
-- This level focused on **Seq Command** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`seq FIRST INCREMENT LAST` generates the numbers, and `-f` takes a printf-style
+format that is applied to each of them, so the label text and the zero padding
+(`%02g`) come out of one command. The request gives the letter and the
+range; the format has to carry the letter, because `seq` only prints numbers
+and whatever you put around them in the format.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- No padding: `rack-a-2` sorts after `rack-a-18` as text.
+- `seq -w` pads to the width of the *last* number, which is right here, but it
+  would give `002` the moment a range reaches 100, and it cannot add text.
+- Counting with `{2..48..2}` and `printf`: it works in bash, but breaks when the
+  numbers come from variables (brace expansion happens before variables).
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Learn next
+`seq` accepts decimals and descending ranges (`seq 10 -2 0`), and
+`seq -s,` joins the numbers with a separator instead of newlines.

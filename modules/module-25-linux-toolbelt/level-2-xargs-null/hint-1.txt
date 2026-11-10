@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in xargs-null.log.
+Run `find photos -name '*.thumb'` and look at the odd names in the output. A
+pipe from find to rm sends names as text, one per line, and xargs has to split
+that text back into names. What characters inside a name could confuse that?
+Also: is a directory called *.thumb a thumbnail?

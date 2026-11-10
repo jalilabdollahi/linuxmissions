@@ -1,16 +1,11 @@
 {
-  "name": "Tee Append: Path Realignment",
-  "description": "In the linux toolbelt lab, a task related to Tee Append needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/tee-append.txt to organized/tee-append/tee-append-notes.txt",
+  "name": "Append, Don't Overwrite",
+  "description": "The nightly maintenance script prints a report, and compliance wants it kept in audit.log, which already holds six months of history. Last quarter someone ran the script into the log with a plain redirect and the old entries were gone for good.",
+  "objective": "Run ./maintenance.sh once so that its complete output (what it prints normally and what it prints as warnings) both appears on your screen and is added to the end of audit.log. The existing history in audit.log must stay exactly as it is, and maintenance.sh must not be edited.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Tee Append",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "10m",
+  "concepts": ["tee -a", "tee overwrites by default", "2>&1", "stdout vs stderr"],
   "module": "module-25-linux-toolbelt",
   "level": "level-1-tee-append"
 }

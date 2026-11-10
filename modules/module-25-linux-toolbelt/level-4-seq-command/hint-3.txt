@@ -1,1 +1,6 @@
-Example: `sort seq-command-raw.txt | uniq > unique-sorted.txt`
+  letter=$(awk '/^rack:/ {print $2}' label-request.txt); first=$(awk '/^first/ {print $3}' label-request.txt); last=$(awk '/^last/ {print $3}' label-request.txt)
+  seq -f "rack-$letter-%02g" $first 2 $last > labels.txt
+      the first line only reads the three values out of the request file (you can also just type them)
+      -f "rack-$letter-%02g"  label text, then the number as 2 digits with zero padding
+      $first 2 $last          first position, increment 2, last position
+  head -3 labels.txt

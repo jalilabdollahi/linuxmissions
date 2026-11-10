@@ -1,15 +1,11 @@
 {
-  "name": "Rev Text: Cleanup Sweep",
-  "description": "In the linux toolbelt lab, a task related to Rev Text needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/rev-text and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Rev Text",
-    "find",
-    "rm"
-  ],
+  "name": "Traffic Per Registrable Domain",
+  "description": "Marketing wants to know which sites send the most traffic, per registrable domain: shop.example.com and www.example.com count as example.com, but shop.bbc.co.uk counts as bbc.co.uk. The 5,000 request URLs in urls.txt come with ports, paths, queries, odd capitalization and the occasional trailing dot.",
+  "objective": "Write domains.txt with one line per registrable domain, as: the request count, a single space, the domain in lowercase. The registrable domain is the last two labels of the host, or the last three when the last two are listed in two-level-suffixes.txt (co.uk and the like). Sort by count, highest first; domains with the same count in plain byte order (LC_ALL=C sort). No other lines; leading spaces are ignored.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "25m",
+  "concepts": ["rev | cut | rev", "cut -d. -f", "sed to strip URL parts", "sort | uniq -c | sort -nr"],
   "module": "module-25-linux-toolbelt",
   "level": "level-8-rev-text"
 }

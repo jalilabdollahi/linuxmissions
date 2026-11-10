@@ -1,1 +1,11 @@
-Example: `chmod 640 unexpand-tabs.sh`
+  awk '/^[^ \t#]/ { rule = ($0 ~ /^[^=:]*:([^=]|$)/ && $0 !~ /^\./) } /^[ \t]*$/ { rule = 0 } /^        [^ ]/ && rule { print NR }' Makefile > recipe.lines
+  n=0
+  while IFS= read -r line; do
+    n=$((n + 1))
+    if grep -qx "$n" recipe.lines; then printf '%s\n' "$line" | unexpand --first-only -t 8; else printf '%s\n' "$line"; fi
+  done < Makefile > Makefile.new && mv Makefile.new Makefile
+      awk line: "rule" is on after a "target: deps" line and off at a blank line; every 8-space line seen while it is on is a recipe line, and its number goes to recipe.lines
+      the loop reads Makefile line by line (IFS= and -r keep the spaces) and counts the lines
+      lines listed in recipe.lines go through unexpand (8 spaces become a tab); all others are printed unchanged
+      > Makefile.new && mv  write a new file, then replace the original
+  grep -nP '^\t' Makefile | head

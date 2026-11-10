@@ -1,15 +1,11 @@
 {
-  "name": "Xargs Null: Alert Filter",
-  "description": "In the linux toolbelt lab, a task related to Xargs Null needs cleanup before the handoff.",
-  "objective": "Write every alert line from xargs-null.log into alerts.txt",
+  "name": "Thumbnails With Awkward Names",
+  "description": "The photo server is running out of space, and the cached thumbnails under photos/ are safe to delete. A teammate already tried a quick find-and-xargs one-liner and it died halfway with an error about quotes.",
+  "objective": "Delete every regular file whose name ends in .thumb anywhere under photos/ (including the ones with spaces, quotes or even a newline in the name). Every other file, and every directory, must stay exactly as it is.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Xargs Null",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["find -print0", "xargs -0", "file names with spaces and quotes", "find -type f -name"],
   "module": "module-25-linux-toolbelt",
   "level": "level-2-xargs-null"
 }

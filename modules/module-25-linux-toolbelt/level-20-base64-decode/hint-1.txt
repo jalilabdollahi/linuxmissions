@@ -1,1 +1,4 @@
-This is a sorting task followed by deduplication.
+Take the blob out of the cron line and look at it: which characters does it
+use, and does `base64 -d` accept it? Decode in steps and look at each result
+before going on, so you know what the next layer is. Never feed any of it to
+`sh`, not even "just to see".

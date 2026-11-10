@@ -1,1 +1,4 @@
-This mission is about cron field order and exact syntax.
+Read FORMAT.txt first and count: the file does not start with a record. Every
+field is a fixed number of bytes at a fixed offset, so a tool that prints bytes
+as numbers of a chosen size can decode them. Check your first row by hand
+against `hexdump -C sensors.bin | head`.

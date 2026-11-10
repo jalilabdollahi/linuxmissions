@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+The message is a stack of parts separated by a boundary line that the header
+declares. First get the parts apart, then decode each one, then find out what
+each one really is: the Content-Type of one attachment is wrong, so look at the
+bytes (the first bytes of a file say what it is). If grep finds nothing in a
+log that is clearly full of ERROR, ask what encoding it is in.

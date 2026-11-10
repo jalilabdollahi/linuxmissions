@@ -1,15 +1,11 @@
 {
-  "name": "Fmt Fill: Backup Bundle",
-  "description": "In the linux toolbelt lab, a task related to Fmt Fill needs cleanup before the handoff.",
-  "objective": "Create fmt-fill-backup.tar.gz containing the files under bundle/fmt-fill",
+  "name": "Reflow the Release Notes",
+  "description": "The release notes in NOTES.txt were drafted with one sentence per line, so the page looks ragged: some lines are tiny, others run past the margin. Paragraphs are separated by blank lines, and the bullet items (an indented list, items separated by blank lines) must stay separate bullets.",
+  "objective": "Write NOTES.wrapped: the text of NOTES.txt reflowed so no line is longer than 72 characters and lines are filled (consecutive short lines of a paragraph or bullet are joined). The words stay the same and in the same order, every paragraph and every bullet item stays a unit of its own, and each bullet still starts on its own line beginning with two spaces and '- '.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Fmt Fill",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "15m",
+  "concepts": ["fmt -w", "paragraphs are separated by blank lines", "indentation is preserved", "fmt vs fold"],
   "module": "module-25-linux-toolbelt",
   "level": "level-10-fmt-fill"
 }

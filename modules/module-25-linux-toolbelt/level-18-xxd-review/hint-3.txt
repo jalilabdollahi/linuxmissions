@@ -1,1 +1,10 @@
-Example: `grep 'ALERT' xxd-review.log > alerts.txt`
+  xxd -p -c1 config.bin > bytes.txt
+      one byte per line, so line N holds offset N-1
+  sed -i '43s/.*/01/' bytes.txt
+      offset 0x2A is 42, which is line 43: replace that byte with 01
+  sum=0; for b in $(head -n 127 bytes.txt); do sum=$((sum + 0x$b)); done
+      add up the first 127 bytes (the 0x makes bash read each as hex)
+  { head -n 127 bytes.txt; printf '%02x\n' $((sum % 256)); } | xxd -r -p > config.new && mv config.new config.bin
+      keep the first 127 bytes, append the checksum modulo 256, and convert the hex back to a binary file
+  cmp -l config.bin config.bin.orig
+      should list exactly two bytes that differ

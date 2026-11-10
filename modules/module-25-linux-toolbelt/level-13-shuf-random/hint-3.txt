@@ -1,1 +1,4 @@
-Example: `chmod +x jobs/shuf-random.sh && jobs/shuf-random.sh`
+  tail -n +2 tx.csv | shuf -n 25 --random-source=seed.bin > sample.csv
+      tail -n +2    print from line 2 to the end, so the header is not a candidate
+      -n 25         stop after 25 lines
+      --random-source=seed.bin    use the bytes of seed.bin, which makes the draw repeatable

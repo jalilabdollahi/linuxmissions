@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+Before touching anything, compare the 8-space lines: which ones come right after
+a `target:` line (those are recipes) and which are the continuation of a variable
+or a comment? A tool that converts every 8-space indent in the file will
+turn the wrong ones into tabs too. You need something that remembers whether you
+are currently inside a rule.

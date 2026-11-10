@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+The program checks whether its output is a terminal, so redirecting it to a
+file makes it quit. You need something that gives it a terminal while still
+recording what it prints. Then look at the recording with `cat -A`: escape
+codes show as ^[ and carriage returns as ^M. What would the screen have looked
+like after each of those?

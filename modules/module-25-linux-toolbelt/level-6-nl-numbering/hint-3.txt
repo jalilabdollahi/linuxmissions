@@ -1,1 +1,5 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' nl-numbering.conf > fixed.conf`
+  nl -b a -w 3 -s ': ' nginx.conf > review.txt
+      -b a     body lines style "all": blank lines are numbered too
+      -w 3     number column 3 characters wide, right-aligned
+      -s ': '  a colon and a space between the number and the line
+  sed -n '1,12p' review.txt

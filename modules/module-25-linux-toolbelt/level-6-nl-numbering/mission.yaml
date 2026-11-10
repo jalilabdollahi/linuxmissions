@@ -1,15 +1,11 @@
 {
-  "name": "Nl Numbering: Config Rewrite",
-  "description": "In the linux toolbelt lab, a task related to Nl Numbering needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in nl-numbering.conf and save the fixed result to fixed.conf",
+  "name": "Line Numbers Like the Editor",
+  "description": "A reviewer left comments on nginx.conf that cite line numbers from their editor ('line 57: why is this open to the world?'). The file you were given has no numbers, and anyone reading the review needs the same numbering.",
+  "objective": "Write review.txt: every line of nginx.conf, blank lines included, numbered as an editor would (the first line is 1, and blank lines count). Format each line as the number right-aligned in 3 characters, a colon, a space, then the original line, e.g. '  7: server {'. Keep nginx.conf unchanged.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Nl Numbering",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["nl -b a", "nl -w", "nl -s", "nl skips blank lines by default"],
   "module": "module-25-linux-toolbelt",
   "level": "level-6-nl-numbering"
 }

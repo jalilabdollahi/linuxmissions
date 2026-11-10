@@ -1,15 +1,11 @@
 {
-  "name": "Script Capture: Field Extract",
-  "description": "In the linux toolbelt lab, a task related to Script Capture needs cleanup before the handoff.",
-  "objective": "Extract the second column from script-capture-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Script Capture",
-    "cut",
-    "awk"
-  ],
+  "name": "A Program That Needs A Terminal",
+  "description": "Vendor support asked for a transcript of ./vendor-diag, but the tool only prints its report when it believes a person is watching: redirect it to a file and it quits. It also draws a spinner and colours with control characters, which turn into junk in a plain text file.",
+  "objective": "Record a session of ./vendor-diag into diag.typescript, with the real report in it (the tool must have run on a terminal). Then give support a clean diag.txt: only the report lines exactly as a person saw them on screen, without colour codes, carriage returns, spinner frames, or the 'Script started/done' lines the recorder adds. Tip for this game's shell: script forwards the shell's own input to the program, so start it with </dev/null, or press Ctrl-C if it seems stuck.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["script -q -c", "pseudo-terminal", "[ -t 1 ]", "ANSI escape codes", "sed", "col -b", "carriage return"],
   "module": "module-25-linux-toolbelt",
   "level": "level-22-script-capture"
 }

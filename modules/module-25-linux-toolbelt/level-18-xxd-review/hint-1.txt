@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in xxd-review.log.
+Two bytes have to change, and the second one depends on the first: patch the
+flag first, then work out the checksum of the result. A text editor will wreck
+a binary file, so look for a way to see the bytes as text, edit that, and turn
+it back. Remember offsets start at 0.

@@ -1,1 +1,6 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+  split -l 5000 FILE PREFIX     cut FILE into pieces of 5000 lines
+  split -d                      numeric suffixes (00, 01, ...) instead of aa, ab
+  --additional-suffix=.csv      put .csv after the number
+  --filter='CMD'                pipe each piece through CMD instead of writing it; $FILE is its name
+  tail -n +2 FILE | split ... - PREFIX     "-" reads the data from the pipe
+More: man split

@@ -1,1 +1,22 @@
-Example: `tar -czf expect-notes-backup.tar.gz bundle/expect-notes`
+  cat > answer.sh <<'SCRIPT'
+  #!/bin/bash
+  . ./answers.conf
+  coproc W { ./provision-wizard; }
+  while IFS= read -r -d ':' -t 5 -u "${W[0]}" prompt; do
+  case $prompt in
+  *Hostname*) reply=$hostname ;;
+  *Region*) reply=$region ;;
+  *size*) reply=$size ;;
+  *Really*) reply=$confirm ;;
+  *Owner*) reply=$owner ;;
+  *Environment*) reply=$env ;;
+  *) continue ;;
+  esac
+  echo "$reply" >&"${W[1]}"
+  done
+  wait
+  SCRIPT
+      . ./answers.conf loads hostname, region, ...; coproc starts the wizard with two pipes
+      read -d ':' returns each chunk up to a prompt's colon; case picks the matching answer; echo >&"${W[1]}" sends it
+      the loop ends when the wizard exits (read gets end of file), then wait collects it
+  bash answer.sh; cat provision.result

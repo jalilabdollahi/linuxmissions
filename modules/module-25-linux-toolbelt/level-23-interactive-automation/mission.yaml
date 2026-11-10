@@ -1,15 +1,11 @@
 {
-  "name": "Expect Notes: Backup Bundle",
-  "description": "In the linux toolbelt lab, a task related to Expect Notes needs cleanup before the handoff.",
-  "objective": "Create expect-notes-backup.tar.gz containing the files under bundle/expect-notes",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Expect Notes",
-    "tar",
-    "compression"
-  ],
+  "name": "Answer The Wizard Without A Human",
+  "description": "The provisioning wizard ./provision-wizard asks six questions, but it asks them in a different order every time and writes its prompts without a trailing newline. Ops wants it driven by a script from a pipeline. The answers are in answers.conf. (expect is not installed here: bash can do the job.)",
+  "objective": "Write answer.sh in this folder. When run with 'bash answer.sh', it must start ./provision-wizard, read each question as it appears, give the matching value from answers.conf, and let the wizard finish so that provision.result is written with the six answers. The check runs answer.sh five times, with the questions in five different orders, and each run must finish within 10 seconds. Do not edit provision-wizard.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["coproc", "read -u", "read -d", "read -t", "mkfifo", "driving interactive programs"],
   "module": "module-25-linux-toolbelt",
-  "level": "level-23-expect-notes"
+  "level": "level-23-interactive-automation"
 }

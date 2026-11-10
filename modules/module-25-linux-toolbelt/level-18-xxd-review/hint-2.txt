@@ -1,1 +1,6 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  xxd FILE                 hex dump, 16 bytes per line, offsets on the left
+  xxd -p -c1 FILE          plain hex, one byte per line (easy to edit by line number)
+  xxd -r -p                the way back: plain hex to binary
+  $(( 0x2a + 1 ))          shell arithmetic accepts hex numbers
+Keep the number of bytes the same. Compare with `cmp -l config.bin config.bin.orig`.
+More: man xxd

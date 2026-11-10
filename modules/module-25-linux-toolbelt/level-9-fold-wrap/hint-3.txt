@@ -1,1 +1,4 @@
-Example: `ln -s releases/fold-wrap.conf current.conf`
+  fold -s -w 70 alert.txt > alert.sms
+      -w 70   maximum line length of 70 characters
+      -s      break after a space when there is one, so words stay whole; the long URL has none and is cut
+  wc -L alert.sms

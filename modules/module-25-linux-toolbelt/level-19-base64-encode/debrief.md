@@ -1,17 +1,19 @@
-# Base64 Encode: Config Rewrite
+# Secrets Must Be Base64, Exactly
 
-## What you practiced
-- This level focused on **Base64 Encode** in a safe sandbox.
-- The shortest path usually combines `sed` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A Kubernetes Secret stores raw bytes as base64, and the decoded bytes are what
+the pod receives. `head -n 1` returns the line with its newline, so the
+newline must be dropped (`tr -d '\n'`, or `printf '%s'` instead of `echo`) or
+the password would end in an invisible extra character and every login
+would fail. GNU `base64` wraps its output at 76 characters, which would split
+a YAML value over several lines; `-w0` keeps each value on one line. The
+certificate and the PNG are encoded whole, as binary.
 
-## Commands to remember
-```bash
-sed 's/old/new/g' file.conf
-sed -n '1,20p' file.conf
-grep PATTERN file.conf
-```
+## Common mistakes
+- `echo "$pw" | base64`: echo adds a newline that becomes part of the secret.
+- Pasting the wrapped output into YAML: the value breaks at the first line end.
+- Encoding the password file whole instead of its first line.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: You need a stream editor or another text replacement tool.
+## Learn next
+`kubectl create secret generic --from-file` does this encoding for you, and
+`base64 -d` plus `cmp` is the quickest way to prove a value round-trips.

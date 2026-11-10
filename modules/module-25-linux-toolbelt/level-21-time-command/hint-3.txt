@@ -1,1 +1,6 @@
-Example: `mkdir -p organized/time-command && mv inbox/time-command.txt organized/time-command/time-command-notes.txt`
+  export TIMEFORMAT='%3R %3U %3S'
+      real user sys, in seconds, three decimals
+  : > timings.txt; for s in reports/gen-*.sh; do { time bash "$s" > /dev/null; } 2>> timings.txt; done
+      each report runs inside a { } group; the group's stderr (where time prints) is appended to timings.txt
+  paste -d' ' <(ls reports) timings.txt | awk '{ c = ($3 + $4 < 0.25 * $2) ? "wait" : ($4 > $3 ? "syscall" : "cpu"); print $1, c }' > class.txt
+      CPU time far below real time = wait; more sys than user = syscall; otherwise cpu

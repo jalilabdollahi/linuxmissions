@@ -1,1 +1,5 @@
-Archive the directory contents without leaving anything out.
+  fmt FILE        joins and refills the lines of every paragraph (default width 75)
+  fmt -w N        maximum line width
+fmt decides what a paragraph is from blank lines and from the indentation of
+lines, and it keeps the indentation of the paragraph it fills. Without -w the
+limit is 75, not 72. Compare with `fold -s -w 72`. More: man fmt

@@ -1,16 +1,11 @@
 {
-  "name": "Time Command: Path Realignment",
-  "description": "In the linux toolbelt lab, a task related to Time Command needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/time-command.txt to organized/time-command/time-command-notes.txt",
+  "name": "Why Are The Reports Slow",
+  "description": "Three report generators in reports/ are all described as 'slow', but the fix depends on why: one waits for something, one burns CPU, one drowns in tiny system calls. Time each of them and say which is which.",
+  "objective": "Run each reports/gen-*.sh once and record its timings in timings.txt: three lines (same order as ls reports/) of 'real user sys' in seconds with three decimals, for example '2.004 0.001 0.002'. Then write class.txt with three lines '<script name> <class>' in the same order, where class is cpu (computing), wait (idle, waiting) or syscall (dominated by system calls). The reports' output itself is not needed.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Time Command",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "20m",
+  "concepts": ["time", "TIMEFORMAT", "real/user/sys", "{ time cmd; } 2>>file", "shell keywords"],
   "module": "module-25-linux-toolbelt",
   "level": "level-21-time-command"
 }

@@ -1,17 +1,19 @@
-# Nl Numbering: Config Rewrite
+# Line Numbers Like the Editor
 
-## What you practiced
-- This level focused on **Nl Numbering** in a safe sandbox.
-- The shortest path usually combines `sed` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`nl` numbers only non-empty lines by default (`-b t`). `-b a` numbers every
+body line, so line 57 in `review.txt` is line 57 in the editor. `-w 3` sets the
+width of the number column and `-s ': '` the text between number and line,
+which together give the `%3d: line` layout. `cat -n` or `awk '{printf "%3d: %s\n", NR, $0}'`
+would give the same result.
 
-## Commands to remember
-```bash
-sed 's/old/new/g' file.conf
-sed -n '1,20p' file.conf
-grep PATTERN file.conf
-```
+## Common mistakes
+- Plain `nl nginx.conf`: the blank lines are skipped, so every comment after the
+  first blank line points at the wrong place.
+- Forgetting `-w`: the default width is 6, with a tab as separator.
+- Counting lines that only contain spaces as blank: `-b t` numbers them, an
+  editor does too, `nl -b a` always does.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: You need a stream editor or another text replacement tool.
+## Learn next
+`nl -b pREGEX` numbers only lines matching a pattern, and `nl -n rz` pads the
+numbers with zeros (`-n ln` left-aligns them).

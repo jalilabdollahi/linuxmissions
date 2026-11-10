@@ -1,1 +1,4 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+  od -A n -v -j 8 -w16 --endian=little -t u4 -t u2 -t f4 sensors.bin | paste - - - > records.txt
+      -j 8 skips the header; -w16 one record per row; -t u4 -t u2 -t f4 print it three ways; paste joins the three lines of a record
+  awk '$8 != 0 { print $1, $7, $15 }' records.txt > faults.txt
+      per joined row: $1 = u32 timestamp, $7 = sensor (3rd u16), $8 = status (4th u16), $15 = value (3rd float)

@@ -1,1 +1,6 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' base64-encode.conf > fixed.conf`
+  pw=$(head -n 1 password.txt | tr -d '\n' | base64 -w0)
+      first line only, newline removed before encoding, one unbroken line out
+  crt=$(base64 -w0 tls.crt); logo=$(base64 -w0 logo.png)
+      the two files as they are, again with -w0
+  printf 'apiVersion: v1\nkind: Secret\nmetadata:\n  name: app-secrets\ntype: Opaque\ndata:\n  db-password: %s\n  tls.crt: %s\n  logo.png: %s\n' "$pw" "$crt" "$logo" > secret.yaml
+      the YAML skeleton with the three encoded values filled in

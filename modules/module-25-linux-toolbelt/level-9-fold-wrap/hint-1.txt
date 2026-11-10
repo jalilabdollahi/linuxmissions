@@ -1,1 +1,4 @@
-This task wants a symbolic link, not a copy.
+Find out how long the longest line of alert.txt is (`awk '{print length}'` or
+`wc -L`). The job is to break lines at a width, but not anywhere: where may a
+line be broken without damaging the message, and what do you do with a word that
+is longer than the whole line?

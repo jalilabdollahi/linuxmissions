@@ -1,1 +1,5 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  nl FILE        numbers lines, but only some of them by default
+  nl -b STYLE    which lines get a number: a = all, t = non-empty only, n = none
+  nl -w N        width of the number column
+  nl -s STR      what to put between the number and the text
+Compare the result with `cat -n nginx.conf`. More: man nl

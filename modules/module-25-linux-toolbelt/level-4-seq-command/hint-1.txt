@@ -1,1 +1,4 @@
-This is a sorting task followed by deduplication.
+The request file gives you a rack letter, a first position, a last position and
+a step. Typing 20-odd labels by hand is slow and error-prone; which command
+counts for you? Then look at your first label: does it look like `rack-a-02`
+or `rack-a-2`?

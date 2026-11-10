@@ -1,17 +1,18 @@
-# Shuf Random: Script Kickoff
+# A Sample You Can Redraw
 
-## What you practiced
-- This level focused on **Shuf Random** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`shuf` normally shuffles with random bytes from the system, so every run gives
+another answer. `--random-source=seed.bin` feeds it the same bytes every time,
+so the same population plus the same seed produce the same sample. The auditor
+can repeat the command next month and compare like with like. The header is
+removed first with `tail -n +2`, otherwise it could be drawn like any row.
 
-## Commands to remember
-```bash
-chmod +x script.sh
-./script.sh
-bash script.sh
-```
+## Common mistakes
+- `shuf -n 25 tx.csv` is random but not repeatable, and may pick the header.
+- `sort -R` shuffles by hashing and cannot take a seed file, so the result
+  cannot be redrawn the same way.
+- Sorting or editing the sample afterwards changes the order of the draw.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task usually takes two steps: fix execute permission, then run the script.
+## Learn next
+`shuf -i 1-100 -n 5` draws numbers without a file, and `shuf -r` allows repeats
+(sampling with replacement).

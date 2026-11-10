@@ -1,17 +1,21 @@
-# Yes Head: Field Extract
+# Unattended Installer, Thousand Pings
 
-## What you practiced
-- This level focused on **Yes Head** in a safe sandbox.
-- The shortest path usually combines `cut` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`yes` writes its argument (default `y`) and a newline over and over, as fast as
+the reader can take it. The installer reads one line per question, so a pipe
+from `yes` answers however many questions there are. When the installer
+exits, the pipe closes and `yes` receives SIGPIPE and stops. The same
+mechanism ends `yes ping | head -n 1000`: `head` quits after 1000 lines and
+that closes the pipe behind it.
 
-## Commands to remember
-```bash
-cut -d, -f2 file.csv
-awk -F, '{print $2}' file.csv
-column -s, -t file.csv
-```
+## Common mistakes
+- `yes ping > load.txt` with no `head`: it never stops and fills the disk
+  until you press Ctrl-C.
+- `echo y | ./install.sh`: one answer only; the second question reads end of
+  input, which the installer counts as "no".
+- `./install.sh < /dev/null` or an empty line: both mean "N".
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a delimiter-based column extraction task.
+## Learn next
+Many installers and package tools have their own flags (`apt-get -y`,
+`rm -f`, `ssh-keygen -N ''`), which are better than `yes` when they exist.
+For a fixed block of answers a here-document (`<<EOF`) is the other option.

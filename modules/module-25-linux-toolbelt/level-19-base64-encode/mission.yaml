@@ -1,15 +1,11 @@
 {
-  "name": "Base64 Encode: Config Rewrite",
-  "description": "In the linux toolbelt lab, a task related to Base64 Encode needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in base64-encode.conf and save the fixed result to fixed.conf",
+  "name": "Secrets Must Be Base64, Exactly",
+  "description": "The new service reads its credentials from a Kubernetes Secret. The values are in plain files in this folder, and Kubernetes only accepts them base64-encoded, each on a single YAML line.",
+  "objective": "Write secret.yaml: a Secret (apiVersion v1, kind Secret, metadata name app-secrets, type Opaque) whose data section holds exactly three keys: db-password (the first line of password.txt, without its line ending), tls.crt (the whole file tls.crt) and logo.png (the whole file logo.png). Each value must be one unbroken base64 string that decodes to exactly the bytes of its source.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Base64 Encode",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "20m",
+  "concepts": ["base64", "base64 -w0", "printf %s vs echo", "head -n 1", "YAML scalars"],
   "module": "module-25-linux-toolbelt",
   "level": "level-19-base64-encode"
 }

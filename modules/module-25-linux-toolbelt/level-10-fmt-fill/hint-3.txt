@@ -1,1 +1,5 @@
-Example: `tar -czf fmt-fill-backup.tar.gz bundle/fmt-fill`
+  fmt -w 72 NOTES.txt > NOTES.wrapped
+      fmt        joins the short lines of each paragraph and refills them, keeping the indentation
+      -w 72      no line longer than 72 characters
+      blank lines between paragraphs and bullets are what keep them separate
+  cat NOTES.wrapped

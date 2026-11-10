@@ -1,1 +1,4 @@
-Use tar with create, gzip, and file flags.
+Which tool re-flows text instead of only cutting long lines? Try the one you
+used on the SMS alert (fold) and look at the result: it never joins the short
+lines. Then look at the structure of NOTES.txt: what separates one paragraph
+or bullet from the next, and does your result keep that?

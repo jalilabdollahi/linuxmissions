@@ -1,1 +1,7 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+  sed -E 's#...#...#'      strip the scheme, then everything from the first / or ?, then a :port, then a trailing dot
+  tr A-Z a-z               hostnames are case-insensitive
+  rev                      reverses each line, so the last labels come first
+  cut -d. -f1-2            keeps the first two dot-separated fields (use -f1-3 for the co.uk family)
+  sort | uniq -c           counts equal lines; sort -k1,1nr orders by that count
+Handle the two-level-suffix hosts separately: grep them out with a pattern built from
+two-level-suffixes.txt. Reverse back with rev when done. More: man rev, man cut

@@ -1,1 +1,10 @@
-Example: `find cleanup/cpu-info -name '*.tmp' -delete`
+echo "host,sockets,cores,threads" > licence.csv
+for f in capture/*.cpuinfo; do h=$(basename $f .cpuinfo); awk -F': *' -v h=$h '/^processor/ { t++ } /^physical id/ { p = $2; s[p] = 1 } /^core id/ { c[p ":" $2] = 1 } END { print h "," length(s) "," length(c) "," t }' $f; done >> licence.csv
+cat licence.csv
+
+- for f in capture/*.cpuinfo   each host file, in name order
+- -F': *'                      fields are split at the colon
+- /^processor/ { t++ }         one block per logical CPU: the thread count
+- s[p] = 1                     sockets: distinct physical ids
+- c[p ":" $2] = 1              cores: distinct (physical id, core id) pairs
+- length(s), length(c)         how many distinct keys each array holds

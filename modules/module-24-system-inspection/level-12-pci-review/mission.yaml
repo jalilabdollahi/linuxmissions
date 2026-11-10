@@ -1,15 +1,11 @@
 {
-  "name": "Pci Review: Permission Fix",
-  "description": "In the system inspection lab, a task related to Pci Review needs cleanup before the handoff.",
-  "objective": "Set the mode of pci-review.sh to 640",
+  "name": "No Driver, No Link",
+  "description": "The new 25 GbE card in storage-07 does not show up as a network interface after the hardware swap. A technician saved the output of `lspci -nnk` to capture/lspci.txt. Before anyone orders a new card, you want to know which network and storage devices have no driver bound at all, and which kernel module could drive them.",
+  "objective": "Write unbound.txt with one line per device that is a network controller (PCI class 02xx) or a storage controller (class 01xx) and has no `Kernel driver in use:`, formatted `slot [vendor:device] module`, in the order of the file. module is the first one listed on the device's `Kernel modules:` line, or a single - when the device lists none. Bridges, USB controllers, graphics and everything else are out of scope.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Pci Review",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "25m",
+  "concepts": ["lspci -nnk", "PCI class codes", "vendor:device IDs", "Kernel driver in use vs Kernel modules", "multi-line records with awk"],
   "module": "module-24-system-inspection",
   "level": "level-12-pci-review"
 }

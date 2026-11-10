@@ -1,1 +1,6 @@
-Look for a filtering command that keeps only the alert lines in sysctl-review.log.
+A grep over all the files shows every place a key is written, but not which
+one counts. Two questions decide it: which files are read at all (can one
+file hide another?) and in which order are the files applied (the last
+assignment wins). Look at the file names across the directories, and be
+careful how names sort: is `9-x.conf` before or after `60-y.conf`? Also
+watch out for different spellings of the same key.

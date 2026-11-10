@@ -1,1 +1,6 @@
-A grep count or grep piped into wc can produce the number you need.
+`who FILE` reads another utmp file (see `man who`). The source host is
+printed in parentheses at the end of the line. Local console logins have
+no parentheses at all.
+Use awk to take the last field and test it; remember that matching the text
+"10" is not the same as "starts with 10 followed by a dot": 110.x.x.x and
+210.x.x.x contain "10" too. Anchor the pattern at the start of the address.

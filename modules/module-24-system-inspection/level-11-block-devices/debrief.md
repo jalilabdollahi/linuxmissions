@@ -1,17 +1,21 @@
-# Block Devices: Restore Drill
+# Pull the Right Disk
 
-## What you practiced
-- This level focused on **Block Devices** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+The serial identifies a physical drive, the model does not. `lsblk -J`
+describes devices as a tree: a disk has partitions as `children`, and a
+partition used by LVM has logical volumes below it. The recursive descent
+`..` in `jq` visits every depth, so a mount three levels down is found with
+the same expression as one directly on a partition. `mountpoints` is always
+an array: `[null]` means "not mounted", `[SWAP]` is swap, and a volume can
+be mounted in several places.
 
-## Commands to remember
-```bash
-tar -tf archive.tar.gz
-tar -xzf archive.tar.gz
-ls -R restored/
-```
+## Common mistakes
+- Matching on `model` and picking the wrong twin.
+- Looking only at the disk's direct children and missing the LVM volumes.
+- Keeping `null` or `[SWAP]` in the output.
+- Using `.mountpoint` (older lsblk, a single string) on this JSON.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: List the archive if you want to inspect it first, then extract it.
+## Next step
+`lsblk -o NAME,SERIAL,MOUNTPOINTS` shows the same tree on a live box,
+`lsblk -s` inverts it (from a volume down to its disks), and `findmnt` and
+`blkid` give the filesystem side.

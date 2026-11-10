@@ -1,17 +1,18 @@
-# W Command: Noise Dedup
+# Warn the Active Users
 
-## What you practiced
-- This level focused on **W Command** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`w` shows how long each terminal has been idle, but in whatever unit fits:
+seconds with a decimal, `min:sec`, `hours:minutes` followed by `m`, or whole
+days. A comparison like `$5 < 10` treats `1:05m` as 1 and `45.00s` as 45,
+which is wrong both ways, so each format has to be read for what it means.
+`sort -u` merges a user's several sessions into one line.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- Converting with `$5+0`: `1:05m` becomes 1 and looks "fresh" although it is
+  an hour.
+- Dropping a user because *one* of their sessions is stale.
+- Treating exactly ten minutes (`10:00`) as active: the rule is "less than".
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Next step
+`w -h` hides the header, `w USER` shows one user, and `who -u` gives the
+idle time in a simpler form. `pinky` and `last` answer related questions.

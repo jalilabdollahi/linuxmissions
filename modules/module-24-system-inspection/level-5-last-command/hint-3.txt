@@ -1,1 +1,9 @@
-Example: `cut -d, -f2 last-command-report.csv > owners.txt`
+last -x -f capture/wtmp --time-format iso reboot | awk '$5 ~ /^2026-10/' | wc -l > reboots.txt
+last -f capture/wtmp --time-format iso | awk '$4 ~ /^2026-10/ && $6 == "crash" { print $1 }' | sort -u > crash_users.txt
+cat reboots.txt crash_users.txt
+
+- last -f capture/wtmp   read the captured history, not the live one
+- reboot                 only the boot records; field 5 is when the boot happened
+- --time-format iso      dates as 2026-10-05T03:34:00, so a ^2026-10 test selects October
+- $6 == "crash"          for a session line, field 4 is the login time and field 6 the "logout": crash
+- sort -u                each user once, sorted

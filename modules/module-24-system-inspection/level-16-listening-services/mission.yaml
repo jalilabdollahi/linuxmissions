@@ -1,15 +1,11 @@
 {
-  "name": "Listening Services: Capacity Report",
-  "description": "In the system inspection lab, a task related to Listening Services needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Listening Services",
-    "du",
-    "sort"
-  ],
+  "name": "Port to Unit Inventory",
+  "description": "For the security review you need to know which systemd unit is behind every listening TCP port of web-03. A teammate captured `ss -ltnpH`, every PID's cgroup file and the unit files from the production host (see TICKET.md).",
+  "objective": "Write inventory.csv from the captures in capture/: the header line `port,proto,unit`, then one row per listening port (proto is always `tcp`; IPv4 and IPv6 listeners of one port are a single row), sorted numerically by port. The unit is the last component of the cgroup path of the process that owns the socket (for example `nginx.service` or `session-7.scope`); where only systemd (PID 1) holds the socket, it is the service that the matching .socket unit activates.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "35m",
+  "concepts": ["ss -ltnpH users field", "/proc/PID/cgroup", "systemd socket activation", ".socket units and ListenStream", "joining data from several files"],
   "module": "module-24-system-inspection",
   "level": "level-16-listening-services"
 }

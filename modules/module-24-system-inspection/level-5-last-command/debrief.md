@@ -1,17 +1,20 @@
-# Last Command: Field Extract
+# Why Did It Reboot?
 
-## What you practiced
-- This level focused on **Last Command** in a safe sandbox.
-- The shortest path usually combines `cut` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`wtmp` is a binary log of logins, logouts, boots and shutdowns. `last`
+decodes it; `-f` selects which file, so you can analyse a copy from another
+machine. `reboot` is a pseudo-user that matches boot records. A session that
+was still open when the machine rebooted without a shutdown record is shown
+as `crash`; after a clean shutdown it is `down`. ISO timestamps carry the
+year and are trivially filtered by prefix.
 
-## Commands to remember
-```bash
-cut -d, -f2 file.csv
-awk -F, '{print $2}' file.csv
-column -s, -t file.csv
-```
+## Common mistakes
+- Running `last` without `-f`: it reads the live (here empty) log.
+- Counting every `reboot` line in the file, including September and November.
+- Matching `2026-10` anywhere on a line: a September boot that ended in
+  October carries both dates.
+- Mixing up `down` (clean shutdown) and `crash`.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a delimiter-based column extraction task.
+## Next step
+`last -x shutdown reboot` pairs shutdowns with boots, `lastb` lists failed
+logins, and `utmpdump /var/log/wtmp` prints every raw record as text.

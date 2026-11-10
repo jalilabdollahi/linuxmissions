@@ -1,15 +1,11 @@
 {
-  "name": "Open Ports: Metric Sum",
-  "description": "In the system inspection lab, a task related to Open Ports needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of open-ports-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Open Ports",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "The Listener Nobody Approved",
+  "description": "The nightly port scan found one more TCP listener on app-03 than the inventory knows. approved.txt lists the approved services; the extra one may be hiding behind a familiar name (see TICKET.md).",
+  "objective": "Find the one listening TCP socket on this machine whose port is not in approved.txt, write `port pid exe` to rogue.txt (exe is the real executable path of that process), and stop that process. All approved services, including the one that listens on IPv6 only, must keep running.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "30m",
+  "concepts": ["ss -ltnp", "IPv4 and IPv6 listeners", "/proc/PID/exe", "/proc/PID/cmdline", "process names can lie"],
   "module": "module-24-system-inspection",
   "level": "level-15-open-ports"
 }

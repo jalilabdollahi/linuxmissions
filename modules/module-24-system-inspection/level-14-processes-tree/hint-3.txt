@@ -1,1 +1,10 @@
-Example: `for n in 1 2 3; do printf 'processes-tree item %s\n' "$n" > generated/processes-tree-$n.txt; done`
+p=$(pgrep -f 'worker\.py --job 7$'); : > chain.txt
+while :; do echo $p >> chain.txt; grep -q 'supervisor\.sh' /proc/$p/cmdline && break; p=$(ps -o ppid= -p $p | tr -d ' '); done
+cat chain.txt
+kill -- -$(ps -o pgid= -p $(tail -1 chain.txt) | tr -d ' ')
+
+- pgrep -f '...--job 7$'   the PID of the worker whose command line ENDS in "--job 7" (not 70 or 17)
+- the while loop           append the PID, stop when its command line mentions supervisor.sh, else move to its parent
+- /proc/$p/cmdline         the command line of a process (NUL-separated, grep still finds the word)
+- ps -o ppid= -p $p        the parent of $p, without a header
+- kill -- -PGID            one signal to the whole process group: the last PID in chain.txt is the group leader, so every layer dies at once and nothing can respawn

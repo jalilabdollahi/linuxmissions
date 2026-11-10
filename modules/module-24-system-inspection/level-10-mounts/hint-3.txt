@@ -1,1 +1,8 @@
-Example: `tar -czf mounts-backup.tar.gz bundle/mounts`
+findmnt -F capture/mountinfo -nl -o TARGET,SOURCE,FSTYPE,VFS-OPTIONS | awk '$1 == "/var/lib/ci/work"' | tail -1 > mount.txt
+cat mount.txt
+
+- findmnt -F capture/mountinfo   read the saved mount table instead of the live one
+- -nl                            plain list, no header, no tree characters
+- -o ...VFS-OPTIONS              the columns we want; VFS-OPTIONS are the mount's own options
+- awk '$1 == "..."'              exactly the mount point that contains build-42 (not work-old, not build-4)
+- tail -1                        the later mount of the two is the one in effect

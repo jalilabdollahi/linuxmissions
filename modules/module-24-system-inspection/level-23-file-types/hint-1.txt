@@ -1,1 +1,6 @@
-Use tar with create, gzip, and file flags.
+A file's name is just a label, but its first bytes identify what it is:
+programs, images, compressed files and scripts all start with a recognisable
+signature ("magic number") or line. Which standard tool reads those
+signatures, and can it print something short that is easy to match in a
+script? Some files are wrapped in compression: you will need to look
+inside them too. Also watch out for names that contain spaces.

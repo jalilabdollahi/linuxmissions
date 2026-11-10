@@ -1,1 +1,10 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' open-ports-metrics.csv > total.txt`
+ss -ltnpH | while read -r _ _ _ local _ users; do port=${local##*:}; grep -q "^$port " approved.txt && continue; pid=$(sed -n 's/.*pid=\([0-9]*\).*/\1/p' <<< "$users"); echo "$port $pid $(readlink /proc/$pid/exe)"; done > rogue.txt
+cat rogue.txt
+read -r port pid exe < rogue.txt; kill $pid
+
+- ss -ltnpH                   listening TCP sockets, numeric, with owner, no header
+- read ... local ... users    split each row: the 4th column is the local address, the 6th the owner
+- ${local##*:}                the port: everything after the last colon (works for [::1]:80 too)
+- grep -q "^$port " ... && continue   skip ports listed in approved.txt
+- readlink /proc/$pid/exe     the real executable behind the (possibly fake) name
+- kill $pid                   stop only the rogue process

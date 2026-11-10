@@ -1,1 +1,8 @@
-Save each result into its own file.
+os-release is written in shell syntax, so a subshell can read it for you:
+`( . fleet/HOST/etc/os-release; echo "$ID $VERSION_ID" )`. The shell follows
+symlinks and removes quotes, so you don't have to. The subshell keeps the
+variables from leaking into your session.
+eol.csv knows Rocky 9.3 only as `rocky,9`: take the part of VERSION_ID before
+the first dot (`${VERSION_ID%%.*}`), except for Ubuntu, whose "major" is the
+YY.MM string. awk can look a key up in eol.csv, and ISO dates compare
+correctly as plain strings.

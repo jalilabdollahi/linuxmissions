@@ -1,1 +1,12 @@
-Example: `mkdir -p organized/uname && mv inbox/uname.txt organized/uname/uname-notes.txt`
+cat > facts.env <<EOT
+KERNEL_NAME=$(uname -s)
+KERNEL_RELEASE=$(uname -r)
+ARCH=$(uname -m)
+EOT
+cat facts.env
+
+- cat > facts.env <<EOT   rewrites facts.env from the lines that follow, until EOT
+- $(uname -s)             the shell replaces this with the kernel name
+- $(uname -r)             ... the kernel release (one word, no spaces)
+- $(uname -m)             ... the machine hardware name
+- cat facts.env           show the result so you can check it

@@ -1,1 +1,4 @@
-Use a targeted file search so you do not remove the wrong files.
+In /proc/cpuinfo every logical CPU has its own block of fields, so counting
+blocks counts threads, not cores. Which fields say which socket and which
+core of that socket a block belongs to? And is a core number unique by
+itself, or only inside one socket?

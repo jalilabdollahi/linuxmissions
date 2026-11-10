@@ -1,17 +1,20 @@
-# Cpu Info: Cleanup Sweep
+# Licence by Core
 
-## What you practiced
-- This level focused on **Cpu Info** in a safe sandbox.
-- The shortest path usually combines `find` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`/proc/cpuinfo` has one block per logical CPU. A physical core is identified
+by two numbers together: `physical id` (the socket) and `core id` (the core
+within the socket). With hyperthreading a core appears in several blocks.
+An awk array keyed by the pair removes the duplicates, so `length(c)` is the
+number of physical cores, and `length(s)` the number of sockets.
 
-## Commands to remember
-```bash
-find dir -name '*.tmp'
-find dir -name '*.tmp' -delete
-find dir -type f -exec rm {} \;
-```
+## Common mistakes
+- Counting `processor` lines: that is hyperthreads, and doubles the bill.
+- Counting distinct `core id` alone: both sockets reuse the same numbers, so
+  you get half the real count. On the VM every vCPU has `core id : 0`.
+- "Correcting" the VM to one socket: the file is what the licensing tool
+  will see, and it reports what the hypervisor tells it.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use a targeted file search so you do not remove the wrong files.
+## Next step
+`lscpu` summarises the same topology (and `lscpu -p` prints it per CPU),
+and `nproc` counts the CPUs your process may use. `siblings` and `cpu cores`
+in cpuinfo are a cross-check: threads and cores per socket.

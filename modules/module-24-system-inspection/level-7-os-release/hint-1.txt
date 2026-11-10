@@ -1,1 +1,4 @@
-Use one command for the beginning of the file and another for the end.
+Each host's identity is in its os-release file. Look at a few of them: are
+they all plain files? Are the values written the same way in each? And
+compare what eol.csv calls a release with what os-release says: do the
+version strings really look alike?

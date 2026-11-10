@@ -1,1 +1,5 @@
-This task wants a symbolic link, not a copy.
+Which line of /proc/meminfo answers "how much could a new application get
+right now?" It is not MemFree: the kernel fills spare RAM with cache, which
+it gives back when needed.
+For the consumers: two of the three are plain lines in kB. The third (huge
+pages) has to be calculated from two lines. Compare them in the same unit.

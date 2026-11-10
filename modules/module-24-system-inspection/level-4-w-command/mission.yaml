@@ -1,15 +1,11 @@
 {
-  "name": "W Command: Noise Dedup",
-  "description": "In the system inspection lab, a task related to W Command needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from w-command-raw.txt with sorted unique values",
+  "name": "Warn the Active Users",
+  "description": "The shared build box is about to be rebooted. Before you do it, you want to warn whoever is actually working on it, not the people who left a terminal open last week. A colleague pasted the output of `w` into capture/w.txt.",
+  "objective": "From capture/w.txt, write warn_users.txt: the users with at least one session idle for LESS than 10 minutes, one name per line, sorted, each name once. Sessions idle for exactly 10 minutes or more do not count.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "W Command",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "10m",
+  "concepts": ["w", "IDLE column formats", "awk field parsing", "sort -u", "reading captured output"],
   "module": "module-24-system-inspection",
   "level": "level-4-w-command"
 }

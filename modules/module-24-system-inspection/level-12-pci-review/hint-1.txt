@@ -1,1 +1,6 @@
-Inspect the current mode first if you want to verify the change.
+Every device in the capture is a short paragraph: a header line with the
+slot, class and IDs, then indented lines about its driver. Which line tells
+you that a driver is attached, and what does it mean when it is missing
+although a "modules" line exists?
+Look at the numbers in square brackets in the header line: one pair is the
+class, another is the vendor and device ID.

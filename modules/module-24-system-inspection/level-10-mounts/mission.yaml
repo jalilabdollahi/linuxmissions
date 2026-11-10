@@ -1,15 +1,11 @@
 {
-  "name": "Mounts: Backup Bundle",
-  "description": "In the system inspection lab, a task related to Mounts needs cleanup before the handoff.",
-  "objective": "Create mounts-backup.tar.gz containing the files under bundle/mounts",
+  "name": "Permission Denied on a Mount",
+  "description": "CI builds on ci-runner-3 fail with \"Permission denied\" when they run ./configure in /var/lib/ci/work/build-42, although the file is executable and owned by the CI user. Someone suspects the mount options. The mount table was saved as capture/mountinfo (the content of /proc/self/mountinfo).",
+  "objective": "Find which mount the path /var/lib/ci/work/build-42 really lives on and write one line `target source fstype options` to mount.txt. Take the mount that is in effect (a later mount at the same place hides an earlier one). Write source the way findmnt shows it, including the bind-mounted subdirectory in square brackets when there is one, and options as the mount's own options (noexec must show up).",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Mounts",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "20m",
+  "concepts": ["/proc/self/mountinfo", "findmnt -F", "longest path-prefix match", "stacked mounts", "bind mounts and the root field", "noexec"],
   "module": "module-24-system-inspection",
   "level": "level-10-mounts"
 }

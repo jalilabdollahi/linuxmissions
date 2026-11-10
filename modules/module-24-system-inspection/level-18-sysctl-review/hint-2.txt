@@ -1,1 +1,9 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+`man sysctl.d` describes the rules: the directories /etc/sysctl.d,
+/run/sysctl.d and /usr/lib/sysctl.d are merged; if the same file name exists
+in several, only the one in the highest-priority directory is used (etc,
+then run, then usr/lib), the others are hidden completely. All remaining
+files are applied in lexicographic order of their names, whatever
+directory they are in, so `ls` order of the names is the order to use
+(compare character by character, "9" > "6"). A symlink is just a file with
+its own name. `a/b/c` and `a.b.c` are the same key, `#` and `;` start
+comments and a leading `-` on a key only suppresses errors.

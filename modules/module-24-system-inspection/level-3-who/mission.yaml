@@ -1,16 +1,11 @@
 {
-  "name": "Who: Event Counter",
-  "description": "In the system inspection lab, a task related to Who needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in who-events.txt and write the number to ok-count.txt",
+  "name": "Who Was On the Jump Host?",
+  "description": "Security snapshotted the jump host during an incident and kept its login records as capture/utmp (the binary file behind `who`). They want to know who was connected from outside the corporate 10.0.0.0/8 network.",
+  "objective": "From capture/utmp, write outside_sessions.txt with one line per remote session whose source address is NOT inside 10.0.0.0/8, formatted `user tty host`, in the order `who` lists them. Local console sessions (no host) are not remote and are not listed. Plain `who` shows this machine, not the capture.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Who",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["who FILE", "utmp records", "who output columns", "matching IP prefixes precisely", "awk"],
   "module": "module-24-system-inspection",
   "level": "level-3-who"
 }

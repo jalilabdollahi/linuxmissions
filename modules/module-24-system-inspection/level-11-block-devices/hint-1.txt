@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+Find the one disk whose SERIAL matches the ticket; the model is the same on
+two of them. A disk's mounts do not only sit on its partitions: logical
+volumes live on top of a partition, so look at every level of the tree.
+Some entries in the JSON are empty (null), and one device is mounted in two
+places. What does `lsblk` print for swap?

@@ -1,1 +1,11 @@
-Example: `tar -xzf block-devices-restore.tar.gz`
+serial=$(grep -o 'serial number [A-Z0-9]*' TICKET.md | awk '{print $3}')
+jq -r --arg s "$serial" '.blockdevices[] | select(.serial == $s) | "/dev/" + .name, ([.. | .mountpoints? // empty | .[] | select(. != null and startswith("/"))] | unique | .[])' capture/lsblk.json > disk.txt
+cat disk.txt
+
+- grep -o ... | awk       take the serial out of the ticket text
+- --arg s "$serial"       hand it to jq as the variable $s
+- select(.serial == $s)   the one disk with that serial
+- "/dev/" + .name         the first output line: the device path
+- .. | .mountpoints?      every mountpoints array at any depth (partitions, LVM volumes)
+- select(. != null and startswith("/"))   real paths only: no null, no [SWAP]
+- unique | .[]            sorted, once each, one per line

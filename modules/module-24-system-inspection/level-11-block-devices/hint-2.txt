@@ -1,1 +1,6 @@
-Use tar extraction flags and point at the archive file.
+`jq` can select one disk: `.blockdevices[] | select(.serial == "XXXX")`.
+The tree is nested through `children`; the recursive descent operator `..`
+visits every level, so `[.. | .mountpoints? // empty]` collects all the
+mountpoints arrays below the disk. Each one is an array, possibly containing
+`null` (unmounted) or `[SWAP]`: filter for strings that start with `/`.
+`jq -r` prints raw lines, and `unique` sorts and removes duplicates.

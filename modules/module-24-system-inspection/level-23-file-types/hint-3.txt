@@ -1,1 +1,9 @@
-Example: `tar -czf file-types-backup.tar.gz bundle/file-types`
+cls() { case "$1" in application/x-pie-executable|application/x-executable|application/x-sharedlib) echo elf;; image/*) echo image;; text/plain|text/csv) echo text;; text/*) echo script;; esac; }
+for f in quarantine/*; do m=$(file -b --mime-type "$f"); case "$m" in application/gzip|application/x-bzip2|application/x-xz) c="archive:$(cls "$(file -zb --mime-type "$f")")";; *) c=$(cls "$m");; esac; printf '%s\t%s\n' "$(basename "$f")" "$c"; done > types.tsv
+cat types.tsv
+
+- cls()                  maps a mime type to our classes: executables = elf, image/* = image, plain text = text, other text/* (shell, python, perl) = script
+- file -b --mime-type    the content type, ignoring the file name
+- case ... application/gzip|...   compressed files are archives
+- file -zb --mime-type   the content type of what is INSIDE the compressed file
+- printf '%s\t%s\n'      name, TAB, class (names with spaces stay intact because everything is quoted)

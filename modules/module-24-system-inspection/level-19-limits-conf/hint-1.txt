@@ -1,1 +1,7 @@
-You need a stream editor or another text replacement tool.
+Every process carries its own limits and its own table of open files, and
+the kernel shows both under /proc/PID. First find the indexer's PID. Which
+file there lists the limits, and which directory holds one entry per open
+file? Then think about the fix: who starts the indexer in production? A
+setting that the starting program reads at login is not necessarily read
+when systemd launches a service. How does systemd let you change a unit
+without editing the vendor's file?

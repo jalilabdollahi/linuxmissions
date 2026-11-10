@@ -1,15 +1,11 @@
 {
-  "name": "File Types: Backup Bundle",
-  "description": "In the system inspection lab, a task related to File Types needs cleanup before the handoff.",
-  "objective": "Create file-types-backup.tar.gz containing the files under bundle/file-types",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "File Types",
-    "tar",
-    "compression"
-  ],
+  "name": "What Is It Really?",
+  "description": "The incident team copied 40 files from a compromised host into quarantine/. The attacker chose the names, so the extensions lie (see TICKET.md).",
+  "objective": "Write types.tsv with one line `name<TAB>class` per file in quarantine/ (name without the directory), where class is one of: `elf` (compiled executable), `script` (text starting with a #! line), `image` (PNG, JPEG or GIF), `text` (any other plain text, even if its name says .sh or .exe), or `archive:<class>` for a gzip/bzip2/xz compressed file, naming the class of what it contains.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "45m",
+  "concepts": ["file(1) and magic numbers", "file -b / --mime-type", "file -z", "shebang lines", "never trust extensions"],
   "module": "module-24-system-inspection",
   "level": "level-23-file-types"
 }

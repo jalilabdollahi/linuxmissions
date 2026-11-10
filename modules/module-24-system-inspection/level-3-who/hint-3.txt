@@ -1,1 +1,8 @@
-Example: `grep -c '^ok$' who-events.txt > ok-count.txt`
+who capture/utmp | awk 'match($0, /\([^)]*\)$/) { h = substr($0, RSTART+1, RLENGTH-2); if (h !~ /^10\./) print $1, $2, h }' > outside_sessions.txt
+cat outside_sessions.txt
+
+- who capture/utmp     list the sessions recorded in the capture, not this machine's
+- match($0, /\(...\)$/) only lines ending in "(something)": remote sessions; console logins are skipped
+- substr(...)          take the text between the parentheses: the host
+- h !~ /^10\./         keep it unless it STARTS with "10." (so 110.x and 210.x stay)
+- print $1, $2, h      user, tty, host

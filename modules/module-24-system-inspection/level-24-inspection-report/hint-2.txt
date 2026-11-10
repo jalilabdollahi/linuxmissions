@@ -1,1 +1,10 @@
-Use chmod with octal mode 640.
+`uname -n`, `uname -r`, `uname -m`; `. /etc/os-release` loads `ID` and
+`VERSION_ID` into your shell (it handles the quotes); `nproc`; `awk` on
+`/proc/meminfo` (MemTotal is in kB) and on `/proc/uptime` (first field);
+`df -P /` has the percentage in the fifth column of its second line.
+`ss -ltnH` lists listeners without a header: take the text after the
+last colon of the local address, then `sort -un`.
+`jq -n --arg name "text"` passes a string, `--argjson name 42` passes a
+JSON value such as a number or an array. For the ports build the array
+with `jq -Rnc '[inputs | tonumber]'`, which gives [] for empty input
+(the naive `[$x]` trick gives [""] ).

@@ -1,1 +1,4 @@
-Inspect the sandbox, then create the missing path for organized/uname/uname-notes.txt.
+The kernel can tell you about itself. Which command prints the name, the
+release and the hardware type of the running system? Don't copy the values
+from the ticket or from a web page: they must match this machine.
+Remember that "release" and "version" are two different things.

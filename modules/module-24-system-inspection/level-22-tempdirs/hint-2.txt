@@ -1,1 +1,8 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+Every process has `/proc/PID/fd/`, a directory of symlinks, one per open
+file; a deleted target is shown with `(deleted)` after the path (`ls -l
+/proc/*/fd | grep deleted`, or `lsof +L1`). Those links are still readable:
+`cp /proc/PID/fd/N somewhere` copies the data that no name points to.
+Only then `kill` the holder. For the cleanup `find tmp -type f -mtime +7`
+selects regular files older than 7 days (sockets are not regular files);
+`fuser FILE` tells whether a process has a file open (exit status 0 = in
+use), so combine them with a loop and `rm` only the unused ones.

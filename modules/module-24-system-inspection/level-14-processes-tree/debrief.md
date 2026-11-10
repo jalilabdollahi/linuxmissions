@@ -1,17 +1,22 @@
-# Processes Tree: Loop Builder
+# Kill the Whole Tree
 
-## What you practiced
-- This level focused on **Processes Tree** in a safe sandbox.
-- The shortest path usually combines `for` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Each process records its parent (`PPid`), so `ps` and `/proc` let you climb a
+tree from any leaf to the root. The runner is a chain of supervisors: kill a
+worker and its shard starts a new one, kill the shard and the dispatcher
+starts a new shard, and so on. Only removing every layer at the same time, or
+killing from the top down, stops it. The supervisor started the runner in its
+own session, so its PID is also the process group ID, and `kill -- -PGID`
+reaches the whole tree with one signal.
 
-## Commands to remember
-```bash
-for n in 1 2 3; do ...; done
-seq 1 3
-printf 'value %s\n' "$n"
-```
+## Common mistakes
+- Killing just the stuck worker: it comes back with a new PID, and the
+  chain you wrote no longer exists.
+- `pgrep -f 'job 7'`, which also finds `--job 70`.
+- Killing from the bottom up by hand and racing the restarts, or killing
+  the supervisor and forgetting that its children keep running as orphans.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: A short for-loop is the cleanest option here.
+## Next step
+`pstree -ps PID` shows the ancestry of one process in a single line,
+`pkill -P PID` kills the children of a process, and systemd does what
+the supervisor did here with `KillMode=control-group`.

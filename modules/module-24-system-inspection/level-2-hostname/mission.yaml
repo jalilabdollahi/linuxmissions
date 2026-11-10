@@ -1,15 +1,11 @@
 {
-  "name": "Hostname: Alert Filter",
-  "description": "In the system inspection lab, a task related to Hostname needs cleanup before the handoff.",
-  "objective": "Write every alert line from hostname.log into alerts.txt",
+  "name": "Who Am I?",
+  "description": "This box's logs arrive in central logging under the name CHANGEME, so nobody can tell which machine they belong to. The log agent's config (agent.conf) still has the placeholder.",
+  "objective": "Set the active `hostname =` line in agent.conf to the hostname this machine's kernel reports right now. Every other line, including the commented examples, must stay exactly as it is.",
   "xp": 100,
   "difficulty": "beginner",
   "expected_time": "5m",
-  "concepts": [
-    "Hostname",
-    "grep",
-    "output redirection"
-  ],
+  "concepts": ["hostname", "uname -n", "/proc/sys/kernel/hostname", "sed on one line", "comments in config files"],
   "module": "module-24-system-inspection",
   "level": "level-2-hostname"
 }

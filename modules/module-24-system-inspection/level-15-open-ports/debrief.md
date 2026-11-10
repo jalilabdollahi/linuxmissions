@@ -1,17 +1,22 @@
-# Open Ports: Metric Sum
+# The Listener Nobody Approved
 
-## What you practiced
-- This level focused on **Open Ports** in a safe sandbox.
-- The shortest path usually combines `awk` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`ss -ltnp` lists every listening socket together with the process that owns
+it. Comparing by port against the approved list finds the stranger. The
+process name that `ss` and `ps` print is just a label the program can change
+(here it even renamed itself to `nginx`), and `/proc/PID/cmdline` is chosen by
+whoever started it. `/proc/PID/exe` is a symlink maintained by the kernel to
+the file that was really executed, which is why it gives away the hidden
+copy of the interpreter.
 
-## Commands to remember
-```bash
-awk -F, 'NR>1 {sum += $2} END {print sum}' file.csv
-cut -d, -f2 file.csv
-paste -sd+ numbers.txt | bc
-```
+## Common mistakes
+- Trusting the name: `nginx` is approved, so the second `nginx` looked fine.
+- Cutting the port with `cut -d: -f2`, which breaks on IPv6 addresses like
+  `[::1]:8123`, and ignoring IPv6-only listeners.
+- Killing by name with `pkill nginx`, which would also stop the approved
+  service.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a numeric aggregation task.
+## Next step
+Without root, `ss -p` only shows your own processes; as root, `ss -ltnp`
+shows all of them. `lsof -i -P -n` is a second view, and
+`ls -l /proc/PID/cwd` shows where a process was started from.

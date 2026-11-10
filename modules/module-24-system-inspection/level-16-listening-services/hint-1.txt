@@ -1,1 +1,6 @@
-Measure directory sizes before deciding which one is largest.
+Each row of ss.txt tells you the port and the processes holding the socket.
+Which process belongs to which unit? Linux records that for every process
+in its cgroup, and the capture has that file for each PID. Now look for a
+port whose only owner is PID 1: systemd holds some sockets itself and starts
+the service on the first connection. Where would systemd have been told
+which port belongs to which service? Check the unit files for the odd ones.

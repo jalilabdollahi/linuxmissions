@@ -1,1 +1,5 @@
-This task usually takes two steps: fix execute permission, then run the script.
+Look at what is inside one device directory under capture/sys/bus/usb/devices:
+which files hold the vendor, the product id and the name? A USB device can
+do several jobs at once (a keyboard with a card reader), so the "kind" of a
+device is not stored on the device itself. Where does sysfs keep it, and
+which directory names in that listing are not devices at all?

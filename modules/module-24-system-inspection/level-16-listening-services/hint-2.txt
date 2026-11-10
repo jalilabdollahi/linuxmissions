@@ -1,1 +1,9 @@
-A du pipeline sorted numerically is a strong fit here.
+The last field of a row is `users:(("name",pid=N,fd=M),...)`; take the PID
+with `grep -o 'pid=[0-9]*'`. `capture/proc/PID/cgroup` holds one line
+`0::/system.slice/nginx.service`: the unit is its last path component
+(`basename` or `awk -F/ '{print $NF}'`); do not take the first `.service`
+you see, the user manager shows up in the path too.
+For PID 1, grep the `*.socket` files for `ListenStream=` with that port: the
+service is the name of the socket file with `.service`, unless the file has
+a `Service=` line. `sort -n` and `sort -u` handle the ordering and the
+IPv4/IPv6 duplicates.

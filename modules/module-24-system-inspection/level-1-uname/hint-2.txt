@@ -1,1 +1,5 @@
-`mkdir -p organized/uname` followed by `mv inbox/uname.txt organized/uname/uname-notes.txt` is enough.
+`uname` has one option per fact: -s (kernel name), -r (kernel release),
+-m (machine hardware name). `uname -a` prints everything on one line, but
+its version field contains spaces, so asking for one fact at a time is safer
+than cutting that line apart. See `man uname`.
+You can put a command's output into a file line with `$(command)`.

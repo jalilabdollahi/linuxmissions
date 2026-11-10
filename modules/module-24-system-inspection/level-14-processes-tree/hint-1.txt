@@ -1,1 +1,6 @@
-A short for-loop is the cleanest option here.
+Every process knows its parent. Start by finding the process that handles
+job 7: which part of the command line tells it apart from the other
+workers? Careful, other jobs have numbers that contain a 7 too. Then walk
+upwards: who started it, who started that, and where does the chain end?
+Think about what happens when you kill only the bottom of such a tree, and
+write the chain down before you kill anything.

@@ -1,1 +1,8 @@
-Archive the directory contents without leaving anything out.
+`findmnt -F capture/mountinfo` reads a saved mount table (see `man findmnt`;
+`-l` gives a plain list, `-n` drops the header, `-o` selects columns such as
+TARGET,SOURCE,FSTYPE,VFS-OPTIONS). A bind mount of a subdirectory is shown
+as /dev/xxx[/subdir]. When two lines have the same target, the later one
+covers the earlier one.
+You can also read the raw file: the fields are id, parent, major:minor,
+root, mount point, mount options, optional fields, `-`, fstype, source,
+super options. Paths with a space are written with \040.

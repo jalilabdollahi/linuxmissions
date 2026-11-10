@@ -1,1 +1,5 @@
-You need a stream editor or another text replacement tool.
+`env` and `printenv` show the environment of your own shell, which never
+ran the worker. Every running process has its own environment: where does
+the kernel expose it? First you need the worker's process ID: which tool
+finds a process by a word in its command line, and how many matches do you
+get?

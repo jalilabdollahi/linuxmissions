@@ -1,15 +1,11 @@
 {
-  "name": "Block Devices: Restore Drill",
-  "description": "In the system inspection lab, a task related to Block Devices needs cleanup before the handoff.",
-  "objective": "Extract block-devices-restore.tar.gz so the restored/block-devices directory appears in the sandbox",
+  "name": "Pull the Right Disk",
+  "description": "Monitoring says the disk with the serial number in TICKET.md is failing and the datacentre technician is waiting to pull it. Two disks in the box are the same model, so the model name will not tell them apart. The output of `lsblk -J` was saved to capture/lsblk.json (TICKET.md names the serial).",
+  "objective": "Write disk.txt: the first line is the device path of the failing whole disk (/dev/NAME, from the serial in TICKET.md), followed by every real mount path that still lives on that disk (partitions, and logical volumes or other devices stacked on them), one per line, sorted. Swap and unmounted devices are not paths and are left out; a device with several mount points contributes all of them.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Block Devices",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "20m",
+  "concepts": ["lsblk -J", "jq", "recursive descent ..", "children", "mountpoints arrays", "null values"],
   "module": "module-24-system-inspection",
   "level": "level-11-block-devices"
 }

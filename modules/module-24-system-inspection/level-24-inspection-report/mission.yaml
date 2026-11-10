@@ -1,15 +1,11 @@
 {
-  "name": "Inspection Report: Permission Fix",
-  "description": "In the system inspection lab, a task related to Inspection Report needs cleanup before the handoff.",
-  "objective": "Set the mode of inspection-report.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Inspection Report",
-    "chmod",
-    "permissions"
-  ],
+  "name": "One Script to Inspect Them All",
+  "description": "The fleet inventory needs one portable script that describes any Linux host it runs on as a JSON document. You will write it as a normal user (see TICKET.md for the exact report format).",
+  "objective": "Write inspect.sh so that running it prints one JSON object with the keys hostname, kernel, arch, os_id, os_version, cpus, mem_total_mib, root_use_pct, uptime_seconds and listening_ports, as described in TICKET.md. Values come from the machine each time it runs; numbers are JSON numbers, os_version is a string, and listening_ports lists this user's TCP listener ports ascending (an empty array when there are none).",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "50m",
+  "concepts": ["uname", "/proc/meminfo, /proc/uptime", "/etc/os-release", "df -P", "ss -ltnH", "jq -n --arg / --argjson", "JSON types"],
   "module": "module-24-system-inspection",
   "level": "level-24-inspection-report"
 }

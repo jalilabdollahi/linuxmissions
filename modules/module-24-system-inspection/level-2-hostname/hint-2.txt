@@ -1,1 +1,6 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+`hostname` (or `uname -n`, or `cat /proc/sys/kernel/hostname`) prints the
+name the kernel has. To change one line, `sed -i 's/OLD/NEW/' file` works,
+but anchor the pattern: `^` matches the start of a line, so `^hostname = `
+cannot match a comment, and it cannot match `report_hostname`.
+Use `$(hostname)` to put the name into the sed command. Check with
+`grep -n hostname agent.conf` afterwards.

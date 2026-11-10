@@ -1,1 +1,7 @@
-Inspect the sandbox, then create the missing path for organized/namespaces-notes/namespaces-notes-notes.txt.
+A namespace is identified by an inode number: two processes are in the same
+network namespace exactly when their numbers are equal. So first you need to
+know which numbers are the HOST's. Which process is certainly in the host's
+namespaces? Do not guess by looking for the smallest or biggest number. Then
+compare every process against the host's PID and network numbers: which
+combination are you looking for, and which two opposite combinations look
+similar but do not count?

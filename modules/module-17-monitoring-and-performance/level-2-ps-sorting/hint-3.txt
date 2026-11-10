@@ -1,1 +1,8 @@
-Example: `grep 'ALERT' ps-sorting.log > alerts.txt`
+ps -eo pid,rss,cmd --sort=-rss | grep 'workers/worker.py' | grep -v grep | head -3 | awk '{print $1}' > top_rss.txt
+cat top_rss.txt
+
+- ps -eo pid,rss,cmd --sort=-rss   every process, columns PID, RSS and command, biggest RSS first
+- grep 'workers/worker.py'         keeps only the job runner's workers
+- grep -v grep                     drops the grep process itself
+- head -3                          the three biggest
+- awk '{print $1}'                 only the PID column, one per line

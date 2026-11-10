@@ -1,1 +1,8 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' log-noise.conf > fixed.conf`
+sed -E 's/^[^ ]+ [^ ]+ //; s/[0-9a-f]{8}/ID/g; s/[0-9]+/N/g' app.log | sort | uniq -c | sort -rn | head -5
+printf '%s\n' ' INFO cache hit key=' ' DEBUG http GET /v1/errors/report\?session=[0-9a-f]+ status=200' ' INFO healthcheck probe from [0-9.]+ ok in' > drop.patterns
+grep -vEf drop.patterns app.log | wc -l; grep -c ' ERROR ' app.log; grep -vEf drop.patterns app.log | grep -c ' ERROR '
+
+- sed ... | uniq -c        normalise the lines and rank the templates: the top three are the noise
+- printf ... > drop.patterns   one regex per template, each including the log level and fixed text
+- \?                       a literal question mark in the URL (ERE)
+- the last three commands  lines left, ERROR lines before, ERROR lines after (must be equal)

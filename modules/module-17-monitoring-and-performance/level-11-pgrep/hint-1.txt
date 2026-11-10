@@ -1,1 +1,6 @@
-List the archive if you want to inspect it first, then extract it.
+Two conditions have to hold at once: the worker's queue and the worker's
+parent. Both can be read from the process table, one from the command line
+and one from a different column. Start by listing the whole family, and look
+closely at the queue names: some are longer than the one you want.
+Also decide how to tell the two supervisors apart before you look for their
+children.

@@ -1,15 +1,11 @@
 {
-  "name": "Pidof: Backup Bundle",
-  "description": "In the monitoring and performance lab, a task related to Pidof needs cleanup before the handoff.",
-  "objective": "Create pidof-backup.tar.gz containing the files under bundle/pidof",
+  "name": "The Health Check That Cries Wolf",
+  "description": "Every minute healthcheck.sh pages the on-call with \"queue-worker DOWN\", yet the queue is draining and the worker is plainly running. Someone also left a backup copy of the worker running next to the real one, and it must not fool the check.",
+  "objective": "Fix healthcheck.sh so that it exits 0 (printing a line with OK) while the queue worker (opt/queue-worker.sh) runs and exits 1 (printing DOWN) when it does not. A running copy named queue-worker.bak must not count as the worker. Keep the script's name, its location and the OK/DOWN lines.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Pidof",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "15m",
+  "concepts": ["pidof vs pidof -x", "how scripts appear in the process table", "pgrep -f patterns", "check scripts and exit codes", "false positives from grep"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-10-pidof"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Iostat Notes: Field Extract",
-  "description": "In the monitoring and performance lab, a task related to Iostat Notes needs cleanup before the handoff.",
-  "objective": "Extract the second column from iostat-notes-report.csv into owners.txt",
+  "name": "iostat by Hand",
+  "description": "The storage team wants to know which disk is taking the writes, but the host has no iostat history. What iostat prints comes from /proc/diskstats, and two snapshots of it, taken ten seconds apart, were saved as diskstats.1 and diskstats.2.",
+  "objective": "Following TICKET.md, write busiest.txt with one line: the name of the whole disk that wrote the most during the ten seconds, a space, and its average write rate in KiB/s (a whole number, within 1 of the exact value).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Iostat Notes",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "15m",
+  "concepts": ["/proc/diskstats fields", "sectors written (field 10)", "delta between snapshots", "whole disks vs partitions", "awk and join"],
   "module": "module-17-monitoring-and-performance",
-  "level": "level-5-iostat-notes"
+  "level": "level-5-diskstats-delta"
 }

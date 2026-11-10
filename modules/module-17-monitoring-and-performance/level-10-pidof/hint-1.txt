@@ -1,1 +1,6 @@
-Use tar with create, gzip, and file flags.
+Look at how the worker really appears in the process table: run ps and read
+the command column of the worker, not just the file name you know. Which
+program is the process, and where does the script's name show up?
+Then run the check by hand and compare what it looks for with what is there.
+Beware of the quick fixes: a pattern that is too loose also finds the backup
+copy, or the check itself.

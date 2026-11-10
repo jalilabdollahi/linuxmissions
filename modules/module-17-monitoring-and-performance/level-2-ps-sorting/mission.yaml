@@ -1,15 +1,11 @@
 {
-  "name": "Ps Sorting: Alert Filter",
-  "description": "In the monitoring and performance lab, a task related to Ps Sorting needs cleanup before the handoff.",
-  "objective": "Write every alert line from ps-sorting.log into alerts.txt",
+  "name": "Who Is Eating the RAM",
+  "description": "The box is swapping. Five worker processes from the job runner are alive in the sandbox, next to other processes, and you need to know which three hold the most memory in RAM before anyone restarts anything.",
+  "objective": "Write the PIDs of the three workers (the processes running opt/workers/worker.py) with the largest resident memory (RSS) to top_rss.txt, one per line, largest first. Do not stop or signal any process.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Ps Sorting",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "10m",
+  "concepts": ["ps -eo output columns", "--sort", "RSS vs VSZ", "filtering ps output", "head"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-2-ps-sorting"
 }

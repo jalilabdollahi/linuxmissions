@@ -1,1 +1,8 @@
-Example: `for n in 1 2 3; do printf 'ss-listen item %s\n' "$n" > generated/ss-listen-$n.txt; done`
+ss -ltn | awk 'NR>1 && $2>$3 {n=split($4,a,":"); print a[n]}' > port.txt
+cat port.txt
+
+- ss -ltn                  all listening TCP sockets, numeric
+- NR>1                     skip the header line
+- $2>$3                    Recv-Q (waiting connections) above Send-Q (backlog): the queue overflowed
+- split($4,a,":")          the local address is ADDR:PORT; take the part after the last colon
+- > port.txt               only the port number goes into the file

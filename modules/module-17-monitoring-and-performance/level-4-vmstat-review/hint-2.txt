@@ -1,1 +1,8 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- The swap-rate columns are si (swapped in from disk) and so (swapped out to
+  disk), both per second. wa is the percentage of CPU time waiting for I/O.
+- A sample line starts with a number, a heading line starts with a letter
+  (procs / r). In awk, $1 ~ /^[0-9]/ selects only the samples.
+- Count samples with a variable (n++) in awk, and count matches with a condition
+  such as $16 > 30 (count the columns of the header to find wa).
+- `awk '$1 ~ /^[0-9]/ && COND' file | wc -l` counts matching samples.
+  man vmstat has a description of every field.

@@ -1,15 +1,11 @@
 {
-  "name": "Df Hotspots: Capacity Report",
-  "description": "In the monitoring and performance lab, a task related to Df Hotspots needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Df Hotspots",
-    "du",
-    "sort"
-  ],
+  "name": "Full Disk, Free Space",
+  "description": "The mail host refuses to create files: \"No space left on device\", yet `df -h` shows 40 % free everywhere. The on-call engineer saved the output of `df -h` and `df -i` in captured/, and rsynced the suspect filesystem's tree to spool/ in the sandbox so it can be examined safely.",
+  "objective": "Find the filesystem that is really full (see captured/) and the one directory inside the local spool/ tree that holds the most files directly. Write one line to culprit.txt: the mount point, a space, and the directory path (relative to the sandbox, for example `spool/mail/x`).",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "30m",
+  "concepts": ["df -i (inode usage)", "find -printf '%h'", "sort | uniq -c | sort -rn", "files vs bytes", "directories with spaces"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-16-df-hotspots"
 }

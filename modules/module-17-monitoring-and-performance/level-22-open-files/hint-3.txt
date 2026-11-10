@@ -1,1 +1,8 @@
-Example: `cut -d, -f2 open-files-report.csv > owners.txt`
+for p in $(pgrep -f 'opt/svc.py'); do n=$(ls /proc/$p/fd | wc -l); lim=$(awk '/^Max open files/ {print $4}' /proc/$p/limits); echo "$((n * 100 / lim)) $p $n $lim"; done | sort -rn | head -1 > .top
+read -r pct pid n lim < .top; type=$(for l in /proc/$pid/fd/*; do readlink "$l"; done | sed -E 's/^(socket|pipe):.*/\1/; t; s#^/.*#file#' | sort | uniq -c | sort -rn | head -1 | awk '{print $2}')
+printf 'pid=%s\ntype=%s\nlimit=%s\nfds=%s\n' "$pid" "$type" "$lim" "$n" > fdleak.env; cat fdleak.env
+
+- the first loop           per service: descriptors in use as a percentage of the soft limit, then PID, count, limit
+- sort -rn | head -1       the service closest to its limit
+- readlink ... | sed       what each descriptor is (socket, pipe or a file path, folded to file), then the most common kind
+- printf > fdleak.env      the four lines the task asks for

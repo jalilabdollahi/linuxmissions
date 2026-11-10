@@ -1,1 +1,8 @@
-A grep count or grep piped into wc can produce the number you need.
+- In `free`, "free" is memory nobody uses at all; Linux fills the rest with
+  buff/cache (disk cache it hands back when a program asks). "available" is
+  the estimate of what programs can really get. meminfo2.txt calls it
+  MemAvailable (in kB, free -m shows MiB).
+- Swap used is the "used" column of the Swap: line. Compare it in the two files.
+- 10 % of total: multiply available by 10 and compare with total (shell
+  arithmetic $(( ... )) or awk both work).
+- awk '/^Swap:/ {print $3}' file prints one column of one line. man free.

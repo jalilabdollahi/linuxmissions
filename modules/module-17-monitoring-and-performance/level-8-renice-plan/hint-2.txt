@@ -1,1 +1,8 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+- renice -n 15 -p PID [PID ...] sets the niceness of those processes to 15.
+- renice -n 15 -g PGID does the same for every member of a process group;
+  ps -eo pid,pgid,ni,cmd shows the PGID column.
+- renice -n 15 -u USER hits every process of a user: too broad here, and it
+  errors on processes whose niceness would have to go down.
+- Select the targets the way you did in the audit: batch scripts with
+  NI below 10 (ps + awk). A for loop over the PIDs keeps it short.
+- man renice.

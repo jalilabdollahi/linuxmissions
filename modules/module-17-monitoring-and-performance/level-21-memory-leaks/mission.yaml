@@ -1,16 +1,11 @@
 {
-  "name": "Memory Leaks: Path Realignment",
-  "description": "In the monitoring and performance lab, a task related to Memory Leaks needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/memory-leaks.txt to organized/memory-leaks/memory-leaks-notes.txt",
+  "name": "The Slow Leak",
+  "description": "Memory use on the app host has been creeping up for days. Four worker processes of the same service are running, and when memory runs out the OOM killer will pick a victim on its own, probably the wrong one. One of the workers leaks; the others are fine, even though one of them is much bigger than the rest.",
+  "objective": "Identify the leaking worker and measure how fast it grows. Write one line to leak.txt: its PID, a space, and its growth rate in KiB per second as a whole number (for example `4242 87`). The rate must be within 20 % of the real one, so measure over at least 10 seconds. Do not kill anything.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Memory Leaks",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "30m",
+  "concepts": ["VmRSS in /proc/PID/status", "ps -o rss", "sampling over time", "rate arithmetic", "RSS vs growth"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-21-memory-leaks"
 }

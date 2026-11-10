@@ -1,1 +1,6 @@
-Inspect the current mode first if you want to verify the change.
+Which workers are stuck is written on the filesystem, not in the process
+list: look at the heartbeat files and their ages. Then you need a way to
+address one specific worker by its command line.
+Be careful with names: they are numbered, and a pattern that is a prefix of
+another name hits more than you want. And remember what "gracefully" means
+for a signal.

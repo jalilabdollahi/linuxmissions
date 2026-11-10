@@ -1,15 +1,11 @@
 {
-  "name": "Vmstat Review: Noise Dedup",
-  "description": "In the monitoring and performance lab, a task related to Vmstat Review needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from vmstat-review-raw.txt with sorted unique values",
+  "name": "One Hour of vmstat, Sixty Samples",
+  "description": "During the incident someone ran `vmstat 1 60` on the app server and saved it as vmstat.txt. The post-mortem needs to know when swapping started and for how long the disks kept the CPUs waiting.",
+  "objective": "Following TICKET.md, write answers.env with FIRST_SWAP_SAMPLE (the number of the first sample in which memory was being swapped in or out) and HIGH_IOWAIT_SAMPLES (how many samples had iowait above 30).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Vmstat Review",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "10m",
+  "concepts": ["vmstat columns (si, so, wa)", "swpd vs swap activity", "repeated header lines", "awk with conditions"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-4-vmstat-review"
 }

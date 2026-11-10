@@ -1,1 +1,10 @@
-Example: `chmod +x jobs/lsof-basics.sh && jobs/lsof-basics.sh`
+base=$(pwd -P)/data
+for p in /proc/[0-9]*; do for l in $p/cwd $p/fd/*; do t=$(readlink "$l" 2>/dev/null) || continue; case $t in "$base"|"$base"/*) echo "${p#/proc/} $t";; esac; done; done | sort -u > holders.txt
+cat holders.txt
+
+- base=...                 the absolute path of data/
+- for p in /proc/[0-9]*    every process
+- $p/cwd $p/fd/*           its working directory and each open file
+- readlink                 where the link points; unreadable ones are skipped
+- case ... "$base"/*       keep only targets that are data/ or below it (not data-old/)
+- sort -u > holders.txt    one "PID PATH" line each

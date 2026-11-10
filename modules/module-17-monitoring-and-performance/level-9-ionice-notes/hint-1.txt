@@ -1,1 +1,6 @@
-This task wants a symbolic link, not a copy.
+CPU priority (nice) and disk priority are separate things: Linux has an I/O
+scheduling class for each process too, and one class is meant for work that
+should only touch the disk when nobody else wants it.
+Find the backup first. Look at everything it consists of: a tar command that
+archives and compresses is rarely a single process, and a helper can start
+helpers of its own. Which process actually writes the archive?

@@ -1,1 +1,5 @@
-This is a numeric aggregation task.
+Run both tools side by side on this host and compare their output line by
+line. What does the first line of each look like, and how are the state names
+spelled? The dashboards match on the old spelling, so you will need to
+translate. Look at every state that exists right now, not just the common
+ones.

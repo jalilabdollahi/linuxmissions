@@ -1,1 +1,7 @@
-An awk one-liner can skip the header and add the second field.
+- ss -tan lists all TCP sockets in numeric form with the state in column 1.
+  Unlike netstat it prints only one header line.
+- The spellings differ: ss writes ESTAB, TIME-WAIT, FIN-WAIT-2, CLOSE-WAIT,
+  netstat writes ESTABLISHED, TIME_WAIT, FIN_WAIT2, CLOSE_WAIT. Compare
+  `netstat -tan | awk '{print $6}' | sort -u` with `ss -tan | awk '{print $1}' | sort -u`
+  and make a translation in awk (gsub/sub) for each difference.
+- Keep the final `sort` of the old script so the order stays identical.

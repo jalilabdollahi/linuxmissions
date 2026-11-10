@@ -1,1 +1,8 @@
-Example: `head -n 3 nice-values-history.log > first3.txt` and `tail -n 3 nice-values-history.log > last3.txt`
+ps -eo pid,ni,cmd | awk '/opt\/jobs\/batch-/ && !/awk/ && $2 < 10 {print $1}' > violators.txt
+cat violators.txt
+
+- ps -eo pid,ni,cmd      every process with PID, niceness and full command line
+- /opt\/jobs\/batch-/    only the batch workers (all of them, including batch-api-sync)
+- !/awk/                 not this awk command itself
+- $2 < 10                niceness below 10 breaks the policy
+- {print $1}             write the PID

@@ -1,15 +1,11 @@
 {
-  "name": "Log Noise: Config Rewrite",
-  "description": "In the monitoring and performance lab, a task related to Log Noise needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in log-noise.conf and save the fixed result to fixed.conf",
+  "name": "Turn Down the Noise",
+  "description": "app.log grows by 2 GB a day and the log shipper bill shows it. Most of the volume is three chatty messages that nobody reads, but the log also contains real ERROR lines that must never be dropped, and some of them look suspiciously like the noise.",
+  "objective": "Find the three message templates that produce the most lines, once numbers, IDs and IP addresses are ignored. Write a file drop.patterns, one extended regex per line, so that `grep -vEf drop.patterns app.log` removes every line of those three templates and nothing else: every other line, ERROR lines above all, must survive.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Log Noise",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "40m",
+  "concepts": ["sed -E normalisation", "sort | uniq -c | sort -rn", "grep -vEf", "regex anchoring on the log level", "empty pattern pitfall"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-19-log-noise"
 }

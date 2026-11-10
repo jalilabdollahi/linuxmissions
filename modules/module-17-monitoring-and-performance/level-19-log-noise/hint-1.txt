@@ -1,1 +1,7 @@
-You need a stream editor or another text replacement tool.
+You cannot see templates in raw lines because every line differs in its
+numbers. First make the lines comparable: strip the timestamp and replace the
+parts that change (numbers, IDs, addresses) by a fixed marker. Then count how
+often each normalised line occurs and look at the top of the ranking, and at
+the lines just below it.
+Then write patterns that are as specific as the template: the log level and
+the fixed words, not just a keyword.

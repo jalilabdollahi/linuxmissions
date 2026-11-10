@@ -1,15 +1,11 @@
 {
-  "name": "Open Files: Field Extract",
-  "description": "In the monitoring and performance lab, a task related to Open Files needs cleanup before the handoff.",
-  "objective": "Extract the second column from open-files-report.csv into owners.txt",
+  "name": "Too Many Open Files",
+  "description": "The API intermittently logs \"Too many open files\" and drops requests. Four services run on this host and each has its own file descriptor limit. One of them is leaking descriptors and is about to hit its limit, but it is not the one with the most descriptors open.",
+  "objective": "Find the process that is close to its open-file limit and write fdleak.env with four lines: `pid=` its PID, `type=` the kind of descriptor it leaks (socket, pipe or file), `limit=` its current soft limit on open files, and `fds=` how many descriptors it has open now (within 5 of the real count). Do not kill anything.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Open Files",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "30m",
+  "concepts": ["/proc/PID/fd", "/proc/PID/limits (soft vs hard)", "readlink socket: pipe: file", "ulimit -n", "counting descriptors against limits"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-22-open-files"
 }

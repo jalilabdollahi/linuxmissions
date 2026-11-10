@@ -1,1 +1,9 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+- The three numbers after "load average:" are the load over the last 1, 5 and
+  15 minutes, separated by commas.
+- Cut the line at "load average:" (sed 's/.*load average: //' or
+  grep -o 'load average:.*') so that the clock, uptime and user count
+  disappear whatever their shape.
+- Load per CPU = 5-minute load / nproc. Put the host and the load next to
+  the nproc: sort both files on the host name and use join, or load
+  inventory.tsv into an awk array first.
+- Test with `> 1.0`: a host at exactly 1.00 is not overloaded. man join, man awk.

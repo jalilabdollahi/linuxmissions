@@ -1,1 +1,9 @@
-Use chmod with octal mode 640.
+- find DIR -type f -mmin +2 lists files modified more than two minutes ago.
+- pgrep -af worker.sh shows the workers' command lines; pkill takes the same
+  patterns as pgrep (pkill -f matches the whole command line). List with
+  pgrep first, then pkill with the identical pattern.
+- The pattern is a regex: `report-1` also matches report-10, report-11 and
+  report-12 (and the supervisor, whose script name contains "report-"). Anchor
+  it with $ at the end of the command line, or include `worker.sh `.
+- pkill sends SIGTERM by default, which the workers answer by logging a
+  clean shutdown; -9 does not give them the chance. man pkill.

@@ -1,1 +1,5 @@
-Measure directory sizes before deciding which one is largest.
+A filesystem can refuse new files in two ways: it has no free blocks, or it
+has no free inodes. The two captured df outputs measure different things; one
+of them will show the filesystem that is really full.
+Then, in the tree, ignore sizes and count entries: you want the directory with
+the most files directly inside it, and some directory names contain a space.

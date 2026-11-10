@@ -1,1 +1,7 @@
-Example: `cut -d, -f2 iostat-notes-report.csv > owners.txt`
+awk 'NR==FNR {before[$3]=$10; next} $3 ~ /^(sd[a-z]|nvme[0-9]+n[0-9]+)$/ {printf "%s %d\n", $3, ($10 - before[$3]) * 512 / 1024 / 10}' diskstats.1 diskstats.2 | sort -k2 -rn | head -1 > busiest.txt
+cat busiest.txt
+
+- NR==FNR {...; next}     while reading the first file, remember sectors written per device
+- $3 ~ /^(sd[a-z]|nvme...)$/   in the second file keep whole disks only (no partitions, no loops)
+- ($10 - before[$3]) * 512 / 1024 / 10   sectors in the window -> bytes -> KiB -> KiB per second
+- sort -k2 -rn | head -1  the busiest disk

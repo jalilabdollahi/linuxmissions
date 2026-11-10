@@ -1,1 +1,7 @@
-Save each result into its own file.
+- ps -o (or -eo) lets you choose columns: pid, ni (niceness) and cmd or args
+  (the command line, which includes the script path).
+- Filter the rows for opt/jobs/batch-, then compare the NI column with 10:
+  awk can test a column numerically (`$2 < 10`) and print another one.
+- When you grep the ps output, the grep/awk process itself shows up too if
+  its own command line contains the pattern.
+- man ps (STANDARD FORMAT SPECIFIERS), man nice.

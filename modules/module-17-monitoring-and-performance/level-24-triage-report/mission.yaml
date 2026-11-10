@@ -1,15 +1,11 @@
 {
-  "name": "Triage Report: Permission Fix",
-  "description": "In the monitoring and performance lab, a task related to Triage Report needs cleanup before the handoff.",
-  "objective": "Set the mode of triage-report.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Triage Report",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Everything Is Slow",
+  "description": "Tickets keep coming in: \"everything is slow\". On this host four different things are going wrong at once: a scheduler that spawns CPU-heavy jobs all day, a worker whose memory keeps growing, a service that stopped accepting connections, and a debug logger that fills the disk and is restarted by a supervisor whenever it dies. Next to them run a healthy API server (big, but fine) and an audit logger that must not be disturbed.",
+  "objective": "1) Write triage.env with the culprit of each problem as KEY=value lines: SPAWNER_PID (the long-running parent that spawns the CPU-heavy short-lived children), LEAKER_PID, LEAKER_RSS_KIB (its resident memory in KiB at the time you looked, within 5 %), STUCK_PORT (the listening port whose accept queue is full) and LOGWRITER_PID (the process writing the runaway log, or its supervisor). 2) Then mitigate: renice the spawner to 19 and leave it running; stop the leaker; stop the log writer for good (it must not come back). Leave the healthy API server, the audit logger and the stuck service alone.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "60m",
+  "concepts": ["ps sampling and PPID", "VmRSS growth over time", "ss -ltn Recv-Q/Send-Q", "fuser / open files of a runaway writer", "renice", "supervisors and process order", "recording evidence before stopping a process"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-24-triage-report"
 }

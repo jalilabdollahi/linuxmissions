@@ -1,1 +1,8 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- Counting from the start of the line, major=1, minor=2, name=3, and "sectors
+  written" is field 10 (see the kernel's iostats documentation, or man proc).
+- A sector is 512 bytes: KiB = sectors * 512 / 1024. Divide by 10 for KiB/s.
+- Combine the two files by device name: join needs both inputs sorted on the
+  join field; or read diskstats.1 into an awk array first (NR==FNR trick).
+- Filter names with a regex: whole disks look like sda, sdb, nvme0n1;
+  partitions like sda1 or nvme0n1p1; loop0 is a loop device.
+- sort -k2 -rn | head -1 gives the biggest.

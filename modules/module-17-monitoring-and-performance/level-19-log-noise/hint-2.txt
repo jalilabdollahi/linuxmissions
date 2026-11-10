@@ -1,1 +1,9 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+- sed -E 's/^[^ ]+ [^ ]+ //; s/[0-9a-f]{8}/ID/g; s/[0-9]+/N/g' app.log  drops
+  the two timestamp fields and masks 8-digit hex IDs, then every other number.
+  Mask IDs before numbers, or the digits inside them get replaced first.
+- | sort | uniq -c | sort -rn | head  ranks the templates.
+- drop.patterns holds one ERE per line for grep -vEf. Escape regex characters
+  (\? for a literal question mark), keep the level word (INFO/DEBUG) in the
+  pattern, and never leave an empty line: an empty pattern matches everything.
+- Test with grep -vEf drop.patterns app.log | wc -l and check that
+  `grep -c ' ERROR ' ` gives the same count before and after.

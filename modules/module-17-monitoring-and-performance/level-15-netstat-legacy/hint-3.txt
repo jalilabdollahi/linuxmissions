@@ -1,1 +1,13 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' netstat-legacy-metrics.csv > total.txt`
+cat > conn_states.sh <<'LMEND'
+#!/bin/bash
+ss -tan | awk 'NR>1 {s=$1; if (s=="ESTAB") s="ESTABLISHED"; gsub("-","_",s); sub("_WAIT_","_WAIT",s); c[s]++} END {for (s in c) print s, c[s]}' | sort
+LMEND
+bash conn_states.sh; bash .lm-state/conn_states.old
+
+- NR>1                       ss has one header line, netstat two
+- s=$1                       the state is the first column here (sixth in netstat)
+- ESTAB -> ESTABLISHED       the one name that is simply shortened
+- gsub("-","_",s)            TIME-WAIT becomes TIME_WAIT, CLOSE-WAIT becomes CLOSE_WAIT
+- sub("_WAIT_","_WAIT",s)    FIN-WAIT-2 became FIN_WAIT_2 but netstat says FIN_WAIT2
+- c[s]++ ... | sort          count per state, same sorted output as before
+- the last line              the old script's output, to compare by eye (keep it as a reference)

@@ -1,1 +1,10 @@
-Example: `sort vmstat-review-raw.txt | uniq > unique-sorted.txt`
+first=$(awk '$1 ~ /^[0-9]/ {n++; if ($7 > 0 || $8 > 0) {print n; exit}}' vmstat.txt)
+high=$(awk '$1 ~ /^[0-9]/ && $16 > 30' vmstat.txt | wc -l)
+printf 'FIRST_SWAP_SAMPLE=%s\nHIGH_IOWAIT_SAMPLES=%s\n' "$first" "$high" > answers.env
+cat answers.env
+
+- $1 ~ /^[0-9]/        only sample lines (headings start with a letter)
+- n++                  numbers the samples as awk goes
+- $7 > 0 || $8 > 0     si or so is non-zero: print the sample number and stop
+- $16 > 30             the wa column is above 30; wc -l counts those lines
+- printf > answers.env writes both answers

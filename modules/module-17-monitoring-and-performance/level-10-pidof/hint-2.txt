@@ -1,1 +1,8 @@
-Archive the directory contents without leaving anything out.
+- A script is run by an interpreter: the process is /bin/bash and the script
+  is only its argument; plain `pidof NAME` matches the program that runs.
+- pidof has an option for exactly this case (man pidof, look for scripts).
+- Alternative: pgrep -f NAME matches against the whole command line, so the
+  pattern has to be specific (anchor it with the .sh, or the directory) or
+  queue-worker.bak matches too.
+- Test the check twice: with the worker running, and after `kill`ing it
+  (start it again with `bash opt/queue-worker.sh &`).

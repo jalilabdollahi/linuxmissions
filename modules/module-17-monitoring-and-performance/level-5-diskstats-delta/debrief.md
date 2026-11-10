@@ -1,17 +1,21 @@
-# Iostat Notes: Field Extract
+# iostat by Hand
 
-## What you practiced
-- This level focused on **Iostat Notes** in a safe sandbox.
-- The shortest path usually combines `cut` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`/proc/diskstats` holds running totals since boot, one line per block device.
+A rate is always a difference: counter at the end minus counter at the start,
+divided by the time between them. That is all `iostat -d` does. Sectors are
+always 512 bytes in this file, whatever the physical sector size. Selecting
+names with an anchored regex keeps the partitions (their writes are already
+included in the parent disk) and loop devices out of the ranking.
 
-## Commands to remember
-```bash
-cut -d, -f2 file.csv
-awk -F, '{print $2}' file.csv
-column -s, -t file.csv
-```
+## Common mistakes
+- Using the totals of one snapshot: the disk with the most writes since boot is
+  rarely the one busy right now.
+- Taking the first line after sorting when a partition ties with its disk (all
+  writes went to one partition): the partition name is not what was asked.
+- Forgetting `* 512 / 1024`, or dividing by 10 twice.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a delimiter-based column extraction task.
+## Next step
+With `sysstat` installed, `iostat -dx 10 2` prints the same rates plus
+utilisation and await times, and `sar -d` keeps history. `lsblk` shows how
+partitions and disks relate.

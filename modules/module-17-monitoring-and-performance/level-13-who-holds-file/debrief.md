@@ -1,17 +1,19 @@
-# Lsof Basics: Script Kickoff
+# Device or Resource Busy
 
-## What you practiced
-- This level focused on **Lsof Basics** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A process can pin a directory in two ways: by holding a file below it open
+(one symlink in `/proc/PID/fd/` per open file) or by having it as its current
+working directory (`/proc/PID/cwd`). Both make `umount` fail with "target is
+busy". `readlink` turns each symlink into a path, and a `case` pattern on
+`data` or `data/*` keeps data-old/ and log/ out of the answer. `fuser -v data`
+reports the same thing with an ACCESS letter (`f` open file, `c` cwd).
 
-## Commands to remember
-```bash
-chmod +x script.sh
-./script.sh
-bash script.sh
-```
+## Common mistakes
+- Looking only at open files: the indexer has none, yet it blocks the unmount.
+- Matching `data*` as a prefix: data-old/ belongs to someone else.
+- Listing your own shell after you `cd data` to look around.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task usually takes two steps: fix execute permission, then run the script.
+## Next step
+`lsof +D data` and `fuser -km` do the same job where installed (the latter
+kills the holders, so read the list first). `umount -l` detaches lazily when
+you cannot wait.

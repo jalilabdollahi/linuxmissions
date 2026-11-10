@@ -1,1 +1,6 @@
-Use a targeted file search so you do not remove the wrong files.
+First list the batch workers and their niceness again, this time also looking
+at which processes belong together. As a normal user you can only make a
+process nicer (a higher number), never less nice, so think about what a
+command that touches "everything of mine" would do to the API and to the
+workers that are already at a high number.
+The batch-etl pipeline is three processes that share one process group.

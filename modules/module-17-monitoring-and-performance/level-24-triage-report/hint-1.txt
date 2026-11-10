@@ -1,1 +1,7 @@
-Inspect the current mode first if you want to verify the change.
+Treat it as four separate investigations and keep notes as you go.
+CPU: a snapshot never shows short-lived children; sample and follow the parent.
+Memory: size is not growth; measure twice with a pause in between.
+Network: which listener's queue of waiting connections is full?
+Disk/log: which file is growing, who has it open, and who restarts that process?
+Order matters at the end: some facts disappear when a process does, and a
+process with a supervisor is not stopped by killing just the child.

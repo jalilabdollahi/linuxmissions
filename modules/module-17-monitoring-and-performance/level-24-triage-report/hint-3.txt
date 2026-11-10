@@ -1,1 +1,14 @@
-Example: `chmod 640 triage-report.sh`
+for i in $(seq 30); do ps -eo ppid=,pcpu=,args= | awk '$2 > 30 && /opt\// {print $1}'; sleep 0.1; done | sort | uniq -c | sort -rn | awk 'NR==1 {print $2}' > .sp
+for p in $(pgrep -f 'opt/.*\.py'); do echo "$p $(awk '/^VmRSS/ {print $2}' /proc/$p/status)"; done > .r0; sleep 6
+for p in $(pgrep -f 'opt/.*\.py'); do echo "$p $(awk '/^VmRSS/ {print $2}' /proc/$p/status)"; done > .r1
+leaker=$(join .r0 .r1 | awk '{print $1, $3 - $2}' | sort -k2 -n | tail -1 | cut -d' ' -f1); rss=$(awk '/^VmRSS/ {print $2}' /proc/$leaker/status)
+port=$(ss -ltn | awk 'NR>1 && $2>$3 {n=split($4,a,":"); print a[n]}'); lw=$(fuser log/forwarder.debug.log 2>/dev/null | awk '{print $1}'); sup=$(ps -o ppid= -p "$lw" | tr -d ' ')
+printf 'SPAWNER_PID=%s\nLEAKER_PID=%s\nLEAKER_RSS_KIB=%s\nSTUCK_PORT=%s\nLOGWRITER_PID=%s\n' "$(cat .sp)" "$leaker" "$rss" "$port" "$lw" > triage.env; cat triage.env
+renice -n 19 -p "$(cat .sp)"; kill "$leaker"; kill "$sup"; kill "$lw"
+
+- line 1       sample ps 30 times, keep CPU-heavy processes, the parent PID that appears most is the spawner
+- lines 2-3    RSS of every python service twice, 6 s apart; the biggest difference is the leaker
+- line 4       the leaker's RSS, read now while it is still alive; then the full-queue port (Recv-Q > Send-Q)
+- line 5       who holds the runaway log open (fuser), and its parent (the supervisor)
+- printf       the five findings go to triage.env
+- last line    renice the spawner to 19; stop the leaker (its RSS is already recorded); stop the supervisor first, then the writer

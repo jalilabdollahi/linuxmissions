@@ -1,1 +1,4 @@
-Inspect the sandbox, then create the missing path for organized/memory-leaks/memory-leaks-notes.txt.
+A single look at memory use cannot tell a leak from a big program: a leak is
+a change over time. Take a measurement for every worker, wait, measure
+again, and compare. How long you wait decides how good the rate is.
+The biggest process is rarely the leaker.

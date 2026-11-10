@@ -1,1 +1,10 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+mp=$(awk 'NR>1 && $5=="100%" {print $6}' captured/df-i.txt)
+dir=$(find spool -type f -printf '%h\n' | sort | uniq -c | sort -rn | head -1 | sed -E 's/^ *[0-9]+ //')
+echo "$mp $dir" > culprit.txt; cat culprit.txt
+
+- awk ... $5=="100%"       the row of df -i whose inode use is 100 %, and its mount point (column 6)
+- find -type f -printf %h  one line per file: the directory containing it
+- sort | uniq -c           how many files per directory
+- sort -rn | head -1       the directory with the most files on top
+- sed ...                  strips the count in front, keeping the path (spaces and all)
+- echo "$mp $dir"          the one-line answer

@@ -1,16 +1,11 @@
 {
-  "name": "Ss Listen: Loop Builder",
-  "description": "In the monitoring and performance lab, a task related to Ss Listen needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named ss-listen-1.txt through ss-listen-3.txt with matching numbered content",
+  "name": "Up, But Not Answering",
+  "description": "Users report connection timeouts against one of four local services, yet all four processes are running and all four ports are open. The service that times out is the one that has stopped calling accept(): its queue of waiting connections is full and new clients are being ignored.",
+  "objective": "Find the TCP port of the one listening service whose accept queue is full, and write just that port number to port.txt.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Ss Listen",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "15m",
+  "concepts": ["ss -ltn", "Recv-Q and Send-Q on LISTEN sockets", "accept queue and backlog", "ss -p"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-14-ss-listen"
 }

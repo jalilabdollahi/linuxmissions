@@ -1,15 +1,11 @@
 {
-  "name": "Journal Errors: Alert Filter",
-  "description": "In the monitoring and performance lab, a task related to Journal Errors needs cleanup before the handoff.",
-  "objective": "Write every alert line from journal-errors.log into alerts.txt",
+  "name": "The Minute It Broke",
+  "description": "The last hour of the application host's journal was exported with `journalctl -o json` into journal.json (one JSON object per line). Somewhere in that hour the error rate jumped, and the incident report needs the exact minute and the service that was producing most of the errors then.",
+  "objective": "Find the first minute (UTC) in which more than 10 error-level entries were logged, and the systemd unit that logged the most errors in that minute. Write them to spike.txt as one line: `HH:MM unit` (for example `09:41 foo.service`). Errors are entries with a syslog priority of 3 (err) or more severe.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Journal Errors",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "30m",
+  "concepts": ["journalctl -o json format", "jq select and tonumber", "microsecond timestamps", "strftime bucketing", "syslog priorities", "uniq -c"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-18-journal-errors"
 }

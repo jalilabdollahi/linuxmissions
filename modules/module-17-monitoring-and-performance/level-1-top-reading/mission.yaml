@@ -1,16 +1,11 @@
 {
-  "name": "Top Reading: Path Realignment",
-  "description": "In the monitoring and performance lab, a task related to Top Reading needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/top-reading.txt to organized/top-reading/top-reading-notes.txt",
+  "name": "Reading the Sick Box",
+  "description": "On-call pasted `top -b -n1` from the sick database host into top.txt before rebooting it. The incident report needs five numbers from that paste, and the template summary.env is waiting to be filled in.",
+  "objective": "Fill in summary.env from top.txt: LOAD1 and LOAD15 (the 1-minute and 15-minute load averages), IOWAIT (the %wa figure, number only), ZOMBIES (how many zombie tasks) and TOP_MEM_PID (the PID of the process with the largest resident memory, RES).",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Top Reading",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "10m",
+  "concepts": ["top header lines", "load average", "%wa (iowait)", "task counts", "RES column units"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-1-top-reading"
 }

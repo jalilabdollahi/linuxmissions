@@ -1,1 +1,4 @@
-This mission is about cron field order and exact syntax.
+Two kinds of "size" are in play: what a file claims to be and what the disk
+really spends on it. Think about which files can claim much more than they
+use, and about files that exist under several names. Also note what the task
+says about hidden names and about how deep the directories are.

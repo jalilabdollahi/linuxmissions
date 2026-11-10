@@ -1,1 +1,12 @@
-Use chmod with octal mode 640.
+- Spawner: ps -eo ppid,pcpu,args in a loop with sleep 0.1, keep the CPU-heavy
+  ones, count by parent PID (sort | uniq -c). Then renice -n 19 -p PID.
+- Leaker: VmRSS in /proc/PID/status for each candidate, sleep, again, compare.
+  Record its RSS (in KiB) BEFORE you stop it; a dead process has no RSS. Then
+  kill it (the default signal is enough).
+- Stuck listener: ss -ltn, on LISTEN sockets Recv-Q is the accept queue and
+  Send-Q the backlog; the full one has Recv-Q above Send-Q.
+- Log writer: ls -lS log/ or du shows the file; fuser FILE (or ls -l /proc/*/fd)
+  shows who holds it open. ps -o ppid= -p PID shows its parent: a supervisor
+  that restarts it. Stop the supervisor first, then the writer.
+- Don't use broad patterns (pkill -f log, pkill python): a healthy API server
+  and an audit logger are running next to the culprits.

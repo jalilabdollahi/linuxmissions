@@ -1,15 +1,11 @@
 {
-  "name": "Lsof Basics: Script Kickoff",
-  "description": "In the monitoring and performance lab, a task related to Lsof Basics needs cleanup before the handoff.",
-  "objective": "Make jobs/lsof-basics.sh executable, run it, and create the token file it writes",
+  "name": "Device or Resource Busy",
+  "description": "Ops wants to take the data/ volume offline for maintenance, but the unmount (and even a plain rm -r of data/) is refused with \"device or resource busy\". Something on this host still has the volume in use, and nobody knows what. lsof is not installed on the maintenance box, but /proc and fuser are.",
+  "objective": "Find every live process that uses data/ in any way: it has a file below data/ open, or data/ (or a directory inside it) is its current working directory. Write one line per process to holders.txt in the form `PID PATH`, where PATH is the open file or the directory it holds, as absolute path. Do not stop any process.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Lsof Basics",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "20m",
+  "concepts": ["/proc/PID/fd", "/proc/PID/cwd", "readlink", "fuser -v", "open file vs working directory"],
   "module": "module-17-monitoring-and-performance",
-  "level": "level-13-lsof-basics"
+  "level": "level-13-who-holds-file"
 }

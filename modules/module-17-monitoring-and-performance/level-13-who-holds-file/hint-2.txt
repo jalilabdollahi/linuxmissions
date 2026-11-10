@@ -1,1 +1,7 @@
-Use `chmod +x jobs/lsof-basics.sh` and then execute it.
+- /proc/PID/fd/ holds one symlink per open file; readlink shows the target.
+- /proc/PID/cwd is a symlink to the working directory. This one has no fd.
+- fuser -v data/  lists the processes using that directory (ACCESS column:
+  f = open file, c = current directory); fuser -vm shows a whole filesystem,
+  which is far too broad here. man fuser.
+- Compare against "$PWD/data/" with a trailing slash or a case pattern, so
+  data-old/ does not match.

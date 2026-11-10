@@ -1,15 +1,11 @@
 {
-  "name": "Renice Plan: Cleanup Sweep",
-  "description": "In the monitoring and performance lab, a task related to Renice Plan needs cleanup before the handoff.",
-  "objective": "Delete only the `.tmp` files under cleanup/renice-plan and leave the other files intact",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Renice Plan",
-    "find",
-    "rm"
-  ],
+  "name": "Make the Batch Jobs Nicer",
+  "description": "The audit found batch workers running below niceness 10 (policy OPS-12). They must not be stopped, because they are halfway through the nightly run, but they have to stop competing with the API. One of them is a small pipeline of three processes.",
+  "objective": "Without restarting anything, give every batch worker (processes running opt/jobs/batch-*.sh) that is below niceness 10 niceness 15, including every process of the batch-etl pipeline. The API, the monitoring agent and the workers that already comply must keep their current niceness exactly (a worker already at 17 or 18 must not drop to 15).",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["renice -n N -p PID", "renice -g (process group)", "raising niceness as a normal user", "ps -o pid,pgid,ni", "why renice -u is too broad"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-8-renice-plan"
 }

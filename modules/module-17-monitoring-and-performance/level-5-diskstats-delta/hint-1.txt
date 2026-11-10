@@ -1,1 +1,5 @@
-This is a delimiter-based column extraction task.
+The two files list the same devices in the same order, with counters that only
+grow. What happened during the ten seconds is the difference between the
+snapshots, not either file on its own.
+Which column holds "sectors written"? And which of the listed names are real
+disks, as opposed to partitions of those disks or loop devices?

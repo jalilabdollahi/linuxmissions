@@ -1,1 +1,21 @@
-Example: `tar -czf watch-loops-backup.tar.gz bundle/watch-loops`
+cat > sample.sh <<'LMEND'
+#!/bin/bash
+pid=$1; n=$2
+for ((i = 0; i < n; i++)); do
+  rest=$(sed 's/.*) //' "/proc/$pid/stat" 2>/dev/null) || exit 0
+  rss=$(awk '/^VmRSS/ {print $2}' "/proc/$pid/status" 2>/dev/null)
+  [ -n "$rest" ] && [ -n "$rss" ] || exit 0
+  set -- $rest
+  echo "$(date +%s),$rss,$((${12} + ${13}))"
+  [ "$i" -lt $((n - 1)) ] && sleep 1
+done
+exit 0
+LMEND
+bash sample.sh "$(pgrep -f 'etl job')" 3
+
+- sed 's/.*) //'      drop everything up to the last ") ": the name with its spaces and parentheses is gone
+- set -- $rest        the remaining words become $1, $2, ...; utime and stime are the 12th and 13th
+- awk '/^VmRSS/'      resident memory in KiB
+- date +%s            the epoch for the row
+- || exit 0           if the process vanished the reads fail and the script ends quietly
+- [ ... ] && sleep 1  one sample per second, without a pointless pause after the last one

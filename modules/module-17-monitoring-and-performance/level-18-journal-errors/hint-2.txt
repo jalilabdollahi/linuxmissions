@@ -1,1 +1,9 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+- jq -r 'select(...)' filters objects; PRIORITY and __REALTIME_TIMESTAMP are
+  strings, so convert with tonumber before comparing or dividing.
+- Syslog priorities: 0 emerg, 1 alert, 2 crit, 3 err, 4 warning, ... A lower
+  number is worse, so errors are priority <= 3, not == 3.
+- __REALTIME_TIMESTAMP is microseconds since the epoch: divide by 1000000,
+  floor, then strftime("%H:%M") (jq prints it in UTC).
+- Kernel messages have no _SYSTEMD_UNIT; `// "-"` supplies a placeholder.
+- The file is in time order, so `uniq -c` on the minute column counts runs.
+  sort | uniq -c | sort -rn ranks the units within one minute.

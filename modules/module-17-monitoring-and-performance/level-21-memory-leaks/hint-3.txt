@@ -1,1 +1,10 @@
-Example: `mkdir -p organized/memory-leaks && mv inbox/memory-leaks.txt organized/memory-leaks/memory-leaks-notes.txt`
+pids=$(pgrep -f 'opt/worker.py'); for p in $pids; do echo "$p $(awk '/^VmRSS/ {print $2}' /proc/$p/status)"; done > rss0.txt; sleep 10
+for p in $pids; do echo "$p $(awk '/^VmRSS/ {print $2}' /proc/$p/status)"; done > rss1.txt
+join rss0.txt rss1.txt | awk '{print $1, int(($3 - $2) / 10)}' | sort -k2 -n | tail -1 > leak.txt; cat leak.txt
+
+- pgrep -f opt/worker.py   the PIDs of the four workers
+- awk '/^VmRSS/ ...'       resident memory in KiB from /proc/PID/status, written as "PID RSS" lines
+- sleep 10                 the waiting time that the rate is divided by
+- the second round         the same measurement again, into rss1.txt
+- join | awk               pair both rounds by PID and compute (new - old) / 10 KiB per second
+- sort -k2 -n | tail -1    the fastest grower is the leaker; its PID and rate go into leak.txt

@@ -1,1 +1,5 @@
-A short for-loop is the cleanest option here.
+All four services are "up", so process lists and port scans will not show
+the difference. Ask the kernel about each listening socket instead: a
+listener that is overloaded keeps connections waiting in a queue. Which two
+numbers in the socket listing describe that queue, and what do they mean on
+a LISTEN socket (they mean something else on a connected one)?

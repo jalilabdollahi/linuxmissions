@@ -1,1 +1,7 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- ls /proc/PID/fd | wc -l counts a process's open descriptors.
+- /proc/PID/limits has the line "Max open files": the first number is the
+  soft limit (what is enforced), the second the hard limit (the ceiling the
+  process may raise the soft one to). `ulimit -Sn` / `-Hn` show the same for a shell.
+- readlink /proc/PID/fd/N shows the target: "socket:[inode]", "pipe:[inode]"
+  or a path for regular files. Count the kinds for the process in danger.
+- pgrep -f opt/svc.py lists the four PIDs. awk can divide count by limit.

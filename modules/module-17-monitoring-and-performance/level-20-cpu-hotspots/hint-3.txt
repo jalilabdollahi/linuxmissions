@@ -1,1 +1,8 @@
-Example: `sort cpu-hotspots-raw.txt | uniq > unique-sorted.txt`
+for i in $(seq 30); do ps -eo ppid=,pcpu=,args= | awk '$2 > 30 && /-step\.sh/ {print $1}'; sleep 0.1; done | sort | uniq -c | sort -rn | awk 'NR==1 {print $2}' > culprit.txt
+cat culprit.txt
+
+- for ... sleep 0.1        take 30 samples, 0.1 s apart
+- ps -eo ppid=,pcpu=,args= parent PID, CPU share and command line of every process, no header
+- awk '$2 > 30 && ...'     keep only CPU-heavy short-lived step processes, print their parent PID
+- sort | uniq -c | sort -rn  which parent shows up most among them
+- awk 'NR==1 {print $2}'   the top parent's PID goes into culprit.txt

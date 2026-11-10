@@ -1,15 +1,11 @@
 {
-  "name": "Watch Loops: Backup Bundle",
-  "description": "In the monitoring and performance lab, a task related to Watch Loops needs cleanup before the handoff.",
-  "objective": "Create watch-loops-backup.tar.gz containing the files under bundle/watch-loops",
+  "name": "One Sample per Second",
+  "description": "Capacity planning wants a CSV of how one process behaves over time, and they want to collect it with a script you write, not with a monitoring suite. The process to watch is the nightly ETL job, whose name contains spaces and parentheses, which is exactly the kind of detail that breaks naive parsing of /proc.",
+  "objective": "Write sample.sh in the sandbox so that `bash sample.sh PID N` prints N lines `epoch,rss_kib,cpu_ticks`, one per second, for the process PID: the Unix time, its resident memory in KiB, and its CPU time in clock ticks (user plus system). No header line. If the process disappears while sampling, the script must stop quietly and exit with status 0, printing nothing broken.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Watch Loops",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "40m",
+  "concepts": ["for/while loops with sleep", "/proc/PID/stat fields 14 and 15", "comm field with spaces and parentheses", "/proc/PID/status VmRSS", "robust exit when the PID vanishes"],
   "module": "module-17-monitoring-and-performance",
   "level": "level-23-watch-loops"
 }

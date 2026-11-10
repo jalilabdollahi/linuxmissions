@@ -1,1 +1,8 @@
-Example: `grep 'ALERT' du.log > alerts.txt`
+  find projects -type d \( -name node_modules -o -name .cache -o -name target -o -name build \) -prune -exec du -sk {} + | awk '$1 > 5120' | sort -nr > bloat.txt
+      find ... -type d    only directories (mobile-app/target is a file)
+      \( ... -o ... \)    any of the four cache names, at any depth
+      -prune              stop at the outer cache, so nested ones aren't listed (or counted twice)
+      du -sk {} +         one "KiB<TAB>path" line per cache dir
+      awk '$1 > 5120'     only those over 5 MiB
+      sort -nr            largest first
+  cat bloat.txt

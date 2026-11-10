@@ -1,1 +1,3 @@
-Look for a filtering command that keeps only the alert lines in pwd-cd.log.
+`ls -l deploy` and `ls -l deploy/releases` show where each symlink points (the part after ->). Follow the chain from current: how many links do you pass before you reach a real directory?
+
+After `cd deploy/current`, the shell remembers the path you typed, not where you really are. There are two kinds of "current directory": the one through the links and the real one.

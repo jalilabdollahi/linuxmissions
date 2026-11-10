@@ -1,17 +1,21 @@
-# Brace Expansion: Cleanup Sweep
+# Scaffolding
 
-## What you practiced
-- This level focused on **Brace Expansion** in a safe sandbox.
-- The shortest path usually combines `find` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Brace expansion is the first expansion bash performs, and it is pure text
+generation: `{a,b}` turns into two words, `{01..12}` into twelve, and several
+braces in one word produce every combination. Nothing has to exist on disk, so
+it is the tool for *creating* names. `cp config.yaml{,.bak}` expands to
+`cp config.yaml config.yaml.bak`, because the first item in the braces is empty.
 
-## Commands to remember
-```bash
-find dir -name '*.tmp'
-find dir -name '*.tmp' -delete
-find dir -type f -exec rm {} \;
-```
+## Common mistakes
+- `{1..12}` gives `1 ... 12`. Sorting then puts `10` before `2`, and tools that
+  expect `MM` break. A leading zero on either end (`{01..12}`) pads them all.
+- `mkdir "data/2026/{01..12}"` creates one directory literally named `{01..12}`:
+  quotes switch brace expansion off. So does a space: `{api, web}`.
+- Braces generate names and globs match existing ones: `ls svc/*/dev` works
+  only after the directories exist, `ls svc/{api,web}/dev` complains about any
+  that are missing.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use a targeted file search so you do not remove the wrong files.
+## Learn next
+`{a..z}` and `{0..100..10}` (a step) also work, and `mv file.{txt,md}` renames
+in one go. `tree -d data svc` (or `find ... -type d`) shows what was created.

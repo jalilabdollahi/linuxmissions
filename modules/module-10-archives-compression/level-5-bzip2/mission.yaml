@@ -1,15 +1,11 @@
 {
-  "name": "Bzip2: Field Extract",
-  "description": "In the archives and compression lab, a task related to Bzip2 needs cleanup before the handoff.",
-  "objective": "Extract the second column from bzip2-report.csv into owners.txt",
+  "name": "Legacy Transfer",
+  "description": "The auditors' old transfer system only accepts bzip2 files. A colleague already put outbox/ledger-2025.tar.bz2 there, but the system rejected it (see outbox/transfer-rejected.txt). It checks what the file really is, not its name.",
+  "objective": "Put two real bzip2 files in outbox/: ledger-2025.tar.bz2, a bzip2-compressed tar of the ledger/ directory (members ledger/..., all its files), and audit.log.bz2, the bzip2-compressed audit.log. Keep audit.log itself where it is, and do not change ledger/.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Bzip2",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "7m",
+  "concepts": ["tar -cjf", "bzip2 -k", "file", "magic bytes"],
   "module": "module-10-archives-compression",
   "level": "level-5-bzip2"
 }

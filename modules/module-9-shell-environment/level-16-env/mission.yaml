@@ -1,15 +1,11 @@
 {
-  "name": "Env: Capacity Report",
-  "description": "In the shell environment lab, a task related to Env needs cleanup before the handoff.",
-  "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Env",
-    "du",
-    "sort"
-  ],
+  "name": "Cron Clone",
+  "description": "report-gen builds the daily sales report. Run by hand it works, but every morning at 06:00 cron mails that there is no report (MAIL.txt). A test cron job saved the exact environment cron gives its jobs in cron.env.",
+  "objective": "1) Run ./report-gen with exactly the environment in cron.env (nothing from your own shell) and save everything it prints, errors included, in cron-run.log. Do this before changing the script. 2) Then fix report-gen so that it exits 0 and writes a complete report (author in the header, a ruler line, the region totals) when started with only cron.env's variables. Leave cron.env as it is: it describes cron, not your fix.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["env -i", "env VAR=value cmd", "cron's environment", "USER vs LOGNAME", "set -u", "${VAR:-default}"],
   "module": "module-9-shell-environment",
   "level": "level-16-env"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Case: Field Extract",
-  "description": "In the shell environment lab, a task related to Case needs cleanup before the handoff.",
-  "objective": "Extract the second column from case-report.csv into owners.txt",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Case",
-    "cut",
-    "awk"
-  ],
+  "name": "Which Deploy?",
+  "description": "On the jump host, typing `deploy` runs a different program depending on the terminal: SSH sessions get the old 1.4 hotfix binary, new tabs get a 2022 rsync script, and removing that alias only revealed yet another old version (TICKET.txt). The jump host's home directory is home/ in this sandbox.",
+  "objective": "Change the startup files under home/ so that in every new shell started with HOME=home/, both login shells (bash -l) and terminal tabs (bash -i), `deploy` is the program tools/bin/deploy (type -t says file, command -v gives that path). Keep opt/deploy-1.4 and scripts/deploy-legacy.sh on disk, keep PATH's system directories, and keep the team shortcuts ll, gs and mkcd working in terminal tabs.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "25m",
+  "concepts": ["type -a / type -t", "command -v", "alias > function > builtin > PATH", ".bash_profile vs .bashrc", "PATH order", "hash -r"],
   "module": "module-9-shell-environment",
-  "level": "level-22-case"
+  "level": "level-22-command-lookup"
 }

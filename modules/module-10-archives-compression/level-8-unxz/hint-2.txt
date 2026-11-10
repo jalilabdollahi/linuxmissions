@@ -1,1 +1,8 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+  xz -l FILE...            sizes per file plus a totals line, rounded for humans
+  xz -l -v -v FILE...      verbose: also lists exact sizes in bytes
+  xz -l --robot FILE...    machine-readable, tab-separated, exact bytes; the
+                           line starting with "totals" has the uncompressed sum in field 5
+  awk '$1 == "totals" {print $5}'   print field 5 of that line
+  unxz -k FILE.xz          decompress and keep FILE.xz
+(Another exact way: xz -dc exports/*.xz | wc -c, which reads everything once.)
+More: man xz  (section "Robot mode")

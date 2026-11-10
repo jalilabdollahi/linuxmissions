@@ -1,1 +1,5 @@
-List the archive if you want to inspect it first, then extract it.
+Start with `cat INCIDENT.txt` and `head -20 home/deploy/.bash_history`. Each command is preceded by a line like #1791336123: the number of seconds since 1970-01-01 UTC when it ran. Turn those numbers into readable UTC times, then look only at the incident date and window.
+
+Inside the window, which command deletes files, and on which directory? A variable like $D gets its value from an earlier command, not from the line itself.
+
+For part 2, read home/deploy/.bashrc: which settings keep the history short, and what does "ignoreboth" ignore?

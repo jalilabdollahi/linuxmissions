@@ -1,17 +1,32 @@
-# Here Docs: Permission Fix
+# Newcomer Bootstrap
 
-## What you practiced
-- This level focused on **Here Docs** in a safe sandbox.
-- The shortest path usually combines `chmod` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A heredoc is expanded when it is *written*, unless its delimiter is quoted.
+That gave three tools for three jobs:
 
-## Commands to remember
-```bash
-chmod 750 script.sh
-ls -l script.sh
-stat -c '%a %n' script.sh
-```
+- team.env (`<<EOF`): TEAM and OWNER must be frozen at bootstrap time, so
+  they are expanded, and wrapped in double quotes so `Ana Lima` reads back as
+  one value.
+- the .bashrc block (`<<EOF` with `\$`): the tools directory is known only
+  now, so `$tools` expands; `\$PATH`, `\$USER` and `\$HOME` are escaped and
+  stay as text, to be expanded every time a shell starts. The draft's unquoted
+  `$PATH` froze bootstrap's PATH into the file forever.
+- .bash_profile (`<<'EOF'`): nothing to expand at all.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the current mode first if you want to verify the change.
+Rerunning is safe because files that are fully owned by the script are
+written with `>` (same content every time), and the block in the user's own
+.bashrc is appended only when its marker line is not there yet.
+
+## Common mistakes
+- `<<'EOF'` for team.env: the file then says `TEAM=$TEAM`, which is empty in
+  every later shell.
+- Escaping too much: `\$tools` would write `$tools` into .bashrc, a variable
+  that never exists at login.
+- `>>` for .bash_profile: every rerun adds another `. ~/.bashrc` line, and
+  login shells then read .bashrc twice (PATH gets the tools directory twice).
+
+## Learn next
+`<<-EOF` strips leading tabs, so heredocs can be indented in scripts (module
+21). Tools like `envsubst` (gettext) fill in only the variables you name:
+`envsubst '$TEAM $OWNER' < template`. The `# >>> ... >>>` marker pattern is
+what conda and many installers use to update their block in place.

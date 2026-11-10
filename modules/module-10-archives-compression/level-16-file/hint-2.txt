@@ -1,1 +1,8 @@
-A du pipeline sorted numerically is a strong fit here.
+  file recovered/*            what each chunk really is
+  file -b FILE                the description only, without the name: "gzip compressed data, ..."
+  file -bz FILE               also looks inside compressed data: "POSIX tar archive (gzip compressed data, ...)"
+  file -b --mime-type FILE    short types: application/gzip, application/x-tar, inode/x-empty ...
+  n=$(basename "$f"); n=${n%%.*}    chunk-017.tar.gz -> chunk-017 (cut at the first dot)
+In a loop, `case "$(file -b "$f")" in gzip*) ...;; bzip2*) ...;; esac` picks a type by the first words.
+The first words to expect: gzip, bzip2, XZ, Zip, POSIX tar archive, PNG, PDF, ... text, empty.
+More: man file

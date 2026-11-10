@@ -1,1 +1,6 @@
-Inspect the sandbox, then create the missing path for organized/mount-notes/mount-notes-notes.txt.
+Don't delete anything from app/: tar can leave things out while it packs.
+Look at the tree first (`find app | sort`) and note what has to go and what
+looks similar but must stay: .env vs .env.example, logs/*.log vs logs/.keep,
+.git vs .gitignore vs .github, node_modules at two depths. Each exclude rule
+should match exactly the names you mean, no more. List the archive afterwards
+to check.

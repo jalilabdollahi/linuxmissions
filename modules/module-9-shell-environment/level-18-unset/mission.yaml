@@ -1,15 +1,11 @@
 {
-  "name": "Unset: Alert Filter",
-  "description": "In the shell environment lab, a task related to Unset needs cleanup before the handoff.",
-  "objective": "Write every alert line from unset.log into alerts.txt",
+  "name": "Clean Slate",
+  "description": "Someone sourced legacy-env.sh in a long-lived CI shell, and now curl goes through a dead proxy, grep colours its output and cd talks back. Opening a new shell is not an option there (NOTE.txt).",
+  "objective": "Write reset-env.sh so that `source reset-env.sh` removes from the current shell every variable and function that legacy-env.sh created and that can be removed: they must end up unset, not just empty, and `cd` must be the builtin again. It must not touch PATH or HOME, print no errors, never close the shell, and also be harmless in a shell where legacy-env.sh was never sourced. Write the name of the one thing that cannot be removed into readonly.txt.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Unset",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "15m",
+  "concepts": ["unset -v / unset -f", "empty vs unset (${VAR+x})", "readonly", "declare -p", "type -t", "source"],
   "module": "module-9-shell-environment",
   "level": "level-18-unset"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Here Docs: Permission Fix",
-  "description": "In the shell environment lab, a task related to Here Docs needs cleanup before the handoff.",
-  "objective": "Set the mode of here-docs.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Here Docs",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Newcomer Bootstrap",
+  "description": "Onboarding runs bootstrap.sh for every new team member to set up their shell (ONBOARDING.txt). The draft a teammate left behind writes the wrong things: some values are frozen that should be looked up at login, some are left as variables that should have been filled in, and every rerun piles up another copy.",
+  "objective": "Fix bootstrap.sh so that, run as `TEAM=... OWNER=\"...\" ./bootstrap.sh` for a newcomer's $HOME, it writes ~/.config/team.env with TEAM and OWNER fixed to the values given (OWNER may contain a space), adds a team block to the existing ~/.bashrc (keeping what is there) that puts this repo's tools/bin, as an absolute path, in front of the PATH the shell started with, defines an alias mine that runs `teamctl list --owner \"$USER\"` with $USER of the shell where it is used, and exports TEAM and OWNER from team.env, and makes ~/.bash_profile read ~/.bashrc so login shells get the same. A second run must change no file. It is tested with a fresh home and random values.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "30m",
+  "concepts": ["<<'EOF' vs <<EOF", "escaping \\$ in a heredoc", "> vs >> on rerun", "idempotent setup", ".bash_profile and .bashrc", "set -a"],
   "module": "module-9-shell-environment",
   "level": "level-24-here-docs"
 }

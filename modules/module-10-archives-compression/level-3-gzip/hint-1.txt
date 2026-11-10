@@ -1,1 +1,4 @@
-Count matching lines instead of copying them out by hand.
+gzip replaces each file you give it with FILE.gz, so the whole job is naming
+exactly the right eleven files. Try your pattern with `ls` or `echo` first.
+Which files would `app.log*` hit? Does `app.log.1*` match only app.log.1?
+Does a one-character class like [2-9] ever match "10"?

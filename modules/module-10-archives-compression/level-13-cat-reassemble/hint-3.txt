@@ -1,1 +1,9 @@
-Example: `chmod +x jobs/cat-reassemble.sh && jobs/cat-reassemble.sh`
+  cat backup.part{1..14} > backup.tar.gz
+      {1..14} expands to part1 part2 ... part14 in numeric order, and the
+      truncated "backup.part7 (copy)" is not in the list
+  sha256sum -c backup.tar.gz.sha256
+      must print "backup.tar.gz: OK"; FAILED means the order or a part is wrong
+  mkdir restored
+  tar -xzf backup.tar.gz -C restored
+      unpack the verified archive into restored/
+  ls -R restored | head

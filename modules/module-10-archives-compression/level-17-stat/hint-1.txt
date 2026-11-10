@@ -1,1 +1,7 @@
-This mission is about cron field order and exact syntax.
+Each MANIFEST line is "mode mtime path", with mtime in seconds since 1970 and
+the path last because it may contain spaces. `ls -l` shows neither number in
+that form; you need a tool that prints a file's mode as digits and its mtime as
+epoch seconds, so you can compare the strings line by line.
+Be careful with lib/libacme.so.4: it is a symlink. Is the question about the
+link itself or the file it points to? And what do chmod and touch do when you
+hand them a symlink?

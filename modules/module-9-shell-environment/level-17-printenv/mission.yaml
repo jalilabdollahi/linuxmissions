@@ -1,15 +1,11 @@
 {
-  "name": "Printenv: Schedule Entry",
-  "description": "In the shell environment lab, a task related to Printenv needs cleanup before the handoff.",
-  "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+  "name": "Ghost Config",
+  "description": "worker.env was corrected yesterday, but the DBA still sees the running worker connecting to the legacy database (TICKET.txt). Before anyone restarts it, prove what the live process is really using. (Linux only: this level reads /proc.)",
+  "objective": "For the running process started from bin/worker (not worker-metrics), write live.env with its actual DB_HOST, QUEUE and POOL, one KEY=value line each, and stale.txt with the names of the keys whose value in the running process differs from worker.env, one name per line. Don't stop or restart any process.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Printenv",
-    "cron",
-    "crontab syntax"
-  ],
+  "expected_time": "15m",
+  "concepts": ["/proc/<pid>/environ", "pgrep -af", "tr '\\0' '\\n'", "printenv vs another process's environment", "environment is fixed at exec time"],
   "module": "module-9-shell-environment",
   "level": "level-17-printenv"
 }

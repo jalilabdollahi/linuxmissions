@@ -1,1 +1,7 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  bzip2 -tv dumps/*.bz2          test every file; prints "ok" or the error per file
+  bzip2 -t FILE                  exit status 0 = intact, non-zero = damaged (for if/else)
+  bunzip2 -c FILE > OUT          decompress to stdout, the .bz2 stays
+  bunzip2 -k FILE                decompress next to it and keep FILE
+Careful: on a damaged file `bunzip2 -c` has already written what it could read
+before the error, so do not decompress the damaged ones into restore/.
+More: man bzip2

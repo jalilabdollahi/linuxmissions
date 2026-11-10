@@ -1,1 +1,8 @@
-This is a delimiter-based column extraction task.
+GNU tar can remember what it backed up last time in a "snapshot file". The
+first run with a new snapshot file is a full (level 0) backup; later runs with
+the same snapshot file store only files that changed since the previous run,
+plus a listing of every directory. So the rhythm is: back up, play a day, back
+up, play a day ... always with the same snapshot file.
+Restoring is the other half: one archive is not enough, and tar has to be told
+that these are incremental archives, or it will never delete the files that
+disappeared during the week.

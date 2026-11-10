@@ -1,1 +1,10 @@
-Example: `head -n 3 xz-history.log > first3.txt` and `tail -n 3 xz-history.log > last3.txt`
+mkdir -p archive
+for m in 2026-05 2026-06 2026-07 2026-08 2026-09 2026-10; do
+  tar -cJf archive/$m.tar.xz logs/app-$m-*.log && xz -t archive/$m.tar.xz && rm logs/app-$m-*.log
+done
+
+- for m in ...                     one round per month, $m = 2026-05 and so on
+- tar -cJf archive/$m.tar.xz ...   an xz tar of the logs whose NAME has that month
+- && xz -t archive/$m.tar.xz       test the archive; only if that worked ...
+- && rm logs/app-$m-*.log          ... delete the month's plain logs
+Check: ls archive; tar -tJf archive/2026-09.tar.xz | tail -2   (ends with 09-30)

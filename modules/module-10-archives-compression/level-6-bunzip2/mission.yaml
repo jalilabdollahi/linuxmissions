@@ -1,15 +1,11 @@
 {
-  "name": "Bunzip2: Config Rewrite",
-  "description": "In the archives and compression lab, a task related to Bunzip2 needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in bunzip2.conf and save the fixed result to fixed.conf",
+  "name": "Bad Dump Night",
+  "description": "The nightly import crashed halfway with 'bunzip2: Data integrity error'. The database dumps came from the old server as dumps/*.sql.bz2, and at least one of them was damaged on the way. Nobody knows which.",
+  "objective": "Move every damaged .sql.bz2 file from dumps/ into quarantine/ (unchanged), and for every intact one write its uncompressed dump to restore/NAME.sql. Leave the intact .bz2 files in dumps/. restore/ must hold only complete, correct .sql files.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Bunzip2",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["bzip2 -t", "bunzip2 -c / -k", "exit status", "file vs. integrity test"],
   "module": "module-10-archives-compression",
   "level": "level-6-bunzip2"
 }

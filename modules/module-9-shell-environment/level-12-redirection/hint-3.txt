@@ -1,1 +1,12 @@
-Example: `chmod 640 redirection.sh`
+Type these at the prompt:
+
+./nightly.sh > out.log 2> err.log
+./nightly.sh >> all.log 2>&1
+./nightly.sh >> all.log 2>&1
+
+- > out.log 2> err.log    stdout to out.log, stderr to err.log (one run, nothing on the terminal)
+- >> all.log              append stdout to all.log, so the second run comes after the first
+- 2>&1                    after that, send stderr to the same place as stdout (the order matters)
+
+If all.log already had other runs in it, start with: rm all.log
+Check: cat all.log

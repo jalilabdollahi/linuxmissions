@@ -1,1 +1,6 @@
-A short for-loop is the cleanest option here.
+Look at isos/SHA256SUMS: one line per image, "hash  name", and the names have
+no directory in front. So where must you stand for a check to find the files?
+Six of the listed images were never downloaded: a plain check complains loudly
+about those; you only care about the lines that say FAILED.
+For the new file, think about which files in isos/ are images (SHA256SUMS.gpg
+isn't) and what path each line will contain.

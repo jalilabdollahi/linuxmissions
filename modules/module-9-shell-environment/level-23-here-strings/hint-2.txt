@@ -1,1 +1,15 @@
-Archive the directory contents without leaving anything out.
+- A here-string feeds a string to a command's stdin without a pipe, so `read`
+  runs in the current shell and its variables survive:
+    IFS=: read -r user pass <<< "$creds"
+  With two variables, the last one gets the REST of the line, more colons
+  included, so a password like s3:cr3t stays whole.
+- Parameter expansion cuts at the first or the last match:
+    ${v#*@}   remove up to the FIRST @      ${v##*@}  remove up to the LAST @
+    ${v%@*}   remove from the LAST @ on     ${v%%@*}  remove from the FIRST @ on
+  Credentials are everything before the last @, the host part everything after.
+- ${DB_PORT:-5432} gives 5432 when DB_PORT is empty.
+- printf '%q' writes a value quoted so that the shell reads it back unchanged:
+    printf 'DB_PASS=%q\n' "$DB_PASS"
+- Edit with `edit parse-dsn.sh`, try with the lines of dsns.txt.
+
+Read more: man bash ("Here Strings", "Parameter Expansion"), help read, help printf

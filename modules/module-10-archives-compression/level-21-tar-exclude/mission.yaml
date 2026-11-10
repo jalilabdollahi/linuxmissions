@@ -1,16 +1,11 @@
 {
-  "name": "Mount Notes: Path Realignment",
-  "description": "In the archives and compression lab, a task related to Mount Notes needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/mount-notes.txt to organized/mount-notes/mount-notes-notes.txt",
+  "name": "Pack Light",
+  "description": "orders-api 2.4.0 is ready to ship. The release tarball is built from the working copy in app/, which also holds a git repo, node_modules, log files and production secrets (RELEASE-CHECKLIST.txt).",
+  "objective": "Create release.tar.gz in the sandbox root, gzip-compressed, with members starting with app/. It must contain every file of app/ except: the .git directory and .gitignore, every node_modules directory (at any depth), every *.log file, and every file named exactly .env. .env.example files, logs/.keep and .github/ must be included. Don't change app/.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Mount Notes",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "15m",
+  "concepts": ["tar --exclude", "--exclude-vcs", "exclude pattern matching", "tar -tzf review"],
   "module": "module-10-archives-compression",
-  "level": "level-21-mount-notes"
+  "level": "level-21-tar-exclude"
 }

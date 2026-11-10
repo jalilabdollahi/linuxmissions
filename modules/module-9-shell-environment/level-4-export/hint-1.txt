@@ -1,1 +1,3 @@
-This is a sorting task followed by deduplication.
+Read shell-notes.txt: `echo $APP_MODE` printed prod, so the shell knew the value. Yet launcher.sh said "APP_MODE is not in my environment".
+
+launcher.sh is a separate program, a child process of your shell. Which of your shell's variables does a child process get to see?

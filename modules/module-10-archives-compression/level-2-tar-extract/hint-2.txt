@@ -1,1 +1,6 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  tar -tzf ARCHIVE | grep nginx           list the stored names that mention nginx
+  tar -xzf ARCHIVE -C DIR MEMBER          extract only MEMBER (and everything under it) into DIR
+The MEMBER must be written exactly as in the listing; if it is not, tar says
+"Not found in archive". With --wildcards (GNU tar) you can use patterns, but a
+loose pattern like '*nginx*' also catches logrotate.d/nginx and friends.
+More: man tar

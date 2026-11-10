@@ -1,15 +1,11 @@
 {
-  "name": "Df: Config Rewrite",
-  "description": "In the archives and compression lab, a task related to Df needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in df.conf and save the fixed result to fixed.conf",
+  "name": "Will It Fit",
+  "description": "The catalog restore.tar.xz has to be unpacked into /srv on every kiosk that can take it (RESTORE-TICKET.txt). You can't log in to the kiosks; all you have is last night's df -PT and df -i output of each one in hosts/.",
+  "objective": "Write targets.txt with the names of the hosts (file names in hosts/ without .txt, one per line) that can take the restore: the filesystem that holds /srv on that host must have at least as many free KiB as the uncompressed size of restore.tar.xz (the tar inside, in KiB rounded up) and at least as many free inodes as the archive has members (files and directories).",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Df",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "20m",
+  "concepts": ["xz -l --robot", "tar -tJf | wc -l", "df -P columns", "df -i inodes", "mount points", "awk"],
   "module": "module-10-archives-compression",
   "level": "level-19-df"
 }

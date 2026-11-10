@@ -1,1 +1,8 @@
-Example: `sort lsblk-raw.txt | uniq > unique-sorted.txt`
+  for i in $(seq 14 -1 2); do xzgrep -hE 'order=88412( |$)' logs/app.log.$i.*; done > order-88412.txt
+      seq 14 -1 2         rotations 14, 13, ..., 2: oldest first
+      logs/app.log.$i.*   that rotation, whether it ends in .gz, .bz2 or .xz
+      xzgrep              decompresses in memory, picking gzip/bzip2/xz by the suffix
+      -h                  no file names in front;  -E 'order=88412( |$)'  exactly order 88412
+  grep -hE 'order=88412( |$)' logs/app.log.1 logs/app.log >> order-88412.txt
+      then yesterday's and today's plain logs, appended (>>) in that order
+  cat order-88412.txt

@@ -1,1 +1,11 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' xargs-metrics.csv > total.txt`
+grep -Ev '^[[:space:]]*(#|$)' tenants.txt | xargs -d '\n' -t -I{} mkdir -p "tenants/{}"
+grep -Ev '^[[:space:]]*(#|$)' tenants.txt | xargs -d '\n' -I{} cp template/app.conf "tenants/{}/app.conf"
+ls tenants
+
+- grep -Ev '^[[:space:]]*(#|$)'   only real tenant lines: no comments (even indented), no blank lines
+- xargs -d '\n'                    one argument per line, quotes and spaces kept literally
+- -t                               show each command as it runs
+- -I{} mkdir -p "tenants/{}"       one mkdir per tenant, {} replaced by the whole name
+- -I{} cp ... "tenants/{}/app.conf"  copy the template into each new directory
+
+If an earlier try left junk in tenants/, clean it first: rm -r tenants && mkdir tenants

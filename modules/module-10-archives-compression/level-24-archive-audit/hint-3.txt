@@ -1,1 +1,35 @@
-Example: `chmod 640 archive-audit.sh`
+Write the audit as a script (everything up to the EOF line), then run it:
+
+cat > audit.sh <<'EOF'
+cd "$SANDBOX"
+echo "name,real_type,members,checksum_ok,unsafe" > audit.csv
+for f in delivery/*; do
+  n=${f#delivery/}
+  [ "$n" = SHA256SUMS ] && continue
+  case "$(file -b "$f")" in
+    Zip*)   t=zip ;;
+    gzip*)  t=tar.gz ;;
+    bzip2*) t=tar.bz2 ;;
+    XZ*)    t=tar.xz ;;
+    *tar*)  t=tar ;;
+    *)      echo "unknown type: $f"; continue ;;
+  esac
+  if [ "$t" = zip ]; then list=$(unzip -Z1 "$f"); else list=$(tar -tf "$f" 2>/dev/null); fi
+  members=$(printf '%s\n' "$list" | grep -c .)
+  if grep -qxF "$(sha256sum < "$f" | cut -d' ' -f1)  $n" delivery/SHA256SUMS; then ok=yes; else ok=no; fi
+  if printf '%s\n' "$list" | grep -Eq '^/|(^|/)\.\.(/|$)'; then bad=yes; else bad=no; fi
+  echo "$n,$t,$members,$ok,$bad" >> audit.csv
+  if [ "$ok" = yes ] && [ "$bad" = no ]; then
+    mkdir -p "accepted/${n%%.*}"
+    if [ "$t" = zip ]; then unzip -q "$f" -d "accepted/${n%%.*}"; else tar -xf "$f" -C "accepted/${n%%.*}"; fi
+  fi
+done
+EOF
+bash audit.sh
+cat audit.csv
+
+- case "$(file -b)"     the real format from the magic bytes, not from the name
+- tar -tf / unzip -Z1   the member list without extracting; grep -c . counts it
+- grep -qxF "HASH  NAME" SHA256SUMS   yes only if the exact line (hash, two spaces, name) is there
+- grep -Eq '^/|..'      absolute paths or .. components make it unsafe
+- extract only when checksum_ok=yes and unsafe=no, each into accepted/<name up to the first dot>

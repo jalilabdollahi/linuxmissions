@@ -1,1 +1,10 @@
-Archive the directory contents without leaving anything out.
+  rm -f FILE                   remove if it exists, never an error
+  [ -e FILE ] && ...           only act on generations that exist
+  if [ -e F ]; then mv ...; fi safer than && under set -e at the end of a script
+  for n in 4 3 2 1; do ... done   descending: .4 -> .5 first, then .3 -> .4, ...
+  $((n + 1))                   arithmetic for the next number
+  tar -czf backups/site.tar.gz.1 site    the fresh newest generation
+Rewrite the script with `edit rotate.sh`, or with cat > rotate.sh <<'EOF' ... EOF
+(quote 'EOF' so $n is written literally). Run it a few times and check with
+  for f in backups/*; do echo "$f: $(tar -xzOf "$f" site/VERSION)"; done
+More: man bash (CONDITIONAL EXPRESSIONS, set -e)

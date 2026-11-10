@@ -1,1 +1,11 @@
-Example: `find cleanup/brace-expansion -name '*.tmp' -delete`
+Type these at the prompt:
+
+mkdir -p data/2026/{01..12} svc/{api,web,worker}/{dev,prod}/{conf,logs}
+cp config.yaml{,.bak}
+
+- data/2026/{01..12}                         12 words: data/2026/01 ... data/2026/12, zero-padded
+- svc/{api,web,worker}/{dev,prod}/{conf,logs} 3 x 2 x 2 = 12 paths, every combination
+- mkdir -p                                   also creates data/, svc/ and the middle levels
+- cp config.yaml{,.bak}                      expands to: cp config.yaml config.yaml.bak
+
+Check: find data svc -type d | sort

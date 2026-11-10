@@ -1,1 +1,3 @@
-This task wants a symbolic link, not a copy.
+You need two values inside one name: today's date and the content of a file. The shell can run a command and paste its output into another command line.
+
+Then look at VERSION closely: `cat -v VERSION` or `od -c VERSION`. Is there anything at the end of the line besides the newline? Characters like that are invisible in `ls`, but they are part of the name.

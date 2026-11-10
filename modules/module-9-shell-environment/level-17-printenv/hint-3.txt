@@ -1,1 +1,10 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+pid=$(pgrep -f 'bin/worker$'); echo "$pid"
+tr '\0' '\n' < /proc/$pid/environ | grep -E '^(DB_HOST|QUEUE|POOL)=' > live.env
+grep -vxF -f <(grep -v '^#' worker.env) live.env | cut -d= -f1 > stale.txt
+cat live.env stale.txt
+
+- pgrep -f 'bin/worker$'           the PID of the process whose command line ends in bin/worker
+- tr '\0' '\n' < /proc/$pid/environ  its start-time environment, one variable per line
+- grep -E '^(DB_HOST|QUEUE|POOL)='   only the three settings -> live.env
+- grep -vxF -f <(...) live.env       live lines that are not exactly a line of worker.env
+- cut -d= -f1 > stale.txt            keep only the key names

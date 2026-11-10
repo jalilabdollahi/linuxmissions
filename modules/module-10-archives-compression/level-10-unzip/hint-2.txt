@@ -1,1 +1,7 @@
-Archive the directory contents without leaving anything out.
+  unzip -l ZIP                    list the members with their paths
+  unzip ZIP 'PATTERN' -d DIR      extract only members matching PATTERN into DIR
+                                  (quote it; in unzip patterns * also matches /)
+  -x 'PATTERN'                    exclude members matching PATTERN
+  -j                              junk paths: put every file directly into DIR
+  -n                              never overwrite existing files (-o: always overwrite)
+More: man unzip

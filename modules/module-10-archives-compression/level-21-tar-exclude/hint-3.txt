@@ -1,1 +1,8 @@
-Example: `mkdir -p organized/mount-notes && mv inbox/mount-notes.txt organized/mount-notes/mount-notes-notes.txt`
+  tar -czf release.tar.gz --exclude-vcs --exclude=node_modules --exclude='*.log' --exclude=.env app
+      --exclude-vcs           drops .git/ and .gitignore, keeps .github/
+      --exclude=node_modules  drops both node_modules dirs with everything inside
+      --exclude='*.log'       every .log file, anywhere (logs/.keep stays)
+      --exclude=.env          files named exactly .env; .env.example stays
+      app                     archive the directory itself, so members start with app/
+  tar -tzf release.tar.gz | sort
+      check: .env.example, logs/.keep and .github/ are there; no .env, .log or node_modules

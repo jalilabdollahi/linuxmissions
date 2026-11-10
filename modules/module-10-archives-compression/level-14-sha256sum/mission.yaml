@@ -1,16 +1,11 @@
 {
-  "name": "Sha256Sum: Loop Builder",
-  "description": "In the archives and compression lab, a task related to Sha256Sum needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named sha256sum-1.txt through sha256sum-3.txt with matching numbered content",
+  "name": "Mirror, Mirror",
+  "description": "mirror-03 serves installer images from isos/. Upstream's SHA256SUMS lists twelve images, but we only download the six our installers use, and the storage team suspects one of them was damaged on the way in. MIRROR-NOTES.txt has the house rules.",
+  "objective": "Move every image in isos/ that fails its SHA256SUMS check into a quarantine/ directory in the sandbox root (move it, don't delete it). Then write isos/SHA256SUMS.local with the sha256 of exactly the image files (.iso, .img) still in isos/, so that `sha256sum -c SHA256SUMS.local` passes when run inside isos/.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Sha256Sum",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "12m",
+  "concepts": ["sha256sum -c", "--ignore-missing", "checksum file format", "relative paths in checksum files", "mv"],
   "module": "module-10-archives-compression",
   "level": "level-14-sha256sum"
 }

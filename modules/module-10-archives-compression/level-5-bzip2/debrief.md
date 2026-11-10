@@ -1,17 +1,20 @@
-# Bzip2: Field Extract
+# Legacy Transfer
 
-## What you practiced
-- This level focused on **Bzip2** in a safe sandbox.
-- The shortest path usually combines `cut` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+A file name is only a label. Tools like `file`, and strict receivers like this
+transfer system, read the first bytes: gzip starts with `1f 8b`, bzip2 with
+`BZh`, xz with `fd 37 7a 58 5a 00`. `tar -cjf` sends the tar stream through
+bzip2, so the archive gets the right header. `bzip2 -k` keeps the original,
+because bzip2, like gzip, normally replaces the file it compresses.
 
-## Commands to remember
-```bash
-cut -d, -f2 file.csv
-awk -F, '{print $2}' file.csv
-column -s, -t file.csv
-```
+## Common mistakes
+- `mv x.tar.gz x.tar.bz2` or `tar -czf x.tar.bz2`: GNU tar picks the compressor
+  from the flag you give, not from the file name you write.
+- `bzip2 audit.log` without `-k` deletes the log; `bunzip2 -k audit.log.bz2`
+  brings it back.
+- Forgetting `-f` order: `tar -cfj` takes `j` as the archive name.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a delimiter-based column extraction task.
+## Learn next
+`tar -caf NAME.tar.bz2 DIR` (`-a`, auto-compress) picks the compressor from
+the suffix. `bzip2 -t` tests an archive without unpacking, and `xxd FILE | head
+-1` shows the magic bytes yourself.

@@ -1,1 +1,9 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+  xz -l FILE.xz                 summary, sizes rounded to KiB/MiB
+  xz -l --robot FILE.xz         tab-separated, exact bytes; on the "totals" line field 5 is the uncompressed size
+  tar -tJf FILE.tar.xz | wc -l  number of members (one per line)
+  KiB rounded up:               $(( (BYTES + 1023) / 1024 ))
+df -PT columns:  Filesystem Type 1024-blocks Used Available Capacity Mounted-on   (Available = field 5, in KiB)
+df -i  columns:  Filesystem Inodes IUsed IFree IUse% Mounted-on                    (IFree = field 4)
+A path lives on the mount with the longest matching mount point: /srv if it is mounted, otherwise /.
+In awk, $NF is the last field (the mount point). Compare numbers, not df -h output.
+More: man xz (--robot), man df

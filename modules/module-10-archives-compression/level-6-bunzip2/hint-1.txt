@@ -1,1 +1,4 @@
-You need a stream editor or another text replacement tool.
+Which dumps are damaged? `file` will not tell you: it only reads the first few
+bytes, and a file cut off halfway still starts with a perfect bzip2 header.
+bzip2 can read a whole file and check its CRCs without writing anything.
+Find the bad ones first, then restore the others.

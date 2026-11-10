@@ -1,1 +1,13 @@
-A du pipeline sorted numerically is a strong fit here.
+- `env -i VAR=1 OTHER=2 command` runs command with ONLY those variables.
+- `$(grep -v '^#' cron.env)` turns the non-comment lines into words, so
+  `env -i $(grep -v '^#' cron.env) ./report-gen` starts it like cron does.
+  (This works because no value in cron.env contains a space.)
+- `> cron-run.log 2>&1` saves stdout and stderr in the same file.
+- `set -u` makes using an unset variable an error ("unbound variable").
+  Cron sets LOGNAME, but not USER. `${USER:-$LOGNAME}` uses LOGNAME when USER
+  is unset or empty.
+- `tput cols` asks the terminal type ($TERM) for its width. Under cron there is
+  no terminal: `$(tput cols 2>/dev/null || echo 80)` falls back to 80.
+- `edit report-gen` opens the script in an editor.
+
+Read more: man env, and in man bash: "Parameter Expansion".

@@ -1,17 +1,20 @@
-# Gunzip: Noise Dedup
+# Partner Drop
 
-## What you practiced
-- This level focused on **Gunzip** in a safe sandbox.
-- The shortest path usually combines `sort` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+`gunzip -c` (the same as `zcat`) writes the uncompressed bytes to standard
+output and leaves the `.gz` alone, so the redirect decides where each CSV goes.
+The loop runs once per file, and `basename "$f" .gz` turns
+`inbox/orders-2026-11-09.csv.gz` into `orders-2026-11-09.csv`. The quotes keep
+names with spaces in one piece.
 
-## Commands to remember
-```bash
-sort file.txt
-sort file.txt | uniq
-uniq -c sorted.txt
-```
+## Common mistakes
+- `gunzip inbox/*.gz` deletes every `.gz` and leaves the CSVs in `inbox/`.
+- `gunzip -c inbox/*.gz > import/all.csv` concatenates all exports into one
+  file, five header lines included. gzip streams can be joined like that,
+  which is why it "works" without an error.
+- `gunzip -k` on a file that already has its plain twin asks before
+  overwriting it; in a script, add `-f` only when you mean it.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This is a sorting task followed by deduplication.
+## Learn next
+`gzip -l` shows the uncompressed size before you unpack, `zcat FILE.gz | head`
+peeks at the header row, and `gzip -t` tests a file without writing anything.

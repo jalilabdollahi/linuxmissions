@@ -1,1 +1,8 @@
-Example: `cut -d, -f2 bzip2-report.csv > owners.txt`
+  tar -cjf outbox/ledger-2025.tar.bz2 ledger
+      c = create, j = bzip2, f = file; replaces the gzip impostor, members are ledger/...
+  bzip2 -k audit.log
+      writes audit.log.bz2 and keeps audit.log (-k = keep)
+  mv audit.log.bz2 outbox/
+      move the compressed copy to the outbox
+  file outbox/*.bz2
+      both should say "bzip2 compressed data"

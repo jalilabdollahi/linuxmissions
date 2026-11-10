@@ -1,1 +1,12 @@
-Look for a filtering command that keeps only the alert lines in unset.log.
+Read legacy-env.sh line by line and make a list: which names does it create?
+Some are exported variables, one is a plain shell variable, one is set to an
+empty value, one is a function, and one is marked readonly.
+
+Then ask for each: what does "gone" mean? An empty variable still exists, a
+function is not a variable, and a readonly variable refuses to leave until
+the shell exits.
+
+Safe way to experiment, in a throwaway shell:
+  bash --norc -c 'source ./legacy-env.sh; source ./reset-env.sh; declare -p no_proxy'
+(If you source legacy-env.sh in the game shell itself, `reset` gives you a
+fresh one, but it also resets the files.)

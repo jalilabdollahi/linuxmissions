@@ -1,1 +1,6 @@
-Use tar with create, gzip, and file flags.
+List the zip before extracting anything: where are the .csv files, and which
+other names would a careless pattern catch (look at __MACOSX/ and at names that
+merely contain "csv")? Three separate problems: the folders inside the zip
+must not appear in import/, only real .csv files may come out, and unzip must
+not replace the customers.csv that is already there (it would ask, or with
+-o simply overwrite it).

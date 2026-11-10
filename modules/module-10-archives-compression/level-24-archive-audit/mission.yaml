@@ -1,15 +1,11 @@
 {
-  "name": "Archive Audit: Permission Fix",
-  "description": "In the archives and compression lab, a task related to Archive Audit needs cleanup before the handoff.",
-  "objective": "Set the mode of archive-audit.sh to 640",
-  "xp": 200,
-  "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Archive Audit",
-    "chmod",
-    "permissions"
-  ],
+  "name": "Trust, but Verify",
+  "description": "Capstone. A vendor's delivery/ holds eight archives and a SHA256SUMS file. Some names lie about the format, and the security team warns that at least one archive was tampered with and that archives can try to write outside the folder they are unpacked in (INTAKE-POLICY.txt).",
+  "objective": "Write audit.csv: the header name,real_type,members,checksum_ok,unsafe, then one row per archive with its file name, its real format (tar, tar.gz, tar.bz2, tar.xz or zip), the number of entries it lists (directories included), yes/no for matching SHA256SUMS, and yes/no for having a member path that is absolute or contains a .. component. Then extract every archive that matches its checksum and is safe into accepted/<name>/ (name = file name up to the first dot), and nothing else. No file may be written outside its accepted/ folder.",
+  "xp": 300,
+  "difficulty": "expert",
+  "expected_time": "35m",
+  "concepts": ["file", "tar -tf", "unzip -Z1", "sha256sum", "path traversal (zip slip)", "absolute member names", "tar -C / unzip -d"],
   "module": "module-10-archives-compression",
   "level": "level-24-archive-audit"
 }

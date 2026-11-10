@@ -1,1 +1,7 @@
-You need a stream editor or another text replacement tool.
+Start with the archive: how big is it once uncompressed (exactly, in bytes, not
+a rounded "53.9 MiB"), and how many members does it hold? Every file and
+directory needs one inode.
+Then, for each host, find the line for the filesystem that /srv really lives
+on. If there is no /srv mount, /srv is just a directory on another filesystem.
+Which one? (/srv/backup is not /srv.) That filesystem needs enough free space
+AND enough free inodes; some hosts pass one test and fail the other.

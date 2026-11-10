@@ -1,1 +1,26 @@
-Example: `mkdir -p organized/test-brackets && mv inbox/test-brackets.txt organized/test-brackets/test-brackets-notes.txt`
+Replace the four checks in guard.sh (`edit guard.sh`), or rewrite it at the prompt:
+
+cat > guard.sh <<'EOF'
+#!/bin/bash
+# guard.sh - pre-deploy gate. Exit 0 = go, exit 1 = stop. Rules: RULES.txt
+stop() { echo "guard: $*" >&2; exit 1; }
+[[ -n $DEPLOY_ENV ]] || stop "DEPLOY_ENV is required"
+[[ -n $RELEASE ]] || stop "RELEASE is required"
+if [[ $DEPLOY_ENV != staging && ! $DEPLOY_ENV =~ ^prod-[a-z]+-[0-9]+$ ]]; then
+  stop "unknown environment: $DEPLOY_ENV"
+fi
+if [[ ! $RELEASE =~ ^v?[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$ ]]; then
+  stop "malformed release: $RELEASE"
+fi
+if [[ $DEPLOY_ENV != staging && $RELEASE == *-rc* ]]; then
+  stop "release candidates are not allowed in $DEPLOY_ENV"
+fi
+echo "guard: ok to deploy $RELEASE to $DEPLOY_ENV"
+EOF
+
+- [[ -n $VAR ]]                     safe for unset, empty and spaced values: no splitting inside [[ ]]
+- =~ ^prod-[a-z]+-[0-9]+$           exactly prod-<letters>-<digits>, nothing before or after
+- =~ ^v?[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$   the release format; the regex is not quoted
+- $RELEASE == *-rc*                 an unquoted pattern on the right: "contains -rc"
+
+Check: DEPLOY_ENV="prod eu 1" RELEASE=1.2.3 ./guard.sh; echo "exit $?"

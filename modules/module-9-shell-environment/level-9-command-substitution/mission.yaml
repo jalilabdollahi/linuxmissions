@@ -1,15 +1,11 @@
 {
-  "name": "Command Substitution: Link Repair",
-  "description": "In the shell environment lab, a task related to Command Substitution needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/command-substitution.conf",
+  "name": "Snapshot Name",
+  "description": "Change CHG-3310 touches the gateway config, and the change policy wants a snapshot first, named after today's date and the running version. The version is in the VERSION file, which the release tool writes on a Windows build agent.",
+  "objective": "Create backups/config-<YYYYMMDD>-<VERSION>: a copy of everything in config/ (same files and content), where YYYYMMDD is today's date and <VERSION> is the version string from the VERSION file, with nothing else in the name. backups/ must contain only this one snapshot.",
   "xp": 150,
   "difficulty": "intermediate",
   "expected_time": "8m",
-  "concepts": [
-    "Command Substitution",
-    "ln",
-    "symbolic links"
-  ],
+  "concepts": ["$(...) command substitution", "date +%Y%m%d", "trailing newline stripping", "CRLF line endings", "tr -d"],
   "module": "module-9-shell-environment",
   "level": "level-9-command-substitution"
 }

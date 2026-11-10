@@ -1,17 +1,23 @@
-# Tar Create: Path Realignment
+# Ship the Site
 
-## What you practiced
-- This level focused on **Tar Create** in a safe sandbox.
-- The shortest path usually combines `mkdir` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+tar stores each path the way it was named on the command line. `-C build/dist`
+makes tar change into `build/dist` before reading `site`, so the members are
+`site/index.html`, `site/.htaccess` and so on, and `tar -xzf` on the server
+creates one `site/` folder. Naming the directory (not `site/*`) lets tar walk
+the tree itself, so hidden files like `.htaccess` and `.well-known/` come along.
 
-## Commands to remember
-```bash
-mkdir -p path/to/dir
-mv source target
-cp source target
-```
+## Common mistakes
+- `tar -czf release-2.3.tar.gz build/dist/site` keeps the whole path: the
+  server would get `build/dist/site/`.
+- `tar -czf ... site/*`: the shell expands `*` and skips dot files, so the
+  redirect rules in `.htaccess` silently disappear from production.
+- `cd build/dist/site && tar -czf release-2.3.tar.gz .` writes the archive into
+  the folder it is reading. tar only warns "file changed as we read it", the
+  members have no site/ prefix, and the half-written archive stays in the site
+  where the next release picks it up.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Inspect the sandbox, then create the missing path for organized/tar-create/tar-create-notes.txt.
+## Learn next
+`tar -tvzf` shows sizes, modes and owners of each member. When you build
+releases, `--owner=0 --group=0` (GNU tar) keeps your local user name out of
+the archive, and `--exclude` drops files you do not want to ship.

@@ -1,1 +1,14 @@
-Example: `grep -c '^ok$' variables-events.txt > ok-count.txt`
+Run `edit name-report.sh` and make two changes:
+
+1. Add this line before the `out=` line:
+     DAY="${DAY:-$(date +%F)}"
+2. Change the `out=` line to:
+     out="reports/report-${ENV}_${DAY}.txt"
+
+- ${DAY:-$(date +%F)}   DAY's value, or today's date (YYYY-MM-DD) when DAY is unset or empty
+- ${ENV}_${DAY}         the braces end each name, so _ is no longer read as part of ENV_
+
+Without an editor, the same two changes with GNU sed (Linux):
+  sed -i.bak -e 's/\$ENV_\$DAY/${ENV}_${DAY}/' -e '/^out=/i DAY="${DAY:-$(date +%F)}"' name-report.sh
+
+Check: ENV=qa1 ./name-report.sh && ls reports

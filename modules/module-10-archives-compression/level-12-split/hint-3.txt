@@ -1,1 +1,7 @@
-Example: `chmod 640 split.sh`
+  split -b 5000000 db-backup.tar.gz outgoing/db-backup.tar.gz.part-
+      cut into pieces of exactly 5,000,000 bytes (the last one smaller), named
+      outgoing/db-backup.tar.gz.part-aa, -ab, ...; the original stays
+  sha256sum db-backup.tar.gz > outgoing/db-backup.sha256
+      checksum of the whole backup, stored with the plain name db-backup.tar.gz
+  ls -l outgoing
+      every part is at most 5000000 bytes

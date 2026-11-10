@@ -1,1 +1,12 @@
-This is a sorting task followed by deduplication.
+Look at what the glob expands to in each situation, without running the loop:
+  echo incoming/*.csv
+  mkdir -p try/incoming && (cd try && echo incoming/*.csv)
+What does bash do with a pattern that matches nothing? Does `*` cross a `/`?
+Is `.CSV` the same as `.csv` to the shell?
+
+Bash can change each of these behaviours with an option, and one more option
+protects existing files from `>`. All of them can be switched on inside the
+script, so they affect only the script's own shell.
+
+To run the script again, remove the summary.txt it wrote (once the noclobber
+part works, it will refuse otherwise, which is the point).

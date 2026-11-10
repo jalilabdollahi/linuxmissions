@@ -1,1 +1,5 @@
-Inspect the sandbox, then create the missing path for organized/shell-startup/shell-startup-notes.txt.
+Look at which files exist in home/: `ls -a home`.
+
+A login shell (an SSH login, `bash -l`) reads only the FIRST of ~/.bash_profile, ~/.bash_login and ~/.profile that exists. A new terminal tab is an interactive shell that is not a login shell, and it reads only ~/.bashrc.
+
+So which shells ever look at .profile here? Where would one definition have to live so that both kinds of shell reach it?

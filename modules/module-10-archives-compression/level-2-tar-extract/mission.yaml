@@ -1,15 +1,11 @@
 {
-  "name": "Tar Extract: Alert Filter",
-  "description": "In the archives and compression lab, a task related to Tar Extract needs cleanup before the handoff.",
-  "objective": "Write every alert line from tar-extract.log into alerts.txt",
+  "name": "Just the Nginx Config",
+  "description": "Someone broke the nginx config on web-04 and the only good copy is in last night's full backup etc-backup.tar.gz, about 2,000 files of /etc. Unpacking all of it would only add noise; you need just the nginx directory.",
+  "objective": "Extract only the etc/nginx directory from etc-backup.tar.gz into restore/, so that restore/etc/nginx/ is exactly the copy from the backup (all files and links) and nothing else ends up in restore/. Do not change etc-backup.tar.gz.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Tar Extract",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "6m",
+  "concepts": ["tar -tzf", "extract one member", "tar -C", "./ in member names"],
   "module": "module-10-archives-compression",
   "level": "level-2-tar-extract"
 }

@@ -1,15 +1,11 @@
 {
-  "name": "Unzip: Backup Bundle",
-  "description": "In the archives and compression lab, a task related to Unzip needs cleanup before the handoff.",
-  "objective": "Create unzip-backup.tar.gz containing the files under bundle/unzip",
+  "name": "CSVs Only, Please",
+  "description": "A customer uploaded upload.zip from their Mac. It has CSV files scattered over several folders, plus documentation, images and Mac metadata. The importer reads import/ and does not look into subfolders. import/customers.csv is already there and was corrected by hand yesterday; it is newer than the copy in the zip.",
+  "objective": "Put every real .csv file from upload.zip into import/, directly (no subdirectories), with its content from the zip. Nothing else from the zip goes into import/: no other file types, no Mac metadata files. import/customers.csv must stay exactly as it is now. Do not change upload.zip.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Unzip",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "10m",
+  "concepts": ["unzip -l", "unzip -j", "unzip -n", "member patterns and -x"],
   "module": "module-10-archives-compression",
   "level": "level-10-unzip"
 }

@@ -1,1 +1,9 @@
-Archive the directory contents without leaving anything out.
+- alias name="... $VAR ..."   double quotes: $VAR is expanded NOW, while the alias is being defined.
+- alias name='... $VAR ...'   single quotes: the text is stored as is; $VAR is expanded each time the alias runs.
+  Inside the single quotes you can still use double quotes: '... "$LOGDIR/app.log"'
+- Aliases cannot take arguments. A function can: name() { commands using "$1"; }
+  It runs in the current shell, so a cd inside it moves you.
+- Remove the old `alias mkcd=...` line. While an alias called mkcd exists in your shell, `mkcd() {` is alias-expanded and fails: run `unalias mkcd` before you source the fixed file again.
+- `type -t mkcd` prints alias, function, builtin or file.
+
+Read more: `help alias`, `help unalias`, `help type`, `man bash` (ALIASES, FUNCTIONS).

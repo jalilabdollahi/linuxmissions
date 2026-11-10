@@ -1,15 +1,11 @@
 {
-  "name": "Md5Sum: Metric Sum",
-  "description": "In the archives and compression lab, a task related to Md5Sum needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of md5sum-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Md5Sum",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "Seeing Double",
+  "description": "Five devices were synced into photos/ at the same time, so the same picture often arrived several times under different names (see INTAKE.txt). 400 files, and nobody knows how many distinct pictures.",
+  "objective": "Leave exactly one copy of every distinct picture (by content) in photos/ and move all the other copies into a new dupes/ directory in the sandbox root. Don't delete or change any file.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "15m",
+  "concepts": ["md5sum", "sort", "awk '!seen[$1]++'", "uniq -w32", "while IFS= read -r", "names with spaces"],
   "module": "module-10-archives-compression",
   "level": "level-15-md5sum"
 }

@@ -1,1 +1,12 @@
-Example: `for n in 1 2 3; do printf 'sha256sum item %s\n' "$n" > generated/sha256sum-$n.txt; done`
+  cd isos
+      the names in SHA256SUMS are relative to isos/
+  sha256sum -c --ignore-missing SHA256SUMS
+      check only the six images we have; one line ends in FAILED
+  mkdir -p ../quarantine
+  sha256sum -c --ignore-missing SHA256SUMS 2>/dev/null | grep ': FAILED$' | sed 's/: FAILED$//' | while IFS= read -r f; do mv -- "$f" ../quarantine/; done
+      keep the FAILED lines, cut off ": FAILED" and move each named file
+  sha256sum *.iso *.img > SHA256SUMS.local
+      hash the images that are left, with plain names (no isos/ in front)
+  sha256sum -c SHA256SUMS.local
+      every line should say OK
+  cd ..

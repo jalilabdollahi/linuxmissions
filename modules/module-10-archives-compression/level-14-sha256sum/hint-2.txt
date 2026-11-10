@@ -1,1 +1,8 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+  sha256sum -c SHA256SUMS                    check every listed file: name: OK / FAILED / No such file
+  sha256sum -c --ignore-missing SHA256SUMS   skip listed files that aren't there
+  sha256sum -c --quiet ...                   print only the problems
+  sha256sum FILE... > LIST                   write "hash  name" lines, with the names exactly as you typed them
+A list made with `sha256sum isos/*.iso` from the sandbox root says isos/NAME,
+which won't verify from inside isos/. cd isos first, then hash *.iso *.img.
+On older macOS: shasum -a 256 (same options, except --ignore-missing).
+More: man sha256sum

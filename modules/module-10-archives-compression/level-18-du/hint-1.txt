@@ -1,1 +1,6 @@
-Look for a filtering command that keeps only the alert lines in du.log.
+Two separate problems. Finding: the cache dirs are at different depths, some
+are hidden (.cache), and some sit inside other caches (a node_modules inside
+node_modules, a build inside target). Once you find an outer cache dir, you
+don't want to descend into it. Measuring: the size of a directory is the total
+of everything below it, in plain KiB so you can compare and sort numbers.
+Is `du -sh * | sort` sorting numbers or text?

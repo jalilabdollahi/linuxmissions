@@ -1,1 +1,12 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' bunzip2.conf > fixed.conf`
+for f in dumps/*.sql.bz2; do
+  if bzip2 -t "$f" 2>/dev/null; then
+    bunzip2 -c "$f" > "restore/$(basename "$f" .bz2)"
+  else
+    mv "$f" quarantine/
+  fi
+done
+
+- bzip2 -t "$f"        reads the whole file and checks it; exit status 0 only if it is intact
+- 2>/dev/null          hide the error text (bzip2 -tv dumps/*.bz2 shows it if you want to see it)
+- bunzip2 -c ... > restore/NAME.sql   decompress the intact dump, the .bz2 stays in dumps/
+- mv "$f" quarantine/  set the damaged one aside, unchanged

@@ -1,15 +1,11 @@
 {
-  "name": "Globbing: History Window",
-  "description": "In the shell environment lab, a task related to Globbing needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of globbing-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Globbing",
-    "head",
-    "tail"
-  ],
+  "name": "Ten Days of Logs",
+  "description": "Retention ticket RET-118: the plain-text app logs for 10 to 19 October 2026 go to the second-tier archive. logs/ also holds compressed copies, other months, another service's logs, an editor swap file and two files with broken names from a buggy rotation script.",
+  "objective": "Move exactly the ten files logs/app-2026-10-10.log through logs/app-2026-10-19.log into archive/oct-2/ (create it). Nothing else may move: the .gz copies, the other days and months, worker-* logs, hidden files and the malformed app-2026-10-1.log and app-2026-10-100.log all stay in logs/.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "8m",
+  "concepts": ["globs", "* and ?", "[0-9] character classes", "hidden files", "previewing with echo"],
   "module": "module-9-shell-environment",
   "level": "level-7-globbing"
 }

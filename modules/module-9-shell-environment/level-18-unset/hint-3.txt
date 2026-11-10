@@ -1,1 +1,15 @@
-Example: `grep 'ALERT' unset.log > alerts.txt`
+Type this at the prompt:
+
+cat > reset-env.sh <<'EOF'
+# reset-env.sh - undo everything legacy-env.sh did. Usage: source reset-env.sh
+unset -v http_proxy https_proxy no_proxy LD_LIBRARY_PATH GREP_OPTIONS CDPATH
+unset -f cd
+EOF
+echo LEGACY_MODE > readonly.txt
+
+- unset -v ...      removes the six variables (no_proxy and CDPATH included); afterwards they are unset, not empty
+- unset -f cd       removes the cd() wrapper, so cd is the builtin again
+- LEGACY_MODE       readonly: unset would fail with an error, so it is only noted in readonly.txt
+
+Try it in a throwaway shell:
+bash --norc -c 'source ./legacy-env.sh; source ./reset-env.sh; type -t cd; declare -p no_proxy LEGACY_MODE'

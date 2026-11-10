@@ -1,1 +1,9 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+- `tee FILE` copies its input to FILE and also to its own stdout, so it can sit
+  in the middle of a pipeline:   producer | tee copy.txt | consumer
+- You can use tee more than once in the same pipeline.
+- `grep 'level=error'` keeps only the lines whose level field is error
+  (a plain `grep error` also catches "retrying after upstream error").
+- `wc -l` counts the lines it reads; `> file` saves the number.
+- tee overwrites its file; `tee -a` would append to it instead.
+
+Read more: man tee

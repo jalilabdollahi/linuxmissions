@@ -1,1 +1,12 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+- `unset -v NAME...` removes variables (several at once; names that do not
+  exist are fine). `unset -f NAME` removes a function.
+- `NAME=` does NOT unset: the variable stays, with an empty value.
+  Test the difference with `[ -n "${NAME+x}" ] && echo set` or `declare -p NAME`.
+- `readonly NAME=value` cannot be undone in that shell: `unset` fails with
+  "cannot unset: readonly variable". Leave it out of the script (no errors
+  allowed) and list it in readonly.txt.
+- `type -t cd` says builtin, function, alias, file or keyword.
+- The script is sourced, so `exit` in it would close the caller's shell.
+- Write the file with `edit reset-env.sh`, or with cat and a heredoc.
+
+Read more: help unset, help readonly, help declare, help type

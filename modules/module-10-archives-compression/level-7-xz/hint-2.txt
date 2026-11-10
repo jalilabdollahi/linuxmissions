@@ -1,1 +1,8 @@
-Save each result into its own file.
+  mkdir -p archive
+  tar -cJf archive/NAME.tar.xz FILE...    J = xz (z = gzip, j = bzip2)
+  logs/app-2026-09-*.log                   glob for every September log
+  xz -t archive/NAME.tar.xz                test the archive; exit status 0 = intact
+  tar -tJf archive/NAME.tar.xz             list its members
+A loop over the months:  for m in 2026-05 2026-06 ...; do ... "$m" ...; done
+Chain the steps with && so rm only runs when the archive was made and tested.
+More: man tar, man xz

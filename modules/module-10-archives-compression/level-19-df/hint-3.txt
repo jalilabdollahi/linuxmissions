@@ -1,1 +1,22 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' df.conf > fixed.conf`
+First the two numbers the restore needs:
+
+need_kib=$(( ( $(xz -l --robot restore.tar.xz | awk '$1 == "totals" { print $5 }') + 1023 ) / 1024 ))
+need_ino=$(tar -tJf restore.tar.xz | wc -l)
+echo "$need_kib KiB, $need_ino inodes"
+
+Then check every host (the loop continues on ...> lines until "done"):
+
+for h in hosts/*.txt; do
+  awk -v k="$need_kib" -v n="$need_ino" -v host="$(basename "$h" .txt)" '
+    /^\$ df -PT/ { s = "kib" }
+    /^\$ df -i/  { s = "ino" }
+    $NF == "/srv" || $NF == "/" { free[s, $NF] = (s == "kib" ? $5 : $4) }
+    END { m = (("kib", "/srv") in free) ? "/srv" : "/"
+          if (free["kib", m] >= k && free["ino", m] >= n) print host }' "$h"
+done > targets.txt
+
+- s = "kib" / "ino"         remember which command's output we are in
+- free[s, mount]            Available (field 5) of df -PT, IFree (field 4) of df -i, for / and /srv
+- m = ...                   /srv if it is its own mount, otherwise / holds it
+- print host                only if both free space and free inodes are enough
+cat targets.txt

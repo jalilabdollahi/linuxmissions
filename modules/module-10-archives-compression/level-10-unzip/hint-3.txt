@@ -1,1 +1,8 @@
-Example: `tar -czf unzip-backup.tar.gz bundle/unzip`
+  unzip -j -n upload.zip '*.csv' -x '__MACOSX/*' -d import
+      '*.csv'        only members whose name ends in .csv, at any depth
+                     (README.csv.txt does not end in .csv)
+      -x '__MACOSX/*'  skip the Mac metadata files like __MACOSX/._orders.csv
+      -j             drop the folders, so files land directly in import/
+      -n             never overwrite: the newer import/customers.csv stays
+      -d import      extract into import/
+  ls -la import      check: five CSVs, no ._ files

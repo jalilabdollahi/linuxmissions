@@ -1,1 +1,17 @@
-Use chmod with octal mode 640.
+- `cat <<EOF`   (delimiter unquoted): $VAR, $(cmd) and `cmd` are expanded
+  when the heredoc is written. `\$VAR` writes a literal $VAR.
+- `cat <<'EOF'` (delimiter quoted): the text is written exactly as typed.
+- One heredoc can mix both kinds: in an unquoted heredoc, write $tools for the
+  value of now and \$PATH for "whatever PATH is at login".
+- team.env: unquoted heredoc, and put the values in double quotes in the file
+  (OWNER="$OWNER") so that a name with a space survives `source`.
+- `>` rewrites a file (the same result on every run); `>>` appends (one more
+  copy on every run). For the block appended to .bashrc, mark it and check
+  first:   grep -qs '^# >>> team setup >>>$' "$HOME/.bashrc" || cat >> ...
+- `set -a; . file; set +a` exports every variable the file assigns.
+- A login shell reads ~/.bash_profile only; `[ -f ~/.bashrc ] && . ~/.bashrc`
+  in it makes login shells load .bashrc too.
+- Check like the validator does:
+  env -i HOME=$SANDBOX/home PATH=/usr/bin:/bin USER=ana bash -l -i -c 'mine; echo "$PATH"; echo "$OWNER"'
+
+Read more: man bash ("Here Documents")

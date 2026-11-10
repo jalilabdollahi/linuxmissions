@@ -1,1 +1,4 @@
-This is a sorting task followed by deduplication.
+Two things plain `gunzip inbox/x.csv.gz` gets wrong here: it deletes the .gz
+(compliance wants it kept) and it writes the CSV next to it in inbox/. Find a
+way to keep the .gz, and decide how each CSV gets to import/ under its own name.
+Five separate files are wanted, not one combined file.

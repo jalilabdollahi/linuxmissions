@@ -1,17 +1,22 @@
-# Zip: Link Repair
+# Refresh the Hand-over
 
-## What you practiced
-- This level focused on **Zip** in a safe sandbox.
-- The shortest path usually combines `ln` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Naming an existing zip makes zip update it instead of starting over, so the
+archive comment survives. `-FS` (filesync) compares each member with the
+file on disk by time and size: changed files are replaced, new ones are
+added, and members whose file no longer exists are deleted. `-y` stores
+`docs/latest` as a link entry (mode `lrwxrwxrwx`, data = the target name), so
+the client gets the same link, not a third copy of the release notes.
 
-## Commands to remember
-```bash
-ln -s target linkname
-ls -l current.conf
-readlink current.conf
-```
+## Common mistakes
+- `zip -r -u`: updates and adds, but `legacy.ini` and `migrate-v3.sh` stay in
+  the zip forever.
+- `rm handover.zip; zip -r handover.zip handover`: the content is right, but the
+  comment the portal looks for is gone.
+- Forgetting `-y`: zip follows the link, so `docs/latest` becomes a regular
+  file. That breaks the next update too, when the link moves again.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: This task wants a symbolic link, not a copy.
+## Learn next
+`zip -d ZIP 'pattern'` deletes members by hand, `zip -z ZIP` edits the comment,
+and `zipnote` edits member comments or renames members. `unzip -t` tests a zip
+the way `gzip -t` tests a gzip file.

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-10T11:37:57.934863+00:00",
-  "level_count": 500,
+  "generated_at": "2026-11-10T12:19:16.671842+00:00",
+  "level_count": 494,
   "modules": [
     {
       "name": "module-1-filesystem",
@@ -1401,17 +1401,18 @@
           "name": "level-1-shell-startup",
           "path": "modules/module-9-shell-environment/level-1-shell-startup",
           "mission": {
-            "name": "Shell Startup: Path Realignment",
-            "description": "In the shell environment lab, a task related to Shell Startup needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/shell-startup.txt to organized/shell-startup/shell-startup-notes.txt",
+            "name": "Lost on Login",
+            "description": "A new teammate added `export PROJECT_ROOT=/srv/projects/billing-api` to home/.profile on the build host, but neither SSH logins nor new terminal tabs ever see it. The account's dotfiles are in home/ (treat it as $HOME).",
+            "objective": "Fix the startup files in home/ so that PROJECT_ROOT=/srv/projects/billing-api is exported both in login shells (bash -l, like an SSH login) and in interactive non-login shells (bash -i, like a new terminal tab). Define the variable in exactly one of .bash_profile, .profile and .bashrc, and keep the existing login settings (EDITOR and ~/bin on PATH) and aliases working.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Shell Startup",
-              "mkdir",
-              "mv",
-              "cp"
+              "login vs non-login shells",
+              ".bash_profile",
+              ".profile",
+              ".bashrc",
+              "source"
             ],
             "module": "module-9-shell-environment",
             "level": "level-1-shell-startup"
@@ -1422,16 +1423,18 @@
           "name": "level-2-pwd-cd",
           "path": "modules/module-9-shell-environment/level-2-pwd-cd",
           "mission": {
-            "name": "Pwd Cd: Alert Filter",
-            "description": "In the shell environment lab, a task related to Pwd Cd needs cleanup before the handoff.",
-            "objective": "Write every alert line from pwd-cd.log into alerts.txt",
+            "name": "Behind the Symlink",
+            "description": "A bad release is live and you are about to roll back. Step 1 of the runbook (deploy/RUNBOOK.txt): write down which directory deploy/current really is, because symlinks get swapped during a rollback.",
+            "objective": "Change into deploy/current. Save the path as the shell shows it through the symlink (absolute, ending in deploy/current) to logical.txt, and the real directory behind every symlink (absolute) to physical.txt. Both files go in the sandbox root, one path per file.",
             "xp": 100,
             "difficulty": "beginner",
             "expected_time": "5m",
             "concepts": [
-              "Pwd Cd",
-              "grep",
-              "output redirection"
+              "cd",
+              "pwd -L",
+              "pwd -P",
+              "symlinks",
+              "cd -"
             ],
             "module": "module-9-shell-environment",
             "level": "level-2-pwd-cd"
@@ -1442,17 +1445,17 @@
           "name": "level-3-variables",
           "path": "modules/module-9-shell-environment/level-3-variables",
           "mission": {
-            "name": "Variables: Event Counter",
-            "description": "In the shell environment lab, a task related to Variables needs cleanup before the handoff.",
-            "objective": "Count how many times `ok` appears in variables-events.txt and write the number to ok-count.txt",
+            "name": "report-.txt",
+            "description": "name-report.sh should write reports/report-<ENV>_<DAY>.txt, for example reports/report-staging_2026-11-09.txt. Instead every run produces reports/report-.txt or a name without the environment, and cron runs it without setting DAY at all.",
+            "objective": "Fix name-report.sh so that it writes reports/report-<ENV>_<DAY>.txt for whatever ENV and DAY it gets from the environment, with the same values on the 'environment:' and 'day:' lines inside the report. When DAY is unset or empty, use today's date in YYYY-MM-DD form. The script is checked with values you have not seen.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Variables",
-              "grep",
-              "wc",
-              "redirection"
+              "${VAR}",
+              "variable name rules",
+              "${VAR:-default}",
+              "$(date +%F)"
             ],
             "module": "module-9-shell-environment",
             "level": "level-3-variables"
@@ -1463,16 +1466,17 @@
           "name": "level-4-export",
           "path": "modules/module-9-shell-environment/level-4-export",
           "mission": {
-            "name": "Export: Noise Dedup",
-            "description": "In the shell environment lab, a task related to Export needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from export-raw.txt with sorted unique values",
+            "name": "Set But Not Seen",
+            "description": "Change ticket CHG-2207 (TICKET.txt) says to start the billing worker in production mode for a new region. Kim \"set\" APP_MODE and APP_REGION on the line before ./launcher.sh, yet the worker keeps starting in dev mode (shell-notes.txt shows what was typed).",
+            "objective": "Start the worker with ./launcher.sh so that it runs with the APP_MODE and APP_REGION from TICKET.txt. run.log, which launcher.sh writes and signs on every start, must show that production start. Do not change launcher.sh.",
             "xp": 100,
             "difficulty": "beginner",
             "expected_time": "5m",
             "concepts": [
-              "Export",
-              "sort",
-              "uniq"
+              "shell vs environment variables",
+              "export",
+              "VAR=value command",
+              "declare -p"
             ],
             "module": "module-9-shell-environment",
             "level": "level-4-export"
@@ -1483,16 +1487,18 @@
           "name": "level-5-path",
           "path": "modules/module-9-shell-environment/level-5-path",
           "mission": {
-            "name": "Path: Field Extract",
-            "description": "In the shell environment lab, a task related to Path needs cleanup before the handoff.",
-            "objective": "Extract the second column from path-report.csv into owners.txt",
+            "name": "Stale Helper",
+            "description": "deploy-helper keeps behaving like last year's version. The team's env.sh, which login shells and CI source, puts legacy/bin on PATH, while the current tools live in tools/bin. legacy/bin still holds report-legacy, which nobody has ported yet.",
+            "objective": "Fix env.sh so that after `source env.sh`, from any directory and in a fresh shell, deploy-helper runs the copy in tools/bin, report-legacy still runs from legacy/bin, and system commands (ls, grep, sort) still work. Every PATH entry env.sh adds must be an absolute directory (no empty, `.` or relative entries). Keep env.sh's other settings.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Path",
-              "cut",
-              "awk"
+              "PATH search order",
+              "prepending to PATH",
+              "absolute paths",
+              "command -v",
+              "hash -r"
             ],
             "module": "module-9-shell-environment",
             "level": "level-5-path"
@@ -1503,16 +1509,18 @@
           "name": "level-6-quoting",
           "path": "modules/module-9-shell-environment/level-6-quoting",
           "mission": {
-            "name": "Quoting: Config Rewrite",
-            "description": "In the shell environment lab, a task related to Quoting needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in quoting.conf and save the fixed result to fixed.conf",
+            "name": "Awkward Names",
+            "description": "Files from the customer portal land in uploads/ with whatever names people typed. Finance has asked for three of them to be archived: `Q3 report (final).pdf`, `price$list.csv` and `it's done.txt`. Some other files in uploads/ have names that look a lot like pieces of those.",
+            "objective": "Move exactly these three files from uploads/ into archive/, keeping their names and content: `Q3 report (final).pdf`, `price$list.csv` and `it's done.txt`. Every other file in uploads/ must stay where it is, unchanged.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
-              "Quoting",
-              "sed",
-              "redirection"
+              "single quotes",
+              "double quotes",
+              "backslash escapes",
+              "word splitting",
+              "tab completion"
             ],
             "module": "module-9-shell-environment",
             "level": "level-6-quoting"
@@ -1523,16 +1531,18 @@
           "name": "level-7-globbing",
           "path": "modules/module-9-shell-environment/level-7-globbing",
           "mission": {
-            "name": "Globbing: History Window",
-            "description": "In the shell environment lab, a task related to Globbing needs cleanup before the handoff.",
-            "objective": "Write the first 3 lines of globbing-history.log to first3.txt and the last 3 lines to last3.txt",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
+            "name": "Ten Days of Logs",
+            "description": "Retention ticket RET-118: the plain-text app logs for 10 to 19 October 2026 go to the second-tier archive. logs/ also holds compressed copies, other months, another service's logs, an editor swap file and two files with broken names from a buggy rotation script.",
+            "objective": "Move exactly the ten files logs/app-2026-10-10.log through logs/app-2026-10-19.log into archive/oct-2/ (create it). Nothing else may move: the .gz copies, the other days and months, worker-* logs, hidden files and the malformed app-2026-10-1.log and app-2026-10-100.log all stay in logs/.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "8m",
             "concepts": [
-              "Globbing",
-              "head",
-              "tail"
+              "globs",
+              "* and ?",
+              "[0-9] character classes",
+              "hidden files",
+              "previewing with echo"
             ],
             "module": "module-9-shell-environment",
             "level": "level-7-globbing"
@@ -1543,16 +1553,18 @@
           "name": "level-8-brace-expansion",
           "path": "modules/module-9-shell-environment/level-8-brace-expansion",
           "mission": {
-            "name": "Brace Expansion: Cleanup Sweep",
-            "description": "In the shell environment lab, a task related to Brace Expansion needs cleanup before the handoff.",
-            "objective": "Delete only the `.tmp` files under cleanup/brace-expansion and leave the other files intact",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
+            "name": "Scaffolding",
+            "description": "The new metrics service gets its storage today: one directory per month for 2026, and a conf/logs pair for each component and stage. Before anyone edits config.yaml, the platform checklist wants a backup copy next to it.",
+            "objective": "Create data/2026/01 through data/2026/12 (two-digit months) and svc/<component>/<stage>/{conf,logs} for the components api, web, worker and the stages dev, prod. data/ and svc/ must contain exactly these directories and nothing else. Also create config.yaml.bak, an identical copy of config.yaml.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "6m",
             "concepts": [
-              "Brace Expansion",
-              "find",
-              "rm"
+              "brace expansion",
+              "{01..12} sequences",
+              "nested braces",
+              "cp file{,.bak}",
+              "mkdir -p"
             ],
             "module": "module-9-shell-environment",
             "level": "level-8-brace-expansion"
@@ -1563,16 +1575,18 @@
           "name": "level-9-command-substitution",
           "path": "modules/module-9-shell-environment/level-9-command-substitution",
           "mission": {
-            "name": "Command Substitution: Link Repair",
-            "description": "In the shell environment lab, a task related to Command Substitution needs cleanup before the handoff.",
-            "objective": "Create current.conf as a symbolic link to releases/command-substitution.conf",
+            "name": "Snapshot Name",
+            "description": "Change CHG-3310 touches the gateway config, and the change policy wants a snapshot first, named after today's date and the running version. The version is in the VERSION file, which the release tool writes on a Windows build agent.",
+            "objective": "Create backups/config-<YYYYMMDD>-<VERSION>: a copy of everything in config/ (same files and content), where YYYYMMDD is today's date and <VERSION> is the version string from the VERSION file, with nothing else in the name. backups/ must contain only this one snapshot.",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
-              "Command Substitution",
-              "ln",
-              "symbolic links"
+              "$(...) command substitution",
+              "date +%Y%m%d",
+              "trailing newline stripping",
+              "CRLF line endings",
+              "tr -d"
             ],
             "module": "module-9-shell-environment",
             "level": "level-9-command-substitution"
@@ -1583,16 +1597,18 @@
           "name": "level-10-aliases",
           "path": "modules/module-9-shell-environment/level-10-aliases",
           "mission": {
-            "name": "Aliases: Backup Bundle",
-            "description": "In the shell environment lab, a task related to Aliases needs cleanup before the handoff.",
-            "objective": "Create aliases-backup.tar.gz containing the files under bundle/aliases",
+            "name": "Team Aliases",
+            "description": "Everyone on the team sources team/aliases.sh from their ~/.bashrc, and each host sets LOGDIR later in its own startup file. Three complaints came in: `logs` tails /app.log instead of the host's log, `mkcd projects/x` creates nothing and leaves you where you were, and the promised safety alias for rm was never added.",
+            "objective": "Fix team/aliases.sh so that, after it is sourced: `logs` shows the last 20 lines of $LOGDIR/app.log using the LOGDIR that is set at the time you run it (even if LOGDIR is set or changed after sourcing); `mkcd DIR` creates DIR (with parents, spaces allowed) and changes into it, as a shell function; `rm` is an alias for `rm -i`. Keep ll, gs and .. as they are, and sourcing the file must print no errors.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Aliases",
-              "tar",
-              "compression"
+              "alias",
+              "single vs double quotes",
+              "shell functions",
+              "type",
+              "unalias"
             ],
             "module": "module-9-shell-environment",
             "level": "level-10-aliases"
@@ -1603,16 +1619,20 @@
           "name": "level-11-history",
           "path": "modules/module-9-shell-environment/level-11-history",
           "mission": {
-            "name": "History: Restore Drill",
-            "description": "In the shell environment lab, a task related to History needs cleanup before the handoff.",
-            "objective": "Extract history-restore.tar.gz so the restored/history directory appears in the sandbox",
+            "name": "Who Deleted the Uploads",
+            "description": "On the bastion host, customer uploads vanished during the night (INCIDENT.txt has the date and the time window). Only the deploy account was logged in. Its history file, home/deploy/.bash_history, was saved with timestamps, but the account's .bashrc keeps a tiny history that hides some commands.",
+            "objective": "1) Find the command that deleted the uploads. Write it to culprit.txt exactly as it appears in the history file, and the time it ran to when.txt as UTC in the form YYYY-MM-DD HH:MM:SS. 2) Fix home/deploy/.bashrc so that a new interactive shell for deploy records timestamps (HISTTIMEFORMAT), keeps at least 10000 commands in memory and in the file (HISTSIZE, HISTFILESIZE), appends to the history file instead of overwriting it, and no longer drops commands that start with a space.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "15m",
             "concepts": [
-              "History",
-              "tar",
-              "archive extraction"
+              "history file format",
+              "#epoch timestamps",
+              "date -u",
+              "HISTTIMEFORMAT",
+              "HISTSIZE/HISTFILESIZE",
+              "histappend",
+              "HISTCONTROL"
             ],
             "module": "module-9-shell-environment",
             "level": "level-11-history"
@@ -1623,16 +1643,19 @@
           "name": "level-12-redirection",
           "path": "modules/module-9-shell-environment/level-12-redirection",
           "mission": {
-            "name": "Redirection: Permission Fix",
-            "description": "In the shell environment lab, a task related to Redirection needs cleanup before the handoff.",
-            "objective": "Set the mode of redirection.sh to 640",
+            "name": "Split the Streams",
+            "description": "nightly.sh prints its progress on stdout and its warnings and errors on stderr, and so far everything just scrolled past in a terminal. Ops wants it logged properly before the job moves to cron. Every run stamps its lines with a run id, so mixed-up logs are easy to spot.",
+            "objective": "1) Run nightly.sh once so that out.log gets only its stdout and err.log only its stderr (both from that same run, nothing shown on the terminal). 2) Run it two more times so that all.log ends up with both streams of both runs, in the order they were printed, the second run after the first. all.log must hold exactly those two runs.",
             "xp": 150,
             "difficulty": "intermediate",
             "expected_time": "8m",
             "concepts": [
-              "Redirection",
-              "chmod",
-              "permissions"
+              ">",
+              ">>",
+              "2>",
+              "2>&1",
+              "redirection order",
+              "&>>"
             ],
             "module": "module-9-shell-environment",
             "level": "level-12-redirection"
@@ -1643,16 +1666,18 @@
           "name": "level-13-pipes",
           "path": "modules/module-9-shell-environment/level-13-pipes",
           "mission": {
-            "name": "Pipes: Script Kickoff",
-            "description": "In the shell environment lab, a task related to Pipes needs cleanup before the handoff.",
-            "objective": "Make jobs/pipes.sh executable, run it, and create the token file it writes",
+            "name": "Missing Warnings",
+            "description": "The CI step `./build.sh | grep -c WARN` reports fewer warnings than anyone can see scrolling past, and the release dashboard shows every build as passed. The release manager wants real numbers before the go/no-go meeting (RELEASE-NOTES.txt).",
+            "objective": "From one single run of ./build.sh, write warn_count.txt with the number of lines containing WARN that the build printed (all of its output) and build_status.txt with the exit status of build.sh itself. Each file holds just the number. The test phase is flaky, so a second run gives different numbers.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "Pipes",
-              "chmod",
-              "bash"
+              "stdout vs stderr in pipes",
+              "2>&1 |",
+              "|&",
+              "PIPESTATUS",
+              "$? after a pipeline"
             ],
             "module": "module-9-shell-environment",
             "level": "level-13-pipes"
@@ -1663,17 +1688,17 @@
           "name": "level-14-tee",
           "path": "modules/module-9-shell-environment/level-14-tee",
           "mission": {
-            "name": "Tee: Loop Builder",
-            "description": "In the shell environment lab, a task related to Tee needs cleanup before the handoff.",
-            "objective": "Create three files under generated/ named tee-1.txt through tee-3.txt with matching numbered content",
+            "name": "Three Copies",
+            "description": "Checkout errors are spiking (INCIDENT.txt). gen-events taps the live event bus and prints what passes by, one line per event; every run sees different traffic.",
+            "objective": "From one single run of ./gen-events, save its complete, unchanged output in events.raw, the events whose level is error (level=error) in errors.log, and the number of those events in error_count.txt (just the number).",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "Tee",
-              "for",
-              "seq",
-              "printf"
+              "tee",
+              "tee in the middle of a pipeline",
+              "grep",
+              "wc -l"
             ],
             "module": "module-9-shell-environment",
             "level": "level-14-tee"
@@ -1684,16 +1709,18 @@
           "name": "level-15-xargs",
           "path": "modules/module-9-shell-environment/level-15-xargs",
           "mission": {
-            "name": "Xargs: Metric Sum",
-            "description": "In the shell environment lab, a task related to Xargs needs cleanup before the handoff.",
-            "objective": "Sum the numeric values in the second column of xargs-metrics.csv and write the total to total.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "Tenant Onboarding",
+            "description": "Ticket OPS-4521 lists the new tenants in tenants.txt, one per line, between comments and blank lines. Every tenant needs its own config directory before the platform team can switch them on. Last sprint, a quick `cat tenants.txt | xargs mkdir` created directories called `acme`, `corp` and `#`.",
+            "objective": "For every tenant line in tenants.txt, create the directory tenants/<tenant name> (the whole line is the name, spaces and punctuation included) containing a copy of template/app.conf. Comment lines (starting with #, also when indented) and blank lines are not tenants and must not produce anything. tenants/ must contain nothing else, and tenants.txt stays unchanged.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
             "concepts": [
-              "Xargs",
-              "awk",
-              "numeric aggregation"
+              "xargs -d",
+              "xargs -I{}",
+              "xargs -t",
+              "grep -v",
+              "how xargs splits input"
             ],
             "module": "module-9-shell-environment",
             "level": "level-15-xargs"
@@ -1704,16 +1731,19 @@
           "name": "level-16-env",
           "path": "modules/module-9-shell-environment/level-16-env",
           "mission": {
-            "name": "Env: Capacity Report",
-            "description": "In the shell environment lab, a task related to Env needs cleanup before the handoff.",
-            "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "Cron Clone",
+            "description": "report-gen builds the daily sales report. Run by hand it works, but every morning at 06:00 cron mails that there is no report (MAIL.txt). A test cron job saved the exact environment cron gives its jobs in cron.env.",
+            "objective": "1) Run ./report-gen with exactly the environment in cron.env (nothing from your own shell) and save everything it prints, errors included, in cron-run.log. Do this before changing the script. 2) Then fix report-gen so that it exits 0 and writes a complete report (author in the header, a ruler line, the region totals) when started with only cron.env's variables. Leave cron.env as it is: it describes cron, not your fix.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
             "concepts": [
-              "Env",
-              "du",
-              "sort"
+              "env -i",
+              "env VAR=value cmd",
+              "cron's environment",
+              "USER vs LOGNAME",
+              "set -u",
+              "${VAR:-default}"
             ],
             "module": "module-9-shell-environment",
             "level": "level-16-env"
@@ -1724,16 +1754,18 @@
           "name": "level-17-printenv",
           "path": "modules/module-9-shell-environment/level-17-printenv",
           "mission": {
-            "name": "Printenv: Schedule Entry",
-            "description": "In the shell environment lab, a task related to Printenv needs cleanup before the handoff.",
-            "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+            "name": "Ghost Config",
+            "description": "worker.env was corrected yesterday, but the DBA still sees the running worker connecting to the legacy database (TICKET.txt). Before anyone restarts it, prove what the live process is really using. (Linux only: this level reads /proc.)",
+            "objective": "For the running process started from bin/worker (not worker-metrics), write live.env with its actual DB_HOST, QUEUE and POOL, one KEY=value line each, and stale.txt with the names of the keys whose value in the running process differs from worker.env, one name per line. Don't stop or restart any process.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Printenv",
-              "cron",
-              "crontab syntax"
+              "/proc/<pid>/environ",
+              "pgrep -af",
+              "tr '\\0' '\\n'",
+              "printenv vs another process's environment",
+              "environment is fixed at exec time"
             ],
             "module": "module-9-shell-environment",
             "level": "level-17-printenv"
@@ -1744,16 +1776,19 @@
           "name": "level-18-unset",
           "path": "modules/module-9-shell-environment/level-18-unset",
           "mission": {
-            "name": "Unset: Alert Filter",
-            "description": "In the shell environment lab, a task related to Unset needs cleanup before the handoff.",
-            "objective": "Write every alert line from unset.log into alerts.txt",
+            "name": "Clean Slate",
+            "description": "Someone sourced legacy-env.sh in a long-lived CI shell, and now curl goes through a dead proxy, grep colours its output and cd talks back. Opening a new shell is not an option there (NOTE.txt).",
+            "objective": "Write reset-env.sh so that `source reset-env.sh` removes from the current shell every variable and function that legacy-env.sh created and that can be removed: they must end up unset, not just empty, and `cd` must be the builtin again. It must not touch PATH or HOME, print no errors, never close the shell, and also be harmless in a shell where legacy-env.sh was never sourced. Write the name of the one thing that cannot be removed into readonly.txt.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Unset",
-              "grep",
-              "output redirection"
+              "unset -v / unset -f",
+              "empty vs unset (${VAR+x})",
+              "readonly",
+              "declare -p",
+              "type -t",
+              "source"
             ],
             "module": "module-9-shell-environment",
             "level": "level-18-unset"
@@ -1764,16 +1799,18 @@
           "name": "level-19-source",
           "path": "modules/module-9-shell-environment/level-19-source",
           "mission": {
-            "name": "Source: Config Rewrite",
-            "description": "In the shell environment lab, a task related to Source needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in source.conf and save the fixed result to fixed.conf",
+            "name": "Workon",
+            "description": "The team's workon.sh is supposed to drop you into a project with its settings loaded. COMPLAINTS.txt: run as ./workon.sh it does nothing, sourced it only works from the repo root, and a typo in the project name closes the whole terminal. (Careful: that last one is real. Try the broken script in a throwaway shell such as `bash -c '...'`, not in this game shell; if it closes, type `reset`.)",
+            "objective": "Fix workon.sh so that `source /path/to/workon.sh NAME` works from any directory: it changes the caller's directory to projects/NAME and exports PROJECT=NAME plus the settings from that project's .project.env. For an unknown name it prints an error on stderr and returns a non-zero status, leaving the caller's shell open and unchanged. When it is run as a program instead of sourced, it exits non-zero with a message that mentions `source`.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Source",
-              "sed",
-              "redirection"
+              "source / .",
+              "running vs sourcing",
+              "return vs exit",
+              "${BASH_SOURCE[0]} vs $0",
+              "set -a"
             ],
             "module": "module-9-shell-environment",
             "level": "level-19-source"
@@ -1784,16 +1821,18 @@
           "name": "level-20-shell-options",
           "path": "modules/module-9-shell-environment/level-20-shell-options",
           "mission": {
-            "name": "Shell Options: Noise Dedup",
-            "description": "In the shell environment lab, a task related to Shell Options needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from shell-options-raw.txt with sorted unique values",
+            "name": "Glob Patrol",
+            "description": "ingest.sh loads the CSV uploads from incoming/. On quiet nights it crashes on a file literally called `incoming/*.csv`, it never sees the uploads in the dated subdirectories or the ones ending in .CSV, and last week it overwrote the summary.txt the auditors had signed off. (Needs bash 4 or newer: Linux, or ./play.sh --docker.)",
+            "objective": "Fix ingest.sh (it is tested with fresh upload directories you have not seen) so that it ingests every non-hidden file under incoming/, at any depth, whose name ends in .csv in any letter case; with no such files it ingests nothing and writes summary.txt with files=0 rows=0; and when summary.txt already exists it leaves it unchanged and exits with a non-zero status. Keep its output format.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Shell Options",
-              "sort",
-              "uniq"
+              "shopt -s nullglob",
+              "shopt -s globstar (**)",
+              "shopt -s nocaseglob",
+              "set -o noclobber",
+              "shopt -p"
             ],
             "module": "module-9-shell-environment",
             "level": "level-20-shell-options"
@@ -1804,40 +1843,45 @@
           "name": "level-21-test-brackets",
           "path": "modules/module-9-shell-environment/level-21-test-brackets",
           "mission": {
-            "name": "Test Brackets: Path Realignment",
-            "description": "In the shell environment lab, a task related to Test Brackets needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/test-brackets.txt to organized/test-brackets/test-brackets-notes.txt",
+            "name": "Gatekeeper",
+            "description": "guard.sh is the last check before a deploy: the pipeline runs `./guard.sh && ./deploy.sh`. Yesterday a release candidate went to production and a deploy with an empty DEPLOY_ENV went through, while the logs show lines like `[: too many arguments`. Meanwhile a perfectly good v1.4.0 was refused.",
+            "objective": "Fix guard.sh so that it follows RULES.txt for every possible value of DEPLOY_ENV and RELEASE (unset, empty, with spaces, with * or other odd characters): exit 0 when the deploy may go ahead, exit 1 when it must stop, and never let bash print an error. It is tested with many inputs you have not seen, run in a directory full of files.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "20m",
             "concepts": [
-              "Test Brackets",
-              "mkdir",
-              "mv",
-              "cp"
+              "[ ] vs [[ ]]",
+              "quoting in tests",
+              "-z / -n",
+              "== with patterns",
+              "=~ regex (unquoted)",
+              "exit status 2 of a failed test"
             ],
             "module": "module-9-shell-environment",
             "level": "level-21-test-brackets"
           }
         },
         {
-          "id": "module-9-shell-environment/level-22-case",
-          "name": "level-22-case",
-          "path": "modules/module-9-shell-environment/level-22-case",
+          "id": "module-9-shell-environment/level-22-command-lookup",
+          "name": "level-22-command-lookup",
+          "path": "modules/module-9-shell-environment/level-22-command-lookup",
           "mission": {
-            "name": "Case: Field Extract",
-            "description": "In the shell environment lab, a task related to Case needs cleanup before the handoff.",
-            "objective": "Extract the second column from case-report.csv into owners.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Which Deploy?",
+            "description": "On the jump host, typing `deploy` runs a different program depending on the terminal: SSH sessions get the old 1.4 hotfix binary, new tabs get a 2022 rsync script, and removing that alias only revealed yet another old version (TICKET.txt). The jump host's home directory is home/ in this sandbox.",
+            "objective": "Change the startup files under home/ so that in every new shell started with HOME=home/, both login shells (bash -l) and terminal tabs (bash -i), `deploy` is the program tools/bin/deploy (type -t says file, command -v gives that path). Keep opt/deploy-1.4 and scripts/deploy-legacy.sh on disk, keep PATH's system directories, and keep the team shortcuts ll, gs and mkcd working in terminal tabs.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "25m",
             "concepts": [
-              "Case",
-              "cut",
-              "awk"
+              "type -a / type -t",
+              "command -v",
+              "alias > function > builtin > PATH",
+              ".bash_profile vs .bashrc",
+              "PATH order",
+              "hash -r"
             ],
             "module": "module-9-shell-environment",
-            "level": "level-22-case"
+            "level": "level-22-command-lookup"
           }
         },
         {
@@ -1845,16 +1889,19 @@
           "name": "level-23-here-strings",
           "path": "modules/module-9-shell-environment/level-23-here-strings",
           "mission": {
-            "name": "Here Strings: Backup Bundle",
-            "description": "In the shell environment lab, a task related to Here Strings needs cleanup before the handoff.",
-            "objective": "Create here-strings-backup.tar.gz containing the files under bundle/here-strings",
+            "name": "DSN Splitter",
+            "description": "The app reads its database settings from db.env, which parse-dsn.sh writes from a DSN out of the secrets vault. Since the vault switched to generated passwords, every db.env comes out empty or broken. Some examples are in dsns.txt.",
+            "objective": "Fix parse-dsn.sh so that `./parse-dsn.sh 'scheme://user:password@host[:port]/dbname'` writes db.env in the current directory, and `source db.env` then sets DB_USER, DB_PASS, DB_HOST, DB_PORT (5432 when the DSN has none) and DB_NAME to exactly the DSN's parts. Passwords may contain @, :, $, # and spaces; user names and host names never contain @ or :. Use only shell variables: no temporary files. It is tested with DSNs you have not seen.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "20m",
             "concepts": [
-              "Here Strings",
-              "tar",
-              "compression"
+              "here-strings <<<",
+              "IFS=... read -r",
+              "pipes run read in a subshell",
+              "${v%@*} / ${v##*@}",
+              "${v:-default}",
+              "printf %q"
             ],
             "module": "module-9-shell-environment",
             "level": "level-23-here-strings"
@@ -1865,16 +1912,19 @@
           "name": "level-24-here-docs",
           "path": "modules/module-9-shell-environment/level-24-here-docs",
           "mission": {
-            "name": "Here Docs: Permission Fix",
-            "description": "In the shell environment lab, a task related to Here Docs needs cleanup before the handoff.",
-            "objective": "Set the mode of here-docs.sh to 640",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Newcomer Bootstrap",
+            "description": "Onboarding runs bootstrap.sh for every new team member to set up their shell (ONBOARDING.txt). The draft a teammate left behind writes the wrong things: some values are frozen that should be looked up at login, some are left as variables that should have been filled in, and every rerun piles up another copy.",
+            "objective": "Fix bootstrap.sh so that, run as `TEAM=... OWNER=\"...\" ./bootstrap.sh` for a newcomer's $HOME, it writes ~/.config/team.env with TEAM and OWNER fixed to the values given (OWNER may contain a space), adds a team block to the existing ~/.bashrc (keeping what is there) that puts this repo's tools/bin, as an absolute path, in front of the PATH the shell started with, defines an alias mine that runs `teamctl list --owner \"$USER\"` with $USER of the shell where it is used, and exports TEAM and OWNER from team.env, and makes ~/.bash_profile read ~/.bashrc so login shells get the same. A second run must change no file. It is tested with a fresh home and random values.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "30m",
             "concepts": [
-              "Here Docs",
-              "chmod",
-              "permissions"
+              "<<'EOF' vs <<EOF",
+              "escaping \\$ in a heredoc",
+              "> vs >> on rerun",
+              "idempotent setup",
+              ".bash_profile and .bashrc",
+              "set -a"
             ],
             "module": "module-9-shell-environment",
             "level": "level-24-here-docs"
@@ -1890,17 +1940,17 @@
           "name": "level-1-tar-create",
           "path": "modules/module-10-archives-compression/level-1-tar-create",
           "mission": {
-            "name": "Tar Create: Path Realignment",
-            "description": "In the archives and compression lab, a task related to Tar Create needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/tar-create.txt to organized/tar-create/tar-create-notes.txt",
+            "name": "Ship the Site",
+            "description": "The build pipeline left the finished website in build/dist/site/. The release engineer wants it as release-2.3.tar.gz, and the deploy script unpacks it with a plain `tar -xzf release-2.3.tar.gz` on the web server, expecting one site/ directory to appear.",
+            "objective": "Create a gzip-compressed tar archive release-2.3.tar.gz in the sandbox root. Every member must be inside a top-level site/ directory (site/index.html, not build/dist/site/index.html, not index.html), and it must hold every file of build/dist/site/, hidden ones included, and nothing else. Leave build/ as it is.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
-              "Tar Create",
-              "mkdir",
-              "mv",
-              "cp"
+              "tar -czf",
+              "tar -C",
+              "tar -tzf",
+              "hidden files and globs"
             ],
             "module": "module-10-archives-compression",
             "level": "level-1-tar-create"
@@ -1911,16 +1961,17 @@
           "name": "level-2-tar-extract",
           "path": "modules/module-10-archives-compression/level-2-tar-extract",
           "mission": {
-            "name": "Tar Extract: Alert Filter",
-            "description": "In the archives and compression lab, a task related to Tar Extract needs cleanup before the handoff.",
-            "objective": "Write every alert line from tar-extract.log into alerts.txt",
+            "name": "Just the Nginx Config",
+            "description": "Someone broke the nginx config on web-04 and the only good copy is in last night's full backup etc-backup.tar.gz, about 2,000 files of /etc. Unpacking all of it would only add noise; you need just the nginx directory.",
+            "objective": "Extract only the etc/nginx directory from etc-backup.tar.gz into restore/, so that restore/etc/nginx/ is exactly the copy from the backup (all files and links) and nothing else ends up in restore/. Do not change etc-backup.tar.gz.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
-              "Tar Extract",
-              "grep",
-              "output redirection"
+              "tar -tzf",
+              "extract one member",
+              "tar -C",
+              "./ in member names"
             ],
             "module": "module-10-archives-compression",
             "level": "level-2-tar-extract"
@@ -1931,17 +1982,17 @@
           "name": "level-3-gzip",
           "path": "modules/module-10-archives-compression/level-3-gzip",
           "mission": {
-            "name": "Gzip: Event Counter",
-            "description": "In the archives and compression lab, a task related to Gzip needs cleanup before the handoff.",
-            "objective": "Count how many times `ok` appears in gzip-events.txt and write the number to ok-count.txt",
+            "name": "Disk at 92%",
+            "description": "The monitoring alert says /var on shop-02 is 92% full. In logs/ the app's rotated logs app.log.2 to app.log.12 were never compressed because the logrotate job broke. Logrotate runs with delaycompress: app.log is the file the app is writing right now, and app.log.1 stays plain for one more day.",
+            "objective": "In logs/, compress app.log.2 through app.log.12 with gzip, so that each one becomes app.log.N.gz with the same content and no uncompressed copy is left. app.log and app.log.1 must stay exactly as they are (same file, same content), and the old app.log.13.gz and app.log.14.gz stay unchanged.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
-              "Gzip",
-              "grep",
-              "wc",
-              "redirection"
+              "gzip",
+              "gzip -l",
+              "brace expansion",
+              "glob character classes"
             ],
             "module": "module-10-archives-compression",
             "level": "level-3-gzip"
@@ -1952,16 +2003,17 @@
           "name": "level-4-gunzip",
           "path": "modules/module-10-archives-compression/level-4-gunzip",
           "mission": {
-            "name": "Gunzip: Noise Dedup",
-            "description": "In the archives and compression lab, a task related to Gunzip needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from gunzip-raw.txt with sorted unique values",
+            "name": "Partner Drop",
+            "description": "A logistics partner drops gzipped CSV exports into inbox/ every night. The import job reads plain .csv files from import/, and the compliance team wants the original .gz files left in inbox/ exactly as they arrived, for the audit trail.",
+            "objective": "For every inbox/NAME.csv.gz, create import/NAME.csv with its uncompressed content (one CSV per .gz file, same names). Leave inbox/ exactly as it was: all .gz files still there and unchanged, and no uncompressed files in it. import/ must contain only those CSVs.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
-              "Gunzip",
-              "sort",
-              "uniq"
+              "gunzip -k",
+              "gunzip -c / zcat",
+              "output redirection",
+              "for loop"
             ],
             "module": "module-10-archives-compression",
             "level": "level-4-gunzip"
@@ -1972,16 +2024,17 @@
           "name": "level-5-bzip2",
           "path": "modules/module-10-archives-compression/level-5-bzip2",
           "mission": {
-            "name": "Bzip2: Field Extract",
-            "description": "In the archives and compression lab, a task related to Bzip2 needs cleanup before the handoff.",
-            "objective": "Extract the second column from bzip2-report.csv into owners.txt",
+            "name": "Legacy Transfer",
+            "description": "The auditors' old transfer system only accepts bzip2 files. A colleague already put outbox/ledger-2025.tar.bz2 there, but the system rejected it (see outbox/transfer-rejected.txt). It checks what the file really is, not its name.",
+            "objective": "Put two real bzip2 files in outbox/: ledger-2025.tar.bz2, a bzip2-compressed tar of the ledger/ directory (members ledger/..., all its files), and audit.log.bz2, the bzip2-compressed audit.log. Keep audit.log itself where it is, and do not change ledger/.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "7m",
             "concepts": [
-              "Bzip2",
-              "cut",
-              "awk"
+              "tar -cjf",
+              "bzip2 -k",
+              "file",
+              "magic bytes"
             ],
             "module": "module-10-archives-compression",
             "level": "level-5-bzip2"
@@ -1992,16 +2045,17 @@
           "name": "level-6-bunzip2",
           "path": "modules/module-10-archives-compression/level-6-bunzip2",
           "mission": {
-            "name": "Bunzip2: Config Rewrite",
-            "description": "In the archives and compression lab, a task related to Bunzip2 needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in bunzip2.conf and save the fixed result to fixed.conf",
+            "name": "Bad Dump Night",
+            "description": "The nightly import crashed halfway with 'bunzip2: Data integrity error'. The database dumps came from the old server as dumps/*.sql.bz2, and at least one of them was damaged on the way. Nobody knows which.",
+            "objective": "Move every damaged .sql.bz2 file from dumps/ into quarantine/ (unchanged), and for every intact one write its uncompressed dump to restore/NAME.sql. Leave the intact .bz2 files in dumps/. restore/ must hold only complete, correct .sql files.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Bunzip2",
-              "sed",
-              "redirection"
+              "bzip2 -t",
+              "bunzip2 -c / -k",
+              "exit status",
+              "file vs. integrity test"
             ],
             "module": "module-10-archives-compression",
             "level": "level-6-bunzip2"
@@ -2012,16 +2066,17 @@
           "name": "level-7-xz",
           "path": "modules/module-10-archives-compression/level-7-xz",
           "mission": {
-            "name": "Xz: History Window",
-            "description": "In the archives and compression lab, a task related to Xz needs cleanup before the handoff.",
-            "objective": "Write the first 3 lines of xz-history.log to first3.txt and the last 3 lines to last3.txt",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
+            "name": "Month by Month",
+            "description": "Today is 2026-11-10. logs/ on the reporting server holds one log per day since May (app-YYYY-MM-DD.log), and the retention policy says: everything older than the current month goes into one xz-compressed tar per month, and the plain files go away only after the archive has been checked.",
+            "objective": "Create archive/2026-05.tar.xz, archive/2026-06.tar.xz ... archive/2026-10.tar.xz (six xz-compressed tar files, nothing else in archive/). Each one must hold exactly the daily logs whose file NAME carries that month, with unchanged content. Then remove those archived logs from logs/. The November logs stay in logs/, plain and unchanged.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "12m",
             "concepts": [
-              "Xz",
-              "head",
-              "tail"
+              "tar -cJf",
+              "xz -t",
+              "for loop over months",
+              "file name date vs. mtime"
             ],
             "module": "module-10-archives-compression",
             "level": "level-7-xz"
@@ -2032,16 +2087,17 @@
           "name": "level-8-unxz",
           "path": "modules/module-10-archives-compression/level-8-unxz",
           "mission": {
-            "name": "Unxz: Cleanup Sweep",
-            "description": "In the archives and compression lab, a task related to Unxz needs cleanup before the handoff.",
-            "objective": "Delete only the `.tmp` files under cleanup/unxz and leave the other files intact",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
+            "name": "Size Before You Unpack",
+            "description": "Five database exports arrived as exports/*.sql.xz. Before anyone unpacks them on the small staging volume, ops wants the exact total uncompressed size in bytes for the capacity ticket. The first one needed is the customers table.",
+            "objective": "Write the exact total uncompressed size of the five exports/*.sql.xz files, in bytes, as a single number in total_bytes.txt. Then restore exports/customers.sql (its uncompressed content). Keep all five .xz files unchanged, and do not leave any other uncompressed export in exports/.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
             "concepts": [
-              "Unxz",
-              "find",
-              "rm"
+              "xz -l",
+              "xz --robot",
+              "unxz -k",
+              "awk sum"
             ],
             "module": "module-10-archives-compression",
             "level": "level-8-unxz"
@@ -2052,16 +2108,17 @@
           "name": "level-9-zip",
           "path": "modules/module-10-archives-compression/level-9-zip",
           "mission": {
-            "name": "Zip: Link Repair",
-            "description": "In the archives and compression lab, a task related to Zip needs cleanup before the handoff.",
-            "objective": "Create current.conf as a symbolic link to releases/zip.conf",
+            "name": "Refresh the Hand-over",
+            "description": "Every week the client gets handover.zip, a zip of the handover/ folder. Last week's zip is still here, and their portal identifies it by its archive comment, so it has to be refreshed in place rather than built from scratch. Since last week, files in handover/ were changed, added and deleted, and docs/latest now points to the v4 release notes.",
+            "objective": "Update handover.zip so that it matches handover/ exactly: same member paths (handover/...), current content, no files that were deleted from the folder, and handover/docs/latest stored as a symbolic link (not as a copy of the file it points to). The archive comment that is in handover.zip now must still be there. Do not change handover/.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "Zip",
-              "ln",
-              "symbolic links"
+              "zip -r",
+              "zip -FS (filesync)",
+              "zip -y",
+              "unzip -l / unzip -z"
             ],
             "module": "module-10-archives-compression",
             "level": "level-9-zip"
@@ -2072,16 +2129,17 @@
           "name": "level-10-unzip",
           "path": "modules/module-10-archives-compression/level-10-unzip",
           "mission": {
-            "name": "Unzip: Backup Bundle",
-            "description": "In the archives and compression lab, a task related to Unzip needs cleanup before the handoff.",
-            "objective": "Create unzip-backup.tar.gz containing the files under bundle/unzip",
+            "name": "CSVs Only, Please",
+            "description": "A customer uploaded upload.zip from their Mac. It has CSV files scattered over several folders, plus documentation, images and Mac metadata. The importer reads import/ and does not look into subfolders. import/customers.csv is already there and was corrected by hand yesterday; it is newer than the copy in the zip.",
+            "objective": "Put every real .csv file from upload.zip into import/, directly (no subdirectories), with its content from the zip. Nothing else from the zip goes into import/: no other file types, no Mac metadata files. import/customers.csv must stay exactly as it is now. Do not change upload.zip.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "Unzip",
-              "tar",
-              "compression"
+              "unzip -l",
+              "unzip -j",
+              "unzip -n",
+              "member patterns and -x"
             ],
             "module": "module-10-archives-compression",
             "level": "level-10-unzip"
@@ -2092,16 +2150,17 @@
           "name": "level-11-cpio",
           "path": "modules/module-10-archives-compression/level-11-cpio",
           "mission": {
-            "name": "Cpio: Restore Drill",
-            "description": "In the archives and compression lab, a task related to Cpio needs cleanup before the handoff.",
-            "objective": "Extract cpio-restore.tar.gz so the restored/cpio directory appears in the sandbox",
+            "name": "Inside the initrd",
+            "description": "A server boots into the initramfs shell instead of its root filesystem. Before rebuilding anything, the team wants to know which kernel modules the current initrd.img actually ships, and what configuration it carries in etc/. The file is a gzip-compressed cpio archive in the newc format, like most Linux initramfs images.",
+            "objective": "Write modules.txt with the file name of every kernel module (*.ko) inside initrd.img, one per line, file names only (e.g. nvme.ko, no directories). Then extract only the etc/ tree of the image into initrd-root/, so initrd-root/etc/ matches the image and nothing else from it is unpacked anywhere. Do not change initrd.img.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Cpio",
-              "tar",
-              "archive extraction"
+              "cpio -t",
+              "cpio -idm",
+              "zcat | cpio",
+              "newc / initramfs"
             ],
             "module": "module-10-archives-compression",
             "level": "level-11-cpio"
@@ -2112,16 +2171,17 @@
           "name": "level-12-split",
           "path": "modules/module-10-archives-compression/level-12-split",
           "mission": {
-            "name": "Split: Permission Fix",
-            "description": "In the archives and compression lab, a task related to Split needs cleanup before the handoff.",
-            "objective": "Set the mode of split.sh to 640",
+            "name": "Five Megabytes Max",
+            "description": "The vendor needs last night's db-backup.tar.gz (about 23 MB), but their file share rejects any upload larger than 5 MB, and their ticket says exactly what that means: 5,000,000 bytes. They will glue the pieces together with `cat db-backup.tar.gz.part-* > db-backup.tar.gz` and then check it with `sha256sum -c db-backup.sha256`.",
+            "objective": "Fill outgoing/ with the upload: the backup cut into pieces named db-backup.tar.gz.part-aa, db-backup.tar.gz.part-ab, ... (each at most 5,000,000 bytes, and joined in name order they give back the exact original), plus db-backup.sha256, a checksum file that passes `sha256sum -c` for the rebuilt db-backup.tar.gz in the vendor's folder. Nothing else in outgoing/. Keep db-backup.tar.gz unchanged in the sandbox root.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "Split",
-              "chmod",
-              "permissions"
+              "split -b",
+              "split prefix",
+              "MB vs MiB units",
+              "sha256sum"
             ],
             "module": "module-10-archives-compression",
             "level": "level-12-split"
@@ -2132,16 +2192,19 @@
           "name": "level-13-cat-reassemble",
           "path": "modules/module-10-archives-compression/level-13-cat-reassemble",
           "mission": {
-            "name": "Cat Reassemble: Script Kickoff",
-            "description": "In the archives and compression lab, a task related to Cat Reassemble needs cleanup before the handoff.",
-            "objective": "Make jobs/cat-reassemble.sh executable, run it, and create the token file it writes",
+            "name": "Fourteen Pieces",
+            "description": "Last night's shop backup reached the restore host cut into backup.part1 ... backup.part14. The transfer had a hiccup on part 7 (see transfer.log), and the sender put the checksum of the whole file in backup.tar.gz.sha256.",
+            "objective": "Rebuild backup.tar.gz in the sandbox root from the parts so that it matches backup.tar.gz.sha256, then extract it into a new restored/ directory (restored/shop/... must hold exactly the files of the backup). Leave the parts in place.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "Cat Reassemble",
-              "chmod",
-              "bash"
+              "cat to join files",
+              "glob sort order",
+              "brace expansion {1..14}",
+              "sort -V",
+              "sha256sum -c",
+              "tar -xzf -C"
             ],
             "module": "module-10-archives-compression",
             "level": "level-13-cat-reassemble"
@@ -2152,17 +2215,18 @@
           "name": "level-14-sha256sum",
           "path": "modules/module-10-archives-compression/level-14-sha256sum",
           "mission": {
-            "name": "Sha256Sum: Loop Builder",
-            "description": "In the archives and compression lab, a task related to Sha256Sum needs cleanup before the handoff.",
-            "objective": "Create three files under generated/ named sha256sum-1.txt through sha256sum-3.txt with matching numbered content",
+            "name": "Mirror, Mirror",
+            "description": "mirror-03 serves installer images from isos/. Upstream's SHA256SUMS lists twelve images, but we only download the six our installers use, and the storage team suspects one of them was damaged on the way in. MIRROR-NOTES.txt has the house rules.",
+            "objective": "Move every image in isos/ that fails its SHA256SUMS check into a quarantine/ directory in the sandbox root (move it, don't delete it). Then write isos/SHA256SUMS.local with the sha256 of exactly the image files (.iso, .img) still in isos/, so that `sha256sum -c SHA256SUMS.local` passes when run inside isos/.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Sha256Sum",
-              "for",
-              "seq",
-              "printf"
+              "sha256sum -c",
+              "--ignore-missing",
+              "checksum file format",
+              "relative paths in checksum files",
+              "mv"
             ],
             "module": "module-10-archives-compression",
             "level": "level-14-sha256sum"
@@ -2173,16 +2237,19 @@
           "name": "level-15-md5sum",
           "path": "modules/module-10-archives-compression/level-15-md5sum",
           "mission": {
-            "name": "Md5Sum: Metric Sum",
-            "description": "In the archives and compression lab, a task related to Md5Sum needs cleanup before the handoff.",
-            "objective": "Sum the numeric values in the second column of md5sum-metrics.csv and write the total to total.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "Seeing Double",
+            "description": "Five devices were synced into photos/ at the same time, so the same picture often arrived several times under different names (see INTAKE.txt). 400 files, and nobody knows how many distinct pictures.",
+            "objective": "Leave exactly one copy of every distinct picture (by content) in photos/ and move all the other copies into a new dupes/ directory in the sandbox root. Don't delete or change any file.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
             "concepts": [
-              "Md5Sum",
-              "awk",
-              "numeric aggregation"
+              "md5sum",
+              "sort",
+              "awk '!seen[$1]++'",
+              "uniq -w32",
+              "while IFS= read -r",
+              "names with spaces"
             ],
             "module": "module-10-archives-compression",
             "level": "level-15-md5sum"
@@ -2193,16 +2260,19 @@
           "name": "level-16-file",
           "path": "modules/module-10-archives-compression/level-16-file",
           "mission": {
-            "name": "File: Capacity Report",
-            "description": "In the archives and compression lab, a task related to File needs cleanup before the handoff.",
-            "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "What's in a Name",
+            "description": "80 chunks were carved out of the crashed upload volume into recovered/. The carver guessed their extensions, mostly wrong, and some chunks have none (RECOVERY-NOTES.txt). The upload service needs them sorted by what they really are.",
+            "objective": "Move every chunk from recovered/ to sorted/<type>/chunk-NNN.<type>, where <type> is its real content: gz, bz2, xz, zip, tar, tar.gz (a gzip that holds a tar archive), png, pdf or txt. Zero-byte chunks go to sorted/empty/chunk-NNN with no extension. Keep the content unchanged and leave nothing in recovered/.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "20m",
             "concepts": [
-              "File",
-              "du",
-              "sort"
+              "file -b",
+              "file -z",
+              "file --mime-type",
+              "magic numbers",
+              "case in a for loop",
+              "${name%%.*}"
             ],
             "module": "module-10-archives-compression",
             "level": "level-16-file"
@@ -2213,16 +2283,19 @@
           "name": "level-17-stat",
           "path": "modules/module-10-archives-compression/level-17-stat",
           "mission": {
-            "name": "Stat: Schedule Entry",
-            "description": "In the archives and compression lab, a task related to Stat needs cleanup before the handoff.",
-            "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+            "name": "Time and Permission",
+            "description": "The acme-agent installer refuses the extracted bundle: the vendor's MANIFEST pins the mode and mtime of every path, and some entries drifted during extraction (INSTALLER-ERROR.txt). Several names contain spaces, and lib/ holds a symlink.",
+            "objective": "First write drift.txt in the sandbox root: one line per MANIFEST path whose mode or mtime differs, written exactly as in MANIFEST. Then fix the bundle so every entry (the symlink itself included) has exactly the mode and mtime MANIFEST gives, without changing anything else.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "20m",
             "concepts": [
-              "Stat",
-              "cron",
-              "crontab syntax"
+              "stat -c '%a %Y'",
+              "stat vs stat -L",
+              "chmod",
+              "touch -d @epoch",
+              "touch -h",
+              "while read -r"
             ],
             "module": "module-10-archives-compression",
             "level": "level-17-stat"
@@ -2233,16 +2306,18 @@
           "name": "level-18-du",
           "path": "modules/module-10-archives-compression/level-18-du",
           "mission": {
-            "name": "Du: Alert Filter",
-            "description": "In the archives and compression lab, a task related to Du needs cleanup before the handoff.",
-            "objective": "Write every alert line from du.log into alerts.txt",
+            "name": "Dead Weight",
+            "description": "projects/ is going to cold storage, and the archive should not carry caches that any build can recreate (ARCHIVE-PLAN.txt). First the team wants to see which cache dirs are worth excluding.",
+            "objective": "Write bloat.txt in the sandbox root: one line 'KiB<TAB>path' for every directory named node_modules, .cache, target or build under projects/ that uses more than 5 MiB (5120 KiB) on disk, sorted largest first. Size = what `du -sk` reports for that dir, path relative like projects/app/build. Only the outermost cache dir counts: skip cache dirs that sit inside another cache dir. Don't delete anything.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Du",
-              "grep",
-              "output redirection"
+              "du -sk",
+              "find -prune",
+              "find -name with -o",
+              "awk numeric filter",
+              "sort -nr"
             ],
             "module": "module-10-archives-compression",
             "level": "level-18-du"
@@ -2253,80 +2328,89 @@
           "name": "level-19-df",
           "path": "modules/module-10-archives-compression/level-19-df",
           "mission": {
-            "name": "Df: Config Rewrite",
-            "description": "In the archives and compression lab, a task related to Df needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in df.conf and save the fixed result to fixed.conf",
+            "name": "Will It Fit",
+            "description": "The catalog restore.tar.xz has to be unpacked into /srv on every kiosk that can take it (RESTORE-TICKET.txt). You can't log in to the kiosks; all you have is last night's df -PT and df -i output of each one in hosts/.",
+            "objective": "Write targets.txt with the names of the hosts (file names in hosts/ without .txt, one per line) that can take the restore: the filesystem that holds /srv on that host must have at least as many free KiB as the uncompressed size of restore.tar.xz (the tar inside, in KiB rounded up) and at least as many free inodes as the archive has members (files and directories).",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "20m",
             "concepts": [
-              "Df",
-              "sed",
-              "redirection"
+              "xz -l --robot",
+              "tar -tJf | wc -l",
+              "df -P columns",
+              "df -i inodes",
+              "mount points",
+              "awk"
             ],
             "module": "module-10-archives-compression",
             "level": "level-19-df"
           }
         },
         {
-          "id": "module-10-archives-compression/level-20-lsblk",
-          "name": "level-20-lsblk",
-          "path": "modules/module-10-archives-compression/level-20-lsblk",
+          "id": "module-10-archives-compression/level-20-zgrep-rotated-logs",
+          "name": "level-20-zgrep-rotated-logs",
+          "path": "modules/module-10-archives-compression/level-20-zgrep-rotated-logs",
           "mission": {
-            "name": "Lsblk: Noise Dedup",
-            "description": "In the archives and compression lab, a task related to Lsblk needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from lsblk-raw.txt with sorted unique values",
+            "name": "Needle in a Gzip Stack",
+            "description": "Support needs the full history of order 88412 (TICKET.txt). Its log lines are spread over two weeks of rotated logs in logs/: app.log, app.log.1, then compressed rotations, some gzip, some bzip2, some xz. The disk is almost full, so nothing gets unpacked.",
+            "objective": "Write order-88412.txt with every log line whose order= field is exactly 88412, from all files in logs/, oldest first, as plain log lines (no file names in front). Leave every file in logs/ as it is and don't write decompressed copies anywhere.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Lsblk",
-              "sort",
-              "uniq"
+              "zgrep",
+              "bzgrep",
+              "xzgrep",
+              "zcat / bzcat / xzcat",
+              "grep -h",
+              "rotation order",
+              "exact field match"
             ],
             "module": "module-10-archives-compression",
-            "level": "level-20-lsblk"
+            "level": "level-20-zgrep-rotated-logs"
           }
         },
         {
-          "id": "module-10-archives-compression/level-21-mount-notes",
-          "name": "level-21-mount-notes",
-          "path": "modules/module-10-archives-compression/level-21-mount-notes",
+          "id": "module-10-archives-compression/level-21-tar-exclude",
+          "name": "level-21-tar-exclude",
+          "path": "modules/module-10-archives-compression/level-21-tar-exclude",
           "mission": {
-            "name": "Mount Notes: Path Realignment",
-            "description": "In the archives and compression lab, a task related to Mount Notes needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/mount-notes.txt to organized/mount-notes/mount-notes-notes.txt",
+            "name": "Pack Light",
+            "description": "orders-api 2.4.0 is ready to ship. The release tarball is built from the working copy in app/, which also holds a git repo, node_modules, log files and production secrets (RELEASE-CHECKLIST.txt).",
+            "objective": "Create release.tar.gz in the sandbox root, gzip-compressed, with members starting with app/. It must contain every file of app/ except: the .git directory and .gitignore, every node_modules directory (at any depth), every *.log file, and every file named exactly .env. .env.example files, logs/.keep and .github/ must be included. Don't change app/.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Mount Notes",
-              "mkdir",
-              "mv",
-              "cp"
+              "tar --exclude",
+              "--exclude-vcs",
+              "exclude pattern matching",
+              "tar -tzf review"
             ],
             "module": "module-10-archives-compression",
-            "level": "level-21-mount-notes"
+            "level": "level-21-tar-exclude"
           }
         },
         {
-          "id": "module-10-archives-compression/level-22-rsync-basics",
-          "name": "level-22-rsync-basics",
-          "path": "modules/module-10-archives-compression/level-22-rsync-basics",
+          "id": "module-10-archives-compression/level-22-tar-incremental",
+          "name": "level-22-tar-incremental",
+          "path": "modules/module-10-archives-compression/level-22-tar-incremental",
           "mission": {
-            "name": "Rsync Basics: Field Extract",
-            "description": "In the archives and compression lab, a task related to Rsync Basics needs cleanup before the handoff.",
-            "objective": "Extract the second column from rsync-basics-report.csv into owners.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Week of Incrementals",
+            "description": "Capstone. data/ gets a full backup on Sunday and incremental backups Monday to Wednesday (BACKUP-PLAN.txt). It is Sunday evening; ./simulate-day.sh plays each next day, and on Thursday the data disk dies. Needs GNU tar (Linux).",
+            "objective": "Take backups/data-sun.tar.gz (full) now, then after each of ./simulate-day.sh mon, tue and wed take backups/data-mon.tar.gz, data-tue.tar.gz and data-wed.tar.gz: gzip-compressed GNU incremental archives that hold only what changed. Then run ./simulate-day.sh thu and restore Wednesday's state into restored/, so that restored/data is exactly data/ as it was on Wednesday night, with files deleted during the week absent.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "30m",
             "concepts": [
-              "Rsync Basics",
-              "cut",
-              "awk"
+              "tar --listed-incremental",
+              "snapshot (.snar) files",
+              "level 0 vs incremental",
+              "restore with --listed-incremental=/dev/null",
+              "tar -tvG"
             ],
             "module": "module-10-archives-compression",
-            "level": "level-22-rsync-basics"
+            "level": "level-22-tar-incremental"
           }
         },
         {
@@ -2334,16 +2418,19 @@
           "name": "level-23-backup-rotation",
           "path": "modules/module-10-archives-compression/level-23-backup-rotation",
           "mission": {
-            "name": "Backup Rotation: Backup Bundle",
-            "description": "In the archives and compression lab, a task related to Backup Rotation needs cleanup before the handoff.",
-            "objective": "Create backup-rotation-backup.tar.gz containing the files under bundle/backup-rotation",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Five Generations",
+            "description": "Capstone. Cron should run ./rotate.sh every night to keep five generations of the bakery's site backup (ROTATION.txt). Kim's draft of rotate.sh was never tested, and someone already deleted backups/site.tar.gz.3 by hand.",
+            "objective": "Make rotate.sh (executable, run from the sandbox root) keep backups/site.tar.gz.1 (newest) ... .5 (oldest): each run drops .5, moves every existing generation up by one (a missing one leaves its gap moving up too) and creates a fresh .1, a gzip tar of site/. It must exit 0, also when generations are missing, and leave nothing else in backups/. The check runs a copy of your script many times in a scratch folder.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "25m",
             "concepts": [
-              "Backup Rotation",
-              "tar",
-              "compression"
+              "shell script",
+              "set -eu",
+              "mv in descending order",
+              "[ -e ] tests",
+              "for loop",
+              "tar -czf"
             ],
             "module": "module-10-archives-compression",
             "level": "level-23-backup-rotation"
@@ -2354,16 +2441,20 @@
           "name": "level-24-archive-audit",
           "path": "modules/module-10-archives-compression/level-24-archive-audit",
           "mission": {
-            "name": "Archive Audit: Permission Fix",
-            "description": "In the archives and compression lab, a task related to Archive Audit needs cleanup before the handoff.",
-            "objective": "Set the mode of archive-audit.sh to 640",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
+            "name": "Trust, but Verify",
+            "description": "Capstone. A vendor's delivery/ holds eight archives and a SHA256SUMS file. Some names lie about the format, and the security team warns that at least one archive was tampered with and that archives can try to write outside the folder they are unpacked in (INTAKE-POLICY.txt).",
+            "objective": "Write audit.csv: the header name,real_type,members,checksum_ok,unsafe, then one row per archive with its file name, its real format (tar, tar.gz, tar.bz2, tar.xz or zip), the number of entries it lists (directories included), yes/no for matching SHA256SUMS, and yes/no for having a member path that is absolute or contains a .. component. Then extract every archive that matches its checksum and is safe into accepted/<name>/ (name = file name up to the first dot), and nothing else. No file may be written outside its accepted/ folder.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "35m",
             "concepts": [
-              "Archive Audit",
-              "chmod",
-              "permissions"
+              "file",
+              "tar -tf",
+              "unzip -Z1",
+              "sha256sum",
+              "path traversal (zip slip)",
+              "absolute member names",
+              "tar -C / unzip -d"
             ],
             "module": "module-10-archives-compression",
             "level": "level-24-archive-audit"
@@ -2379,17 +2470,17 @@
           "name": "level-1-find-name",
           "path": "modules/module-11-find-and-pipelines/level-1-find-name",
           "mission": {
-            "name": "Find Name: Path Realignment",
-            "description": "In the search and pipelines lab, a task related to Find Name needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/find-name.txt to organized/find-name/find-name-notes.txt",
+            "name": "Invoices for Legal",
+            "description": "Legal is preparing for an audit and wants a copy of every invoice PDF on the old shared drive. The dump in share/ grew for ten years without rules: Invoice_2026-03.PDF sits next to 'invoice - april.pdf', and templates, backups and receipts are mixed in.",
+            "objective": "Write the path of every file under share/ whose name contains the word invoice and ends in .pdf, both in any letter case, to invoices.txt (one path per line, like share/Finance/x.pdf or ./share/Finance/x.pdf). Nothing else goes in the list; do not change share/.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "6m",
             "concepts": [
-              "Find Name",
-              "mkdir",
-              "mv",
-              "cp"
+              "find -iname",
+              "wildcards",
+              "quoting patterns",
+              "-type f"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-1-find-name"
@@ -2400,16 +2491,17 @@
           "name": "level-2-find-type",
           "path": "modules/module-11-find-and-pipelines/level-2-find-type",
           "mission": {
-            "name": "Find Type: Alert Filter",
-            "description": "In the search and pipelines lab, a task related to Find Type needs cleanup before the handoff.",
-            "objective": "Write every alert line from find-type.log into alerts.txt",
+            "name": "After the Failed Deploy",
+            "description": "Last night's deploy died halfway through. Before anyone cleans up releases/, the on-call engineer wants two lists for the incident ticket: every symbolic link under releases/ (some point at shared folders, one may point at nothing) and every directory the deploy left completely empty.",
+            "objective": "Write links.txt with the path of every symbolic link under releases/, and empty-dirs.txt with the path of every empty directory under releases/ (one path per line, like releases/x or ./releases/x). A directory that holds anything, even a hidden file, is not empty. Do not change releases/.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Find Type",
-              "grep",
-              "output redirection"
+              "find -type l",
+              "find -type d",
+              "-empty",
+              "symlinks to directories"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-2-find-type"
@@ -2420,17 +2512,18 @@
           "name": "level-3-find-size",
           "path": "modules/module-11-find-and-pipelines/level-3-find-size",
           "mission": {
-            "name": "Find Size: Event Counter",
-            "description": "In the search and pipelines lab, a task related to Find Size needs cleanup before the handoff.",
-            "objective": "Count how many times `ok` appears in find-size-events.txt and write the number to ok-count.txt",
+            "name": "Too Big to Send",
+            "description": "The mail relay rejects every attachment larger than 10 MiB (10 x 1024 x 1024 bytes), and a crashed upload left zero-byte attachments behind. Messages in outbox/ keep bouncing, and support wants to tell each sender which file to fix.",
+            "objective": "Write oversize.txt with the path of every file under outbox/ that is larger than 10 MiB, and empty.txt with the path of every file under outbox/ that is 0 bytes (one path per line, like outbox/x or ./outbox/x). Files of exactly 10 MiB are still allowed. Do not change outbox/.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Find Size",
-              "grep",
-              "wc",
-              "redirection"
+              "find -size",
+              "size units (c, k, M)",
+              "MB vs MiB",
+              "-empty",
+              "-type f"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-3-find-size"
@@ -2441,16 +2534,17 @@
           "name": "level-4-find-mtime",
           "path": "modules/module-11-find-and-pipelines/level-4-find-mtime",
           "mission": {
-            "name": "Find Mtime: Noise Dedup",
-            "description": "In the search and pipelines lab, a task related to Find Mtime needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from find-mtime-raw.txt with sorted unique values",
+            "name": "What Changed Last Night",
+            "description": "The shop went down an hour ago and the first question in the incident channel is the usual one: which configs were touched recently? etc/ is a copy of the server's /etc with the original timestamps.",
+            "objective": "Write recent.txt with the path of every file under etc/ whose content was modified during the last 24 hours (one path per line, like etc/x or ./etc/x). Only files, not directories. Do not change anything in etc/.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Find Mtime",
-              "sort",
-              "uniq"
+              "find -mtime",
+              "find -mmin",
+              "mtime vs atime vs ctime",
+              "-type f"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-4-find-mtime"
@@ -2461,16 +2555,18 @@
           "name": "level-5-find-exec",
           "path": "modules/module-11-find-and-pipelines/level-5-find-exec",
           "mission": {
-            "name": "Find Exec: Field Extract",
-            "description": "In the search and pipelines lab, a task related to Find Exec needs cleanup before the handoff.",
-            "objective": "Extract the second column from find-exec-report.csv into owners.txt",
+            "name": "Compress the Old Logs",
+            "description": "app/logs fills the disk every few weeks because nobody configured rotation. Until logrotate is set up, ops wants the old logs compressed in place, with a single find command that can later go into cron.",
+            "objective": "Compress (gzip, in place, so x.log becomes x.log.gz with the same content) every file under app/logs whose name ends in .log and that was last modified more than 7 days ago. Logs modified within the last 7 days stay as they are, and no other file is compressed or changed.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "10m",
             "concepts": [
-              "Find Exec",
-              "cut",
-              "awk"
+              "find -exec {} +",
+              "find -mtime +N",
+              "find -mmin",
+              "gzip",
+              "preview with -print"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-5-find-exec"
@@ -2481,16 +2577,18 @@
           "name": "level-6-grep-fixed",
           "path": "modules/module-11-find-and-pipelines/level-6-grep-fixed",
           "mission": {
-            "name": "Grep Fixed: Config Rewrite",
-            "description": "In the search and pipelines lab, a task related to Grep Fixed needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in grep-fixed.conf and save the fixed result to fixed.conf",
+            "name": "Leaked Keys",
+            "description": "Security found a paste with 40 of our API keys and saved them in leaked.txt, one per line. Before rotating them, they need to know which requests in logs/ were made with any of those keys. The keys contain characters like . + * and $.",
+            "objective": "Write hits.txt with every log line under logs/ that contains any of the keys from leaked.txt exactly as written, each prefixed with its file name the way grep prints it with several files (logs/dir/file.log:the whole line). No line numbers, no other lines. Do not change logs/.",
             "xp": 100,
             "difficulty": "beginner",
-            "expected_time": "5m",
+            "expected_time": "8m",
             "concepts": [
-              "Grep Fixed",
-              "sed",
-              "redirection"
+              "grep -F",
+              "grep -f patternfile",
+              "grep -r",
+              "grep -H",
+              "regex metacharacters"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-6-grep-fixed"
@@ -2501,16 +2599,19 @@
           "name": "level-7-grep-regex",
           "path": "modules/module-11-find-and-pipelines/level-7-grep-regex",
           "mission": {
-            "name": "Grep Regex: History Window",
-            "description": "In the search and pipelines lab, a task related to Grep Regex needs cleanup before the handoff.",
-            "objective": "Write the first 3 lines of grep-regex-history.log to first3.txt and the last 3 lines to last3.txt",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
+            "name": "Root Over SSH",
+            "description": "An auditor asks which of our 12 servers let root log in over SSH with a password. Copies of their sshd configs are in hosts/<host>/sshd_config, edited by hand for years: commented-out lines, tabs, odd capitalisation, and settings that appear twice.",
+            "objective": "Write root-login-hosts.txt with the names of the hosts (the folder names under hosts/, one per line, any order) where sshd's effective PermitRootLogin setting is yes. Values like prohibit-password, without-password, forced-commands-only and no do not allow password logins, and a host without the setting uses the default, prohibit-password.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "12m",
             "concepts": [
-              "Grep Regex",
-              "head",
-              "tail"
+              "grep -E",
+              "anchors ^ $",
+              "[[:space:]]",
+              "grep -i",
+              "grep -m1",
+              "first-match semantics"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-7-grep-regex"
@@ -2521,16 +2622,18 @@
           "name": "level-8-grep-invert",
           "path": "modules/module-11-find-and-pipelines/level-8-grep-invert",
           "mission": {
-            "name": "Grep Invert: Cleanup Sweep",
-            "description": "In the search and pipelines lab, a task related to Grep Invert needs cleanup before the handoff.",
-            "objective": "Delete only the `.tmp` files under cleanup/grep-invert and leave the other files intact",
-            "xp": 100,
-            "difficulty": "beginner",
-            "expected_time": "5m",
+            "name": "What Is Actually Set",
+            "description": "A database is slow and the vendor asks for 'your effective postgresql.conf, without the comments'. Ours is the stock file of about 600 lines, edited over the years: commented defaults, indented comment lines, blank lines with stray spaces and tabs, and a few dozen real settings, some with a comment after the value.",
+            "objective": "Create effective.conf containing exactly the lines of postgresql.conf that are settings: drop every line that is empty, contains only spaces/tabs, or whose first non-blank character is #. Keep the remaining lines unchanged (including any # comment after a value) and in their original order. postgresql.conf itself must stay unchanged.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "10m",
             "concepts": [
-              "Grep Invert",
-              "find",
-              "rm"
+              "grep -v",
+              "grep -E",
+              "anchors",
+              "[[:space:]]",
+              "alternation (a|b)"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-8-grep-invert"
@@ -2541,16 +2644,17 @@
           "name": "level-9-grep-count",
           "path": "modules/module-11-find-and-pipelines/level-9-grep-count",
           "mission": {
-            "name": "Grep Count: Link Repair",
-            "description": "In the search and pipelines lab, a task related to Grep Count needs cleanup before the handoff.",
-            "objective": "Create current.conf as a symbolic link to releases/grep-count.conf",
+            "name": "The Noisiest Services",
+            "description": "Error budgets are reviewed tomorrow. logs/ holds today's log of each of our 30 services (logs/<service>.log, one line per event, the level in the second column). The SRE lead wants the services that logged more than 50 ERROR lines today.",
+            "objective": "Write noisy.txt with one line '<file> <count>' (for example 'billing.log 73') for every log in logs/ that has more than 50 lines with the level ERROR, sorted by count, highest first. Other levels never count, even when their message mentions something like NOERROR.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Grep Count",
-              "ln",
-              "symbolic links"
+              "grep -c",
+              "grep -w",
+              "counting lines vs occurrences",
+              "sort -t -k -n -r"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-9-grep-count"
@@ -2561,16 +2665,18 @@
           "name": "level-10-grep-context",
           "path": "modules/module-11-find-and-pipelines/level-10-grep-context",
           "mission": {
-            "name": "Grep Context: Backup Bundle",
-            "description": "In the search and pipelines lab, a task related to Grep Context needs cleanup before the handoff.",
-            "objective": "Create grep-context-backup.tar.gz containing the files under bundle/grep-context",
+            "name": "Who Killed the Worker",
+            "description": "The image worker crashed 15 times overnight. A FATAL line never names the request it was working on, but the line just before each crash always carries that request's req=<id>. The developers want the ids so they can replay those requests.",
+            "objective": "Write fatal-reqs.txt with the request id (only the id, without req=) from the line directly before each FATAL in worker.log, one per line, in the order they occur in the log. When several FATAL lines follow each other, they belong to the request on the line before the first of them, which is listed once. Do not change worker.log.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Grep Context",
-              "tar",
-              "compression"
+              "grep -B",
+              "context lines and -- separators",
+              "grep -o",
+              "grep -w",
+              "cut"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-10-grep-context"
@@ -2581,16 +2687,18 @@
           "name": "level-11-cut-fields",
           "path": "modules/module-11-find-and-pipelines/level-11-cut-fields",
           "mission": {
-            "name": "Cut Fields: Restore Drill",
-            "description": "In the search and pipelines lab, a task related to Cut Fields needs cleanup before the handoff.",
-            "objective": "Extract cut-fields-restore.tar.gz so the restored/cut-fields directory appears in the sandbox",
+            "name": "Columns for Two Audiences",
+            "description": "The asset database exported assets.tsv: tab-separated, a header line, 14 columns, and some values (models, rooms, notes) contain spaces. Ops wants a short list for the rack audit, and the hardware vendor needs the full export without our staff's e-mail addresses.",
+            "objective": "Create inventory.tsv with the columns serial, hostname, rack in exactly that order, and vendor.tsv with all columns of assets.tsv except owner_email, in their original order. Both keep the header line, every row of assets.tsv, and tabs between the fields. assets.tsv must stay unchanged.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Cut Fields",
-              "tar",
-              "archive extraction"
+              "cut -f",
+              "field ranges",
+              "cut --complement",
+              "awk -F'\\t' -v OFS",
+              "field order"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-11-cut-fields"
@@ -2601,16 +2709,18 @@
           "name": "level-12-paste-columns",
           "path": "modules/module-11-find-and-pipelines/level-12-paste-columns",
           "mission": {
-            "name": "Paste Columns: Permission Fix",
-            "description": "In the search and pipelines lab, a task related to Paste Columns needs cleanup before the handoff.",
-            "objective": "Set the mode of paste-columns.sh to 640",
+            "name": "Three Exports, One Report",
+            "description": "The monitoring tool can only export one metric per file: hosts.txt, cpu.txt and mem.txt, one value per line, all in the same host order. cpu.txt came from the Windows reporting box. The team wants a single table, and the CPU-saturated hosts as a list for `ansible --limit`.",
+            "objective": "Create report.tsv with one line per host: host, cpu, mem separated by tabs, in the order of hosts.txt, no header. Create limit.txt with one single line: the hosts whose cpu is 90 or more, joined with commas (web-03,db-01,...), in report order, without spaces or a trailing comma. Leave the three input files unchanged.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "10m",
             "concepts": [
-              "Paste Columns",
-              "chmod",
-              "permissions"
+              "paste",
+              "paste -d",
+              "paste -s",
+              "CRLF line endings",
+              "tr -d '\\r'"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-12-paste-columns"
@@ -2621,16 +2731,18 @@
           "name": "level-13-join-files",
           "path": "modules/module-11-find-and-pipelines/level-13-join-files",
           "mission": {
-            "name": "Join Files: Script Kickoff",
-            "description": "In the search and pipelines lab, a task related to Join Files needs cleanup before the handoff.",
-            "objective": "Make jobs/join-files.sh executable, run it, and create the token file it writes",
+            "name": "Whose Laptop Is That?",
+            "description": "The office network has devices nobody recognises. The DHCP server's lease file dnsmasq.leases (expiry mac ip hostname client-id) says which MAC got which IP; the asset inventory inventory.csv (MAC,owner,team, with a header) says who owns which MAC. The two systems write MAC addresses differently.",
+            "objective": "Write owners.txt with one line 'ip mac owner' for every lease in dnsmasq.leases: the MAC as the lease file writes it, the owner from inventory.csv, or UNKNOWN when the inventory has no entry for that MAC. Sort the lines by IP address numerically (10.20.0.9 before 10.20.0.10).",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "15m",
             "concepts": [
-              "Join Files",
-              "chmod",
-              "bash"
+              "join -1 -2",
+              "join -a1 -e -o",
+              "sorting on the join key",
+              "tr to normalise keys",
+              "sort -t. -n"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-13-join-files"
@@ -2641,17 +2753,18 @@
           "name": "level-14-comm-compare",
           "path": "modules/module-11-find-and-pipelines/level-14-comm-compare",
           "mission": {
-            "name": "Comm Compare: Loop Builder",
-            "description": "In the search and pipelines lab, a task related to Comm Compare needs cleanup before the handoff.",
-            "objective": "Create three files under generated/ named comm-compare-1.txt through comm-compare-3.txt with matching numbered content",
+            "name": "Twin Servers Drift",
+            "description": "web-1 and web-2 sit behind the same load balancer and should be identical, but a deploy works on one and fails on the other. You have both package lists as dumped by the inventory agent: web1.pkgs and web2.pkgs (package<TAB>version, in install order). The two dumps were taken with different formats: web-1 adds the architecture to some names (libc6:amd64), web-2 never does.",
+            "objective": "Write only-web1.txt with the names of the packages installed on web-1 but not on web-2, and only-web2.txt with those installed on web-2 but not on web-1. One package name per line, each name once, without architecture or version. A package installed on both hosts in different versions is not drift.",
             "xp": 150,
             "difficulty": "intermediate",
-            "expected_time": "8m",
+            "expected_time": "12m",
             "concepts": [
-              "Comm Compare",
-              "for",
-              "seq",
-              "printf"
+              "comm -23 / -13",
+              "sort -u",
+              "cut -f1",
+              "sed 's/:.*//'",
+              "sorted input"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-14-comm-compare"
@@ -2662,16 +2775,18 @@
           "name": "level-15-sort-keys",
           "path": "modules/module-11-find-and-pipelines/level-15-sort-keys",
           "mission": {
-            "name": "Sort Keys: Metric Sum",
-            "description": "In the search and pipelines lab, a task related to Sort Keys needs cleanup before the handoff.",
-            "objective": "Sum the numeric values in the second column of sort-keys-metrics.csv and write the total to total.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "Capacity Review",
+            "description": "For the quarterly capacity review, the team wants the host inventory grouped by datacenter, busiest hosts first. inventory.txt (host dc rack load mem, with a header line) comes from a metrics exporter that writes some loads in scientific notation, like 1e-02 or 1.2e+01.",
+            "objective": "Write sorted.txt: the header line first, then every row of inventory.txt unchanged, ordered by datacenter (alphabetically), then by load as a number (highest first), then by host name in natural order (web9 before web10).",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
             "concepts": [
-              "Sort Keys",
-              "awk",
-              "numeric aggregation"
+              "sort -k N,N",
+              "sort -g",
+              "sort -V",
+              "per-key options (-k4,4gr)",
+              "keeping a header out of sort"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-15-sort-keys"
@@ -2682,16 +2797,18 @@
           "name": "level-16-uniq-count",
           "path": "modules/module-11-find-and-pipelines/level-16-uniq-count",
           "mission": {
-            "name": "Uniq Count: Capacity Report",
-            "description": "In the search and pipelines lab, a task related to Uniq Count needs cleanup before the handoff.",
-            "objective": "Identify the largest directory under datasets and write its relative path to largest.txt",
-            "xp": 150,
-            "difficulty": "intermediate",
-            "expected_time": "8m",
+            "name": "Is It Beaconing?",
+            "description": "A laptop was quarantined after an antivirus alert. Malware often phones home by looking up the same odd domain again and again. You have two hours of the laptop's local DNS cache log, dnsmasq.log: every lookup is a query[...] line, followed by forwarded/reply or cached lines for the same name. Applications write names in any case, and some add a trailing dot (example.com.).",
+            "objective": "Count the query[...] lines per domain, treating names case-insensitively and ignoring a trailing dot. Write beacons.txt with one line 'count domain' for every domain queried 3 times or more, highest count first, and once.txt with every domain queried exactly once, one per line. Write domains in lowercase without the trailing dot.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "15m",
             "concepts": [
-              "Uniq Count",
-              "du",
-              "sort"
+              "sort | uniq -c",
+              "uniq -u / -d",
+              "uniq needs sorted input",
+              "normalising keys (tr, sed)",
+              "sort -rn"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-16-uniq-count"
@@ -2702,16 +2819,18 @@
           "name": "level-17-tr-translate",
           "path": "modules/module-11-find-and-pipelines/level-17-tr-translate",
           "mission": {
-            "name": "Tr Translate: Schedule Entry",
-            "description": "In the search and pipelines lab, a task related to Tr Translate needs cleanup before the handoff.",
-            "objective": "Create crontab.txt containing the nightly-check schedule line exactly once",
+            "name": "Usernames From HR",
+            "description": "64 people start next month and HR sent their names in newhires.txt, exported from a Windows tool. Accounts are created from a list of usernames, and the naming rule is: all lowercase, name parts joined by an underscore (Mary J. Smith becomes mary_j_smith). The export separates name parts with spaces, double spaces or tabs, initials have dots, and some names are in capitals.",
+            "objective": "Write usernames.txt with one username per line, in the same order as newhires.txt: the name in lowercase, with every space, tab and dot turned into an underscore and runs of underscores squeezed into one. No carriage returns (\\r) may remain.",
             "xp": 200,
             "difficulty": "advanced",
             "expected_time": "12m",
             "concepts": [
-              "Tr Translate",
-              "cron",
-              "crontab syntax"
+              "tr 'A-Z' 'a-z'",
+              "tr SET1 SET2 maps characters",
+              "tr -s squeeze",
+              "tr -d '\\r'",
+              "cat -A"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-17-tr-translate"
@@ -2722,140 +2841,21 @@
           "name": "level-18-tr-delete",
           "path": "modules/module-11-find-and-pipelines/level-18-tr-delete",
           "mission": {
-            "name": "Tr Delete: Alert Filter",
-            "description": "In the search and pipelines lab, a task related to Tr Delete needs cleanup before the handoff.",
-            "objective": "Write every alert line from tr-delete.log into alerts.txt",
+            "name": "Serial Console Cleanup",
+            "description": "A database server failed to mount its backup share after a reboot. The datacenter tech captured the serial console (boot messages and a short login session) in console.raw for the incident ticket, but the capture is full of carriage returns, NUL padding bytes, terminal bells and ANSI colour codes, and the ticket system shows it as garbage.",
+            "objective": "Write console.txt: the text of console.raw, line by line, with every carriage return (\\r), NUL byte, bell character (\\a) and ANSI colour sequence (ESC [ ... m) removed. Everything else stays exactly as it is, including the tabs in the /etc/hosts lines and the empty lines.",
             "xp": 200,
             "difficulty": "advanced",
-            "expected_time": "12m",
+            "expected_time": "15m",
             "concepts": [
-              "Tr Delete",
-              "grep",
-              "output redirection"
+              "od -c / cat -A",
+              "tr -d with octal escapes",
+              "tr -cd and character classes",
+              "ANSI escape sequences",
+              "sed with $'...' quoting"
             ],
             "module": "module-11-find-and-pipelines",
             "level": "level-18-tr-delete"
-          }
-        },
-        {
-          "id": "module-11-find-and-pipelines/level-19-sed-print",
-          "name": "level-19-sed-print",
-          "path": "modules/module-11-find-and-pipelines/level-19-sed-print",
-          "mission": {
-            "name": "Sed Print: Config Rewrite",
-            "description": "In the search and pipelines lab, a task related to Sed Print needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in sed-print.conf and save the fixed result to fixed.conf",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Sed Print",
-              "sed",
-              "redirection"
-            ],
-            "module": "module-11-find-and-pipelines",
-            "level": "level-19-sed-print"
-          }
-        },
-        {
-          "id": "module-11-find-and-pipelines/level-20-sed-substitute",
-          "name": "level-20-sed-substitute",
-          "path": "modules/module-11-find-and-pipelines/level-20-sed-substitute",
-          "mission": {
-            "name": "Sed Substitute: Noise Dedup",
-            "description": "In the search and pipelines lab, a task related to Sed Substitute needs cleanup before the handoff.",
-            "objective": "Create unique-sorted.txt from sed-substitute-raw.txt with sorted unique values",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Sed Substitute",
-              "sort",
-              "uniq"
-            ],
-            "module": "module-11-find-and-pipelines",
-            "level": "level-20-sed-substitute"
-          }
-        },
-        {
-          "id": "module-11-find-and-pipelines/level-21-awk-patterns",
-          "name": "level-21-awk-patterns",
-          "path": "modules/module-11-find-and-pipelines/level-21-awk-patterns",
-          "mission": {
-            "name": "Awk Patterns: Path Realignment",
-            "description": "In the search and pipelines lab, a task related to Awk Patterns needs cleanup before the handoff.",
-            "objective": "Create the target directory and move inbox/awk-patterns.txt to organized/awk-patterns/awk-patterns-notes.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Awk Patterns",
-              "mkdir",
-              "mv",
-              "cp"
-            ],
-            "module": "module-11-find-and-pipelines",
-            "level": "level-21-awk-patterns"
-          }
-        },
-        {
-          "id": "module-11-find-and-pipelines/level-22-awk-fields",
-          "name": "level-22-awk-fields",
-          "path": "modules/module-11-find-and-pipelines/level-22-awk-fields",
-          "mission": {
-            "name": "Awk Fields: Field Extract",
-            "description": "In the search and pipelines lab, a task related to Awk Fields needs cleanup before the handoff.",
-            "objective": "Extract the second column from awk-fields-report.csv into owners.txt",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Awk Fields",
-              "cut",
-              "awk"
-            ],
-            "module": "module-11-find-and-pipelines",
-            "level": "level-22-awk-fields"
-          }
-        },
-        {
-          "id": "module-11-find-and-pipelines/level-23-awk-sum",
-          "name": "level-23-awk-sum",
-          "path": "modules/module-11-find-and-pipelines/level-23-awk-sum",
-          "mission": {
-            "name": "Awk Sum: Backup Bundle",
-            "description": "In the search and pipelines lab, a task related to Awk Sum needs cleanup before the handoff.",
-            "objective": "Create awk-sum-backup.tar.gz containing the files under bundle/awk-sum",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Awk Sum",
-              "tar",
-              "compression"
-            ],
-            "module": "module-11-find-and-pipelines",
-            "level": "level-23-awk-sum"
-          }
-        },
-        {
-          "id": "module-11-find-and-pipelines/level-24-pipeline-report",
-          "name": "level-24-pipeline-report",
-          "path": "modules/module-11-find-and-pipelines/level-24-pipeline-report",
-          "mission": {
-            "name": "Pipeline Report: Permission Fix",
-            "description": "In the search and pipelines lab, a task related to Pipeline Report needs cleanup before the handoff.",
-            "objective": "Set the mode of pipeline-report.sh to 640",
-            "xp": 200,
-            "difficulty": "advanced",
-            "expected_time": "12m",
-            "concepts": [
-              "Pipeline Report",
-              "chmod",
-              "permissions"
-            ],
-            "module": "module-11-find-and-pipelines",
-            "level": "level-24-pipeline-report"
           }
         }
       ]
@@ -2966,9 +2966,9 @@
           }
         },
         {
-          "id": "module-12-users-and-groups/level-6-su-notes",
-          "name": "level-6-su-notes",
-          "path": "modules/module-12-users-and-groups/level-6-su-notes",
+          "id": "module-12-users-and-groups/level-6-login-defs-ids",
+          "name": "level-6-login-defs-ids",
+          "path": "modules/module-12-users-and-groups/level-6-login-defs-ids",
           "mission": {
             "name": "Su Notes: Config Rewrite",
             "description": "In the users and groups lab, a task related to Su Notes needs cleanup before the handoff.",
@@ -3267,9 +3267,9 @@
           }
         },
         {
-          "id": "module-12-users-and-groups/level-21-secure-tempfiles",
-          "name": "level-21-secure-tempfiles",
-          "path": "modules/module-12-users-and-groups/level-21-secure-tempfiles",
+          "id": "module-12-users-and-groups/level-21-subuid-ranges",
+          "name": "level-21-subuid-ranges",
+          "path": "modules/module-12-users-and-groups/level-21-subuid-ranges",
           "mission": {
             "name": "Secure Tempfiles: Path Realignment",
             "description": "In the users and groups lab, a task related to Secure Tempfiles needs cleanup before the handoff.",
@@ -3676,9 +3676,9 @@
           }
         },
         {
-          "id": "module-13-services-and-logs/level-17-proc-meminfo",
-          "name": "level-17-proc-meminfo",
-          "path": "modules/module-13-services-and-logs/level-17-proc-meminfo",
+          "id": "module-13-services-and-logs/level-17-oom-killer",
+          "name": "level-17-oom-killer",
+          "path": "modules/module-13-services-and-logs/level-17-oom-killer",
           "mission": {
             "name": "Proc Meminfo: Schedule Entry",
             "description": "In the services and logs lab, a task related to Proc Meminfo needs cleanup before the handoff.",
@@ -3696,9 +3696,9 @@
           }
         },
         {
-          "id": "module-13-services-and-logs/level-18-hostnamectl",
-          "name": "level-18-hostnamectl",
-          "path": "modules/module-13-services-and-logs/level-18-hostnamectl",
+          "id": "module-13-services-and-logs/level-18-restart-policy",
+          "name": "level-18-restart-policy",
+          "path": "modules/module-13-services-and-logs/level-18-restart-policy",
           "mission": {
             "name": "Hostnamectl: Alert Filter",
             "description": "In the services and logs lab, a task related to Hostnamectl needs cleanup before the handoff.",
@@ -3736,9 +3736,9 @@
           }
         },
         {
-          "id": "module-13-services-and-logs/level-20-localectl",
-          "name": "level-20-localectl",
-          "path": "modules/module-13-services-and-logs/level-20-localectl",
+          "id": "module-13-services-and-logs/level-20-unit-dropins",
+          "name": "level-20-unit-dropins",
+          "path": "modules/module-13-services-and-logs/level-20-unit-dropins",
           "mission": {
             "name": "Localectl: Noise Dedup",
             "description": "In the services and logs lab, a task related to Localectl needs cleanup before the handoff.",
@@ -4245,9 +4245,9 @@
           }
         },
         {
-          "id": "module-14-storage-and-backups/level-21-snapshot-notes",
-          "name": "level-21-snapshot-notes",
-          "path": "modules/module-14-storage-and-backups/level-21-snapshot-notes",
+          "id": "module-14-storage-and-backups/level-21-hardlink-snapshots",
+          "name": "level-21-hardlink-snapshots",
+          "path": "modules/module-14-storage-and-backups/level-21-hardlink-snapshots",
           "mission": {
             "name": "Snapshot Notes: Path Realignment",
             "description": "In the storage and backups lab, a task related to Snapshot Notes needs cleanup before the handoff.",
@@ -4533,9 +4533,9 @@
           }
         },
         {
-          "id": "module-15-scheduling-and-jobs/level-11-disown",
-          "name": "level-11-disown",
-          "path": "modules/module-15-scheduling-and-jobs/level-11-disown",
+          "id": "module-15-scheduling-and-jobs/level-11-setsid-detach",
+          "name": "level-11-setsid-detach",
+          "path": "modules/module-15-scheduling-and-jobs/level-11-setsid-detach",
           "mission": {
             "name": "Disown: Restore Drill",
             "description": "In the scheduling and jobs lab, a task related to Disown needs cleanup before the handoff.",
@@ -5203,9 +5203,9 @@
           }
         },
         {
-          "id": "module-16-security-auditing/level-20-shellshock-checks",
-          "name": "level-20-shellshock-checks",
-          "path": "modules/module-16-security-auditing/level-20-shellshock-checks",
+          "id": "module-16-security-auditing/level-20-cve-version-triage",
+          "name": "level-20-cve-version-triage",
+          "path": "modules/module-16-security-auditing/level-20-cve-version-triage",
           "mission": {
             "name": "Shellshock Checks: Noise Dedup",
             "description": "In the security auditing lab, a task related to Shellshock Checks needs cleanup before the handoff.",
@@ -5391,9 +5391,9 @@
           }
         },
         {
-          "id": "module-17-monitoring-and-performance/level-5-iostat-notes",
-          "name": "level-5-iostat-notes",
-          "path": "modules/module-17-monitoring-and-performance/level-5-iostat-notes",
+          "id": "module-17-monitoring-and-performance/level-5-diskstats-delta",
+          "name": "level-5-diskstats-delta",
+          "path": "modules/module-17-monitoring-and-performance/level-5-diskstats-delta",
           "mission": {
             "name": "Iostat Notes: Field Extract",
             "description": "In the monitoring and performance lab, a task related to Iostat Notes needs cleanup before the handoff.",
@@ -5551,9 +5551,9 @@
           }
         },
         {
-          "id": "module-17-monitoring-and-performance/level-13-lsof-basics",
-          "name": "level-13-lsof-basics",
-          "path": "modules/module-17-monitoring-and-performance/level-13-lsof-basics",
+          "id": "module-17-monitoring-and-performance/level-13-who-holds-file",
+          "name": "level-13-who-holds-file",
+          "path": "modules/module-17-monitoring-and-performance/level-13-who-holds-file",
           "mission": {
             "name": "Lsof Basics: Script Kickoff",
             "description": "In the monitoring and performance lab, a task related to Lsof Basics needs cleanup before the handoff.",
@@ -6242,9 +6242,9 @@
           }
         },
         {
-          "id": "module-18-configuration-editing/level-23-nano-shortcuts",
-          "name": "level-23-nano-shortcuts",
-          "path": "modules/module-18-configuration-editing/level-23-nano-shortcuts",
+          "id": "module-18-configuration-editing/level-23-config-drift",
+          "name": "level-23-config-drift",
+          "path": "modules/module-18-configuration-editing/level-23-config-drift",
           "mission": {
             "name": "Nano Shortcuts: Backup Bundle",
             "description": "In the configuration editing lab, a task related to Nano Shortcuts needs cleanup before the handoff.",
@@ -6509,9 +6509,9 @@
           }
         },
         {
-          "id": "module-19-network-troubleshooting/level-12-telnet-legacy",
-          "name": "level-12-telnet-legacy",
-          "path": "modules/module-19-network-troubleshooting/level-12-telnet-legacy",
+          "id": "module-19-network-troubleshooting/level-12-bash-dev-tcp",
+          "name": "level-12-bash-dev-tcp",
+          "path": "modules/module-19-network-troubleshooting/level-12-bash-dev-tcp",
           "mission": {
             "name": "Telnet Legacy: Permission Fix",
             "description": "In the network troubleshooting lab, a task related to Telnet Legacy needs cleanup before the handoff.",
@@ -6630,9 +6630,9 @@
           }
         },
         {
-          "id": "module-19-network-troubleshooting/level-18-tls-notes",
-          "name": "level-18-tls-notes",
-          "path": "modules/module-19-network-troubleshooting/level-18-tls-notes",
+          "id": "module-19-network-troubleshooting/level-18-tls-cert-check",
+          "name": "level-18-tls-cert-check",
+          "path": "modules/module-19-network-troubleshooting/level-18-tls-cert-check",
           "mission": {
             "name": "Tls Notes: Alert Filter",
             "description": "In the network troubleshooting lab, a task related to Tls Notes needs cleanup before the handoff.",
@@ -6938,9 +6938,9 @@
           }
         },
         {
-          "id": "module-20-package-and-release-ops/level-9-snap-notes",
-          "name": "level-9-snap-notes",
-          "path": "modules/module-20-package-and-release-ops/level-9-snap-notes",
+          "id": "module-20-package-and-release-ops/level-9-package-holds",
+          "name": "level-9-package-holds",
+          "path": "modules/module-20-package-and-release-ops/level-9-package-holds",
           "mission": {
             "name": "Snap Notes: Link Repair",
             "description": "In the package and release operations lab, a task related to Snap Notes needs cleanup before the handoff.",
@@ -6958,9 +6958,9 @@
           }
         },
         {
-          "id": "module-20-package-and-release-ops/level-10-flatpak-notes",
-          "name": "level-10-flatpak-notes",
-          "path": "modules/module-20-package-and-release-ops/level-10-flatpak-notes",
+          "id": "module-20-package-and-release-ops/level-10-apt-pinning",
+          "name": "level-10-apt-pinning",
+          "path": "modules/module-20-package-and-release-ops/level-10-apt-pinning",
           "mission": {
             "name": "Flatpak Notes: Backup Bundle",
             "description": "In the package and release operations lab, a task related to Flatpak Notes needs cleanup before the handoff.",
@@ -8305,9 +8305,9 @@
           }
         },
         {
-          "id": "module-23-boot-and-recovery/level-4-single-user",
-          "name": "level-4-single-user",
-          "path": "modules/module-23-boot-and-recovery/level-4-single-user",
+          "id": "module-23-boot-and-recovery/level-4-default-target",
+          "name": "level-4-default-target",
+          "path": "modules/module-23-boot-and-recovery/level-4-default-target",
           "mission": {
             "name": "Single User: Noise Dedup",
             "description": "In the boot and recovery lab, a task related to Single User needs cleanup before the handoff.",
@@ -8566,9 +8566,9 @@
           }
         },
         {
-          "id": "module-23-boot-and-recovery/level-17-password-reset-notes",
-          "name": "level-17-password-reset-notes",
-          "path": "modules/module-23-boot-and-recovery/level-17-password-reset-notes",
+          "id": "module-23-boot-and-recovery/level-17-slow-boot",
+          "name": "level-17-slow-boot",
+          "path": "modules/module-23-boot-and-recovery/level-17-slow-boot",
           "mission": {
             "name": "Password Reset Notes: Schedule Entry",
             "description": "In the boot and recovery lab, a task related to Password Reset Notes needs cleanup before the handoff.",
@@ -9665,9 +9665,9 @@
           }
         },
         {
-          "id": "module-25-linux-toolbelt/level-23-expect-notes",
-          "name": "level-23-expect-notes",
-          "path": "modules/module-25-linux-toolbelt/level-23-expect-notes",
+          "id": "module-25-linux-toolbelt/level-23-interactive-automation",
+          "name": "level-23-interactive-automation",
+          "path": "modules/module-25-linux-toolbelt/level-23-interactive-automation",
           "mission": {
             "name": "Expect Notes: Backup Bundle",
             "description": "In the linux toolbelt lab, a task related to Expect Notes needs cleanup before the handoff.",

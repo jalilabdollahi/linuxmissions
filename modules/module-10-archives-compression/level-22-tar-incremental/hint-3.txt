@@ -1,1 +1,22 @@
-Example: `cut -d, -f2 rsync-basics-report.csv > owners.txt`
+Back up and play the week (one snapshot file, backups/data.snar, for the whole chain):
+
+tar --listed-incremental=backups/data.snar -czf backups/data-sun.tar.gz data
+./simulate-day.sh mon
+tar --listed-incremental=backups/data.snar -czf backups/data-mon.tar.gz data
+./simulate-day.sh tue
+tar --listed-incremental=backups/data.snar -czf backups/data-tue.tar.gz data
+./simulate-day.sh wed
+tar --listed-incremental=backups/data.snar -czf backups/data-wed.tar.gz data
+./simulate-day.sh thu
+
+- the first tar creates data.snar: full backup; each later one stores only the day's changes
+- simulate-day.sh changes data/ (and on thu deletes it)
+
+Restore, oldest first:
+
+mkdir restored
+for d in sun mon tue wed; do tar --listed-incremental=/dev/null -xzf backups/data-$d.tar.gz -C restored; done
+
+- --listed-incremental=/dev/null   treat the archives as incremental, so deleted files are removed again
+- sun, mon, tue, wed               the full backup first, then every incremental in order
+Check: find restored | sort   (no c-1005.json, no tmp/import-cache, no 2026-11-08.csv)

@@ -1,1 +1,33 @@
-Example: `chmod 640 here-docs.sh`
+Replace bootstrap.sh (the outer heredoc uses BOOT so the inner EOFs survive):
+
+cat > bootstrap.sh <<'BOOT'
+#!/bin/bash
+# bootstrap.sh - set up a newcomer's shell. Usage: TEAM=... OWNER="..." ./bootstrap.sh
+tools="$(cd "$(dirname "$0")" && pwd)/tools/bin"
+mkdir -p "$HOME/.config"
+cat > "$HOME/.config/team.env" <<EOF
+TEAM="$TEAM"
+OWNER="$OWNER"
+EOF
+if ! grep -qs '^# >>> team setup >>>$' "$HOME/.bashrc"; then
+  cat >> "$HOME/.bashrc" <<EOF
+# >>> team setup >>>
+export PATH="$tools:\$PATH"
+alias mine='teamctl list --owner "\$USER"'
+set -a; . "\$HOME/.config/team.env"; set +a
+# <<< team setup <<<
+EOF
+fi
+cat > "$HOME/.bash_profile" <<'EOF'
+[ -f ~/.bashrc ] && . ~/.bashrc
+EOF
+BOOT
+
+- team.env, <<EOF          TEAM and OWNER are filled in now; the quotes keep "Ana Lima" together
+- .bashrc, <<EOF with \$   $tools is filled in now, \$PATH \$USER \$HOME stay literal for login time
+- grep -qs ... || append   the marker line makes a rerun skip the block
+- .bash_profile, <<'EOF'   nothing to expand, and > writes the same file every time
+
+Try it: rm -rf home && cp -R skel home
+HOME=$SANDBOX/home TEAM=payments OWNER="Ana Lima" ./bootstrap.sh; HOME=$SANDBOX/home TEAM=payments OWNER="Ana Lima" ./bootstrap.sh
+env -i HOME=$SANDBOX/home PATH=/usr/bin:/bin USER=ana bash -l -i -c 'mine; echo "$PATH"'

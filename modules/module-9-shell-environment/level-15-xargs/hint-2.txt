@@ -1,1 +1,13 @@
-An awk one-liner can skip the header and add the second field.
+- Filter first: grep -Ev '^[[:space:]]*(#|$)' tenants.txt
+  drops lines that are empty, only spaces, or a (possibly indented) comment.
+- By default xargs splits on any blank AND treats ' " and \ as quoting, so
+  "acme corp" becomes two arguments and o'reilly is an error.
+  `xargs -d '\n'` (GNU) makes every input line exactly one argument, taken
+  literally.
+- `-I{}` runs the command once per input item and replaces {} with it, also
+  inside a longer word:  xargs -d '\n' -I{} mkdir -p "tenants/{}"
+- `-t` prints each command before running it; `-p` asks before each one.
+- Test with echo in front of the real command, then remove the echo.
+
+Read more: man xargs (-d, -I, -t, -p)
+macOS xargs has no -d: use `tr '\n' '\0' | xargs -0 ...` or the Docker mode.

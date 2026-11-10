@@ -1,1 +1,23 @@
-Example: `tar -czf here-strings-backup.tar.gz bundle/here-strings`
+Replace parse-dsn.sh at the prompt:
+
+cat > parse-dsn.sh <<'EOF'
+#!/bin/bash
+# parse-dsn.sh DSN - split a database URL into db.env (port defaults to 5432)
+dsn="$1"
+rest="${dsn#*://}"
+creds="${rest%@*}"
+hostpart="${rest##*@}"
+IFS=: read -r DB_USER DB_PASS <<< "$creds"
+IFS=/ read -r hostport DB_NAME <<< "$hostpart"
+IFS=: read -r DB_HOST DB_PORT <<< "$hostport"
+DB_PORT="${DB_PORT:-5432}"
+printf 'DB_USER=%q\nDB_PASS=%q\nDB_HOST=%q\nDB_PORT=%q\nDB_NAME=%q\n' "$DB_USER" "$DB_PASS" "$DB_HOST" "$DB_PORT" "$DB_NAME" > db.env
+EOF
+
+- ${dsn#*://}                 drop the scheme
+- ${rest%@*} / ${rest##*@}    split at the LAST @: user:password | host:port/dbname
+- IFS=: read -r ... <<< "$creds"   here-string: read runs in this shell, the password keeps its extra colons
+- ${DB_PORT:-5432}            default port
+- printf '%q'                 quote each value so `source db.env` gives it back exactly
+
+Try: ./parse-dsn.sh 'mysql://root:pa$$w0rd!@10.0.0.5:3306/shop'; cat db.env

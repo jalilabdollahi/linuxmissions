@@ -1,1 +1,7 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- Prepend a directory: PATH="/abs/dir:$PATH". It is searched first; everything that was on PATH stays.
+- `PATH=/abs/dir` alone REPLACES the list: ls, grep and sort disappear.
+- A relative entry (tools/bin) is looked up from the CURRENT directory, so it breaks as soon as someone runs `cd`.
+- Inside double quotes, the shell expands variables when you type the command: echo "x=$SANDBOX/y" >> file writes the real path into the file; \$PATH stays as the text $PATH.
+- `command -v deploy-helper` prints which file will run. After moving files around in PATH directories, `hash -r` makes your shell forget remembered locations.
+
+Read more: `help command`, `help hash`, `man bash` (PATH).

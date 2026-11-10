@@ -1,16 +1,11 @@
 {
-  "name": "Shell Startup: Path Realignment",
-  "description": "In the shell environment lab, a task related to Shell Startup needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/shell-startup.txt to organized/shell-startup/shell-startup-notes.txt",
+  "name": "Lost on Login",
+  "description": "A new teammate added `export PROJECT_ROOT=/srv/projects/billing-api` to home/.profile on the build host, but neither SSH logins nor new terminal tabs ever see it. The account's dotfiles are in home/ (treat it as $HOME).",
+  "objective": "Fix the startup files in home/ so that PROJECT_ROOT=/srv/projects/billing-api is exported both in login shells (bash -l, like an SSH login) and in interactive non-login shells (bash -i, like a new terminal tab). Define the variable in exactly one of .bash_profile, .profile and .bashrc, and keep the existing login settings (EDITOR and ~/bin on PATH) and aliases working.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Shell Startup",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "8m",
+  "concepts": ["login vs non-login shells", ".bash_profile", ".profile", ".bashrc", "source"],
   "module": "module-9-shell-environment",
   "level": "level-1-shell-startup"
 }

@@ -1,1 +1,13 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- `shopt -s nullglob`   a pattern that matches nothing expands to nothing
+                        (default: it stays as the literal text incoming/*.csv)
+- `shopt -s globstar`   `**` matches any number of directories, including none:
+                        incoming/**/*.csv finds incoming/a.csv and incoming/x/y/b.csv
+- `shopt -s nocaseglob` patterns ignore letter case: *.csv also matches B.CSV
+- Hidden files (starting with .) are still skipped unless you turn on dotglob.
+- `set -o noclobber`    `> file` fails ("cannot overwrite existing file") when
+                        file exists; a script that ends with that failed
+                        redirection exits non-zero. (`>|` would force it.)
+- `shopt -p` / `set -o` show the current settings.
+- Put the options near the top of ingest.sh: `edit ingest.sh`.
+
+Read more: help shopt, help set, man bash ("Pathname Expansion")

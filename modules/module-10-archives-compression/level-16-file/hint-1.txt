@@ -1,1 +1,6 @@
-Measure directory sizes before deciding which one is largest.
+Ignore the extensions completely: chunk-005.txt may be gzip and a .zip may be
+something else entirely. Every format starts with its own "magic" bytes, and
+there is a tool that reads them and tells you what a file really is. Try it on
+a few chunks and look at the first words of its answers.
+Two special cases: a gzip file can hold plain text or a whole tar archive (you
+have to look inside to tell), and some chunks are empty.

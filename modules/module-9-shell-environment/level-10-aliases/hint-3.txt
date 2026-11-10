@@ -1,1 +1,20 @@
-Example: `tar -czf aliases-backup.tar.gz bundle/aliases`
+Type this at the prompt. It rewrites team/aliases.sh with the three fixes:
+
+cat > team/aliases.sh <<'EOF'
+# team/aliases.sh - shared shell helpers, sourced from ~/.bashrc
+alias ll='ls -lah'
+alias gs='git status -sb'
+alias ..='cd ..'
+alias logs='tail -n 20 "$LOGDIR/app.log"'
+mkcd() { mkdir -p -- "$1" && cd -- "$1"; }
+alias rm='rm -i'
+EOF
+
+- alias logs='... "$LOGDIR/app.log"'   single quotes store $LOGDIR unexpanded; it is read each time logs runs
+- mkcd() { ...; }                      a function gets its arguments as $1; "$1" keeps spaces in the name
+- mkdir -p -- / cd --                  -p creates parents; -- ends the options (names starting with -)
+- alias rm='rm -i'                     the missing safety alias
+- <<'EOF'                              quoted delimiter: the text goes into the file exactly as typed
+
+Check it in a separate shell (so rm -i doesn't follow you around here):
+bash -c 'source team/aliases.sh; alias logs rm; type -t mkcd'

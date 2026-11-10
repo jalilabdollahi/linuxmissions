@@ -1,1 +1,4 @@
-Look for a filtering command that keeps only the alert lines in tar-extract.log.
+tar can extract a single member (a file or a whole directory) if you give its
+name exactly as it is stored in the archive. So first look at the stored names:
+how does the nginx directory appear in the listing? Watch the very first
+characters. Beware: other files also have "nginx" in their path.

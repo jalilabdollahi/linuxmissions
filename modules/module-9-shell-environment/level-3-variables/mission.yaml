@@ -1,16 +1,11 @@
 {
-  "name": "Variables: Event Counter",
-  "description": "In the shell environment lab, a task related to Variables needs cleanup before the handoff.",
-  "objective": "Count how many times `ok` appears in variables-events.txt and write the number to ok-count.txt",
+  "name": "report-.txt",
+  "description": "name-report.sh should write reports/report-<ENV>_<DAY>.txt, for example reports/report-staging_2026-11-09.txt. Instead every run produces reports/report-.txt or a name without the environment, and cron runs it without setting DAY at all.",
+  "objective": "Fix name-report.sh so that it writes reports/report-<ENV>_<DAY>.txt for whatever ENV and DAY it gets from the environment, with the same values on the 'environment:' and 'day:' lines inside the report. When DAY is unset or empty, use today's date in YYYY-MM-DD form. The script is checked with values you have not seen.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Variables",
-    "grep",
-    "wc",
-    "redirection"
-  ],
+  "expected_time": "8m",
+  "concepts": ["${VAR}", "variable name rules", "${VAR:-default}", "$(date +%F)"],
   "module": "module-9-shell-environment",
   "level": "level-3-variables"
 }

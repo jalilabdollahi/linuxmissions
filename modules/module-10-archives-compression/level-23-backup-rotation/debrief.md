@@ -1,17 +1,22 @@
-# Backup Rotation: Backup Bundle
+# Five Generations
 
-## What you practiced
-- This level focused on **Backup Rotation** in a safe sandbox.
-- The shortest path usually combines `tar` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Shifting has to start at the top: `.4 -> .5` first frees .4, then
+`.3 -> .4` frees .3, and so on, so each move lands on a slot that was just
+emptied. The ascending draft did `.1 -> .2` first, which overwrote
+yesterday's backup with today's, and the copy then rippled up until every
+generation was the same file. `rm -f` and `if [ -e ]` keep `set -e` happy
+when a generation is missing, and the gap simply moves up with the others.
 
-## Commands to remember
-```bash
-tar -czf backup.tar.gz folder/
-tar -tf backup.tar.gz
-gzip file.txt
-```
+## Common mistakes
+- Ascending order: after one run, .2 to .5 all hold the same content.
+- `[ -e f ] && mv f g` as the last command of a script or function: when the
+  test fails, the whole thing returns 1, so cron reports a failure.
+- "Compacting" gaps (renumbering what is left): then .5 is no longer
+  "five nights ago", and the retention promise breaks.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Use tar with create, gzip, and file flags.
+## Learn next
+This is the numbering scheme logrotate uses (`rotate 5`), and
+`savelog -c 5 FILE` from Debian's debianutils does the same for single
+files. For backups by date instead of by number, keep `site-$(date +%F).tar.gz`
+and prune with `find backups -mtime +5 -delete`.

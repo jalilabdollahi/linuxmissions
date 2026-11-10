@@ -1,15 +1,11 @@
 {
-  "name": "Xz: History Window",
-  "description": "In the archives and compression lab, a task related to Xz needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of xz-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Xz",
-    "head",
-    "tail"
-  ],
+  "name": "Month by Month",
+  "description": "Today is 2026-11-10. logs/ on the reporting server holds one log per day since May (app-YYYY-MM-DD.log), and the retention policy says: everything older than the current month goes into one xz-compressed tar per month, and the plain files go away only after the archive has been checked.",
+  "objective": "Create archive/2026-05.tar.xz, archive/2026-06.tar.xz ... archive/2026-10.tar.xz (six xz-compressed tar files, nothing else in archive/). Each one must hold exactly the daily logs whose file NAME carries that month, with unchanged content. Then remove those archived logs from logs/. The November logs stay in logs/, plain and unchanged.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "12m",
+  "concepts": ["tar -cJf", "xz -t", "for loop over months", "file name date vs. mtime"],
   "module": "module-10-archives-compression",
   "level": "level-7-xz"
 }

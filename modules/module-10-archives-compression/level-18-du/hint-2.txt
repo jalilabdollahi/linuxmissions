@@ -1,1 +1,7 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+  find projects -type d \( -name A -o -name B \)      dirs named A or B, hidden ones included
+  ... -prune                                           don't descend into a dir that matched
+  ... -exec du -sk {} +                                total disk usage of each found dir, in KiB, "KiB<TAB>path"
+  awk '$1 > 5120'                                      keep lines whose first field is over 5 MiB (prints the line unchanged)
+  sort -nr                                             numeric, largest first
+du -sh prints 6.5M / 980K; sort -n can't compare those, and the task wants KiB anyway.
+More: man find (look for -prune), man du

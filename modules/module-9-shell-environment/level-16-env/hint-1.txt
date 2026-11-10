@@ -1,1 +1,10 @@
-Measure directory sizes before deciding which one is largest.
+Compare `env` in your shell with cron.env. Your terminal has dozens of
+variables (USER, TERM, SANDBOX, ...); cron gives its jobs five.
+
+To see what cron sees, start report-gen with an EMPTY environment and add only
+the lines of cron.env. Careful: the first line of cron.env is a comment, not a
+variable. And the error message goes to stderr, so capture both streams.
+
+Once you see the error, read report-gen: which line needs something cron does
+not provide? It runs with `set -eu`, so it stops at the first problem: fix,
+rerun, look again.

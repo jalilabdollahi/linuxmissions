@@ -1,1 +1,6 @@
-List the archive if you want to inspect it first, then extract it.
+Start with `file initrd.img`: the .img name hides what it really is. cpio
+itself only understands the uncompressed archive, so the data has to be
+decompressed on the way in. Two more things about cpio: it reads the archive
+from standard input (not as a file argument), and it extracts into the
+directory you are in. How are the member names written in the listing: with a
+leading / or ./, or without?

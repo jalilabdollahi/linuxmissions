@@ -1,1 +1,10 @@
-Use tar extraction flags and point at the archive file.
+  gzip -dc FILE                 decompress to stdout, whatever the file is called
+                                (zcat FILE on Linux; macOS zcat wants a .Z file)
+  ... | cpio -t                 list the members of the archive on stdin
+  ... | cpio -idm 'PATTERN'     extract members matching PATTERN
+                                -i extract, -d create directories, -m keep mtimes, -v show names
+  grep '\.ko$'                  lines ending in .ko
+  sed 's|.*/||'                 strip everything up to the last /
+Quote the pattern so the shell does not expand it, and run the extract inside
+initrd-root/ (cd there, or use a ( cd ... && ... ) subshell).
+More: man cpio

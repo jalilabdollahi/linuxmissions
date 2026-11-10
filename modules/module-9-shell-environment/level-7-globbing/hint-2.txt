@@ -1,1 +1,11 @@
-Save each result into its own file.
+Glob building blocks (they match file names, they are not regular expressions):
+  *        any number of characters, including none
+  ?        exactly one character
+  [0-9]    exactly one character from the set (here: one digit)
+Each [ ] is ONE character: [10-19] is not "10 to 19", it means one of 1, 0, 1, 9.
+
+Make the pattern end in .log so that .log.gz can't match, and pin the day to two characters.
+A glob never matches a leading dot unless you write the dot, so hidden files are safe.
+Preview with `echo PATTERN` or `ls PATTERN`, then use the same pattern with mv. `mkdir -p` creates the target directory.
+
+Read more: `man 7 glob`, `man bash` (Pathname Expansion).

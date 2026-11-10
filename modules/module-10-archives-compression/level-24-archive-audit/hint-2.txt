@@ -1,1 +1,11 @@
-Use chmod with octal mode 640.
+  file -b FILE              Zip archive / gzip / bzip2 / XZ compressed data / POSIX tar archive
+  tar -tf FILE              list any tar; GNU tar detects gzip/bzip2/xz by content, whatever the name
+  unzip -Z1 FILE            list a zip, one name per line
+  ... | grep -c .           count the lines
+  ... | grep -Eq '^/|(^|/)\.\.(/|$)'    true if a path is absolute or has a .. component
+  sha256sum < FILE          just the hash; compare with the line for that name in delivery/SHA256SUMS
+  ${n%%.*}                  fonts.tar.gz -> fonts
+  tar -xf FILE -C DIR   /   unzip -q FILE -d DIR     extract into DIR
+tar -t prints the original member names (with a warning on stderr), so you can see
+the dangerous paths. Never extract with -P / --absolute-names.
+More: man tar, man unzip (-Z), man sha256sum

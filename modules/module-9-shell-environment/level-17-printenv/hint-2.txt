@@ -1,1 +1,11 @@
-Write the schedule into crontab.txt using the standard five time fields.
+- `pgrep -af worker` lists PIDs with their full command lines;
+  `pgrep -f 'bin/worker$'` matches only the line that ends in bin/worker.
+- /proc/<pid>/environ holds the environment the process was started with.
+  Entries are separated by NUL bytes, not newlines: `cat` glues them together.
+  `tr '\0' '\n' < /proc/<pid>/environ` puts one variable per line.
+- `grep -E '^(DB_HOST|QUEUE|POOL)='` keeps just the three settings.
+- To compare with worker.env: lines of live.env that do not appear in
+  worker.env are the stale ones. `grep -vxF -f FILE` prints lines that are
+  not whole lines of FILE; `cut -d= -f1` keeps the name.
+
+Read more: man 5 proc (search for environ), man pgrep

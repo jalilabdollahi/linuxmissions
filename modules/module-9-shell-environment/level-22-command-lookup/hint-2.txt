@@ -1,1 +1,17 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- Bash resolves a command name in this order: alias, then function, then
+  builtin, then the first match in PATH (left to right). Removing an alias
+  uncovers the function under it; removing the function uncovers PATH.
+- `type -t deploy` prints alias, function, builtin or file;
+  `command -v deploy` prints the path (or the alias definition).
+  `which` only searches PATH, so it never shows aliases or functions.
+- A login shell reads ~/.bash_profile (and NOT ~/.bashrc unless the profile
+  sources it). An interactive non-login shell reads ~/.bashrc.
+- In home/.bash_profile, PATH puts opt/deploy-1.4/bin in front. Either drop
+  that line, or put tools/bin first. A common, tidy layout: .bash_profile
+  just sources .bashrc:   [ -f ~/.bashrc ] && . ~/.bashrc
+- Delete lines with sed: sed -i.bak '/^alias deploy=/d' FILE, and a whole
+  block from one line to another: sed -i.bak '/^start$/,/^end$/d' FILE.
+  Or use `edit home/.bashrc` and friends.
+- An already running shell may remember a path: `hash -r` forgets it.
+
+Read more: help type, help hash, man bash ("INVOCATION", "COMMAND EXECUTION")

@@ -1,1 +1,14 @@
-Use tar extraction flags and point at the archive file.
+Part 1
+- `date -u -d @1791336123 '+%F %T'` prints that moment in UTC (Linux). On macOS: `date -u -r 1791336123 '+%F %T'`.
+- One timeline for the whole file: awk pairs every #number line with the command after it:
+    awk '/^#[0-9]+$/ { t = substr($0, 2); next } { print t, $0 }' home/deploy/.bash_history
+  then convert each number with date in a `while read -r t cmd; do ... done` loop.
+- The same command can appear on several nights: the date matters, not only the clock time.
+- Write a file with printf, single quotes keep $D as text: printf '%s\n' 'COMMAND' > culprit.txt
+
+Part 2 (bash variables, see `man bash` > HISTORY and Shell Variables)
+- HISTTIMEFORMAT='%F %T '   record and show a time for each command
+- HISTSIZE / HISTFILESIZE   commands kept in memory / in the file
+- shopt -s histappend       append on exit instead of overwriting
+- HISTCONTROL: ignorespace (and ignoreboth) drop every command typed with a leading space. ignoredups is fine.
+Lines added at the END of .bashrc override the earlier ones.

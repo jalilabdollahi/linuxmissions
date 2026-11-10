@@ -1,1 +1,6 @@
-Archive the directory contents without leaving anything out.
+- `ss -ltnp`: -l listening sockets, -t TCP, -n numeric ports, -p the owning process as users:(("name",pid=1234,fd=3)). Without root you see the PIDs of your own processes.
+- `ss -ltnp | grep 4721` also matches :47215. Match the colon and the space around it (`grep ':4721 '`), or let ss filter: `ss -ltnp 'sport = :4721'` (-H drops the header).
+- `ps -ww -o pid,args -p PID` shows a process's full command line (-ww: do not cut it at the screen width), which tells you which service it is (here they are all "python3").
+- `kill PID` sends SIGTERM. The port is free once the process has exited.
+
+Read more: `man ss` (FILTER), `man kill`.

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-10T12:55:37.564320+00:00",
-  "level_count": 487,
+  "generated_at": "2026-11-10T12:58:00.094391+00:00",
+  "level_count": 491,
   "modules": [
     {
       "name": "module-1-filesystem",
@@ -3649,6 +3649,28 @@
           }
         },
         {
+          "id": "module-13-services-and-logs/level-8-syslog-triage",
+          "name": "level-8-syslog-triage",
+          "path": "modules/module-13-services-and-logs/level-8-syslog-triage",
+          "mission": {
+            "name": "Who Filled the Disk",
+            "description": "Disk alert on app-02: var/log/syslog grew by gigabytes in the hour from 02:00 to 03:00 and the root filesystem hit 95%. Before anyone turns log levels down, you need to know which programs were that noisy in that hour.",
+            "objective": "Write top-programs.txt with the three programs that logged the most messages in var/log/syslog between 02:00:00 and 02:59:59 on Nov 10, one per line as 'count program' (e.g. '1234 sshd'), highest count first. A program is the name before [pid] or the colon; count messages, not lines: rsyslog's 'message repeated N times' line stands for N messages. Don't change the log.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "15m",
+            "concepts": [
+              "syslog line format",
+              "awk fields and string comparison",
+              "awk associative arrays",
+              "rsyslog repeated-message reduction",
+              "sort -rn | head"
+            ],
+            "module": "module-13-services-and-logs",
+            "level": "level-8-syslog-triage"
+          }
+        },
+        {
           "id": "module-13-services-and-logs/level-13-less-navigation",
           "name": "level-13-less-navigation",
           "path": "modules/module-13-services-and-logs/level-13-less-navigation",
@@ -3780,16 +3802,19 @@
           "name": "level-19-timedatectl",
           "path": "modules/module-13-services-and-logs/level-19-timedatectl",
           "mission": {
-            "name": "Timedatectl: Config Rewrite",
-            "description": "In the services and logs lab, a task related to Timedatectl needs cleanup before the handoff.",
-            "objective": "Replace every `MODE=legacy` entry in timedatectl.conf and save the fixed result to fixed.conf",
+            "name": "Which Clock?",
+            "description": "imgproxy on img-03 was killed by the kernel's OOM killer last night. The alert bot pasted the kernel messages in UTC (kernel-oom.txt), but imgproxy's own log, var/log/imgproxy/app.log, uses the server's local time with no zone. The developer wants the request imgproxy was handling when it died.",
+            "objective": "Write to match.txt the one line of var/log/imgproxy/app.log that was logged in the same second as the OOM kill (the `Killed process` line in kernel-oom.txt), copied exactly. `timedatectl` is a mock that reports this server's clock and time zone.",
             "xp": 200,
             "difficulty": "advanced",
             "expected_time": "12m",
             "concepts": [
-              "Timedatectl",
-              "sed",
-              "redirection"
+              "timedatectl",
+              "UTC vs local time",
+              "time zone offsets with minutes",
+              "TZ=Zone date -d",
+              "converting timestamps",
+              "grep a timestamp"
             ],
             "module": "module-13-services-and-logs",
             "level": "level-19-timedatectl"
@@ -4561,6 +4586,29 @@
             ],
             "module": "module-15-scheduling-and-jobs",
             "level": "level-8-nohup"
+          }
+        },
+        {
+          "id": "module-15-scheduling-and-jobs/level-9-bg-fg",
+          "name": "level-9-bg-fg",
+          "path": "modules/module-15-scheduling-and-jobs/level-9-bg-fg",
+          "mission": {
+            "name": "Pause, Snapshot, Resume",
+            "description": "export.sh streams the orders archive to the backup disk for about a minute. The DBA needs a consistent snapshot of that disk right now, and snapshot.sh refuses to run while anything is writing to it. Nobody wants to restart the export from the beginning.",
+            "objective": "Start export.sh as a background job, pause it, run snapshot.sh while it is paused, then let the same export continue in the background until it writes DONE to export.log. The check reads export.log and snapshot.log: one export run must contain a pause, the whole snapshot must fall inside that pause, and the export's heartbeat counter must continue where it stopped. Linux only: on macOS play with --docker.",
+            "xp": 150,
+            "difficulty": "intermediate",
+            "expected_time": "8m",
+            "concepts": [
+              "job control",
+              "kill -STOP %1",
+              "bg %1",
+              "fg",
+              "jobs",
+              "SIGSTOP / SIGCONT"
+            ],
+            "module": "module-15-scheduling-and-jobs",
+            "level": "level-9-bg-fg"
           }
         },
         {
@@ -8291,6 +8339,51 @@
             ],
             "module": "module-22-data-processing",
             "level": "level-20-tabular-output"
+          }
+        },
+        {
+          "id": "module-22-data-processing/level-21-summary-totals",
+          "name": "level-21-summary-totals",
+          "path": "modules/module-22-data-processing/level-21-summary-totals",
+          "mission": {
+            "name": "Ledger Rollup",
+            "description": "Accounting closes October and wants the ledger as a rollup report: the rows grouped by department and team, with a subtotal after every team, another after every department and a grand total at the end. ledger.csv comes from the accounting tool, which writes amounts like \"1,234.50\" (in quotes because of the comma) and refunds in parentheses: (45.00).",
+            "objective": "Write report.tsv, every line with 5 tab-separated columns and no header. The ledger rows: department, team, date, description, amount, grouped by department (A-Z), then team (A-Z), and within a team in the order of ledger.csv. Amounts everywhere as plain numbers with two decimals, refunds negative (1234.50, -45.00). After the last row of each team: department, team, TEAM TOTAL, an empty column, the team's sum. After the last team of each department: department, an empty column, DEPARTMENT TOTAL, an empty column, the department's sum. Last line: two empty columns, GRAND TOTAL, an empty column, the sum of everything. Leave ledger.csv unchanged.",
+            "xp": 200,
+            "difficulty": "advanced",
+            "expected_time": "25m",
+            "concepts": [
+              "control-break report",
+              "sort -s -t, -k1,1 -k2,2",
+              "awk prev-key detection",
+              "END block for the last group",
+              "parsing \"1,234.50\" and (45.00)"
+            ],
+            "module": "module-22-data-processing",
+            "level": "level-21-summary-totals"
+          }
+        },
+        {
+          "id": "module-22-data-processing/level-22-anomaly-detection",
+          "name": "level-22-anomaly-detection",
+          "path": "modules/module-22-data-processing/level-22-anomaly-detection",
+          "mission": {
+            "name": "Traffic Anomalies",
+            "description": "Monitoring exported 30 days of daily request counts per host to requests.csv (date,host,requests). The on-call team wants an anomaly check they can rerun on every month's export: web-01 serves a hundred times more requests than mail-01, so one fixed threshold is useless. The export has gaps (NaN or empty values).",
+            "objective": "Write an executable detect.sh that is run as ./detect.sh FILE and prints CSV to stdout: the header host,date,value,zscore, then one line per anomaly, sorted by host and then date. A value is an anomaly when it is more than 3 standard deviations above or below the mean of its own host, using the population standard deviation (divide by n) over that host's numeric values only. Values that are not numbers are left out of everything; a host whose values never change has no anomalies. value is copied as written, zscore = (value - mean) / sd with 2 decimals. Save its output for requests.csv as anomalies.csv. detect.sh will also be run on another file.",
+            "xp": 300,
+            "difficulty": "expert",
+            "expected_time": "30m",
+            "concepts": [
+              "mean and population standard deviation",
+              "per-key statistics in awk",
+              "z-score",
+              "filtering non-numeric values",
+              "reusable script with $1",
+              "sort -t, -k1,1 -k2,2"
+            ],
+            "module": "module-22-data-processing",
+            "level": "level-22-anomaly-detection"
           }
         }
       ]

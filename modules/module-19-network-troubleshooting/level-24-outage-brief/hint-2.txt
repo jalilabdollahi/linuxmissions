@@ -1,1 +1,13 @@
-Use chmod with octal mode 640.
+Tools for each kind of FAIL:
+- timeout on every backend while the vendor URL works: curl is sending them to the proxy. no_proxy needs the corp domain as a suffix (.corp.example).
+- "Couldn't connect" (connection refused): nothing listens at that address:port.
+    dig @127.0.0.1 -p DNSPORT _payments._tcp.corp.example SRV +short   priority weight PORT target
+    getent hosts NAME  vs  dig @127.0.0.1 -p DNSPORT NAME +short      a mismatch means an etc/hosts pin
+- HTTP 503: the backend listens but is unhealthy; it goes out of PAYMENTS_BACKENDS.
+- Edit with `edit checkout/client.env` / `edit etc/hosts`, or sed -i.bak.
+
+For the brief:
+  grep 'ERROR payments call failed' logs/checkout.log | head -1 / tail -1 / wc -l
+  (ERROR inventory and WARN lines are other things); match the first failure's time against changes.log.
+
+Read more: man curl (ENVIRONMENT), man dig, man getent.

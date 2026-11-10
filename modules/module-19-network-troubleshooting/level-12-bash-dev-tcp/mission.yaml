@@ -1,15 +1,11 @@
 {
-  "name": "Telnet Legacy: Permission Fix",
-  "description": "In the network troubleshooting lab, a task related to Telnet Legacy needs cleanup before the handoff.",
-  "objective": "Set the mode of telnet-legacy.sh to 640",
+  "name": "Speaking SMTP by Hand",
+  "description": "Alerts from app-07 never arrive and the mail team says their relay is fine. app-07 is a minimal container: no mail client, no telnet, no nc, only bash. The relay runs on 127.0.0.1 (port in smtp.port); TICKET.txt has the envelope and subject to use.",
+  "objective": "Using bash's /dev/tcp (nc, telnet, curl and friends are not installed in this shell), hold an SMTP conversation with the relay and get it to queue one message from healthcheck@app-07.corp.example to ops@corp.example with the Subject given in TICKET.txt.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Telnet Legacy",
-    "chmod",
-    "permissions"
-  ],
+  "expected_time": "15m",
+  "concepts": ["exec 3<>/dev/tcp/HOST/PORT", "read <&3 / printf >&3", "SMTP HELO MAIL RCPT DATA", "CRLF line endings", "SMTP synchronisation"],
   "module": "module-19-network-troubleshooting",
-  "level": "level-12-telnet-legacy"
+  "level": "level-12-bash-dev-tcp"
 }

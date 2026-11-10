@@ -1,1 +1,5 @@
-This task wants a symbolic link, not a copy.
+wget can follow links by itself and download a whole site. Think about where you want it to stop: the docs pages link to /blog/, /admin/ and even to the site root. What keeps a recursive download inside /docs/?
+
+Then the layout: by default wget puts everything under a folder named after the host, then /docs/. And the pages use links like /docs/guide/install.html, which point to the server. What has to happen to them for an offline copy?
+
+If a try goes wrong, delete mirror/ and start again: wget adds to what is there.

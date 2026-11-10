@@ -1,1 +1,3 @@
-Look for a filtering command that keeps only the alert lines in ip-route.log.
+Take one destination at a time and list every route in routes.txt that covers it. Often more than one does (the default route covers everything). Which one does the kernel use: the first one listed, or another?
+
+Watch out for look-alikes: does 10.5.0.0/16 cover 10.50.1.2? Does 10.99.0.0/20 cover 10.99.40.1? A line without a /prefix is a route for exactly one address.

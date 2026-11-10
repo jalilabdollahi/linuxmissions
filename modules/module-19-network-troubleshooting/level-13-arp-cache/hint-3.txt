@@ -1,1 +1,16 @@
-Example: `chmod +x jobs/arp-cache.sh && jobs/arp-cache.sh`
+Type these at the prompt, one line at a time:
+
+pairs=$(cat captures/neigh-*.txt | awk '$3 == "eth0.30" && $4 == "lladdr" { print $1, tolower($5) }' | sort -u)
+ip=$(echo "$pairs" | awk '{ print $1 }' | uniq -d)
+known=$(grep "^$ip," vlan30-inventory.csv | cut -d, -f3 | tr 'A-F' 'a-f')
+rogue=$(echo "$pairs" | awk -v ip="$ip" '$1 == ip { print $2 }' | grep -v "$known")
+vendor=$(grep "^$(echo "$rogue" | cut -c1-8 | tr 'a-f:' 'A-F-') *(hex)" oui.txt | cut -f3)
+printf 'IP=%s\nKNOWN_MAC=%s\nROGUE_MAC=%s\nROGUE_VENDOR=%s\n' "$ip" "$known" "$rogue" "$vendor" > conflict.env
+
+- awk ... tolower($5) | sort -u   every (IP, MAC) pair on VLAN 30 once, case ignored, FAILED lines skipped
+- uniq -d                         the IP that appears with two different MACs
+- grep "^$ip," ... | cut -f3      our MAC for it from the inventory
+- grep -v "$known"                the other one is the rogue
+- cut -c1-8 | tr ...              its OUI in the "DC-A6-32" form oui.txt uses; cut -f3 takes the organisation after the two tabs
+
+Check it: cat conflict.env

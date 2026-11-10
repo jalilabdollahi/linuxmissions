@@ -1,1 +1,7 @@
-Use chmod with octal mode 640.
+- `exec 3<>/dev/tcp/127.0.0.1/PORT` opens a connection and attaches it to file descriptor 3 of your shell (read and write). `exec 3<&-` closes it.
+- `read -r line <&3; echo "$line"` reads one reply line. `printf 'HELO me\r\n' >&3` sends one command; SMTP wants \r\n at the end of every line, echo only sends \n.
+- The commands, in order: `HELO name`, `MAIL FROM:<sender>`, `RCPT TO:<recipient>`, `DATA` (answer 354), then the message ending in `\r\n.\r\n` (answer 250 ... queued), then `QUIT`.
+- The Subject is a header inside the message: `Subject: ...`, then an empty line, then the body.
+- A small function saves typing: `say() { printf '%s\r\n' "$1" >&3; read -r reply <&3; echo "$reply"; }`
+
+Read more: `man bash` (search for /dev/tcp and REDIRECTION), RFC 5321 section 3.3 (a mail transaction).

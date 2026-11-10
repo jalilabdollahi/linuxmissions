@@ -1,1 +1,5 @@
-You need a stream editor or another text replacement tool.
+Counters on a network interface only ever go up, from boot until now. A big number can be a problem from last month; what matters today is how much it grew in the 60 seconds between the two captures.
+
+So compare each interface with itself: which counter changed between 14:02 and 14:03? One counter in the "TX errors" block counts how often the link went down or up.
+
+For the duplex question, read sysfs-net.txt. One interface reports something you would not expect on a switch port today; another reports "unknown", but look at its state before you blame it.

@@ -1,1 +1,21 @@
-Example: `chmod 640 telnet-legacy.sh`
+Type these at the prompt, one line at a time:
+
+subj=$(sed -n 's/^ *Subject: *//p' TICKET.txt)
+exec 3<>/dev/tcp/127.0.0.1/$(cat smtp.port)
+read -r reply <&3; echo "$reply"
+say() { printf '%s\r\n' "$1" >&3; read -r reply <&3; echo "$reply"; }
+say "HELO app-07.corp.example"
+say "MAIL FROM:<healthcheck@app-07.corp.example>"
+say "RCPT TO:<ops@corp.example>"
+say "DATA"
+printf 'Subject: %s\r\n\r\nTest from app-07.\r\n.\r\n' "$subj" >&3; read -r reply <&3; echo "$reply"
+say "QUIT"
+exec 3<&-
+
+- exec 3<>/dev/tcp/...            open the connection on file descriptor 3
+- read -r reply <&3               wait for the 220 greeting before saying anything
+- say()                           send one command with CRLF, then read its one-line reply
+- after DATA (354): headers, empty line, body, and a lone "." line, all with \r\n
+- the 250 "queued as ..." reply means the relay accepted the message
+
+If a reply starts with 5xx or the connection drops, start again from the exec line.

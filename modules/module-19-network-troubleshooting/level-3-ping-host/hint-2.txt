@@ -1,1 +1,11 @@
-A grep count or grep piped into wc can produce the number you need.
+The ping summary:
+
+  50 packets transmitted, 48 received, 4% packet loss, time 49068ms
+  rtt min/avg/max/mdev = 21.403/34.112/88.901/12.774 ms
+
+- The loss is the word that ends in %. When ping saw duplicate replies or ICMP errors it inserts "+3 duplicates" or "+5 errors" before it, so the loss is not always in the same awk field. Search for it instead: a loop over the fields, or `grep -o '[0-9.]*% packet loss'`.
+- mdev (mean deviation) is ping's jitter figure: the 4th value of the slash-separated group. `split($4, v, "/")` in awk gives you v[4].
+- A host that never answered has no rtt line (just "pipe N"): it can be lossy, but it has no jitter figure.
+- "Above 2 %" means 2 % itself is not.
+
+Read more: `man ping` (the statistics at the end), `man awk` (split, NF).

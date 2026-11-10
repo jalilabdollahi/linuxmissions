@@ -1,15 +1,11 @@
 {
-  "name": "Ip Route: Alert Filter",
-  "description": "In the network troubleshooting lab, a task related to Ip Route needs cleanup before the handoff.",
-  "objective": "Write every alert line from ip-route.log into alerts.txt",
+  "name": "Which Way Out?",
+  "description": "Before a firewall change, the network team needs to know how the jump host jh-02 reaches nine addresses. TICKET.txt has the request; routes.txt is `ip route` from jh-02 and destinations.txt lists the addresses.",
+  "objective": "Write answers.tsv with one line per address in destinations.txt, in the same order: `DESTINATION GATEWAY INTERFACE`, where GATEWAY is the next-hop address the kernel would use, or `direct` when no gateway is involved.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Ip Route",
-    "grep",
-    "output redirection"
-  ],
+  "expected_time": "12m",
+  "concepts": ["ip route", "longest-prefix match", "via / dev", "scope link", "default route", "host routes"],
   "module": "module-19-network-troubleshooting",
   "level": "level-2-ip-route"
 }

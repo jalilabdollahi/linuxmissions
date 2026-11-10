@@ -1,15 +1,11 @@
 {
-  "name": "Arp Cache: Script Kickoff",
-  "description": "In the network troubleshooting lab, a task related to Arp Cache needs cleanup before the handoff.",
-  "objective": "Make jobs/arp-cache.sh executable, run it, and create the token file it writes",
+  "name": "Who Else Is Answering?",
+  "description": "TICKET.txt: hosts on VLAN 30 drop off the network for a minute at a time, then come back. Someone grabbed the neighbour (ARP) table of app-jump-02 three times, five minutes apart (captures/), along with the VLAN inventory and an excerpt of the IEEE OUI list.",
+  "objective": "Write conflict.env with four lines: IP= the VLAN 30 IPv4 address whose MAC address keeps changing between captures, KNOWN_MAC= its MAC from vlan30-inventory.csv, ROGUE_MAC= the other MAC seen for it, and ROGUE_VENDOR= the organisation that oui.txt lists for the rogue MAC's first three bytes (exactly as written there).",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Arp Cache",
-    "chmod",
-    "bash"
-  ],
+  "expected_time": "15m",
+  "concepts": ["ip neigh", "neighbour states (REACHABLE, STALE, FAILED)", "ARP conflicts", "MAC OUI", "awk", "tolower"],
   "module": "module-19-network-troubleshooting",
   "level": "level-13-arp-cache"
 }

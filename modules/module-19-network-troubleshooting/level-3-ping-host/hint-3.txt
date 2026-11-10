@@ -1,1 +1,17 @@
-Example: `grep -c '^ok$' ping-host-events.txt > ok-count.txt`
+Type this at the prompt (it is one command over several lines):
+
+rm -f lossy.txt jittery.txt
+for f in pings/*.txt; do
+  site=$(basename "$f" .txt)
+  awk -v s="$site" '
+    /packet loss/ { for (i = 1; i <= NF; i++) if ($i ~ /%$/) { sub(/%/, "", $i); if ($i + 0 > 2) print s >> "lossy.txt" } }
+    /^rtt/        { split($4, v, "/"); if (v[4] + 0 > 20) print s >> "jittery.txt" }' "$f"
+done
+
+- basename "$f" .txt          the site name
+- for (i ...) if ($i ~ /%$/)  find the field that ends in %, wherever "+N duplicates/errors" pushed it
+- $i + 0 > 2                  more than 2 % (2 % itself is fine)
+- split($4, v, "/"); v[4]     min/avg/max/mdev: the 4th number is mdev; files without an rtt line are skipped
+- >> "lossy.txt"              append: each awk run must not truncate what the previous one wrote
+
+Check it: cat lossy.txt jittery.txt

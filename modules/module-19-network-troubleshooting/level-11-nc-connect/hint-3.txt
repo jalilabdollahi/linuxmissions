@@ -1,1 +1,16 @@
-Example: `tar -xzf nc-connect-restore.tar.gz`
+Type these at the prompt (the for loop is one command, up to "done"):
+
+rm -f open.txt
+for p in $(grep -o '127\.0\.0\.1:[0-9]*' backends.txt | cut -d: -f2); do
+  nc -z -w2 127.0.0.1 "$p" && echo "$p" >> open.txt
+done
+port=$(awk '$1 == "status" {print $2}' backends.txt | cut -d: -f2)
+printf 'STATUS\n' | nc -q1 -w3 127.0.0.1 "$port" | grep -o 'token=[^ ]*' | cut -d= -f2 > token.txt
+
+- grep -o '127\.0\.0\.1:[0-9]*' | cut -d: -f2   every backend port
+- nc -z -w2 ... && echo "$p" >> open.txt        keep the ports that accept within 2 s (refused ones fail at once, the filtered one after 2 s)
+- awk '$1 == "status"'                           the status backend's line
+- printf 'STATUS\n' | nc -q1 -w3                 speak first, wait a second for the reply, then hang up
+- grep -o 'token=[^ ]*' | cut -d= -f2            only the token value
+
+Check it: cat open.txt token.txt

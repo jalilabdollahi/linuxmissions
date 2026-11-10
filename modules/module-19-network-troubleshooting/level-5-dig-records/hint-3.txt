@@ -1,1 +1,13 @@
-Example: `cut -d, -f2 dig-records-report.csv > owners.txt`
+Type these at the prompt:
+
+P=$(cat dns.port)
+mx=$(dig @127.0.0.1 -p "$P" shop.example MX +short | sort -n | head -n 1 | awk '{print $2}')
+ip=$(dig @127.0.0.1 -p "$P" "$mx" A +short | tail -n 1)
+printf 'MX_HOST=%s\nMX_IP=%s\n' "${mx%.}" "$ip" > mx.env
+
+- dig @127.0.0.1 -p "$P" shop.example MX +short   the MX records as "PREFERENCE HOST" lines
+- sort -n | head -n 1 | awk '{print $2}'            the host with the lowest preference number
+- dig ... "$mx" A +short | tail -n 1                 follow the CNAME chain; the last line is the address
+- ${mx%.}                                           drop the trailing dot of the DNS name
+
+Check it: cat mx.env

@@ -1,16 +1,11 @@
 {
-  "name": "Resolv Debug: Loop Builder",
-  "description": "In the network troubleshooting lab, a task related to Resolv Debug needs cleanup before the handoff.",
-  "objective": "Create three files under generated/ named resolv-debug-1.txt through resolv-debug-3.txt with matching numbered content",
+  "name": "Five Seconds per Name",
+  "description": "TICKET.txt: on app-12 every lookup of a short service name like `api` takes several seconds, and full names are slow too. Two lab DNS servers stand in for the nameservers in etc/resolv.conf and log every query they receive in logs/; `getent hosts NAME` on your PATH resolves through etc/resolv.conf with glibc's rules.",
+  "objective": "Fix etc/resolv.conf so that `getent hosts api` is answered by the very first query sent, a full name like db.corp.example is asked as-is on the first query, the switched-off nameserver is no longer listed, and short names in each of the current search domains still resolve.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Resolv Debug",
-    "for",
-    "seq",
-    "printf"
-  ],
+  "expected_time": "20m",
+  "concepts": ["resolv.conf search", "options ndots", "options timeout / attempts", "nameserver order", "getent hosts", "DNS query logs"],
   "module": "module-19-network-troubleshooting",
   "level": "level-14-resolv-debug"
 }

@@ -1,1 +1,6 @@
-Inspect the sandbox, then create the missing path for organized/route-priority/route-priority-notes.txt.
+The kernel answers "where does this packet go?" in two stages, and most mistakes come from mixing them up:
+
+1. Rules (ip-rule.txt), from the lowest priority number up. The first rule whose "from" and "to" match the flow names a table to look in.
+2. Inside that ONE table: the most specific matching route wins; between equally specific routes, the lower metric wins.
+
+If the table has no route for the destination at all, the kernel does not give up: it goes on with the next rule. Routes in other tables don't count, even if they are more specific. Lines in ip-route-all.txt without "table ..." belong to the main table.

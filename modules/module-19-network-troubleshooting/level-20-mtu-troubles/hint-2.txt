@@ -1,1 +1,8 @@
-Pipe `sort` into `uniq` and redirect the result to `unique-sorted.txt`.
+- vpnping 10.99.0.1 SIZE      exit status 0 = the echo came back, 1 = lost (or too big for wg0 itself)
+- SIZE is the ICMP payload. The IP packet is SIZE + 20 (IP header) + 8 (ICMP header) = SIZE + 28.
+- Binary search, with lo a size that passes and hi one that fails:
+    while [ $((hi - lo)) -gt 1 ]; do mid=$(( (lo + hi) / 2 )); if vpnping ...; then lo=$mid; else hi=$mid; fi; done
+  At the end lo is the largest payload that passes; the MTU is lo + 28.
+- In the YAML file, change only the number after "mtu:" (sed -i.bak 's/mtu: 1500/mtu: N/' FILE, or edit it).
+
+Read more: man ping (-M do, -s), man netplan (mtu).

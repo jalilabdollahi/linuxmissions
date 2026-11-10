@@ -1,1 +1,11 @@
-Use `ln -s` so current.conf points at the release file.
+Useful wget options:
+- -r                 recursive: follow links in the pages it downloads (honours robots.txt by default)
+- -np (--no-parent)  never go above the starting directory
+- -nH                no host-name folder (127.0.0.1:PORT/)
+- --cut-dirs=N       drop the first N directories of the URL path when saving
+- -k (--convert-links) after downloading, rewrite links to downloaded files as relative links
+- -P DIR             save everything under DIR
+- -q                 quiet
+
+Check the result with `find mirror -type f` and `grep -o 'href="[^"]*"' mirror/index.html`.
+Read more: `man wget` (Recursive Retrieval Options, Directory Options).

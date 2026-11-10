@@ -1,15 +1,11 @@
 {
-  "name": "Hosts Override: Metric Sum",
-  "description": "In the network troubleshooting lab, a task related to Hosts Override needs cleanup before the handoff.",
-  "objective": "Sum the numeric values in the second column of hosts-override-metrics.csv and write the total to total.txt",
-  "xp": 150,
-  "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Hosts Override",
-    "awk",
-    "numeric aggregation"
-  ],
+  "name": "First Match Wins",
+  "description": "TICKET.txt: after last night's database failover, DNS already points db.corp.example at the new primary, yet app-07 still connects to the old one, and a colleague's 3 a.m. fix didn't help. The sandbox holds a copy of app-07's etc/, a lab DNS server runs on loopback, and `getent` on your PATH resolves names the way app-07 does.",
+  "objective": "Make `getent hosts db.corp.example` return the address DNS has for it, while every other name resolves exactly as before (some overrides are intentional). Write cause.txt with the file and line number (in the file as you found it) of the entry responsible, as FILE:LINE, e.g. etc/hosts:3.",
+  "xp": 200,
+  "difficulty": "advanced",
+  "expected_time": "20m",
+  "concepts": ["getent hosts", "/etc/nsswitch.conf order", "/etc/hosts aliases", "first match wins", "dig", "grep -n -w"],
   "module": "module-19-network-troubleshooting",
   "level": "level-15-hosts-override"
 }

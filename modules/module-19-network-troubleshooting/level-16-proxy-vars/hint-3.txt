@@ -1,1 +1,21 @@
-Example: `du -s datasets/* | sort -n | tail -n 1` and write only the path to largest.txt
+Rewrite proxy.env, keeping the proxy address it already has. Type these at the prompt (the cat command ends at the EOT line):
+
+p=$(grep -m1 '^export http_proxy=' proxy.env | cut -d= -f2-)
+cat > proxy.env <<EOT
+# Corporate proxy (NET-2231). Every job does: . ./proxy.env
+export http_proxy=$p
+export https_proxy=$p
+export no_proxy=localhost,127.0.0.1,.internal
+export HTTP_PROXY=\$http_proxy
+export HTTPS_PROXY=\$https_proxy
+export NO_PROXY=\$no_proxy
+EOT
+./check-access.sh
+
+- p=...                  the proxy URL from the old file
+- http_proxy/https_proxy both lower-case ones; curl reads only http_proxy for http:// URLs
+- .internal              a suffix: every host ending in .internal (curl ignores "*.internal")
+- localhost,127.0.0.1    local addresses must be listed too
+- \$http_proxy          written as $http_proxy into the file, so the upper-case copies always equal the lower-case ones
+
+Check it: cat proxy.env

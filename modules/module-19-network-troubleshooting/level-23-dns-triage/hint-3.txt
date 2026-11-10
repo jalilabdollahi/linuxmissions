@@ -1,1 +1,21 @@
-Example: `tar -czf dns-triage-backup.tar.gz bundle/dns-triage`
+Type these at the prompt (the for loop is one command, up to "done > serials.txt"):
+
+smoke-dns | tail -1
+for ns in ns1 ns2 ns3; do
+  p=$(awk -v n="$ns" '$1 == n { print $4 }' servers.txt)
+  echo "$ns $(dig @127.0.0.1 -p "$p" corp.example SOA +short | awk '{ print $3 }') $(dig @127.0.0.1 -p "$p" pay-v2.corp.example +short)"
+done > serials.txt
+cat serials.txt
+good=$(awk '$1 == "ns1" { print $2 }' serials.txt)
+stale=$(awk -v g="$good" '$2 != g { print $1 }' serials.txt)
+printf 'STALE=%s\nSTALE_SERIAL=%s\nGOOD_SERIAL=%s\n' "$stale" "$(awk -v s="$stale" '$1 == s { print $2 }' serials.txt)" "$good" > triage.env
+stale_ip=$(awk -v s="$stale" '$1 == s { print $2 }' servers.txt)
+grep -v "^nameserver $stale_ip" etc/resolv.conf > resolv.new && mv resolv.new etc/resolv.conf
+smoke-dns | tail -1
+
+- the loop asks every server for the zone's SOA serial (3rd field) and for pay-v2, the new record
+- the server whose serial differs from the primary's (ns1) is stale; it has no pay-v2 at all
+- triage.env: its name, its serial, the primary's serial
+- grep -v "^nameserver IP"   drops the stale server, so "rotate" only spreads lookups over the two good ones
+
+Check it: cat triage.env etc/resolv.conf

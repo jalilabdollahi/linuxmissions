@@ -1,15 +1,11 @@
 {
-  "name": "Ss Ports: Backup Bundle",
-  "description": "In the network troubleshooting lab, a task related to Ss Ports needs cleanup before the handoff.",
-  "objective": "Create ss-ports-backup.tar.gz containing the files under bundle/ss-ports",
+  "name": "Address Already in Use",
+  "description": "The new release of ledger-api won't start: releases/ledger-api-2.0/start.sh fails with \"Address already in use\". Probably the old instance is still running, but two other services (audit-relay and metrics-agent) also run on this host and must not be touched. TICKET.txt has the details.",
+  "objective": "Find the process that holds ledger-api's port (see releases/ledger-api-2.0/ledger-api.conf), stop it, and start the new release with its start.sh so that ledger-api 2.0 listens on that port. audit-relay and metrics-agent must keep running.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Ss Ports",
-    "tar",
-    "compression"
-  ],
+  "expected_time": "12m",
+  "concepts": ["ss -ltnp", "users:((...pid=N))", "ss filters (sport = :N)", "ps -o args", "kill"],
   "module": "module-19-network-troubleshooting",
   "level": "level-10-ss-ports"
 }

@@ -1,1 +1,6 @@
-Use tar extraction flags and point at the archive file.
+- `nc -z -w2 HOST PORT`: -z only checks that the port accepts a connection (sends nothing), -w2 gives up after 2 seconds. Exit status 0 = accepted. Add -v to see "succeeded", "Connection refused" or "timed out".
+- "Connection refused": nothing listens there. "timed out": a firewall (or a full accept queue) swallows the connection attempt.
+- To talk to a line protocol: `printf 'STATUS\n' | nc -q1 -w3 HOST PORT`. nc sends what it reads on stdin; -q1 quits 1 s after stdin ends (enough time for the answer), -w3 is a safety timeout.
+- `grep -o 'token=[^ ]*' | cut -d= -f2` cuts one key=value pair out of a line.
+
+Read more: `man nc` (-z, -w, -q, -v).

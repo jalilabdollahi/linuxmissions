@@ -1,15 +1,11 @@
 {
-  "name": "Traceroute Notes: Noise Dedup",
-  "description": "In the network troubleshooting lab, a task related to Traceroute Notes needs cleanup before the handoff.",
-  "objective": "Create unique-sorted.txt from traceroute-notes-raw.txt with sorted unique values",
+  "name": "Where Does the Path Break?",
+  "description": "app-07 can't reach the payment provider and the ISP wants evidence before they open a case. You have a traceroute and an mtr report taken a minute apart (TICKET.txt explains what the ISP asks for).",
+  "objective": "Write path.env with LAST_HOP=<the address of the last hop on the path that still replies> and JUMP_HOP=<the hop number where the mtr Avg first rises by more than 50 ms over the previous hop that answered>.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Traceroute Notes",
-    "sort",
-    "uniq"
-  ],
+  "expected_time": "10m",
+  "concepts": ["traceroute output", "* * *", "mtr --report", "Loss% and Avg", "ICMP rate limiting"],
   "module": "module-19-network-troubleshooting",
   "level": "level-4-traceroute-notes"
 }

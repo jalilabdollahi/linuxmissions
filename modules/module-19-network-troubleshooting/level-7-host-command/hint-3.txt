@@ -1,1 +1,20 @@
-Example: `head -n 3 host-command-history.log > first3.txt` and `tail -n 3 host-command-history.log > last3.txt`
+Type this at the prompt (three commands; the loop runs until "done"):
+
+P=$(cat dns.port)
+rm -f fcrdns-fail.txt
+for ip in $(cat senders.txt); do
+  name=$(host -p "$P" "$ip" 127.0.0.1 | awk '/domain name pointer/ {print $NF}')
+  if [ -n "$name" ] && host -p "$P" -t A "$name" 127.0.0.1 | awk -v ip="$ip" '$NF == ip {f = 1} END {exit !f}'; then
+    echo "pass $ip $name"
+  else
+    echo "FAIL $ip ${name:-no PTR}"
+    echo "$ip" >> fcrdns-fail.txt
+  fi
+done
+
+- host ... "$ip" | awk '/domain name pointer/ {print $NF}'   the PTR name (empty if there is none)
+- host ... -t A "$name"                                       its A records; aliases are followed for you
+- awk '$NF == ip {f = 1} END {exit !f}'                        succeeds only if one line ends in exactly that IP
+- >> fcrdns-fail.txt                                           collect the IPs that fail
+
+Check it: cat fcrdns-fail.txt

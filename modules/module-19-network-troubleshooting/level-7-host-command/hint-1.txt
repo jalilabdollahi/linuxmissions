@@ -1,1 +1,3 @@
-Use one command for the beginning of the file and another for the end.
+Do it by hand for one IP first: ask for its PTR record, then ask for the A records of the name you got, and see whether the IP is among them.
+
+Then look carefully at every answer: some names have more than one address, some are aliases, one PTR name looks odd, and one A record differs from the sending IP by only one digit. A check that is "close enough" lets that one through.

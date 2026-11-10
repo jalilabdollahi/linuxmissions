@@ -1,15 +1,11 @@
 {
-  "name": "Subnet Math: Field Extract",
-  "description": "In the network troubleshooting lab, a task related to Subnet Math needs cleanup before the handoff.",
-  "objective": "Extract the second column from subnet-math-report.csv into owners.txt",
+  "name": "Covered Twice",
+  "description": "TICKET.txt: fw01's source allowlist (allow.cidr) has grown to about 60 entries, and partners complain that they are blocked although they are on the list. blocked.log is the firewall's kernel log of dropped packets.",
+  "objective": "Write redundant.txt: every allow.cidr entry that is fully covered by another single entry (if the same network is listed twice, only the line further down), one per line, exactly as written in allow.cidr. Write misblocked.txt: every distinct source address (SRC=) in blocked.log that lies inside some allowlist entry, one per line. IPv6 counts in both.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Subnet Math",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "25m",
+  "concepts": ["CIDR notation", "network vs host bits", "subnet containment", "python3 ipaddress", "IPv6 notation", "firewall logs"],
   "module": "module-19-network-troubleshooting",
   "level": "level-22-subnet-math"
 }

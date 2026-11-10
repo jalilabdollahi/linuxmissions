@@ -1,1 +1,3 @@
-This is a numeric aggregation task.
+Compare the two answers first: what does DNS say for db.corp.example (ask the lab server directly), and what does getent say? If they differ, DNS isn't what app-07 is using.
+
+etc/nsswitch.conf decides which sources are asked, in which order, and the first source that knows a name answers. Then look at that source with the exact name in mind: a name in etc/hosts isn't always the first word after the address. And why didn't the colleague's new line at the bottom change anything?

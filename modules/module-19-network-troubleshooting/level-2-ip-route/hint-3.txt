@@ -1,1 +1,22 @@
-Example: `grep 'ALERT' ip-route.log > alerts.txt`
+Type this at the prompt (all lines up to PY):
+
+python3 - <<'PY' > answers.tsv
+import ipaddress
+routes = []
+for line in open('routes.txt'):
+    w = line.split()
+    net = ipaddress.ip_network('0.0.0.0/0' if w[0] == 'default' else w[0])
+    gw = w[w.index('via') + 1] if 'via' in w else 'direct'
+    routes.append((net, gw, w[w.index('dev') + 1]))
+for d in open('destinations.txt').read().split():
+    ip = ipaddress.ip_address(d)
+    net, gw, dev = max((r for r in routes if ip in r[0]), key=lambda r: r[0].prefixlen)
+    print(d, gw, dev, sep='\t')
+PY
+
+- ip_network(w[0])                  the route's network ("default" is 0.0.0.0/0, a bare address is a /32)
+- 'via' ... 'dev'                    the word after via is the gateway (none: direct), after dev the interface
+- r for r in routes if ip in r[0]    every route that covers the destination
+- max(..., key=prefixlen)            the most specific of them, which is what the kernel uses
+
+Check it: cat answers.tsv

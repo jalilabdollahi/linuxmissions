@@ -1,1 +1,6 @@
-A short for-loop is the cleanest option here.
+Don't guess: make the resolver work and watch. Run `time getent hosts api`, then read both files in logs/. Every line is one query a server received. Ask:
+- How many queries did one lookup of "api" cause, and for which names?
+- Which server answers and which one only collects queries?
+- Which full name finally answered for api?
+
+Then do the same for db.corp.example. Why is that name glued to the search domains before it's tried as it is? The "options" line has the answer.

@@ -1,1 +1,3 @@
-Count matching lines instead of copying them out by hand.
+You don't need the 50 reply lines: the last two or three lines of each file summarise the run. Look at all six summaries side by side (`tail -n 3 pings/*.txt`).
+
+Do they all have the same shape? Count the words before "packet loss" in each one, and check which file has no rtt line at all.

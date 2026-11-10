@@ -1,1 +1,18 @@
-Example: `for n in 1 2 3; do printf 'resolv-debug item %s\n' "$n" > generated/resolv-debug-$n.txt; done`
+Type these at the prompt:
+
+getent hosts api
+grep -c DROPPED logs/*.log
+dead=$(grep -l DROPPED logs/dns-*.log | sed 's/.*dns-//; s/\.log$//')
+live=$(grep '^nameserver' etc/resolv.conf | awk '{ print $2 }' | grep -vxF "$dead")
+domain=$(awk '$6 == "NOERROR" && $4 ~ /^api\./ { sub(/^api\./, "", $4); sub(/\.$/, "", $4); print $4 }' "logs/dns-$live.log" | head -1)
+others=$(sed -n 's/^search //p' etc/resolv.conf | tr ' ' '\n' | grep -vxF "$domain" | tr '\n' ' ')
+printf 'search %s %s\nnameserver %s\noptions timeout:2 attempts:2\n' "$domain" "$others" "$live" > etc/resolv.conf
+time getent hosts api
+
+- grep -l DROPPED     the server whose log only has DROPPED queries is the switched-off one
+- live=...            the other nameserver
+- domain=...          the search domain that answered NOERROR for api (from the live server's log)
+- others=...          the other search domains, kept so their short names still resolve
+- printf ...          the domain for api first, only the live server, and no ndots:5 (default 1: names with a dot are tried as-is first)
+
+The first getent waits for the dead server; the last one answers at once. Check it: cat etc/resolv.conf

@@ -1,1 +1,12 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+How glibc builds the queries from etc/resolv.conf:
+- nameserver lines are tried in order; a dead one costs "timeout" seconds on every query, "attempts" times
+- search: for a name with FEWER dots than ndots, every search domain is tried first, in order, and the name as-is last
+- a name with at least ndots dots is tried as-is first
+- ndots defaults to 1, timeout to 5, attempts to 2; the last "search" (or "domain") line wins
+
+  time getent hosts api            how long it takes
+  awk '{print $4, $6}' logs/dns-ADDRESS.log    name asked and the result per query (DROPPED = never answered)
+
+So: remove the dead nameserver, put the domain where the short names live first in "search" (keep the other two), and drop ndots:5. Edit the file with `edit etc/resolv.conf`.
+
+Read more: man resolv.conf (search, ndots, timeout, attempts).

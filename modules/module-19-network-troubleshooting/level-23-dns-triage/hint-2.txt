@@ -1,1 +1,8 @@
-Archive the directory contents without leaving anything out.
+- dig @127.0.0.1 -p PORT corp.example SOA +short     "ns1.corp.example. hostmaster.corp.example. SERIAL refresh retry expire minimum"
+  The serial grows with every change on the primary; a secondary with a smaller serial hasn't picked up the latest changes.
+- dig @127.0.0.1 -p PORT pay-v2.corp.example +short  compare one name across all three servers (ports in servers.txt)
+- options rotate   glibc uses the nameservers round-robin instead of always the first; with three servers, every third lookup hits the same one
+- A nameserver later in the list (without rotate) is only asked when the ones before it don't answer at all. An NXDOMAIN is an answer: it is NOT retried elsewhere.
+- smoke-dns         run it after each change
+
+Read more: man dig, man resolv.conf (rotate), RFC 1912 section 2.2 on serial numbers.

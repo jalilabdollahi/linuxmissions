@@ -1,15 +1,11 @@
 {
-  "name": "Interface State: Config Rewrite",
-  "description": "In the network troubleshooting lab, a task related to Interface State needs cleanup before the handoff.",
-  "objective": "Replace every `MODE=legacy` entry in interface-state.conf and save the fixed result to fixed.conf",
+  "name": "Deltas, Not Totals",
+  "description": "TICKET.txt: clients of the storage node stor-04 keep losing their sessions and the backup network crawls. You have two `ip -s -s link` captures taken 60 seconds apart and the /sys/class/net attributes of every interface. Every error counter looks big; which ones are actually moving?",
+  "objective": "Write link.env with FLAPPING= the interface whose link went down and up between the two captures, DUPLEX_MISMATCH= the interface running at the wrong duplex, and CRC_DELTA= the number of CRC errors the flapping interface received between the two captures.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Interface State",
-    "sed",
-    "redirection"
-  ],
+  "expected_time": "20m",
+  "concepts": ["ip -s -s link", "carrier transitions (transns)", "/sys/class/net", "speed and duplex", "counter deltas", "awk getline"],
   "module": "module-19-network-troubleshooting",
   "level": "level-19-interface-state"
 }

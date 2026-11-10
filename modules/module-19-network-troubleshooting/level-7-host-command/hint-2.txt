@@ -1,1 +1,6 @@
-Save each result into its own file.
+- `host -p PORT IP 127.0.0.1` does a reverse lookup: "... domain name pointer NAME." (or "not found: 3(NXDOMAIN)" when there is no PTR). The name is the last word.
+- `host -p PORT -t A NAME 127.0.0.1` prints "NAME is an alias for OTHER." for CNAMEs and "X has address IP" for each address. The address is the last word.
+- Compare whole words, not substrings: `grep "has address 192.0.2.4"` also matches 192.0.2.41 (and the dots match any character). `awk -v ip="$ip" '$NF == ip'` compares exactly.
+- A PTR target that ends in ...in-addr.arpa. is what you get when the zone file forgot the final dot after the name: the zone's origin was appended.
+
+Read more: `man host` (-p, -t), `man awk` (-v, $NF).

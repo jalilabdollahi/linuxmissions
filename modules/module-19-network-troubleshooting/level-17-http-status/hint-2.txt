@@ -1,1 +1,10 @@
-Write the schedule into crontab.txt using the standard five time fields.
+- curl -s -o /dev/null -w '%{http_code} %{time_total}\n' URL
+    -s           no progress bar
+    -o /dev/null throw the body away
+    -w           print variables after the transfer: %{http_code}, %{time_total}, %{url_effective} ...
+- --max-time 5   give up after 5 s; curl then prints http_code 000 (and exits with 28)
+- don't add -L: it follows redirects and reports the final page's code
+- grep -v -e '^#' -e '^$' endpoints.txt | while read -r url; do ...; done > status.tsv
+- awk -F'\t' '$2 !~ /^2/ || $3 > 1 {print $1}' status.tsv    rows that aren't 2xx or took more than 1 s
+
+Read more: man curl (search for --write-out and --max-time).

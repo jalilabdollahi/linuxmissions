@@ -1,1 +1,18 @@
-Example: `sort mtu-troubles-raw.txt | uniq > unique-sorted.txt`
+Type these at the prompt (the while loop is one command, up to "done"):
+
+lo=1200 hi=1472
+while [ $((hi - lo)) -gt 1 ]; do
+  mid=$(( (lo + hi) / 2 ))
+  if vpnping 10.99.0.1 "$mid" >/dev/null; then lo=$mid; else hi=$mid; fi
+done
+echo "largest payload: $lo"
+echo $((lo + 28)) > pmtu.txt
+sed -i.bak "s/mtu: 1500/mtu: $((lo + 28))/" netplan/60-vpn.yaml
+
+- lo=1200 passes, hi=1472 fails (1472 + 28 = 1500, the most wg0 can send; the path is smaller)
+- each round probes the middle and moves lo or hi there: about 8 probes instead of 170
+- the loop takes 10-20 seconds; then lo is the largest payload that got through
+- MTU = payload + 20 (IP header) + 8 (ICMP header)
+- sed -i.bak changes just the mtu line (and keeps a backup)
+
+Check it: cat pmtu.txt; grep mtu netplan/60-vpn.yaml

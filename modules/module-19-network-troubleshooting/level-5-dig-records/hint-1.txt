@@ -1,1 +1,3 @@
-This is a delimiter-based column extraction task.
+Ask the server on 127.0.0.1 (port in dns.port) for the MX records of shop.example. You get several; each has a number in front of the host name. Which one does a sending mail server try first: the one listed first, the biggest number, or the smallest?
+
+Then look up that host name. If the answer is not an address but another name, keep following until you reach an A record.

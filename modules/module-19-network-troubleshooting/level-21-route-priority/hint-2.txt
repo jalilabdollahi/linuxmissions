@@ -1,1 +1,10 @@
-`mkdir -p organized/route-priority` followed by `mv inbox/route-priority.txt organized/route-priority/route-priority-notes.txt` is enough.
+Reading the files:
+  32765:  from all to 10.110.0.0/16 lookup 51820     any source, destinations in 10.110/16 -> table 51820
+  32766:  from all lookup main                         everything else that got this far
+  10.110.0.0/16 via 10.9.0.1 dev wg0 table 51820      a route in table 51820: gateway 10.9.0.1, device wg0
+  192.168.6.0/24 dev eth0 proto kernel scope link ... a connected network in main: no "via", so "direct"
+  default via ... metric 600                          0.0.0.0/0, the least specific route; two of them -> lower metric wins
+
+Is an address inside a prefix? python3 -c 'import ipaddress as i; print(i.ip_address("10.110.4.2") in i.ip_network("10.110.0.0/16"))'
+
+On a live machine `ip route get DEST from SRC` does the whole walk for you; here you do it by hand or with a few lines of Python. Read more: man ip-rule, man ip-route.

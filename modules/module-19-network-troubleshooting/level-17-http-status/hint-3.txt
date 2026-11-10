@@ -1,1 +1,14 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+Type these at the prompt (the loop is one command, up to "done > status.tsv"):
+
+grep -v -e '^#' -e '^$' endpoints.txt | while read -r url; do
+  printf '%s\t%s\n' "$url" "$(curl -s -o /dev/null --max-time 5 -w '%{http_code}\t%{time_total}' "$url")"
+done > status.tsv
+awk -F'\t' '$2 !~ /^2/ || $3 > 1 { print $1 }' status.tsv > bad.txt
+
+- grep -v ...           skip comments and blank lines
+- curl -s -o /dev/null  quiet, body discarded; no -L, so a redirect is reported as 301/302
+- --max-time 5          the hung endpoint gives up after 5 s and reports 000
+- -w '%{http_code}\t%{time_total}'  code and total time, tab-separated
+- awk ...               not 2xx, or more than 1 second -> bad.txt
+
+The loop takes a few seconds (one endpoint makes you wait). Check it: cat status.tsv bad.txt

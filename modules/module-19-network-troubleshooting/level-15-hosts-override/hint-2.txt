@@ -1,1 +1,10 @@
-An awk one-liner can skip the header and add the second field.
+- dig @127.0.0.1 -p PORT db.corp.example +short   what DNS says (PORT is in TICKET.txt)
+- getent hosts db.corp.example                     what the system resolver says, and from which line: it prints that line's address and all its names
+- grep '^hosts:' etc/nsswitch.conf                 "files dns" = etc/hosts first, DNS only if no line matches
+- grep -n -w -F db.corp.example etc/hosts          every line mentioning the name, with line numbers
+    -w   whole words only (metricsdb.corp.example is a different name)
+    lines starting with # are comments and never match
+- An etc/hosts line is: ADDRESS CANONICAL_NAME [ALIAS ...]; the FIRST line containing the name wins
+- Remove just that one alias (edit etc/hosts, or sed -i.bak 'Ns/ db\.corp\.example$//' etc/hosts for line N); the other names on the line still need it
+
+Read more: man 5 hosts, man nsswitch.conf, man getent.

@@ -1,16 +1,11 @@
 {
-  "name": "Route Priority: Path Realignment",
-  "description": "In the network troubleshooting lab, a task related to Route Priority needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/route-priority.txt to organized/route-priority/route-priority-notes.txt",
+  "name": "Which Way Out?",
+  "description": "TICKET.txt: a laptop is docked on Ethernet, on Wi-Fi and on a split-tunnel VPN at the same time, with policy routing for the VPN, and its owner can't tell which traffic leaves through which interface. You have its `ip rule` and `ip route show table all` output.",
+  "objective": "For each of the six flows in flows.txt (source address, destination), work out the gateway and the interface the kernel uses. Write flows.tsv with one line per flow, in the order of flows.txt: source destination gateway device, where gateway is the next hop's IP or the word direct for a directly connected network.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Route Priority",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "25m",
+  "concepts": ["ip rule", "routing tables", "rule priority", "longest prefix match", "route metric", "policy routing"],
   "module": "module-19-network-troubleshooting",
   "level": "level-21-route-priority"
 }

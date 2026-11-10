@@ -1,1 +1,12 @@
-Use `chmod +x jobs/arp-cache.sh` and then execute it.
+An `ip neigh` line with a MAC looks like:
+  10.30.0.1 dev eth0.30 lladdr 44:4c:a8:1f:02:9a REACHABLE
+  field:  $1  $2  $3     $4     $5                $6
+FAILED and INCOMPLETE lines have no lladdr, so $5 is something else there.
+
+- awk '$3 == "eth0.30" && $4 == "lladdr" { print $1, tolower($5) }' captures/*.txt   IP and lower-case MAC
+- sort -u                    each (IP, MAC) pair once
+- awk '{print $1}' | uniq -d    IPs that are left with more than one MAC
+- grep "^IP," vlan30-inventory.csv   the known MAC (upper case there)
+- oui.txt writes the first three bytes as "DC-A6-32   (hex)" followed by the organisation; tr 'a-f:' 'A-F-' converts dc:a6:32
+
+Read more: man ip-neighbour (the NUD states), man awk (tolower), man uniq (-d).

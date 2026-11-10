@@ -1,1 +1,34 @@
-Example: `chmod 640 outage-brief.sh`
+Type these at the prompt, one line (or block) at a time, running ./smoke.sh in between to see each step work:
+
+dns=$(grep -o 'port [0-9]*' TICKET.txt | head -1 | cut -d' ' -f2)
+./smoke.sh
+sed -i.bak 's/^export no_proxy=.*/export no_proxy=localhost,127.0.0.1,.corp.example/' checkout/client.env
+port=$(dig @127.0.0.1 -p "$dns" _payments._tcp.corp.example SRV +short | awk '{ print $3 }' | head -1)
+sed -i "s/^PAYMENTS_PORT=.*/PAYMENTS_PORT=$port/" checkout/client.env
+./smoke.sh
+for b in pay-1 pay-2 pay-3; do echo "$b $(getent hosts $b.corp.example | awk '{print $1}') $(dig @127.0.0.1 -p "$dns" $b.corp.example +short)"; done
+stale=$(for b in pay-1 pay-2 pay-3; do [ "$(getent hosts $b.corp.example | awk '{print $1}')" != "$(dig @127.0.0.1 -p "$dns" $b.corp.example +short)" ] && echo $b; done)
+sed -i.bak "/[[:space:]]$stale\.corp\.example/d" etc/hosts
+sick=$(./smoke.sh | awk '/FAIL/ && /HTTP 503/ { split($2, a, ":"); print a[1] }')
+sed -i "s/ *$sick//; s/\"$sick */\"/" checkout/client.env
+./smoke.sh
+fails=$(grep 'ERROR payments call failed' logs/checkout.log)
+cat > brief.md <<EOT
+# Outage brief: checkout -> payments (INC-4410)
+
+impact_start: $(echo "$fails" | head -1 | cut -d' ' -f1)
+impact_end: $(echo "$fails" | tail -1 | cut -d' ' -f1)
+failed_calls: $(echo "$fails" | wc -l)
+new_port: $port
+removed_backend: $sick
+root_cause: CHG-7001 moved the payments listeners to port $port, but checkout's client.env still used 8080
+fix: no_proxy gets .corp.example, PAYMENTS_PORT=$port, removed the stale $stale pin from etc/hosts, took $sick (503) out of PAYMENTS_BACKENDS
+EOT
+
+- no_proxy ... .corp.example   corp hosts go direct; the proxy can't reach them and every call timed out
+- dig ... SRV                  the published payments port (3rd field)
+- getent vs dig                the backend whose etc/hosts pin differs from DNS; its line goes
+- awk '/HTTP 503/'             the backend that listens but answers 503 leaves the backend list
+- the brief: first/last/count of "ERROR payments call failed"; the first failure follows CHG-7001 in changes.log
+
+Check it: cat brief.md checkout/client.env

@@ -1,1 +1,13 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+In `ip -s -s link`, every interface has four small tables; the numbers are on the line below each header:
+  RX errors:  length    crc   frame    fifo overrun
+                   0  48211     312       0       0      <- crc is field 2
+  TX errors: aborted   fifo  window heartbt transns
+                   0      0       0       0     318      <- transns (carrier transitions) is field 5
+transns is the same number as /sys/class/net/IFACE/carrier_changes.
+
+- awk '/^[0-9]+: / {ifc=$2} /TX errors:/ {getline; print ifc, $5}' FILE   one line per interface (getline reads the next line)
+- join before.txt after.txt     puts both captures side by side by interface name (both lists must be in the same order)
+- grep duplex: sysfs-net.txt    full/half/unknown per interface; a down interface has no duplex at all
+- window errors and collsns growing are what late collisions look like on a half-duplex port
+
+Read more: man ip-link (-s), man awk (getline), man join.

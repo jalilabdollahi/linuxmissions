@@ -1,1 +1,6 @@
-This mission is about cron field order and exact syntax.
+Try one URL by hand first and watch what curl tells you, then a second one. You need two numbers per URL: the status code and how long the whole request took. curl can print both for you after the request, so you don't have to read headers or time anything yourself.
+
+Three things will bite a simple loop:
+- endpoints.txt has comments and blank lines,
+- one endpoint never answers, and curl waits forever unless you tell it when to give up,
+- some endpoints redirect; if curl follows the redirect you see the code of the page it ends up on, not the one the dashboard sees.

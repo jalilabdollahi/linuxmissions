@@ -1,1 +1,6 @@
-Use `cut -d, -f2` or an awk equivalent and save the result to `owners.txt`.
+- `dig @127.0.0.1 -p PORT NAME TYPE` asks a specific server on a specific port; `+short` prints just the data.
+- MX data is `PREFERENCE HOST`. Lower preference = higher priority. Compare the numbers as numbers: `sort` alone puts "10" before "5", `sort -n` doesn't.
+- An A query for a name that is a CNAME returns the whole chain; with `+short` every hop is one line, and the address is the last line.
+- Without +short, read the ANSWER SECTION: "CNAME" lines are aliases, "A" lines are addresses.
+
+Read more: `man dig` (@server, -p, +short, +noall +answer).

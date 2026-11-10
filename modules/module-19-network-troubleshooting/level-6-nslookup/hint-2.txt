@@ -1,1 +1,11 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+- `nslookup -port=PORT NAME 127.0.0.1` asks that server. Its messages:
+    Name: ... / Address: ...                        resolved (the "Address: 127.0.0.1#PORT" at the top is the server, not an answer)
+    ** server can't find NAME: NXDOMAIN             the name doesn't exist
+    ** server can't find NAME: SERVFAIL             the server failed (e.g. a broken zone)
+    ;; communications error ... timed out
+    ;; no servers could be reached                  no answer at all
+- `-timeout=2 -retry=1` makes nslookup wait 2 s and try once, instead of 3 tries of 5 s.
+- `case "$out" in *NXDOMAIN*) ... ;; esac` tests text in a variable without grep.
+- `while read -r name; do ...; done < names.txt > results.tsv` runs once per line and writes all output to one file; `printf '%s\t%s\n'` writes a TAB.
+
+Read more: `man nslookup` (-port, -timeout, -retry).

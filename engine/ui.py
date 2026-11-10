@@ -68,7 +68,8 @@ MODULE_TITLES = {
 # (minimum total XP, rank name)
 RANKS = [(0, "Recruit"), (1000, "Operator"), (5000, "Sysadmin"), (15000, "Engineer"), (30000, "Root")]
 
-KEYS = [("hint", "−XP"), ("validate", ""), ("edit FILE", ""), ("objective", ""), ("help", ""), ("quit", "")]
+# Key bar: (shortcut, command). The shortcut is typed alone at the prompt.
+KEYS = [("h", "hint"), ("v", "validate"), ("o", "objective"), ("s", "status"), ("?", "help"), ("q", "quit")]
 
 
 # ─── Small building blocks ────────────────────────────────────────────────────
@@ -150,7 +151,9 @@ def show_welcome(player_name: str, progress: dict | None = None, total_levels: i
     tip = Text()
     tip.append("Tab completes commands and file names. Type ", style="dim")
     tip.append("help", style=f"bold {ACCENT}")
-    tip.append(" for every command.", style="dim")
+    tip.append(" (or ", style="dim")
+    tip.append("?", style=f"bold {ACCENT}")
+    tip.append(") for every command and shortcut.", style="dim")
     lines.append(tip)
     console.print(Panel(Group(*lines), box=box.ROUNDED, border_style=TRACK, padding=(1, 2)))
 
@@ -236,9 +239,10 @@ def show_mission_briefing(mission: dict, level_num: int, total_levels: int) -> N
 
 def show_command_bar() -> None:
     bar = Text(" ")
-    for key, note in KEYS:
+    for key, command in KEYS:
         bar.append(f" {key} ", style=f"bold black on {ACCENT}")
-        bar.append(f" {note}  " if note else "  ", style="dim")
+        bar.append(f" {command}", style=TEXT)
+        bar.append(" −XP   " if command == "hint" else "   ", style="dim")
     console.print(bar)
 
 
@@ -322,32 +326,35 @@ def show_guidance(hint_text: str, hint_num: int, xp_percent: int | None = None, 
 
 
 def show_help() -> None:
-    table = Table(box=None, show_header=False, padding=(0, 2))
-    table.add_column(no_wrap=True)
-    table.add_column(style=TEXT)
+    table = Table(box=None, show_header=True, padding=(0, 2), header_style="dim")
+    table.add_column("command", no_wrap=True)
+    table.add_column("shortcut", no_wrap=True)
+    table.add_column("", style=TEXT)
     rows = [
-        ("hint", "Next hint, up to 3. Each one lowers this level's XP (90%, 75%, 50%)"),
-        ("hints", "Show the hints you already revealed"),
-        ("validate", "Check your work and show what is still missing"),
-        ("edit FILE", "Open a file in a real editor ($EDITOR, else nano or vim)"),
-        ("objective", "Show the mission again"),
-        ("status", "XP, rank and progress in every module"),
-        ("reset", "Rebuild this level's sandbox from scratch"),
-        ("skip", "Skip this level (no XP)"),
-        ("quit", "Save progress and leave"),
-        ("help", "This list"),
+        ("hint", "h  F2", "Next hint, up to 3. Each one lowers this level's XP (90%, 75%, 50%)"),
+        ("hints", "", "Show the hints you already revealed"),
+        ("validate", "v  F3", "Check your work and show what is still missing"),
+        ("edit FILE", "", "Open a file in a real editor ($EDITOR, else nano or vim)"),
+        ("objective", "o  F4", "Show the mission again"),
+        ("status", "s  F5", "XP, rank and progress in every module"),
+        ("reset", "", "Rebuild this level's sandbox from scratch"),
+        ("skip", "", "Skip this level (no XP)"),
+        ("quit", "q", "Save progress and leave"),
+        ("help", "?  F1", "This list"),
     ]
-    for key, desc in rows:
-        table.add_row(pill(key, ACCENT), desc)
-    table.add_row(Text(""), Text(""))
+    for key, short, desc in rows:
+        table.add_row(pill(key, ACCENT), Text(short, style=f"bold {ACCENT}"), desc)
+    table.add_row(Text(""), Text(""), Text(""))
     for key, desc in [
         ("any command", "Runs for real inside the level's sandbox"),
         ("Tab", "Complete commands and file names"),
         ("multi-line", "Heredocs, if/for/while and lines ending in | or \\ continue on a ...> prompt"),
         ("Ctrl-C", "Stop a running command such as tail -f or sleep"),
     ]:
-        table.add_row(Text(f" {key} ", style=f"bold {ACCENT}"), desc)
-    note = Text("The sandbox lives under /tmp/linuxmissions/. Destructive host-level commands are blocked.",
+        table.add_row(Text(f" {key} ", style=f"bold {ACCENT}"), Text(""), desc)
+    note = Text("Shortcuts are typed alone, then Enter. F-keys work where the terminal sends them "
+                "(on a Mac keyboard: fn + F2).\n"
+                "The sandbox lives under /tmp/linuxmissions/. Destructive host-level commands are blocked.",
                 style="dim")
     console.print(Panel(Group(table, Text(""), note),
                         title=Text(" COMMANDS ", style=f"bold black on {ACCENT}"), title_align="left",

@@ -72,6 +72,13 @@ PROGRESS_FILE = REPO_ROOT / "progress.json"
 LEVELS_REGISTRY = REPO_ROOT / "levels.json"
 BRACKETED_PASTE_RE = re.compile(r"\x1b\[\?2004[hl]|\[\?2004[hl]")
 META_COMMANDS = ("help", "hint", "hints", "status", "objective", "reset", "skip", "quit", "exit", "validate", "edit")
+# One-key shortcuts typed alone at the prompt, and the function keys bound to them.
+SHORTCUTS = {"h": "hint", "v": "validate", "o": "objective", "s": "status", "?": "help", "q": "quit"}
+FUNCTION_KEYS = {  # xterm/iTerm escape sequences (F1-F4 have two common forms)
+    "help": (r"\eOP", r"\e[11~"), "hint": (r"\eOQ", r"\e[12~"), "validate": (r"\eOR", r"\e[13~"),
+    "objective": (r"\eOS", r"\e[14~"), "status": (r"\e[15~",),
+}
+USES_LIBEDIT = "libedit" in (readline.__doc__ or "")
 COMMAND_TIMEOUT = 300
 HEREDOC_RE = re.compile(r"(?<!<)<<(-?)\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\2")
 
@@ -208,6 +215,11 @@ class SandboxCompleter:
         return self._complete_path(text)
 
     def _complete_command(self, text: str) -> list[str]:
+        if not text:
+            # Tab on an empty line: the game's own commands and the sandbox files,
+            # not every program on PATH.
+            game = sorted(set(META_COMMANDS) - {"exit"})
+            return game + self._list_path_entries("", include_hidden=False)
         candidates = set(META_COMMANDS) | self.command_names
         candidates.update(self._list_path_entries("", include_hidden=text.startswith(".")))
         return sorted(candidate for candidate in candidates if candidate.startswith(text))
@@ -528,9 +540,16 @@ def configure_readline(sandbox: Path) -> None:
     COMPLETER.set_sandbox(sandbox)
     readline.set_completer(COMPLETER.complete)
     readline.set_completer_delims(" \t\n`@$><=;|&{(")
+    if USES_LIBEDIT:  # macOS system/Homebrew Python without GNU readline
+        readline.parse_and_bind("bind ^I rl_complete")
+        return
     readline.parse_and_bind("tab: complete")
     readline.parse_and_bind("set show-all-if-ambiguous on")
     readline.parse_and_bind("set completion-ignore-case on")
+    # Function keys: clear the line, type the game command and press Enter.
+    for command, sequences in FUNCTION_KEYS.items():
+        for seq in sequences:
+            readline.parse_and_bind(f'"{seq}": "\\C-a\\C-k{command}\\n"')
 
 
 # readline needs non-printing escape codes wrapped in \001 ... \002 to measure the prompt.
@@ -554,6 +573,8 @@ def prompt_command() -> str:
     first = input(PROMPT)
     if not first.strip():
         return ""
+    if first.strip() in SHORTCUTS:
+        return SHORTCUTS[first.strip()]
     if first.strip().lower() in META_COMMANDS or first.strip().split()[0].lower() in ("edit",):
         return first.strip()
     lines = [first]

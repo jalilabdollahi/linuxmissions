@@ -13,6 +13,6 @@ IMAGE=linuxmissions
 docker build -q -t "$IMAGE" docker >/dev/null
 
 if [[ "${1:-}" == "--unit" ]]; then
-  exec docker run --rm -v "$PWD":/app:ro "$IMAGE" python3 -m unittest discover -s tests -v
+  exec docker run --rm --init -v "$PWD":/app:ro "$IMAGE" python3 -m unittest discover -s tests -v
 fi
-exec docker run --rm -v "$PWD":/app:ro "$IMAGE" python3 scripts/test_levels.py "$@"
+exec docker run --rm --init -v "$PWD":/app:ro "$IMAGE" python3 scripts/test_levels.py "$@"

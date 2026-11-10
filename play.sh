@@ -42,7 +42,7 @@ if [[ "$DOCKER" == 1 ]]; then
   fi
   echo "⚙️  Preparing the LinuxMissions container (first run takes a few minutes)..."
   docker build -q -t linuxmissions docker >/dev/null || { echo "❌ docker build failed"; exit 1; }
-  exec docker run --rm -it --hostname linuxmissions \
+  exec docker run --rm -it --init --hostname linuxmissions \
     -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" \
     -v "$(pwd)":/app linuxmissions \
     bash -c '[ -f levels.json ] || python3 scripts/generate_levels.py >/dev/null; exec python3 -m engine.engine'

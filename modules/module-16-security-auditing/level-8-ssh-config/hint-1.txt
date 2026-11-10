@@ -1,1 +1,6 @@
-Use a targeted file search so you do not remove the wrong files.
+Do not trust the line you can see in sshd_config: ask the server what it really uses.
+`sshd -T` prints the effective settings. Then find out where the unwanted values come
+from: for the keywords in the report, which files mention them at all? Remember how sshd
+reads its configuration: some files are pulled in by an Include line, and for most
+keywords only one occurrence counts. Also ask whether a Match block can change the answer
+for one particular user (try `-C user=deploy,host=x,addr=192.0.2.10`).

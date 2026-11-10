@@ -1,1 +1,4 @@
-This is a delimiter-based column extraction task.
+Look at one of the directories with `ls -ld`: the group's execute slot can hold an `s`
+instead of `x` or `-` when a directory passes its group on. That special mode bit must
+go on the directories only. Think about what recursion does when you ask chmod to walk
+the whole tree: what else does it touch besides directories?

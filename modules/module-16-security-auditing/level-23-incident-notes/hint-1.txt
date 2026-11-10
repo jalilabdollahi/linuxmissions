@@ -1,1 +1,4 @@
-Use tar with create, gzip, and file flags.
+Start from the log: separate the noise (people who only failed, internal logins) from the one address
+that got in, and see what it logged in with the second time. Then, for each place an attacker can plant something that
+runs later or lets them back in (login keys, scheduled jobs, shell startup files, setuid programs), compare what is
+there with what should be. Recently changed files are a good lead (`ls -l --time-style=full-iso`, `find -newer`).

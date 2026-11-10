@@ -1,1 +1,6 @@
-This is a sorting task followed by deduplication.
+You need to ask find for directories that are writable by "others" and do not have
+the sticky bit (the `t` at the end of `ls -ld`). Remember that files and symbolic
+links also appear in a search and can look world-writable, so restrict the search to
+real directories. One directory has a space in its name: be careful when you loop over
+the results. Save the list before you change anything, because afterwards the same
+search finds nothing.

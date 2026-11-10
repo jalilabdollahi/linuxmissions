@@ -1,1 +1,4 @@
-This is a numeric aggregation task.
+Every user can see the full command line of every process. List the processes with their complete
+arguments and look at the two workers. Which of them shows something that should be secret, and which
+one only shows a harmless setting? Remember that a process also has an environment; think about what
+is visible there and to whom.

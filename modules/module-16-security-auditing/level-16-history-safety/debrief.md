@@ -1,17 +1,20 @@
-# History Safety: Capacity Report
+# Typed It in Plain Text
 
-## What you practiced
-- This level focused on **History Safety** in a safe sandbox.
-- The shortest path usually combines `du` with careful redirection or inspection.
-- Keep intermediate outputs small and verify them before moving on.
+## Why it works
+Bash keeps an in-memory list of commands and writes it to `~/.bash_history` when a shell exits, so
+anything you type, passwords included, is stored as plain text. `sed -i '/pattern/d'` removes the
+matching lines and keeps all the others in order. With `HISTCONTROL=ignorespace`, a command whose first
+character is a space is never added to the history, so `' mysql -pSECRET'` leaves no trace. Because
+`.bashrc` is read top to bottom and a later assignment wins, the new line has to come after the old
+`HISTCONTROL=ignoredups` (or replace it with `ignoreboth`).
 
-## Commands to remember
-```bash
-du -s datasets/*
-du -sh datasets/* | sort -h
-sort -n report.txt | tail -n 1
-```
+## Common mistakes
+- A pattern like `/password/Id` also deletes `grep -i password ...`, a harmless line.
+- `grep -v ... > file.new && mv file.new .bash_history` quietly turns a 600 file into 644.
+- Cleaning the file while the shell still has the commands in memory: it writes them back on exit
+  (`history -c` clears the in-memory list).
+- Treating the cleanup as enough: a password that was typed on a shared box should be changed.
 
-## Key insight
-- Start with inspection, then apply the smallest command that achieves the goal.
-- Hint ladder summary: Measure directory sizes before deciding which one is largest.
+## Next step
+Better than hiding a typed secret is not typing it: let the client prompt (`mysql -p`), use
+`~/.my.cnf` with mode 600, or read it from a file. `HISTIGNORE='*password*:*token*'` drops matching commands.

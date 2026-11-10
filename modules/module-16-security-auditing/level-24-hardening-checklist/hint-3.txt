@@ -1,1 +1,21 @@
-Example: `chmod 640 hardening-checklist.sh`
+sed -i -E '/^[[:space:]]*(PermitRootLogin|PasswordAuthentication|MaxAuthTries)[[:space:]]/d' image/etc/ssh/sshd_config image/etc/ssh/sshd_config.d/*.conf
+sed -i '/^Include/a PermitRootLogin no\nPasswordAuthentication no\nMaxAuthTries 3' image/etc/ssh/sshd_config
+chmod 600 image/etc/ssh/ssh_host_*_key
+chmod 700 image/home/admin/.ssh; chmod 600 image/home/admin/.ssh/authorized_keys
+sed -i 's/^%admin .*/%admin ALL=(ALL:ALL) ALL/' image/etc/sudoers.d/90-admin
+rm -f image/etc/profile.d/99-umask.conf; printf '# hardening\numask 027\n' > image/etc/profile.d/99-umask.sh
+chmod 1777 image/tmp
+find image -type f -perm /6000 -printf '%P\n' | grep -vxFf image/etc/suid-baseline.txt | while read -r f; do chmod u-s,g-s "image/$f"; done
+sed -i '/^HISTCONTROL/d' image/etc/bash.bashrc; echo 'HISTCONTROL=ignoreboth' >> image/etc/bash.bashrc
+grep -rlIiE '(password|secret|token|api_key)[a-z_]*[[:space:]]*=[[:space:]]*[^<$[:space:]]|AKIA[0-9A-Z]{16}' image --exclude='ssh_host_*' | xargs -r sed -i -E 's/^([A-Za-z_]*(PASSWORD|SECRET|TOKEN|API_KEY|ACCESS_KEY_ID)[A-Za-z_]*)=[^<$].*/\1=<set at deploy time>/'
+find image -type f -perm -0002 -exec chmod o-w {} +
+
+- 1st-2nd sed    delete the three settings in the main file, the drop-ins and the Match override, then set them right after the Include line (before any Match block)
+- chmod (keys)   items 4 and 5; on an already-compliant item they change nothing
+- sudoers sed    the admin group keeps sudo but must type a password
+- profile.d      a stale 99-umask.conf is never loaded, so remove it and write a .sh file with umask 027
+- chmod 1777     the sticky bit on /tmp
+- SUID loop      strip s-bits from every file not in the baseline
+- HISTCONTROL    drop the old setting, add ignoreboth (ignores commands that start with a space)
+- grep | xargs   find files with secret settings or AWS key ids and replace the values by a placeholder
+- last find      world-writable regular files lose o+w

@@ -1,1 +1,11 @@
-Example: `mkdir -p organized/service-user && mv inbox/service-user.txt organized/service-user/service-user-notes.txt`
+useradd -r -M -d /var/lib/reportd -s /usr/sbin/nologin reportd
+chown -R reportd:reportd var/lib/reportd
+chmod -R go-w opt/reportd
+sed -i -e 's/^User=jalil/User=reportd/' -e '/^User=/a NoNewPrivileges=yes\nProtectSystem=strict\nReadWritePaths=/var/lib/reportd\nPrivateTmp=yes\nProtectHome=yes' etc/systemd/system/reportd.service
+bin/reportd-check
+
+- useradd -r      system account with its own group and a UID below 1000; -M no home directory created, -d names it, nologin forbids interactive use
+- chown -R        the state directory (and the files already in it) now belongs to the service
+- chmod -R go-w   group and others lose write access to the code; read and execute stay, so the service can still run it
+- sed             User= now names the new account, and five sandbox lines are added right after it
+- reportd-check   dry run: starts the script, reads the config, writes the state files under the new restrictions

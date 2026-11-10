@@ -1,1 +1,7 @@
-Example: `tar -xzf gpg-checks-restore.tar.gz`
+: > report.txt; for d in mirrors/*; do m=${d##*/}; if gpgv --keyring ./vendor.gpg "$d/agent-2.3.1.tar.gz.sig" "$d/agent-2.3.1.tar.gz" 2>/dev/null; then echo "$m good" >> report.txt; mv "$d/agent-2.3.1.tar.gz" verified/; else echo "$m bad" >> report.txt; rm -f "$d/agent-2.3.1.tar.gz"; fi; done
+cat report.txt; ls verified
+
+- : > report.txt         start with an empty report
+- for d in mirrors/*     one pass per mirror; m is its name
+- gpgv --keyring ... SIG FILE   exit 0 only if the vendor's key made a valid signature for exactly this file
+- mv / rm                move the trusted copy to verified/, delete the others

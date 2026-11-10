@@ -1,16 +1,11 @@
 {
-  "name": "Service User: Path Realignment",
-  "description": "In the security auditing lab, a task related to Service User needs cleanup before the handoff.",
-  "objective": "Create the target directory and move inbox/service-user.txt to organized/service-user/service-user-notes.txt",
+  "name": "A Service That Cannot Rewrite Itself",
+  "description": "The report generator reportd runs as the login user jalil, with a bash shell, and its own code under opt/reportd is writable by that user (and partly by everybody). If the service is ever exploited, the attacker can change its code and log in as a real person. The sandbox is a small fake root: etc/passwd and etc/group are its account files, and etc/systemd/system/reportd.service is the unit.",
+  "objective": "Harden reportd. (1) Create a dedicated system account reportd (its own group, a system UID below 1000, shell /usr/sbin/nologin, home /var/lib/reportd, not under /home) with the useradd stand-in in bin/. (2) Make the unit run as it and sandbox it: no way to gain new privileges, the whole file system read-only except its state directory /var/lib/reportd (and only that), a private /tmp and no access to home directories. (3) Nothing under opt/reportd may be writable by the service user, while it must still be able to read its config and run its script; /var/lib/reportd must be writable by it and not by everybody. Ownership cannot really change in a sandbox: the chown in bin/ records it (`chown --list` shows the records; unlisted files belong to jalil). `bin/reportd-check` is a dry run of the service under the unit's settings and `bin/systemd-analyze verify` checks the unit file.",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Service User",
-    "mkdir",
-    "mv",
-    "cp"
-  ],
+  "expected_time": "30m",
+  "concepts": ["service accounts", "nologin", "NoNewPrivileges", "ProtectSystem", "ReadWritePaths", "least privilege"],
   "module": "module-16-security-auditing",
   "level": "level-21-service-user"
 }

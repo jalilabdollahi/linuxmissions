@@ -1,1 +1,9 @@
-Example: `mkdir -p organized/chmod-basics && mv inbox/chmod-basics.txt organized/chmod-basics/chmod-basics-notes.txt`
+chmod 700 home/.ssh
+chmod 600 home/.ssh/id_ed25519 home/.ssh/deploy_key home/.ssh/authorized_keys home/.ssh/config
+chmod 644 home/.ssh/*.pub home/.ssh/known_hosts
+ls -la home/.ssh
+
+- chmod 700 home/.ssh    the folder: only the owner may list or enter it
+- chmod 600 ...          both private keys (deploy_key is one too), plus authorized_keys and config
+- chmod 644 ...          public keys and known_hosts may be read by everyone
+- ls -la                 check the result

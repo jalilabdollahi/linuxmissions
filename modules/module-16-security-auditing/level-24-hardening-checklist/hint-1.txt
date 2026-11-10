@@ -1,1 +1,4 @@
-Inspect the current mode first if you want to verify the change.
+Go through CHECKLIST.md point by point and, for each, first check the current state before changing
+anything: some points are already fine. For sshd, ask the stand-in what is effective (including for the user
+deploy) instead of reading the main file, because other files and defaults take part. For the umask and history points,
+think about when and by which files a shell reads its settings. Test your fix the way the auditor would.

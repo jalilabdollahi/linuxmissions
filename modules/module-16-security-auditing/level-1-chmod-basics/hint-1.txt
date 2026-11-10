@@ -1,1 +1,5 @@
-Inspect the sandbox, then create the missing path for organized/chmod-basics/chmod-basics-notes.txt.
+Look at the permission column of every file in home/.ssh, hidden ones included (`ls -la`).
+OpenSSH is strict about who may read the folder and the private keys, and it
+does not care about the key's file name: how many private keys are there, and
+how can you tell a private key from a public one?
+Only home/.ssh needs fixing; everything else under home/ must stay as it is.

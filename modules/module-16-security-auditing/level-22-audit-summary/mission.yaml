@@ -1,15 +1,11 @@
 {
-  "name": "Audit Summary: Field Extract",
-  "description": "In the security auditing lab, a task related to Audit Summary needs cleanup before the handoff.",
-  "objective": "Extract the second column from audit-summary-report.csv into owners.txt",
+  "name": "Quarterly Audit, Read Only",
+  "description": "It is quarter end, and the security officer wants one list of everything wrong on the mock server in host/ before any fixing starts. policy.txt defines each category of finding and categories.txt holds the names to use. The sshd stand-in in bin/ answers `sshd -T -f host/etc/ssh/sshd_config` like the real one.",
+  "objective": "Write audit.tsv with one line per finding and three tab-separated fields: category, path (relative, like host/etc/...), detail, exactly as policy.txt describes each category. Cover world-writable files, unexpected SUID/SGID files, private keys with a weak mode, effective sshd settings that break the policy and plaintext secrets. This is an audit: do not change anything under host/ (a hash of the tree is checked).",
   "xp": 200,
   "difficulty": "advanced",
-  "expected_time": "12m",
-  "concepts": [
-    "Audit Summary",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "40m",
+  "concepts": ["find", "grep -r", "stat", "sshd -T", "awk", "read-only audits"],
   "module": "module-16-security-auditing",
   "level": "level-22-audit-summary"
 }

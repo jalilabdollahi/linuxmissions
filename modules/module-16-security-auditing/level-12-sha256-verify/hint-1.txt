@@ -1,1 +1,5 @@
-Inspect the current mode first if you want to verify the change.
+Count first: sha256sum should give you six verdicts (one per downloaded file). Does it? Read the
+warnings it prints and look at the raw lines of SHA256SUMS with `cat -A` (invisible characters show up
+as ^M and $). Compare the lines of the files that got no verdict with the lines of those that did:
+names, spaces and path prefixes must match what the checker expects. The list also contains entries
+for files you do not have, which must not count as failures.

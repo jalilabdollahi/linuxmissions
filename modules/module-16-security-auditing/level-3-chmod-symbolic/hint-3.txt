@@ -1,1 +1,7 @@
-Example: `grep -c '^ok$' chmod-symbolic-events.txt > ok-count.txt`
+chmod -R go-w,o=rX etc-app
+ls -lR etc-app
+
+- -R          apply to the folder and everything below it
+- go-w        remove write from group and others
+- o=rX        others get read, and execute only on folders and files that are already executable
+- ls -lR      look at the result: folders and scripts rwxr-xr-x, data rw-r--r--

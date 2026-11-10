@@ -1,1 +1,9 @@
-Archive the directory contents without leaving anything out.
+  ssh-keygen -lf authorized_keys              fingerprint of every key (in file order)
+  printf '%s\n' "$line" | ssh-keygen -lf -    fingerprint of a single line
+Loop over the file, keep a line unless its fingerprint is listed in offboard.txt
+(`grep -qxF "$fp" list`), and write the survivors to a new file; keep comment and blank
+lines as they are (ssh-keygen cannot fingerprint them).
+Options go first on the line, comma separated, without spaces, then the key:
+  from="10.0.0.0/8",command="/path/to/script",no-port-forwarding,no-pty ssh-ed25519 AAAA... comment
+Finish with `ssh-keygen -lf authorized_keys`: it must still print every remaining key.
+More: man sshd (AUTHORIZED_KEYS FILE FORMAT), man ssh-keygen

@@ -1,1 +1,9 @@
-Example: `find cleanup/ssh-config -name '*.tmp' -delete`
+sed -i.bak -E '/^(PermitRootLogin|PasswordAuthentication|MaxAuthTries)[[:space:]]/d' etc/ssh/sshd_config.d/*.conf
+sed -i.bak -E '/^[[:space:]]+PasswordAuthentication yes/d' etc/ssh/sshd_config
+rm -f etc/ssh/sshd_config.d/*.bak
+sshd -T -f etc/ssh/sshd_config -C user=deploy,host=ci,addr=192.0.2.10 | grep -E 'permitrootlogin|passwordauthentication|maxauthtries'
+
+- first sed     drop-ins are read first and win, so delete their three unwanted lines (the main file already has the right ones)
+- second sed    delete the indented PasswordAuthentication line inside "Match User deploy", which would override for that user
+- rm .bak       the backups would clutter etc/ssh/sshd_config.d (only *.conf is included, but keep it tidy)
+- sshd -T -C    print what sshd really uses for the user deploy

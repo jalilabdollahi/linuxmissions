@@ -1,1 +1,5 @@
-Count matching lines instead of copying them out by hand.
+Two separate things must change for group and others: the write bit goes away
+everywhere, and read access must be there on every file. Execute is the tricky
+part: folders need it (to be entered) and scripts need it, but data files must not
+get it. Does chmod have a way to say "execute only where it already makes sense"?
+Check `ls -lR etc-app` before and after.

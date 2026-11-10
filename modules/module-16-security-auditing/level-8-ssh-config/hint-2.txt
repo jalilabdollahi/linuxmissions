@@ -1,1 +1,11 @@
-A `find` command with a name filter plus `-delete` or `-exec rm` works well here.
+Two rules explain everything:
+  1. In the main part of the file the FIRST value obtained for a keyword wins, and
+     `Include` is processed where it stands: a drop-in included at the top beats a
+     later line in the main file.
+  2. A `Match` block overrides the global values for connections that match it.
+Find the culprits with grep across all the files:
+  grep -rniE 'permitrootlogin|passwordauthentication|maxauthtries' etc/ssh
+Only files ending in .conf are included. Then remove just the offending lines (an editor,
+or `sed -i.bak '/pattern/d' file`) and check again with `sshd -T -f ... -C user=...`.
+The special rules for the backup user and the office network must keep working.
+More: man sshd_config (Include, Match, the first paragraph on first values)

@@ -1,1 +1,11 @@
-Example: `chmod +x jobs/file-permissions.sh && jobs/file-permissions.sh`
+{
+  find home ! -type l -perm /022
+  find home ! -type l \( -name .netrc -o -name .pgpass -o -name .my.cnf -o -name credentials -o -name .ssh -o -name id_ed25519 \) -perm /077
+} | sort -u > findings.txt
+find home ! -type l -perm /022 -exec chmod go-w {} +
+find home ! -type l \( -name .netrc -o -name .pgpass -o -name .my.cnf -o -name credentials -o -name .ssh -o -name id_ed25519 \) -perm /077 -exec chmod go-rwx {} +
+
+- first block     writable by group/others (not symlinks) plus the secret-named paths readable by others, merged and de-duplicated into findings.txt
+- chmod go-w      take write away from group and others on the writable ones; their other bits stay (644 stays 644)
+- chmod go-rwx    secrets become owner-only (600 for files, 700 for the .ssh directory)
+- the report was written first, because after fixing the modes find would no longer show the problems

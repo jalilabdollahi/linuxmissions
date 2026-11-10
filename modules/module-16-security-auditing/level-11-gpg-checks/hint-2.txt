@@ -1,1 +1,7 @@
-Use tar extraction flags and point at the archive file.
+`gpgv` verifies a detached signature against the keys in a keyring you give it:
+  gpgv --keyring ./vendor.gpg SIGFILE DATAFILE
+Use ./ before the keyring name, otherwise gpgv looks in ~/.gnupg. It exits 0 for a good signature
+from a key in that keyring and non-zero for everything else (bad signature, unknown key, wrong file).
+Run it once per mirror in a loop and branch on `if gpgv ...; then`, add 2>/dev/null while scripting
+(run it once without that to read its messages). Remember the signature goes first, the file second.
+More: man gpgv

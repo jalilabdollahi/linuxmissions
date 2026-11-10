@@ -1,1 +1,5 @@
-An awk one-liner can skip the header and add the second field.
+`ps -eo pid,args` prints PID and full command line; add `| grep '[w]orker'` to narrow it (the brackets
+stop grep from matching itself). `/proc/PID/cmdline` and `/proc/PID/environ` hold the raw argument and
+environment strings separated by NUL bytes: `tr '\0' '\n' < /proc/PID/environ` makes them readable.
+Create the password file with a restrictive umask (`( umask 077; ... > file )`) or `chmod 600` it,
+`kill PID` stops the leaker, then edit app/start-worker.sh and run it. See `man ps`, `man 5 proc`.

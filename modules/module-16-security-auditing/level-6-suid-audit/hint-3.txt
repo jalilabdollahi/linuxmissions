@@ -1,1 +1,9 @@
-Example: `sed 's/MODE=legacy/MODE=managed/g' suid-audit.conf > fixed.conf`
+find rootfs -type f -perm /6000 | sed 's|^rootfs||' | sort > found.txt
+grep -vxFf <(grep -v '^#' suid-baseline.txt) found.txt > unexpected.txt
+cat unexpected.txt
+while IFS= read -r p; do chmod u-s,g-s "rootfs$p"; done < unexpected.txt
+
+- find -perm /6000       files with setuid or setgid, hidden folders included
+- sed 's|^rootfs||'      write paths the way the baseline does (starting with /)
+- grep -vxFf             keep the lines that are not an exact line of the baseline
+- chmod u-s,g-s          remove only the two special bits from each unexpected file

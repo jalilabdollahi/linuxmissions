@@ -1,1 +1,5 @@
-Use grep with a literal pattern like `ALERT` and redirect the result to `alerts.txt`.
+Known escapes: less/more/man/vim (`!sh`, `:!sh`), find (`-exec`), tar (`--checkpoint-action=exec=`),
+and any `*` in arguments, which in sudoers matches spaces and slashes too. Safe forms: `sudoedit /exact/file`
+instead of an editor, exact argument lists (`systemctl restart NAME.service`), `tail -n 100 /exact/log`
+instead of a pager, a root-owned wrapper script. Collect the rules with `grep -n`, fix with `sed -i` or
+`edit FILE`, and check each file with `visudo -cf FILE`. See `man sudoers` (Wildcards, sudoedit sections).

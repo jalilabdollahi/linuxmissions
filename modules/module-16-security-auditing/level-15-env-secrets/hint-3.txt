@@ -1,1 +1,16 @@
-Example: `awk -F, 'NR>1 {sum += $2} END {print sum}' env-secrets-metrics.csv > total.txt`
+ps -eo pid,args | grep '[w]orker.sh'
+pid=$(pgrep -f -- '--password=')
+echo "$pid" > leak.txt
+pw=$(ps -o args= -p "$pid" | sed 's/.*--password=//')
+( umask 077; printf '%s\n' "$pw" > secrets/db.pass )
+kill "$pid"
+sed -i -e '/^DB_PASSWORD=/d' -e 's|^nohup|PASSWORD_FILE="$PWD/secrets/db.pass" nohup|' -e 's| --password="$DB_PASSWORD"||' app/start-worker.sh
+bash app/start-worker.sh
+
+- ps | grep      look at both workers: one has --password=... in its arguments
+- pgrep -f       the PID of the process whose command line contains --password=, saved to leak.txt
+- pw=...         read the password from the leaking command line (you would also find it in start-worker.sh)
+- umask 077      the password file is created with mode 600, never readable by others
+- kill           stop the leaking worker
+- sed            delete the DB_PASSWORD line, drop the --password argument and pass PASSWORD_FILE through the environment instead
+- bash app/...   start the worker again; check logs/ for the "connected" line

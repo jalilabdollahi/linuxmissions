@@ -1,15 +1,11 @@
 {
-  "name": "Sgid Dir: Field Extract",
-  "description": "In the security auditing lab, a task related to Sgid Dir needs cleanup before the handoff.",
-  "objective": "Extract the second column from sgid-dir-report.csv into owners.txt",
+  "name": "Wrong Group",
+  "description": "Files created in the team's projects/ tree get the creator's personal group, so colleagues in the team group cannot edit them. The directories should hand their group down to everything created inside them.",
+  "objective": "Make every directory under projects/ (including projects/ itself, hidden directories and directories with spaces in their names) pass its group on to new files and subdirectories. Do not put that special bit on regular files, and keep every other permission bit exactly as it is.",
   "xp": 100,
   "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Sgid Dir",
-    "cut",
-    "awk"
-  ],
+  "expected_time": "10m",
+  "concepts": ["setgid directories", "chmod g+s", "find -type d -exec", "ls -ld"],
   "module": "module-16-security-auditing",
   "level": "level-5-sgid-dir"
 }

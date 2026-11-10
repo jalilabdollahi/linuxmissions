@@ -1,1 +1,9 @@
-Use `ln -s` so current.conf points at the release file.
+ssh-keygen has three options for known_hosts files:
+  ssh-keygen -F NAME -f FILE     find (and show) the entries for NAME, hashed ones included
+  ssh-keygen -R NAME -f FILE     remove all entries for NAME (a backup goes to FILE.old)
+  ssh-keygen -H -f FILE          hash the names
+A host on a non-standard port is written as [ADDRESS]:PORT (with the brackets).
+Use -F first to see what is there, -R for the old keys, and then add the lines of keyscan.txt
+(comment lines starting with # are legal in known_hosts) with a shell append, `>>`.
+Finish with -F again: only the new keys may be left for git.internal.
+More: man ssh-keygen (see -F, -R), man sshd (SSH_KNOWN_HOSTS FILE FORMAT)

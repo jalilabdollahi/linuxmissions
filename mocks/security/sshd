@@ -1,0 +1,347 @@
+#!/usr/bin/env python3
+"""LinuxMissions mock `sshd`: the configuration-reading half of OpenSSH's sshd.
+
+    sshd -T [-f FILE] [-C SPEC]    print the effective configuration (extended test)
+    sshd -t [-f FILE] [-C SPEC]    only check the configuration (silent when it is valid)
+
+Real sshd needs root (host keys) for -T; this mock does not, and it never starts a
+daemon. It implements the sshd_config(5) rules that matter when auditing:
+
+  * Include is processed in place, in glob (lexical) order. Relative patterns are
+    resolved against the directory of the config file given with -f (real sshd uses
+    /etc/ssh), so `Include sshd_config.d/*.conf` works inside a sandbox.
+  * For each keyword the FIRST value obtained wins (global section), so an Include
+    near the top of the file beats later lines of the main file. List keywords
+    (Port, ListenAddress, HostKey, AcceptEnv, SetEnv, AllowUsers, AllowGroups, DenyUsers,
+    DenyGroups, Subsystem, ...) accumulate instead.
+  * `Match` blocks only apply with -C; without -C they are checked for syntax and ignored.
+    With -C, values set inside matching Match blocks override the global section (first
+    matching block wins among Match blocks). Criteria: User, Group, Host, LocalAddress,
+    LocalPort, Address (patterns, `!` negation, comma lists, CIDR for addresses), RDomain,
+    All. Several criteria on one line must all match. `Match Group` reads $SSHD_GROUP_FILE
+    (default /etc/group; group-file format). A criterion not supplied in -C is an error.
+  * Only the keywords sshd allows inside Match are accepted there.
+  * -C SPEC is a comma-separated list: user=NAME,host=HOST,addr=IP,laddr=IP,lport=N,rdomain=X.
+  * Output: one `keyword value` per line, keywords in lower case, in sshd's usual order
+    (defaults included). `loglevel` is upper case, booleans are yes/no.
+
+Exit status: 0 ok; 255 for a configuration error (message on stderr in sshd's format,
+e.g. `FILE line N: Bad configuration option: X`, then `FILE: terminating, 1 bad
+configuration options`); 1 for a usage error. Not implemented: -D, -d, -o, -h, -p and the
+real daemon; unknown keywords are errors as in real sshd, but only the keywords listed
+in this file are known.
+"""
+import fnmatch
+import glob
+import ipaddress
+import os
+import re
+import shlex
+import sys
+
+# (keyword in sshd's output order, default; "" means "do not print when unset")
+SCALARS = [
+    ("addressfamily", "any"), ("loglevel", "INFO"), ("logingracetime", "120"), ("permitrootlogin", "prohibit-password"),
+    ("strictmodes", "yes"), ("maxauthtries", "6"), ("maxsessions", "10"), ("pubkeyauthentication", "yes"),
+    ("hostbasedauthentication", "no"), ("passwordauthentication", "yes"), ("kbdinteractiveauthentication", "no"),
+    ("permitemptypasswords", "no"), ("usepam", "yes"), ("x11forwarding", "no"), ("allowtcpforwarding", "yes"),
+    ("allowagentforwarding", "yes"), ("gatewayports", "no"), ("permittty", "yes"), ("permituserenvironment", "no"),
+    ("permittunnel", "no"), ("printmotd", "no"), ("printlastlog", "yes"), ("tcpkeepalive", "yes"),
+    ("clientaliveinterval", "0"), ("clientalivecountmax", "3"), ("usedns", "no"), ("compression", "yes"),
+    ("maxstartups", "10:30:100"), ("authorizedkeysfile", ".ssh/authorized_keys .ssh/authorized_keys2"),
+    ("banner", "none"), ("forcecommand", ""), ("chrootdirectory", ""), ("authenticationmethods", "any"),
+    ("authorizedkeyscommand", ""), ("authorizedkeyscommanduser", ""), ("ciphers", ""), ("macs", ""),
+    ("kexalgorithms", ""), ("pidfile", "/run/sshd.pid"), ("permitopen", ""), ("permituserrc", "yes"),
+]
+LISTS = ["port", "listenaddress", "hostkey", "acceptenv", "setenv", "allowusers", "allowgroups", "denyusers",
+         "denygroups", "subsystem"]
+BOOLS = {"strictmodes", "pubkeyauthentication", "hostbasedauthentication", "passwordauthentication",
+         "kbdinteractiveauthentication", "permitemptypasswords", "usepam", "x11forwarding", "allowagentforwarding",
+         "permittty", "permituserenvironment", "printmotd", "printlastlog", "tcpkeepalive", "usedns", "permituserrc"}
+INTS = {"logingracetime", "maxauthtries", "maxsessions", "clientaliveinterval", "clientalivecountmax"}
+ALIASES = {"challengeresponseauthentication": "kbdinteractiveauthentication", "skeyauthentication": None}
+ROOT_VALUES = {"yes", "no", "prohibit-password", "without-password", "forced-commands-only"}
+MATCH_OK = {"acceptenv", "allowagentforwarding", "allowgroups", "allowtcpforwarding", "allowusers",
+            "authenticationmethods", "authorizedkeyscommand", "authorizedkeyscommanduser", "authorizedkeysfile",
+            "banner", "chrootdirectory", "clientalivecountmax", "clientaliveinterval", "denygroups", "denyusers",
+            "forcecommand", "gatewayports", "hostbasedauthentication", "kbdinteractiveauthentication",
+            "maxauthtries", "maxsessions", "passwordauthentication", "permitemptypasswords", "permitopen",
+            "permitrootlogin", "permittty", "permittunnel", "permituserenvironment", "permituserrc",
+            "pubkeyauthentication", "setenv", "x11forwarding", "printmotd"}
+KNOWN = {k for k, _ in SCALARS} | set(LISTS) | set(ALIASES) | {"include", "match"}
+CRITERIA = {"user", "group", "host", "localaddress", "localport", "address", "rdomain", "all"}
+CI_KEY = {"user": "user", "group": "user", "host": "host", "localaddress": "laddr", "localport": "lport",
+          "address": "addr", "rdomain": "rdomain"}
+
+
+class ConfigError(Exception):
+    pass
+
+
+def split_args(text):
+    try:
+        return shlex.split(text, posix=True)
+    except ValueError:
+        raise ConfigError("invalid quotes")
+
+
+def parse_line(line):
+    s = line.strip()
+    if not s or s.startswith("#"):
+        return None
+    m = re.match(r"([A-Za-z0-9]+)\s*(?:=\s*|\s+)(.*)$", s)
+    if not m:
+        return s.lower(), [], s
+    return m.group(1).lower(), split_args(m.group(2)), m.group(1)
+
+
+def pattern_match(value, patterns, is_addr=False):
+    """sshd's match_pattern_list: comma list, `!` negates (and wins), `*`/`?` wildcards, CIDR for addresses."""
+    positive = False
+    for pat in patterns.split(","):
+        neg = pat.startswith("!")
+        if neg:
+            pat = pat[1:]
+        hit = fnmatch.fnmatchcase(value, pat)
+        if not hit and is_addr and "/" in pat:
+            try:
+                hit = ipaddress.ip_address(value) in ipaddress.ip_network(pat, strict=False)
+            except ValueError:
+                hit = False
+        if hit:
+            if neg:
+                return False
+            positive = True
+    return positive
+
+
+def user_groups(user):
+    path = os.environ.get("SSHD_GROUP_FILE", "/etc/group")
+    out = set()
+    try:
+        with open(path) as fh:
+            for line in fh:
+                f = line.rstrip("\n").split(":")
+                if len(f) >= 4 and user in f[3].split(","):
+                    out.add(f[0])
+    except OSError:
+        pass
+    return out
+
+
+class Config:
+    def __init__(self, ci):
+        self.ci = ci
+        self.glob_vals = {}      # scalar keyword -> value (first wins)
+        self.match_vals = {}     # scalar keyword -> value from matching Match blocks
+        self.lists = {k: [] for k in LISTS}
+        self.errors = 0
+        self.main = ""
+
+    def err(self, path, n, msg):
+        sys.stderr.write("%s line %d: %s\n" % (path, n, msg))
+        self.errors += 1
+
+    def match_criteria(self, path, n, args):
+        """Return True/False for the Match line, or raise ConfigError."""
+        if not args:
+            raise ConfigError("Missing Match criteria")
+        i, result = 0, True
+        while i < len(args):
+            crit = args[i].lower()
+            if crit not in CRITERIA:
+                raise ConfigError("Unsupported Match attribute %s" % args[i])
+            if crit == "all":
+                if len(args) != 1:
+                    raise ConfigError("Invalid Match criteria: 'All' cannot be combined")
+                return True
+            i += 1
+            if i >= len(args):
+                raise ConfigError("Missing Match criteria for %s" % args[i - 1])
+            val = args[i]
+            i += 1
+            if self.ci is None:
+                continue
+            key = CI_KEY[crit]
+            if key not in self.ci:
+                raise ConfigError("Match %s requires %s= in -C" % (args[i - 2], key))
+            if crit == "group":
+                ok = any(pattern_match(g, val) for g in user_groups(self.ci["user"]))
+            else:
+                ok = pattern_match(self.ci[key], val, is_addr=crit in ("address", "localaddress"))
+            result = result and ok
+        return result if self.ci is not None else False
+
+    def read(self, path, depth=0, state=None):
+        state = state if state is not None else {"inmatch": False, "matched": False}
+        if depth > 16:
+            raise ConfigError("%s: too many nested Include" % path)
+        try:
+            with open(path) as fh:
+                lines = fh.read().splitlines()
+        except OSError as e:
+            raise ConfigError("%s: %s" % (path, e.strerror))
+        for n, line in enumerate(lines, 1):
+            try:
+                parsed = parse_line(line)
+            except ConfigError as e:
+                self.err(path, n, str(e)); continue
+            if parsed is None:
+                continue
+            kw, args, raw = parsed
+            if kw == "include":
+                if not args:
+                    self.err(path, n, "Missing argument."); continue
+                for pat in args:
+                    full = pat if os.path.isabs(pat) else os.path.join(os.path.dirname(self.main), pat)
+                    for f in sorted(glob.glob(full)):
+                        if os.path.isfile(f):
+                            self.read(f, depth + 1, state)
+                continue
+            if kw == "match":
+                try:
+                    state["inmatch"] = True
+                    state["matched"] = self.match_criteria(path, n, args)
+                except ConfigError as e:
+                    if "requires" in str(e):
+                        raise ConfigError("%s line %d: %s" % (path, n, e))
+                    self.err(path, n, str(e)); state["matched"] = False
+                continue
+            if kw in ALIASES:
+                kw = ALIASES[kw]
+                if kw is None:
+                    continue
+            if kw not in KNOWN:
+                self.err(path, n, "Bad configuration option: %s" % raw); continue
+            if state["inmatch"] and kw not in MATCH_OK:
+                self.err(path, n, "Directive '%s' is not allowed within a Match block" % raw); continue
+            if not args:
+                self.err(path, n, "missing argument."); continue
+            try:
+                self.store(kw, args, state)
+            except ConfigError as e:
+                self.err(path, n, str(e))
+
+    def store(self, kw, args, state):
+        """Validate one directive and record it. Global lines count always (first value
+        wins); lines inside a Match block count only when that block matched."""
+        inmatch = state["inmatch"]
+        counts = (not inmatch) or state["matched"]
+        if kw in BOOLS:
+            if len(args) != 1 or args[0].lower() not in ("yes", "no"):
+                raise ConfigError("Bad yes/no argument: %s" % args[0])
+            val = args[0].lower()
+        elif kw in INTS:
+            if len(args) != 1 or not re.fullmatch(r"\d+", args[0]):
+                raise ConfigError("Bad numeric value: %s" % args[0])
+            val = str(int(args[0]))
+        elif kw == "permitrootlogin":
+            if len(args) != 1 or args[0].lower() not in ROOT_VALUES:
+                raise ConfigError("Bad permitrootlogin argument: %s" % args[0])
+            val = args[0].lower()
+            val = "prohibit-password" if val == "without-password" else val
+        elif kw in ("allowtcpforwarding", "gatewayports", "permittunnel", "compression"):
+            val = args[0].lower()
+        elif kw == "loglevel":
+            val = args[0].upper()
+        elif kw in LISTS:
+            if kw == "port" and not re.fullmatch(r"\d+", args[0]):
+                raise ConfigError("Bad port number: %s" % args[0])
+            if not counts:
+                return
+            if kw == "subsystem":
+                if not any(e.split()[0] == args[0] for e in self.lists[kw]):
+                    self.lists[kw].append(" ".join(args))
+            else:
+                self.lists[kw].extend(args)
+            return
+        else:
+            val = " ".join(args)
+        if counts:
+            (self.match_vals if inmatch else self.glob_vals).setdefault(kw, val)   # first value wins
+
+    @staticmethod
+    def listen(addr, port):
+        if addr.startswith("["):
+            return addr if "]:" in addr else "%s:%s" % (addr, port)
+        if addr.count(":") > 1:
+            return "[%s]:%s" % (addr, port)
+        return addr if ":" in addr else "%s:%s" % (addr, port)
+
+    def effective(self):
+        out = []
+        ports = self.lists["port"] or ["22"]
+        out += ["port %s" % p for p in ports]
+        out.append("addressfamily %s" % self.match_vals.get("addressfamily", self.glob_vals.get("addressfamily", "any")))
+        out += ["listenaddress %s" % self.listen(a, ports[0]) for a in (self.lists["listenaddress"] or ["0.0.0.0", "::"])]
+        out += ["hostkey %s" % h for h in self.lists["hostkey"]]
+        for kw, default in SCALARS:
+            if kw == "addressfamily":
+                continue
+            val = self.match_vals.get(kw, self.glob_vals.get(kw, default))
+            if val != "":
+                out.append("%s %s" % (kw, val))
+        for kw in ("acceptenv", "setenv", "allowusers", "allowgroups", "denyusers", "denygroups", "subsystem"):
+            out += ["%s %s" % (kw, v) for v in self.lists[kw]]
+        return out
+
+
+def usage():
+    sys.stderr.write("usage: sshd [-T | -t] [-f config_file] [-C connection_spec]\n")
+    return 1
+
+
+def main(argv):
+    cfg_file, mode, spec = "/etc/ssh/sshd_config", None, None
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        if a in ("-T", "-t"):
+            mode = mode or a
+        elif a in ("-f", "-C"):
+            i += 1
+            if i >= len(argv):
+                return usage()
+            if a == "-f":
+                cfg_file = argv[i]
+            else:
+                spec = argv[i]
+        elif a.startswith("-f") and len(a) > 2:
+            cfg_file = a[2:]
+        elif a.startswith("-C") and len(a) > 2:
+            spec = a[2:]
+        else:
+            return usage()
+        i += 1
+    if mode is None:
+        sys.stderr.write("sshd: this mock only supports -T and -t\n")
+        return 1
+    ci = None
+    if spec is not None:
+        ci = {}
+        for part in spec.split(","):
+            if "=" not in part or part.split("=")[0] not in ("user", "host", "addr", "laddr", "lport", "rdomain"):
+                sys.stderr.write("Invalid test mode specification %s\n" % part)
+                return 255
+            k, v = part.split("=", 1)
+            ci[k] = v
+        if mode == "-T" and not all(k in ci for k in ("user", "host", "addr")):
+            sys.stderr.write("sshd: user, host and addr are all required when -C is used with -T\n")
+            return 1
+    cfg = Config(ci)
+    cfg.main = os.path.abspath(cfg_file)
+    try:
+        cfg.read(cfg_file)
+    except ConfigError as e:
+        sys.stderr.write("%s\n" % e)
+        return 255
+    if cfg.errors:
+        sys.stderr.write("%s: terminating, %d bad configuration options\n" % (cfg_file, cfg.errors))
+        return 255
+    if mode == "-T":
+        sys.stdout.write("\n".join(cfg.effective()) + "\n")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

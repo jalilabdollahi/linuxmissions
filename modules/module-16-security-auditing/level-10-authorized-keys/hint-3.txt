@@ -1,1 +1,11 @@
-Example: `tar -czf authorized-keys-backup.tar.gz bundle/authorized-keys`
+grep '^SHA256' offboard.txt | awk '{print $1}' > leavers.txt
+while IFS= read -r line; do case "$line" in ''|'#'*) printf '%s\n' "$line"; continue;; esac; fp=$(printf '%s\n' "$line" | ssh-keygen -lf - | awk '{print $2}'); grep -qxF "$fp" leavers.txt || printf '%s\n' "$line"; done < authorized_keys > authorized_keys.new
+mv authorized_keys.new authorized_keys
+sed -i.bak -E 's|^(ssh-ed25519 [^ ]+ ci-deploy@runner)$|from="10.0.0.0/8",command="/usr/local/bin/deploy-only",no-port-forwarding,no-pty \1|' authorized_keys
+ssh-keygen -lf authorized_keys
+
+- grep/awk                     the leavers' fingerprints, one per line
+- the while loop               fingerprint each line with ssh-keygen -lf - and keep it unless it is on the list (comments pass through)
+- mv                           replace the file with the filtered one
+- sed ... ci-deploy@runner     put the four options in front of the CI key (found by its comment)
+- ssh-keygen -lf               proves the file still parses and shows who is left

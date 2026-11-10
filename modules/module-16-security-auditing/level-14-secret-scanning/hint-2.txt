@@ -1,1 +1,5 @@
-Use `seq` or explicit numbers and redirect each line into a separate file.
+`grep -rnE 'PATTERN' repo` searches recursively (hidden folders too) and prints `file:line:text`;
+`cut -d: -f1,2` keeps just `file:line`. Compressed logs need `zgrep -nH` (try it with `find repo -name '*.gz' -exec ... {} +`).
+Useful patterns: `AKIA[0-9A-Z]{16}`, `BEGIN .*PRIVATE KEY`, `ghp_[A-Za-z0-9]{36}`, and for passwords
+`-i` plus an anchor (`^[[:space:]]*password`) so that `password_min_length` and comments do not match.
+Take false positives out with `grep -v`. See `man grep` and `man zgrep`.

@@ -1,1 +1,5 @@
-Use `chmod +x jobs/file-permissions.sh` and then execute it.
+`find home -perm /022` lists paths where group or others have write permission (`/` means "any of
+these bits"); `-perm /077` finds anything touched by group or others at all, which you can narrow
+by name (`-name .netrc`, `\( -name a -o -name b \)`). `! -type l` skips symlinks. Review the list
+first, then fix with `chmod go-w` (remove write) or `chmod go-rwx` (secret). Put the fixed paths in
+findings.txt, for example with `find ... > file` or `| sort -u`. See `man find` (TESTS, -perm) and `man chmod`.

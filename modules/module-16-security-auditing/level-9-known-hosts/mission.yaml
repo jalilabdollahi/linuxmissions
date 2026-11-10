@@ -1,15 +1,11 @@
 {
-  "name": "Known Hosts: Link Repair",
-  "description": "In the security auditing lab, a task related to Known Hosts needs cleanup before the handoff.",
-  "objective": "Create current.conf as a symbolic link to releases/known-hosts.conf",
+  "name": "Host Key Changed",
+  "description": "git.internal was rebuilt overnight and ssh now shouts \"REMOTE HOST IDENTIFICATION HAS CHANGED\" (see ssh-error.txt). The team's known_hosts file hashes its host names, so grep cannot tell you which lines belong to the server. The new host keys were collected on the trusted console with ssh-keyscan and saved in keyscan.txt.",
+  "objective": "In known_hosts, remove the old keys of git.internal, including the ones stored under its alternate address [10.4.0.7]:2222, and make the new keys from keyscan.txt the trusted keys for git.internal. Every entry for other hosts must stay in the file byte for byte.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Known Hosts",
-    "ln",
-    "symbolic links"
-  ],
+  "expected_time": "15m",
+  "concepts": ["known_hosts", "hashed host names", "ssh-keygen -F", "ssh-keygen -R", "ssh-keyscan"],
   "module": "module-16-security-auditing",
   "level": "level-9-known-hosts"
 }

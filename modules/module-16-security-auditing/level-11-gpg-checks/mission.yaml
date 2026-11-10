@@ -1,15 +1,11 @@
 {
-  "name": "Gpg Checks: Restore Drill",
-  "description": "In the security auditing lab, a task related to Gpg Checks needs cleanup before the handoff.",
-  "objective": "Extract gpg-checks-restore.tar.gz so the restored/gpg-checks directory appears in the sandbox",
+  "name": "Which Mirror Can You Trust",
+  "description": "agent-2.3.1.tar.gz was downloaded from four mirrors, each with a detached .sig file. The vendor's release key is in vendor.gpg. Mirrors are run by third parties, so only a verified copy may be installed.",
+  "objective": "Check every copy against vendor.gpg without a full GnuPG setup. Move the one copy with a valid signature from the vendor's release key into verified/ (the folder is empty now) and delete the other three tarballs. Write report.txt with one line per mirror, `<mirror-name> good` or `<mirror-name> bad`.",
   "xp": 150,
   "difficulty": "intermediate",
-  "expected_time": "8m",
-  "concepts": [
-    "Gpg Checks",
-    "tar",
-    "archive extraction"
-  ],
+  "expected_time": "20m",
+  "concepts": ["detached signatures", "gpgv", "keyrings", "exit codes", "supply chain"],
   "module": "module-16-security-auditing",
   "level": "level-11-gpg-checks"
 }

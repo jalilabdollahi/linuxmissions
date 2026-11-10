@@ -1,1 +1,8 @@
-Example: `head -n 3 umask-hardening-history.log > first3.txt` and `tail -n 3 umask-hardening-history.log > last3.txt`
+sed -i.bak -e '/^chmod 600/d' -e 's/^set -e$/set -e; umask 077/' issue-cert.sh
+grep -n 'umask\|chmod' issue-cert.sh
+CERT_DIR=demo ./issue-cert.sh x && ls -ld demo demo/x demo/x/x.key
+
+- /^chmod 600/d            delete the late chmod: there is nothing to repair afterwards
+- set -e; umask 077        the script runs in its own process, so this umask ends with it and the caller's is untouched
+- the last line            run it and look: key 600, folders 700, from the moment they exist
+(Prefer to keep the change small and local? Put the key creation in ( umask 077; ... ) instead.)

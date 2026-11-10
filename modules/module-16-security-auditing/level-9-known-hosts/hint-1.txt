@@ -1,1 +1,5 @@
-This task wants a symbolic link, not a copy.
+Read ssh-error.txt, then look at known_hosts: the host names are hashed, so
+`grep git.internal known_hosts` finds nothing. OpenSSH ships its own tool to look a name
+up in a known_hosts file, hashed or not. The same server was also reached by IP address and
+port at some point: is that old key still trusted too? Whatever you remove, entries for the
+other hosts must come out byte for byte the same.

@@ -1,1 +1,9 @@
-Example: `chmod 640 sha256-verify.sh`
+cd release; sed -E -e 's/\r$//' -e 's/^SHA256 \((.*)\) = ([0-9a-f]{64})$/\2  \1/' -e 's/^([0-9a-f]{64}) +\*?(dist\/)?/\1  /' SHA256SUMS > SHA256SUMS.fixed; sha256sum -c --ignore-missing SHA256SUMS.fixed > ../verify.log 2>&1; cd ..
+cat verify.log
+grep ': FAILED' verify.log | cut -d: -f1 | while IFS= read -r f; do mv "release/$f" quarantine/; done
+
+- sed 's/\r$//'          drop the Windows line ends
+- sed 's/^SHA256 (...)/' rewrite BSD lines as GNU lines (hash, two spaces, name)
+- sed ... dist\/         make every separator two spaces and strip the dist/ prefix
+- -c --ignore-missing    check the cleaned list, skipping entries for files you do not have
+- grep FAILED | mv       move each corrupted file into quarantine/

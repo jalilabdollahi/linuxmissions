@@ -1,1 +1,5 @@
-Use one command for the beginning of the file and another for the end.
+Run `ls -l certs/...` after `./issue-cert.sh test` under different umasks (`umask 000`
+in your shell, then try again) and think about when the key file comes into existence
+and when it becomes private. Anything that happens after the file exists is too late:
+the file's permissions at creation time are decided by the umask of whoever runs the
+script. The folders the script creates matter too.

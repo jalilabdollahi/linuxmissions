@@ -1,1 +1,8 @@
-Example: `grep 'ALERT' chmod-octal.log > alerts.txt`
+find app -path app/bin -prune -o -type f -exec chmod u-x,g-wx,o-rwx {} +
+find app/bin -type f -exec chmod g-w,o-rwx {} +
+find app -type f -exec stat -c '%a %n' {} +
+
+- -path app/bin -prune -o     skip app/bin in the first pass
+- chmod u-x,g-wx,o-rwx        remove exactly the bits 640 does not allow; a 600 file loses nothing
+- chmod g-w,o-rwx             the bin/ limit is 750: no group write, nothing for others
+- stat -c '%a %n'             print octal mode and name to check the result

@@ -1,1 +1,8 @@
-Example: `printf '%s\n' '15 2 * * * /usr/local/bin/nightly-check' > crontab.txt`
+sed -i 's|^tmp=.*|tmp=$(mktemp "${TMPDIR:-/tmp}/report.XXXXXX")|' nightly-report.sh
+sed -i "/^set -e/a trap 'rm -f \"\$tmp\"' EXIT" nightly-report.sh
+sed -i '/^rm -f "\$tmp"$/d' nightly-report.sh
+
+- first sed    the work file now comes from mktemp: an unpredictable name, created exclusively with mode 600
+- second sed   after "set -e", add a trap so the file is removed on any exit, including a failure
+- third sed    the final rm is redundant now and is deleted
+- check it     cat nightly-report.sh, then run it on good and on broken data

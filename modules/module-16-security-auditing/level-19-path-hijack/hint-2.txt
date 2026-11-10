@@ -1,1 +1,5 @@
-Use `sed` to replace `legacy` with `managed`, then redirect the output to `fixed.conf`.
+`grep '^PATH' etc/cron.d/rotate-keys` shows it; `tr ':' '\n'` puts one element per line. A directory is
+world-writable if `find DIR -maxdepth 0 -type d -perm -0002` prints it (`-perm -0002`: the "others write" bit is set; `-type d` because a symlink such as /bin always shows mode 777).
+An empty element (`::`, or a leading/trailing `:`) means the current directory. `type -a tar` lists every `tar` the shell can find.
+To remove the dependence on the inherited PATH either set `PATH=` yourself at the top of the script to trusted
+directories only, or call the tools with absolute paths (and keep that in mind for every command the script runs).

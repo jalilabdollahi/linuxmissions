@@ -1,15 +1,11 @@
 {
-  "name": "Umask Hardening: History Window",
-  "description": "In the security auditing lab, a task related to Umask Hardening needs cleanup before the handoff.",
-  "objective": "Write the first 3 lines of umask-hardening-history.log to first3.txt and the last 3 lines to last3.txt",
-  "xp": 100,
-  "difficulty": "beginner",
-  "expected_time": "5m",
-  "concepts": [
-    "Umask Hardening",
-    "head",
-    "tail"
-  ],
+  "name": "The Race Before chmod",
+  "description": "issue-cert.sh creates a private key file and then runs chmod 600 on it. Between the two commands the key exists with whatever mode the caller's umask allows, so on a busy host another user can read it in that gap.",
+  "objective": "Change issue-cert.sh so the private key (and the directories it creates) are never accessible to other users, even for a moment, whatever umask the caller has. The script must keep printing exactly the same output and still produce the key, the request and the certificate.",
+  "xp": 150,
+  "difficulty": "intermediate",
+  "expected_time": "15m",
+  "concepts": ["umask", "race conditions", "mkdir -m", "install -m", "subshells"],
   "module": "module-16-security-auditing",
   "level": "level-7-umask-hardening"
 }

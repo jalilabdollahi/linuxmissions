@@ -3,8 +3,22 @@
 clear
 cd "$(dirname "$0")"
 
+# ─── Options ───────────────────────────────────────────────────────────────────
+#   --reset    start over from level 1
+#   --docker   play inside the LinuxMissions Ubuntu container (recommended on
+#              macOS and on Linux hosts missing some tools; needs Docker)
+RESET=0
+DOCKER=0
+for arg in "$@"; do
+  case "$arg" in
+    --reset) RESET=1 ;;
+    --docker) DOCKER=1 ;;
+    *) echo "Unknown option: $arg (use --reset and/or --docker)"; exit 1 ;;
+  esac
+done
+
 # ─── Reset option ──────────────────────────────────────────────────────────────
-if [[ "$1" == "--reset" ]]; then
+if [[ "$RESET" == 1 ]]; then
   if [ ! -f "progress.json" ]; then
     echo "ℹ️  No progress file found — nothing to reset."
     exit 0
@@ -18,6 +32,20 @@ if [[ "$1" == "--reset" ]]; then
     echo "Cancelled."
     exit 0
   fi
+fi
+
+# ─── Docker mode ───────────────────────────────────────────────────────────────
+if [[ "$DOCKER" == 1 ]]; then
+  if ! command -v docker &>/dev/null; then
+    echo "❌ Docker is not installed. Install Docker Desktop (macOS) or docker.io (Linux)."
+    exit 1
+  fi
+  echo "⚙️  Preparing the LinuxMissions container (first run takes a few minutes)..."
+  docker build -q -t linuxmissions docker >/dev/null || { echo "❌ docker build failed"; exit 1; }
+  exec docker run --rm -it --hostname linuxmissions \
+    -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" \
+    -v "$(pwd)":/app linuxmissions \
+    bash -c '[ -f levels.json ] || python3 scripts/generate_levels.py >/dev/null; exec python3 -m engine.engine'
 fi
 
 # ─── venv guard ────────────────────────────────────────────────────────────────

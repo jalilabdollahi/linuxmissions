@@ -32,7 +32,7 @@ This module teaches how to tell what a slow or failing box is doing: reading top
 ## Notes
 
 - **Linux-only:** `/proc/*` sampling (levels 13, 20–24), `ionice` (9: verified working as non-root in the reference image, class idle), `ss` queue semantics (14), diskstats format (5). macOS players should get a "Linux-only level" message.
-- **Reference image gaps:** `lsof` and `iostat` are missing (hence REPLACE on 5 and 13). If `lsof` is added to `tests/Dockerfile`, level 13 can keep the old slug; the scenario is unchanged.
+- **Reference image gaps:** `lsof` and `iostat` are missing (hence REPLACE on 5 and 13). If `lsof` is added to `docker/Dockerfile`, level 13 can keep the old slug; the scenario is unchanged.
 - Captured snapshots (1, 3, 4, 5, 6, 16, 18) must be generated per setup with random values, so answers can't be shared between players.
 - Live levels must start every background process with the sandbox path in its command line and output redirected (authoring rule 5). Level 14's client and server, and level 20's spawner, must be stopped on reset.
 - Level 2/21 memory: allocate with `python3 -c` and `bytearray`, touching pages so RSS is real; keep total under ~200 MB for CI.

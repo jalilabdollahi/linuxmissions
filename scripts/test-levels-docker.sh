@@ -1,6 +1,7 @@
 #!/bin/bash
-# Run scripts/test_levels.py (and the engine unit tests) inside the reference
-# Ubuntu container as a non-root user. Arguments go to test_levels.py.
+# Run scripts/test_levels.py (and the engine unit tests) inside the
+# LinuxMissions container as the non-root user `player`. Arguments go to
+# test_levels.py.
 #
 #   scripts/test-levels-docker.sh                     # every level
 #   scripts/test-levels-docker.sh module-4 -v         # one module, verbose
@@ -8,8 +9,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-IMAGE=linuxmissions-test
-docker build -q -t "$IMAGE" tests >/dev/null
+IMAGE=linuxmissions
+docker build -q -t "$IMAGE" docker >/dev/null
 
 if [[ "${1:-}" == "--unit" ]]; then
   exec docker run --rm -v "$PWD":/app:ro "$IMAGE" python3 -m unittest discover -s tests -v

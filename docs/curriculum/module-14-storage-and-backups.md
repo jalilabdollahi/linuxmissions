@@ -32,7 +32,7 @@ This module teaches disks, filesystems and backups without root. Disks are image
 ## Notes
 
 - Most of this module is Linux-only: `sfdisk`/`fdisk` on images, `blkid -p`, `mke2fs`/`dumpe2fs`/`e2label`/`debugfs`, `mountpoint`, `findmnt`, `/dev/shm`, sparse-file behaviour, and GNU `cp --sparse`, `ln -r`, `tar -S`, `find -printf`.
-- `tests/Dockerfile` changes to verify or add: `rsync` (levels 10, 11, 20, 21), `e2fsprogs` (levels 2, 16, 17), and `fdisk` (Ubuntu ships `sfdisk`/`fdisk` in that package, separate from util-linux; levels 1, 8, 17, 24). Also confirm that `blkid`, `mkswap`, `findmnt` and `mountpoint` are present in the image.
+- `docker/Dockerfile` changes to verify or add: `rsync` (levels 10, 11, 20, 21), `e2fsprogs` (levels 2, 16, 17), and `fdisk` (Ubuntu ships `sfdisk`/`fdisk` in that package, separate from util-linux; levels 1, 8, 17, 24). Also confirm that `blkid`, `mkswap`, `findmnt` and `mountpoint` are present in the image.
 - The game's safety filter blocks any command matching `mkfs` and `dd … of=/dev/sd*`. Level 2 must therefore tell the player to use `mke2fs`, and setup scripts must create filesystems with `mke2fs -F` on image files.
 - Mocks: `setquota` and quota state for level 15; a `mountpoint` stub that the level 4 validator puts on PATH for the positive case only (the player's script must call `mountpoint` through PATH, and the objective has to say so); a slow `tar` stub for the level 9 validator.
 - Levels 3, 5, 6 and 15 work on captures and config copies, so they need nothing beyond coreutils, plus `df`/`findmnt` for the `/dev/shm` part of level 6.

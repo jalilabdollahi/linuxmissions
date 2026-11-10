@@ -31,7 +31,7 @@ This module teaches how to change configuration files safely and exactly: seeing
 
 ## Notes
 
-- **Reference image gaps:** `envsubst` (level 10, package `gettext-base`) and `ssh` (level 17, `ssh -G` needs `openssh-client`) are missing; the YAML validator (13, 24) needs `python3-yaml`. Add these to `tests/Dockerfile`. All three work offline.
+- **Reference image gaps:** `envsubst` (level 10, package `gettext-base`) and `ssh` (level 17, `ssh -G` needs `openssh-client`) are missing; the YAML validator (13, 24) needs `python3-yaml`. Add these to `docker/Dockerfile`. All three work offline.
 - **Mocks:** `newaliases` (19), `exportfs -v` (20), a "resolved regenerate" script (16), `app --check-config` and the app server (24).
 - `sed -i` differs between GNU and BSD (`-i.bak` works on both; `-i ''` is BSD-only). Hints for 3/16 should use `-i.bak`.
 - Level 21 needs bash ≥ 4.4 for `${PS1@P}` in the validator (macOS system bash 3.2 lacks it; use the Homebrew bash or mark Linux-only).

@@ -31,13 +31,21 @@ saved in players' `progress.json`.
    wrong without giving the answer (`❌ errors.txt has 3 lines, expected more`).
    Success prints one line starting `✅`.
 4. **Runs as a normal user on Ubuntu**, no root, no network. Reference
-   environment: `tests/Dockerfile`. Prefer POSIX/GNU tools that also exist on
+   environment: `docker/Dockerfile` (the same image `./play.sh --docker` uses);
+   a level may rely on any tool installed there. Prefer POSIX/GNU tools that also exist on
    macOS; when a task needs root or a real service (systemctl, useradd, mount),
    ship a small mock script in the sandbox and say so in the objective.
 5. **Background processes** started by setup.sh must redirect output
    (`>/dev/null 2>&1 &`) and have the sandbox path in their command line, so the
    engine can stop them on reset.
 6. Everything the level creates stays inside `$SANDBOX`.
+7. **Shared mocks** for tools that need root, a daemon or the network live in
+   `mocks/` (see `mocks/README.md`). setup.sh copies the ones it needs into the
+   sandbox. A mock behaves like the real tool (same options, output format and
+   exit codes); everything specific to the level (data, scenario, checks) stays
+   in the level folder. Never generate levels from a shared template: each
+   level's setup, validator, solution and hints are written for that level, and
+   `scripts/check_duplicates.py` must report no issues.
 
 ## Mission text
 

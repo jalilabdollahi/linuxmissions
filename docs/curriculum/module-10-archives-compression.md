@@ -31,7 +31,7 @@ This module teaches packaging and unpacking data safely: tar member selection an
 
 ## Notes
 
-- `cpio` (level 11) isn't in `tests/Dockerfile`, so add it. zstd is installed but not needed.
+- `cpio` (level 11) isn't in `docker/Dockerfile`, so add it. zstd is installed but not needed.
 - Level 22 needs GNU tar (`--listed-incremental`), so it's Linux-only; macOS players would need `gtar`.
 - Level 17 uses GNU `stat -c`, which is `stat -f` on macOS, and level 20 needs `xzgrep`/`bzgrep` (from xz-utils and bzip2). Level 9's `zip -FS` needs Info-ZIP zip 3.0, which is what the Dockerfile has.
 - Levels 14/15: older macOS has only `shasum -a 256` and `md5`, so hints should mention that.

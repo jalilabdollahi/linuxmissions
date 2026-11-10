@@ -46,6 +46,17 @@ cd linuxmissions
 ./play.sh
 ```
 
+On macOS, or on a Linux machine missing some tools, play inside the
+LinuxMissions container (needs Docker; your progress is still saved in this
+folder):
+
+```bash
+./play.sh --docker
+```
+
+Some levels use Linux-only tools (`/proc`, apt/dpkg, systemd file formats), so
+`--docker` is the recommended way to play on macOS.
+
 To reset progress and start over from level 1:
 
 ```bash

@@ -32,7 +32,7 @@ This module teaches how to work out why something can't talk to something else, 
 ## Notes
 
 - **Shared mock DNS server:** levels 5, 6, 7, 14, 23 need a small Python UDP DNS responder (A, AAAA, CNAME, MX, PTR, SOA, NXDOMAIN, SERVFAIL, silent drop) on 127.0.0.1 with a random port, built from a per-setup zone. Write it once as a shared fixture. `dig`, `nslookup` and `host` (dnsutils) are in the reference image and can target a custom port.
-- **Reference image gaps:** `wget` (level 9) and `openssl` (level 18) are missing. Add both to `tests/Dockerfile`. If wget isn't added, level 9 should become `REPLACE → level-9-curl-resume` (resume a partial download with `curl -C -`, follow redirects, verify size). `traceroute`/`mtr` are missing, but level 4 only reads captures.
+- **Reference image gaps:** `wget` (level 9) and `openssl` (level 18) are missing. Add both to `docker/Dockerfile`. If wget isn't added, level 9 should become `REPLACE → level-9-curl-resume` (resume a partial download with `curl -C -`, follow redirects, verify size). `traceroute`/`mtr` are missing, but level 4 only reads captures.
 - **Mocks:** `vpnping` (20), `getent hosts` over sandbox nsswitch/hosts (15), resolver simulator in the validator (14), SMTP and line-protocol servers (11, 12), HTTP proxy and origin (16), multi-endpoint HTTP server (8, 17, 24).
 - Live servers bind to 127.0.0.1 only, on ports chosen at setup, and carry the sandbox path in their command line. `ping 127.0.0.1` works in the reference image, but ping levels use captures because loopback RTTs teach nothing.
 - `--resolve` lets curl map fake names to 127.0.0.1 without touching the system resolver (16, 24). macOS has only 127.0.0.1 on lo0, so don't rely on 127.0.0.2 and similar addresses.

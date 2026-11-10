@@ -31,7 +31,7 @@ This module teaches how to find and fix weaknesses on a host you are responsible
 
 ## Notes
 
-- **Reference image gaps** (checked in `linuxmissions-test`): `ssh-keygen` (levels 9, 10) is missing, so add `openssh-client` to `tests/Dockerfile` (no network or daemon needed). `gpg` is missing but `gpgv` is present: level 11 uses pre-generated keyrings and signatures committed as fixtures and verified with `gpgv` only.
+- **Reference image gaps** (checked in `linuxmissions`): `ssh-keygen` (levels 9, 10) is missing, so add `openssh-client` to `docker/Dockerfile` (no network or daemon needed). `gpg` is missing but `gpgv` is present: level 11 uses pre-generated keyrings and signatures committed as fixtures and verified with `gpgv` only.
 - No `sshd` binary, so level 8/24 effective-config checks use a Python parser that implements Include/first-match/Match semantics (shared helper).
 - `visudo -cf file` works as non-root in the reference image (level 18).
 - Linux-only: `/proc/PID/environ` and `/proc/PID/cmdline` (level 15). Level 15 must keep both workers' command lines containing the sandbox path so reset can kill them.

@@ -35,7 +35,7 @@ This module teaches the small, lesser-known tools that solve one awkward job wel
 | 24 | level-24-toolbelt-summary | expert | Support sent `bundle.eml`, a MIME message with attachments. Split it into parts, identify each part by its content, decode it, and write `summary.txt` with the requested fields: the error count from the UTF-16 log, the kernel version from the gzipped dmesg, and the setting from the base64 text part. | `csplit` on the MIME boundary, `base64 -d`, `xxd` or `file` for magic bytes, `zcat`, `iconv -f UTF-16`, `grep -c` | Exact summary lines. | One attachment's `Content-Type` header lies. The log is UTF-16 with a BOM, so `grep` finds nothing until it is converted. |
 
 ## Notes
-- `strings` (level 16) comes from binutils, which is not in tests/Dockerfile. Add it, or have the hint use `grep -a` / `tr` for the ASCII part (UTF-16 still needs `strings -e l` or `iconv`).
+- `strings` (level 16) comes from binutils, which is not in docker/Dockerfile. Add it, or have the hint use `grep -a` / `tr` for the ASCII part (UTF-16 still needs `strings -e l` or `iconv`).
 - `col` comes from bsdextrautils and `hexdump` is from util-linux; both are already in the image. `iconv` comes from libc-bin.
 - GNU-only options, so these levels are Linux-only: `tac -s`, `shuf --random-source`, `split --filter` and `--additional-suffix`, `basenc`, `base64 -w0`, `expand -i`, `unexpand --first-only`, `od --endian`, and util-linux `script -c`. macOS's `script` has different flags.
 - Level 21 should use workloads with wide margins (`sleep 2`, a 2 s busy loop, `dd bs=1` for syscalls) so the classification never flips on a slow CI runner.
